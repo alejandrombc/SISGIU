@@ -1,0 +1,1 @@
+@"c:\users\joseca~1\docume~1\gregorio\bitdha~1\wallet\blog-api\scripts\python.exe" "c:\users\joseca~1\docume~1\gregorio\bitdha~1\wallet\blog-api\Scripts\markdown_py" %*
