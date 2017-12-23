@@ -3,7 +3,7 @@ from django.db import models
 # Create your models here.
 class Usuario(models.Model):
 	cedula = models.IntegerField(unique=True, editable=False)
-	contrasena = models.CharField(max_length=20)
+	contrasena = models.CharField(max_length=64)
 	primer_nombre = models.CharField(max_length=50)
 	segundo_nombre = models.CharField(max_length=50)
 	primer_apellido = models.CharField(max_length=50)

@@ -39,6 +39,10 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'usuario.apps.UsuarioConfig',
+    'periodo.apps.PeriodoConfig',
+    'tramite.apps.TramiteConfig',
+    'asignatura.apps.AsignaturaConfig',
+    'relacion.apps.RelacionConfig',
 ]
 
 MIDDLEWARE = [
