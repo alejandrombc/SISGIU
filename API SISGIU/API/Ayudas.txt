@@ -1,0 +1,10 @@
+Que hacer para borrar todas las migraciones (para evitar problemas de DJANGO con nuevas agregaciones al esquema de BD y eso)
+
+-Borramos todas las carpetas "migrations" de cada una de las apps
+-Borramos todas las entradas de la tabla "django.migrations"
+-Hacemos "python manage.py makemigrations app" para cada una de las apps
+-Borramos toda la BD
+-Hacemos "python manage.py migrate"
+
+
+Con eso deberia bastar para tener todo "fresco" desde "0"

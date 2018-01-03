@@ -1,14 +1,15 @@
 from django.db import models
+from django.contrib.auth.models import AbstractUser
 
 # Create your models here.
-class Usuario(models.Model):
+class Usuario(AbstractUser):
 	cedula = models.IntegerField(unique=True, editable=False)
-	contrasena = models.CharField(max_length=64)
-	primer_nombre = models.CharField(max_length=50)
-	segundo_nombre = models.CharField(max_length=50)
-	primer_apellido = models.CharField(max_length=50)
-	segundo_apellido = models.CharField(max_length=50)
-	correo = models.EmailField(max_length=60)
+	# contrasena = models.CharField(max_length=64)
+	# primer_nombre = models.CharField(max_length=50)
+	# segundo_nombre = models.CharField(max_length=50)
+	# primer_apellido = models.CharField(max_length=50)
+	# segundo_apellido = models.CharField(max_length=50)
+	# correo = models.EmailField(max_length=60)
 	correo_alternativo = models.EmailField(max_length=60)
 	celular = models.CharField(max_length=14)
 	telefono_casa = models.CharField(max_length=14)
@@ -19,39 +20,56 @@ class Usuario(models.Model):
 	estado_civil = models.CharField(max_length=20)
 	foto = models.FileField()
 
-	class Meta:
-		abstract = True
+	# class Meta:
+	# 	abstract = True
 
     # def __str__(self):
   		# return self.username
 
 
-class Estudiante(Usuario):
-    id_tipo_postgrado = models.ForeignKey(
-        'TipoPostgrado',
-        on_delete=models.SET_NULL,
-        null=True
-    )
-    
-    id_estado_estudiante = models.ForeignKey(
-        'EstadoEstudiante',
-        on_delete=models.SET_NULL,
-        null=True
-    )
-    
-    direcccion = models.TextField()
+class Estudiante(models.Model):
+	usuario = models.OneToOneField(
+				Usuario,
+				on_delete=models.CASCADE,
+				primary_key=True)
+
+	id_tipo_postgrado = models.ForeignKey(
+		'TipoPostgrado',
+		on_delete=models.SET_NULL,
+		null=True
+	)
+
+	id_estado_estudiante = models.ForeignKey(
+		'EstadoEstudiante',
+		on_delete=models.SET_NULL,
+		null=True
+	)
+
+	direcccion = models.TextField()
 
 
 
 class TipoPostgrado(models.Model):
+	usuario = models.OneToOneField(
+			Usuario,
+			on_delete=models.CASCADE,
+			primary_key=True)
 	tipo = models.CharField(max_length=20)
 
 
 class EstadoEstudiante(models.Model):
+	usuario = models.OneToOneField(
+			Usuario,
+			on_delete=models.CASCADE,
+			primary_key=True)
 	estado = models.CharField(max_length=20)
 
 
-class PersonalDocente(Usuario):
+class PersonalDocente(models.Model):
+	usuario = models.OneToOneField(
+			Usuario,
+			on_delete=models.CASCADE,
+			primary_key=True)
 	direcccion = models.TextField()
 	rif = models.FileField()
 	curriculum = models.FileField()
@@ -59,9 +77,16 @@ class PersonalDocente(Usuario):
 	coordinador = models.BooleanField()
 
 
-class PersonalAdministrativo(Usuario):
-	pass
+class PersonalAdministrativo(models.Model):
+	usuario = models.OneToOneField(
+			Usuario,
+			on_delete=models.CASCADE,
+			primary_key=True)
 
 
-class Administrador(Usuario):
-	pass
+class Administrador(models.Model):
+	usuario = models.OneToOneField(
+			Usuario,
+			on_delete=models.CASCADE,
+			primary_key=True)
+

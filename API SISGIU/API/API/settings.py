@@ -31,6 +31,11 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'usuario.apps.UsuarioConfig',
+    'periodo.apps.PeriodoConfig',
+    'tramite.apps.TramiteConfig',
+    'asignatura.apps.AsignaturaConfig',
+    'relacion.apps.RelacionConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -38,11 +43,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
-    'usuario.apps.UsuarioConfig',
-    'periodo.apps.PeriodoConfig',
-    'tramite.apps.TramiteConfig',
-    'asignatura.apps.AsignaturaConfig',
-    'relacion.apps.RelacionConfig',
 ]
 
 MIDDLEWARE = [
@@ -109,6 +109,8 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+
+AUTH_USER_MODEL = 'usuario.Usuario'
 
 # Internationalization
 # https://docs.djangoproject.com/en/2.0/topics/i18n/
