@@ -8,3 +8,5 @@ Que hacer para borrar todas las migraciones (para evitar problemas de DJANGO con
 
 
 Con eso deberia bastar para tener todo "fresco" desde "0"
+# Tenemos que hacer el archivo "Requirements" el cual contiene todas las dependencias para que se instalen mas rapido al momento de hacer la integracion del sistema.
+
