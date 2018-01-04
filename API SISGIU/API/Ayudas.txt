@@ -3,11 +3,10 @@ Que hacer para borrar todas las migraciones (para evitar problemas de DJANGO con
 -Borramos todas las carpetas "migrations" de cada una de las apps
 -Borramos todas las entradas de la tabla "django.migrations"
 -Hacemos "python manage.py makemigrations app" para cada una de las apps
--Borramos toda la BD
+-Borramos toda la BD (y la volvemos a crear)
 -Hacemos "python manage.py migrate"
 
 
 Con eso deberia bastar para tener todo "fresco" desde "0"
-
-
 # Tenemos que hacer el archivo "Requirements" el cual contiene todas las dependencias para que se instalen mas rapido al momento de hacer la integracion del sistema.
+
