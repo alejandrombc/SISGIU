@@ -8,13 +8,8 @@ def user_directory_path(instance, filename):
     return 'user_{0}/{1}'.format(instance.cedula, filename)
 
 
-# Create your models here.
 class Usuario(AbstractUser):
-	cedula = models.IntegerField(unique=True, null=True)
-	# contrasena = models.CharField(max_length=64)
-	# primer_nombre = models.CharField(max_length=50)
-	# primer_apellido = models.CharField(max_length=50)
-	# correo = models.EmailField(max_length=60)
+	cedula = models.IntegerField(null=True)
 	segundo_nombre = models.CharField(max_length=50, null=True)
 	segundo_apellido = models.CharField(max_length=50, null=True)
 	correo_alternativo = models.EmailField(max_length=60, blank=True)
@@ -28,12 +23,6 @@ class Usuario(AbstractUser):
 	estado_civil = models.CharField(max_length=20)
 	foto = models.ImageField(upload_to=user_directory_path)
 
-	# class Meta:
-	# 	abstract = True
-
-    # def __str__(self):
-  		# return self.username
-
 
 class Estudiante(models.Model):
 	usuario = models.OneToOneField(
@@ -44,32 +33,26 @@ class Estudiante(models.Model):
 	id_tipo_postgrado = models.ForeignKey(
 		'TipoPostgrado',
 		on_delete=models.SET_NULL,
-		null=True
+		null=True,
+		
 	)
 
 	id_estado_estudiante = models.ForeignKey(
 		'EstadoEstudiante',
 		on_delete=models.SET_NULL,
-		null=True
+		null=True,
 	)
 
-	direcccion = models.TextField()
+	direccion = models.TextField()
 
 
 
 class TipoPostgrado(models.Model):
-	usuario = models.OneToOneField(
-			Usuario,
-			on_delete=models.CASCADE,
-			primary_key=True)
+
 	tipo = models.CharField(max_length=20)
 
 
 class EstadoEstudiante(models.Model):
-	usuario = models.OneToOneField(
-			Usuario,
-			on_delete=models.CASCADE,
-			primary_key=True)
 	estado = models.CharField(max_length=20)
 
 
@@ -79,9 +62,9 @@ class PersonalDocente(models.Model):
 			on_delete=models.CASCADE,
 			primary_key=True)
 	direcccion = models.TextField()
-	rif = models.FileField()
-	curriculum = models.FileField()
-	permiso_ingresos = models.FileField()
+	rif = models.FileField(upload_to=user_directory_path)
+	curriculum = models.FileField(upload_to=user_directory_path)
+	permiso_ingresos = models.FileField(upload_to=user_directory_path)
 	coordinador = models.BooleanField()
 
 
