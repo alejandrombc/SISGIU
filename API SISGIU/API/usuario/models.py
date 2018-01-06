@@ -1,24 +1,32 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+import datetime
+
+
+def user_directory_path(instance, filename):
+    # file will be uploaded to MEDIA_ROOT/user_<id>/<filename>
+    return 'user_{0}/{1}'.format(instance.cedula, filename)
+
 
 # Create your models here.
 class Usuario(AbstractUser):
-	cedula = models.IntegerField(unique=True, editable=False)
+	cedula = models.IntegerField(unique=True, null=True)
 	# contrasena = models.CharField(max_length=64)
 	# primer_nombre = models.CharField(max_length=50)
 	# primer_apellido = models.CharField(max_length=50)
 	# correo = models.EmailField(max_length=60)
-	segundo_nombre = models.CharField(max_length=50, default=None)
-	segundo_apellido = models.CharField(max_length=50, default=None)
-	correo_alternativo = models.EmailField(max_length=60)
+	segundo_nombre = models.CharField(max_length=50, null=True)
+	segundo_apellido = models.CharField(max_length=50, null=True)
+	correo_alternativo = models.EmailField(max_length=60, blank=True)
 	celular = models.CharField(max_length=14)
 	telefono_casa = models.CharField(max_length=14)
 	telefono_trabajo = models.CharField(max_length=14)
-	fecha_nacimiento = models.DateField()
+	date = datetime.date.today()
+	fecha_nacimiento = models.DateField(default=date)
 	sexo = models.CharField(max_length=1)
 	nacionalidad = models.CharField(max_length=20)
 	estado_civil = models.CharField(max_length=20)
-	foto = models.FileField()
+	foto = models.ImageField(upload_to=user_directory_path)
 
 	# class Meta:
 	# 	abstract = True

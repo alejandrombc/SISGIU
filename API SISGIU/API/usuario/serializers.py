@@ -9,7 +9,7 @@ class UsuarioListSerializer(serializers.ModelSerializer):
         model = Usuario
         fields = ('id', 'cedula', 'first_name', 'segundo_nombre', 
             'last_name', 'segundo_apellido', 'last_name', 'email', 
-            'corre_alternativo', 'celular', 'telefono_casa', 'telefono_trabajo', 
+            'correo_alternativo', 'celular', 'telefono_casa', 'telefono_trabajo', 
             'fecha_nacimiento', 'sexo', 'nacionalidad', 'estado_civil', 'foto')
     
 
@@ -19,5 +19,5 @@ class UsuarioDetailSerializer(serializers.ModelSerializer):
         model = Usuario
         fields = ('cedula', 'first_name', 'segundo_nombre', 
             'last_name', 'segundo_apellido', 'last_name', 'email', 
-            'corre_alternativo', 'celular', 'telefono_casa', 'telefono_trabajo', 
+            'correo_alternativo', 'celular', 'telefono_casa', 'telefono_trabajo', 
             'fecha_nacimiento', 'sexo', 'nacionalidad', 'estado_civil', 'foto')

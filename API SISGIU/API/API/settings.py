@@ -27,6 +27,19 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+BASE_DIR = os.path.dirname(os.path.dirname(__file__))
+STATIC_URL = '/static/'
+
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, "static"),
+)
+
+MEDIA_ROOT = (
+BASE_DIR+"/media"
+)
+
+
+MEDIA_URL = '/media/'
 
 # Application definition
 

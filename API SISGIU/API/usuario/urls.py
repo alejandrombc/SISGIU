@@ -15,6 +15,6 @@ urlpatterns = format_suffix_patterns([
     url(r'^api/usuarios/(?P<pk>\d+)/$', UsuarioDetailAPIView.as_view(), name='usuario-detail'),
     url(r'^api/usuarios/(?P<pk>\d+)/edit/$', UsuarioUpdateAPIView.as_view(), name='usuario-update'),
     url(r'^api/usuarios/(?P<pk>\d+)/delete/$', UsuarioDeleteAPIView.as_view(), name='usuario-delete'),
-    
+
 
 ])
