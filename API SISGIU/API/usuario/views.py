@@ -5,14 +5,17 @@ from usuario.models import (
     Estudiante,
     TipoPostgrado,
     EstadoEstudiante,
+    PersonalDocente,
     )
 from usuario.serializers import (
     UsuarioListSerializer,
     UsuarioDetailSerializer,
     EstudianteSerializer,
+    EstudianteDetailSerializer,
     TipoPostgradoSerializer,
     EstadoEstudianteSerializer,
-    EstudianteDetailSerializer,
+    DocenteSerializer,
+    DocenteDetailSerializer,
     )
 from rest_framework.generics import (
 	ListCreateAPIView,
@@ -31,14 +34,17 @@ class UsuarioListCreateAPIView(ListCreateAPIView):
 class UsuarioDetailAPIView(RetrieveAPIView):
     queryset = Usuario.objects.all()
     serializer_class = UsuarioDetailSerializer
+    lookup_field = 'cedula'
 
 class UsuarioUpdateAPIView(RetrieveUpdateAPIView):
     queryset = Usuario.objects.all()
     serializer_class = UsuarioDetailSerializer
+    lookup_field = 'cedula'
 
 class UsuarioDeleteAPIView(DestroyAPIView):
     queryset = Usuario.objects.all()
     serializer_class = UsuarioDetailSerializer
+    # lookup_field = 'cedula'
 
 
 """
@@ -51,10 +57,12 @@ class EstudianteListCreateAPIView(ListCreateAPIView):
 class EstudianteDetailAPIView(RetrieveAPIView):
     queryset = Estudiante.objects.all()
     serializer_class = EstudianteDetailSerializer
+    lookup_field = 'usuario__cedula'
 
 class EstudianteUpdateAPIView(RetrieveUpdateAPIView):
     queryset = Estudiante.objects.all()
     serializer_class = EstudianteDetailSerializer
+    lookup_field = 'usuario__cedula'
 
 
 """
@@ -72,6 +80,20 @@ class EstadoEstudianteListCreateAPIView(ListCreateAPIView):
     queryset = EstadoEstudiante.objects.all()
     serializer_class = EstadoEstudianteSerializer
 
-# class EstadoEstudianteDetailAPIView(RetrieveAPIView):
-#     queryset = EstadoEstudiante.objects.all()
-#     serializer_class = EstudianteSerializer
+
+"""
+Docente
+"""
+class DocenteListCreateAPIView(ListCreateAPIView):
+    queryset = PersonalDocente.objects.all()
+    serializer_class = DocenteSerializer
+
+class DocenteDetailAPIView(RetrieveAPIView):
+    queryset = PersonalDocente.objects.all()
+    serializer_class = DocenteDetailSerializer
+    lookup_field = 'usuario__cedula'
+
+class DocenteUpdateAPIView(RetrieveUpdateAPIView):
+    queryset = PersonalDocente.objects.all()
+    serializer_class = DocenteDetailSerializer
+    lookup_field = 'usuario__cedula'
