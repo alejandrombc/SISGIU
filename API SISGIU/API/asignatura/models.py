@@ -6,6 +6,8 @@ from usuario.models import TipoPostgrado
 class TipoAsignatura(models.Model):
 	nombre = models.CharField(max_length=20)
 
+	def __str__(self):
+		return self.nombre
 
 #Tabla de asignatura
 class Asignatura(models.Model):
