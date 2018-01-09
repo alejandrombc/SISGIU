@@ -6,7 +6,7 @@ from asignatura import views
 from tramite import views
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns,static
 from django.conf import settings
-
+from rest_framework_jwt.views import refresh_jwt_token
 
 
 urlpatterns = [
@@ -15,6 +15,11 @@ urlpatterns = [
     url(r'^', include('asignatura.urls')),
     url(r'^', include('tramite.urls')),
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
+
+    url(r'^', include('rest_auth.urls')),
+    url(r'^registration/', include('rest_auth.registration.urls')),
+
+    url(r'^refresh-token/', refresh_jwt_token),
 ]
 
 # For image files
