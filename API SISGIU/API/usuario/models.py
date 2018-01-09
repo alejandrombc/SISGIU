@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
-import datetime
+from django.utils import timezone
 
 
 def user_directory_path(instance, filename):
@@ -21,8 +21,7 @@ class Usuario(AbstractUser):
 	celular = models.CharField(max_length=14)
 	telefono_casa = models.CharField(max_length=14)
 	telefono_trabajo = models.CharField(max_length=14, blank=True)
-	date = datetime.date.today()
-	fecha_nacimiento = models.DateField(default=date)
+	fecha_nacimiento = models.DateField(default=timezone.now)
 	sexo = models.CharField(max_length=1)
 	nacionalidad = models.CharField(max_length=20)
 	estado_civil = models.CharField(max_length=20)
