@@ -184,6 +184,7 @@ class DocenteDetailSerializer(serializers.ModelSerializer):
             instance.permiso_ingresos = validated_data.get('permiso_ingresos', instance.permiso_ingresos)
         
         instance.coordinador = validated_data.get('coordinador', instance.coordinador)
+        instance.direccion = validated_data.get('direccion', instance.direccion)
         instance.save()
 
         usuario = validated_data.get('usuario')
