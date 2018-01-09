@@ -78,10 +78,3 @@ class PersonalAdministrativo(models.Model):
 			on_delete=models.CASCADE,
 			primary_key=True)
 
-
-class Administrador(models.Model):
-	usuario = models.OneToOneField(
-			Usuario,
-			on_delete=models.CASCADE,
-			primary_key=True)
-

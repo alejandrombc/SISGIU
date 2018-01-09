@@ -5,18 +5,46 @@ from usuario.models import (
     TipoPostgrado,
     EstadoEstudiante,
     PersonalDocente,
+    PersonalAdministrativo,
     )
     
 from django.forms.fields import ImageField, FileField
 
+
 """
-Serializer de Usuario
+Serializer de Usuario/Administrador
+"""
+class AdministradorListSerializer(serializers.ModelSerializer):
+    foto = serializers.ImageField(required=False, max_length=None, allow_empty_file=True, use_url=True)
+    class Meta:
+        model = Usuario
+        fields = ('id','is_superuser', 'cedula', 'first_name', 'segundo_nombre', 
+            'last_name', 'segundo_apellido', 'last_name', 'email', 
+            'correo_alternativo', 'celular', 'telefono_casa', 'telefono_trabajo', 
+            'fecha_nacimiento', 'sexo', 'nacionalidad', 'estado_civil', 'foto', 'username')
+        
+
+# Todo menos el username (no se debe "re-poner")
+class AdministradorDetailSerializer(serializers.ModelSerializer):
+    foto = serializers.ImageField(required=False, max_length=None, allow_empty_file=True, use_url=True)
+    class Meta:
+        model = Usuario
+        fields = ('cedula', 'is_superuser', 'first_name', 'segundo_nombre', 
+            'last_name', 'segundo_apellido', 'last_name', 'email', 
+            'correo_alternativo', 'celular', 'telefono_casa', 'telefono_trabajo', 
+            'fecha_nacimiento', 'sexo', 'nacionalidad', 'estado_civil', 'foto')
+
+
+
+
+"""
+Serializer de Usuario Generico
 """
 class UsuarioListSerializer(serializers.ModelSerializer):
     foto = serializers.ImageField(required=False, max_length=None, allow_empty_file=True, use_url=True)
     class Meta:
         model = Usuario
-        fields = ('id','cedula', 'first_name', 'segundo_nombre', 
+        fields = ('id', 'cedula', 'first_name', 'segundo_nombre', 
             'last_name', 'segundo_apellido', 'last_name', 'email', 
             'correo_alternativo', 'celular', 'telefono_casa', 'telefono_trabajo', 
             'fecha_nacimiento', 'sexo', 'nacionalidad', 'estado_civil', 'foto', 'username')
@@ -181,5 +209,58 @@ class DocenteDetailSerializer(serializers.ModelSerializer):
 
         return instance
 
+
+"""
+Serializer de PersonalAdministrativo
+"""
+class AdministrativoSerializer(serializers.ModelSerializer):
+    usuario = UsuarioListSerializer()
+    class Meta:
+        model = PersonalAdministrativo
+        fields = ('__all__')
+
+    def create(self, validated_data):
+        user_data = validated_data.pop('usuario')
+        user = Usuario.objects.get(cedula=user_data['cedula'])
+        if(user == None):
+            user = UsuarioListSerializer.create(UsuarioListSerializer(), validated_data=user_data)
+        
+        personal_admin, created = PersonalAdministrativo.objects.update_or_create(usuario=user)
+        return personal_admin
+
+    
+
+
+class AdministrativoDetailSerializer(serializers.ModelSerializer):
+    usuario = UsuarioDetailSerializer()
+    class Meta:
+
+        model = PersonalAdministrativo
+        fields = ('__all__')
+
+    def update(self, instance, validated_data):
+        usuario = validated_data.get('usuario')
+
+        administrativo_usuario = Usuario.objects.get(cedula=usuario['cedula'])
+        administrativo_usuario.first_name = usuario['first_name']
+        administrativo_usuario.segundo_nombre = usuario['segundo_nombre']
+        administrativo_usuario.last_name = usuario['last_name']
+        administrativo_usuario.segundo_apellido = usuario['segundo_apellido']
+        administrativo_usuario.email = usuario['email']
+        administrativo_usuario.correo_alternativo = usuario['correo_alternativo']
+        administrativo_usuario.celular = usuario['celular']
+        administrativo_usuario.telefono_casa = usuario['telefono_casa']
+        administrativo_usuario.telefono_trabajo = usuario['telefono_trabajo']
+        administrativo_usuario.fecha_nacimiento = usuario['fecha_nacimiento']
+        administrativo_usuario.sexo = usuario['sexo']
+        administrativo_usuario.nacionalidad = usuario['nacionalidad']
+        administrativo_usuario.estado_civil = usuario['estado_civil']
+        if(usuario.get('foto')):
+            administrativo_usuario.foto = usuario['foto']
+
+        administrativo_usuario.save()
+
+        personal_admin, created = PersonalAdministrativo.objects.update_or_create(usuario=administrativo_usuario)
+        return personal_admin
 
 
