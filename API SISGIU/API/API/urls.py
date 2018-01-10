@@ -14,9 +14,9 @@ urlpatterns = [
     url(r'^', include('usuario.urls')),
     url(r'^', include('asignatura.urls')),
     url(r'^', include('tramite.urls')),
-    url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
+    url(r'^api-auth/', include('rest_auth.urls' )),
 
-    url(r'^', include('rest_auth.urls')),
+    # url(r'^', include('rest_auth.urls')),
     url(r'^registration/', include('rest_auth.registration.urls')),
 
     url(r'^refresh-token/', refresh_jwt_token),

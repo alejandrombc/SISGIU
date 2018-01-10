@@ -21,7 +21,7 @@ class AdministradorListSerializer(serializers.ModelSerializer):
         fields = ('id','is_superuser', 'cedula', 'first_name', 'segundo_nombre', 
             'last_name', 'segundo_apellido', 'last_name', 'email', 
             'correo_alternativo', 'celular', 'telefono_casa', 'telefono_trabajo', 
-            'fecha_nacimiento', 'sexo', 'nacionalidad', 'estado_civil', 'foto', 'username')
+            'fecha_nacimiento', 'sexo', 'nacionalidad', 'estado_civil', 'foto', 'username', 'password')
         
 
 # Todo menos el username (no se debe "re-poner")
@@ -32,7 +32,7 @@ class AdministradorDetailSerializer(serializers.ModelSerializer):
         fields = ('cedula', 'is_superuser', 'first_name', 'segundo_nombre', 
             'last_name', 'segundo_apellido', 'last_name', 'email', 
             'correo_alternativo', 'celular', 'telefono_casa', 'telefono_trabajo', 
-            'fecha_nacimiento', 'sexo', 'nacionalidad', 'estado_civil', 'foto')
+            'fecha_nacimiento', 'sexo', 'nacionalidad', 'estado_civil', 'foto', 'password')
 
 
 
@@ -47,7 +47,7 @@ class UsuarioListSerializer(serializers.ModelSerializer):
         fields = ('id', 'cedula', 'first_name', 'segundo_nombre', 
             'last_name', 'segundo_apellido', 'last_name', 'email', 
             'correo_alternativo', 'celular', 'telefono_casa', 'telefono_trabajo', 
-            'fecha_nacimiento', 'sexo', 'nacionalidad', 'estado_civil', 'foto', 'username')
+            'fecha_nacimiento', 'sexo', 'nacionalidad', 'estado_civil', 'foto', 'username', 'password')
         
 
 # Todo menos el username (no se debe "re-poner")
@@ -58,7 +58,7 @@ class UsuarioDetailSerializer(serializers.ModelSerializer):
         fields = ('cedula', 'first_name', 'segundo_nombre', 
             'last_name', 'segundo_apellido', 'last_name', 'email', 
             'correo_alternativo', 'celular', 'telefono_casa', 'telefono_trabajo', 
-            'fecha_nacimiento', 'sexo', 'nacionalidad', 'estado_civil', 'foto')
+            'fecha_nacimiento', 'sexo', 'nacionalidad', 'estado_civil', 'foto', 'password')
 
 """
 Serializer de TipoPostgrado
