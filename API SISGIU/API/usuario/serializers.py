@@ -23,6 +23,14 @@ class AdministradorListSerializer(serializers.ModelSerializer):
             'correo_alternativo', 'celular', 'telefono_casa', 'telefono_trabajo', 
             'fecha_nacimiento', 'sexo', 'nacionalidad', 'estado_civil', 'foto', 'username', 'password')
         
+    def create(self, validated_data):
+        password = validated_data.pop('password', None)
+        instance = self.Meta.model(**validated_data)
+        if password is not None:
+            instance.set_password(password)
+        instance.save()
+        return instance
+
 
 # Todo menos el username (no se debe "re-poner")
 class AdministradorDetailSerializer(serializers.ModelSerializer):
@@ -32,8 +40,16 @@ class AdministradorDetailSerializer(serializers.ModelSerializer):
         fields = ('cedula', 'is_superuser', 'first_name', 'segundo_nombre', 
             'last_name', 'segundo_apellido', 'last_name', 'email', 
             'correo_alternativo', 'celular', 'telefono_casa', 'telefono_trabajo', 
-            'fecha_nacimiento', 'sexo', 'nacionalidad', 'estado_civil', 'foto', 'password')
+            'fecha_nacimiento', 'sexo', 'nacionalidad', 'estado_civil', 'foto', 'username', 'password')
 
+    def update(self, instance, validated_data):
+        for attr, value in validated_data.items():
+            if attr == 'password':
+                instance.set_password(value)
+            else:
+                setattr(instance, attr, value)
+        instance.save()
+        return instance
 
 
 
@@ -48,7 +64,14 @@ class UsuarioListSerializer(serializers.ModelSerializer):
             'last_name', 'segundo_apellido', 'last_name', 'email', 
             'correo_alternativo', 'celular', 'telefono_casa', 'telefono_trabajo', 
             'fecha_nacimiento', 'sexo', 'nacionalidad', 'estado_civil', 'foto', 'username', 'password')
-        
+    
+    def create(self, validated_data):
+        password = validated_data.pop('password', None)
+        instance = self.Meta.model(**validated_data)
+        if password is not None:
+            instance.set_password(password)
+        instance.save()
+        return instance
 
 # Todo menos el username (no se debe "re-poner")
 class UsuarioDetailSerializer(serializers.ModelSerializer):
@@ -115,6 +138,8 @@ class EstudianteDetailSerializer(serializers.ModelSerializer):
 
         estudiante_usuario = Usuario.objects.get(cedula=usuario['cedula'])
         estudiante_usuario.first_name = usuario['first_name']
+        if(estudiante_usuario.password != usuario['password']):
+            estudiante_usuario.set_password(usuario['password'])
         estudiante_usuario.segundo_nombre = usuario['segundo_nombre']
         estudiante_usuario.last_name = usuario['last_name']
         estudiante_usuario.segundo_apellido = usuario['segundo_apellido']
@@ -129,6 +154,7 @@ class EstudianteDetailSerializer(serializers.ModelSerializer):
         estudiante_usuario.estado_civil = usuario['estado_civil']
         if(usuario.get('foto')):
             estudiante_usuario.foto = usuario['foto']
+
         estudiante_usuario.save()
 
         return instance
@@ -190,6 +216,8 @@ class DocenteDetailSerializer(serializers.ModelSerializer):
         usuario = validated_data.get('usuario')
 
         docente_usuario = Usuario.objects.get(cedula=usuario['cedula'])
+        if(docente_usuario.password != usuario['password']):
+            docente_usuario.set_password(usuario['password'])
         docente_usuario.first_name = usuario['first_name']
         docente_usuario.segundo_nombre = usuario['segundo_nombre']
         docente_usuario.last_name = usuario['last_name']
@@ -243,6 +271,9 @@ class AdministrativoDetailSerializer(serializers.ModelSerializer):
         usuario = validated_data.get('usuario')
 
         administrativo_usuario = Usuario.objects.get(cedula=usuario['cedula'])
+        
+        if(administrativo_usuario.password != usuario['password']):
+            administrativo_usuario.set_password(usuario['password'])
         administrativo_usuario.first_name = usuario['first_name']
         administrativo_usuario.segundo_nombre = usuario['segundo_nombre']
         administrativo_usuario.last_name = usuario['last_name']

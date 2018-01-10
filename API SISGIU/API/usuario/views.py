@@ -1,5 +1,14 @@
 from django.shortcuts import render
 
+from rest_framework.permissions import (
+    AllowAny,
+    IsAdminUser,
+    IsAuthenticated,
+    IsAuthenticatedOrReadOnly
+    )
+
+from .permissions import isOwnerOrReadOnly
+
 from usuario.models import (
     Usuario,
     Estudiante,
@@ -65,11 +74,13 @@ class EstudianteDetailAPIView(RetrieveAPIView):
 class EstudianteUpdateAPIView(RetrieveUpdateAPIView):
     queryset = Estudiante.objects.all()
     serializer_class = EstudianteDetailSerializer
+    permission_classes = [IsAuthenticatedOrReadOnly, isOwnerOrReadOnly]
     lookup_field = 'usuario__cedula'
 
 class EstudianteDeleteAPIView(DestroyAPIView):
     queryset = Estudiante.objects.all()
     serializer_class = EstudianteDetailSerializer
+    permission_classes = [IsAdminUser]
     lookup_field = 'usuario__cedula'
 
 
@@ -105,11 +116,13 @@ class DocenteDetailAPIView(RetrieveAPIView):
 class DocenteUpdateAPIView(RetrieveUpdateAPIView):
     queryset = PersonalDocente.objects.all()
     serializer_class = DocenteDetailSerializer
+    permission_classes = [IsAuthenticatedOrReadOnly, isOwnerOrReadOnly]
     lookup_field = 'usuario__cedula'
 
 class DocenteDeleteAPIView(DestroyAPIView):
     queryset = PersonalDocente.objects.all()
     serializer_class = DocenteDetailSerializer
+    permission_classes = [IsAdminUser]
     lookup_field = 'usuario__cedula'
 
 
@@ -129,9 +142,11 @@ class AdministrativoDetailAPIView(RetrieveAPIView):
 class AdministrativoUpdateAPIView(RetrieveUpdateAPIView):
     queryset = PersonalAdministrativo.objects.all()
     serializer_class = AdministrativoDetailSerializer
+    permission_classes = [IsAuthenticatedOrReadOnly, isOwnerOrReadOnly]
     lookup_field = 'usuario__cedula'
 
 class AdministrativoDeleteAPIView(DestroyAPIView):
     queryset = PersonalAdministrativo.objects.all()
     serializer_class = AdministrativoDetailSerializer
+    permission_classes = [IsAdminUser]
     lookup_field = 'usuario__cedula'

@@ -9,8 +9,6 @@ from asignatura.views import (
 	AsignaturaDetailAPIView,
 	AsignaturaUpdateAPIView,
 	AsignaturaDeleteAPIView,
-
-
 	)
 
 urlpatterns = format_suffix_patterns([

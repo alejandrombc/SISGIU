@@ -4,6 +4,7 @@ from django.conf.urls import url, include
 from usuario import views
 from asignatura import views
 from tramite import views
+from periodo import views
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns,static
 from django.conf import settings
 from rest_framework_jwt.views import refresh_jwt_token
@@ -14,6 +15,7 @@ urlpatterns = [
     url(r'^', include('usuario.urls')),
     url(r'^', include('asignatura.urls')),
     url(r'^', include('tramite.urls')),
+    url(r'^', include('periodo.urls')),
     url(r'^api-auth/', include('rest_auth.urls' )),
 
     # url(r'^', include('rest_auth.urls')),
