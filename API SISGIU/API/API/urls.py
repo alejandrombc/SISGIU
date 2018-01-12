@@ -16,6 +16,7 @@ urlpatterns = [
     url(r'^', include('asignatura.urls')),
     url(r'^', include('tramite.urls')),
     url(r'^', include('periodo.urls')),
+    url(r'^', include('relacion.urls')),
     url(r'^api-auth/', include('rest_auth.urls' )),
 
     # url(r'^', include('rest_auth.urls')),
