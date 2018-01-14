@@ -1,0 +1,85 @@
+
+//Creacion de usuarios
+{
+    "is_superuser": false,
+    "cedula": 10808934,
+    "first_name": "Maria",
+    "last_name": "Jimenez",
+    "email": "mjimenez@gmail.com",
+    "celular": "04122542554",
+    "telefono_casa": "04122542554",
+    "telefono_trabajo": "04122542554",
+    "fecha_nacimiento": "1990-03-12",
+    "sexo": "F",
+    "nacionalidad": "Venezolana",
+    "estado_civil": "Casada",
+    "username": "mjimenez@gmail.com",
+    "password": "123456"
+}
+
+// Crecion de Docente (no sirve)
+{
+	"usuario": 
+		{
+		    "is_superuser": false,
+		    "cedula": 10808934,
+		    "first_name": "Maria",
+		    "last_name": "Jimenez",
+		    "email": "mjimenez@gmail.com",
+		    "celular": "04122542554",
+		    "telefono_casa": "04122542554",
+		    "telefono_trabajo": "04122542554",
+		    "fecha_nacimiento": "1990-03-12",
+		    "sexo": "F",
+		    "nacionalidad": "Venezolana",
+		    "estado_civil": "Casada",
+		    "username": "mjimenez@gmail.com",
+		    "password": "123456"
+		},
+	"direccion": "Caurimare",
+	"coordinador": false
+}
+
+// Docente Asignatura
+
+{
+	"docente": 1,
+	"asignatura": 1,
+	"periodo": 1,
+	"aula": 10,
+	"horario_dia": "0",
+	"horario_hora": "9:00 - 11:00"
+
+}
+
+// Estudiante Asignatura
+
+{
+	"periodo_estudiante": 1,
+	"asignatura": 1,
+	"nota_definitiva": 0
+}
+
+
+// Estudiante Tramite
+{
+	"estudiante": 2,
+	"tramite": 1,
+	"fecha_creacion": "2017-12-03",
+	"fecha_tope": "2017-12-10",
+	"estado_tramite": 1,
+	"mensaje": "cualquier cosa"
+
+}
+
+// AsignaturaTipoPostgrado
+
+{
+	"asignatura": 1,
+	"tipo_postgrado": 1 
+}
+
+// TipoPostgrado
+{
+	"tipo": "Maestria"
+}

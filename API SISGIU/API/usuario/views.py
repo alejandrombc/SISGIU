@@ -4,10 +4,11 @@ from rest_framework.permissions import (
     AllowAny,
     IsAdminUser,
     IsAuthenticated,
-    IsAuthenticatedOrReadOnly
+    IsAuthenticatedOrReadOnly,
+    
     )
 
-from .permissions import isOwnerOrReadOnly
+from .permissions import isOwnerOrReadOnly, onlyListNotCreate
 
 from usuario.models import (
     Usuario,
@@ -42,21 +43,25 @@ Usuario
 class AdministradorListCreateAPIView(ListCreateAPIView):
     queryset = Usuario.objects.all()
     serializer_class = AdministradorListSerializer
+    permission_classes = [IsAdminUser]
 
 class AdministradorDetailAPIView(RetrieveAPIView):
     queryset = Usuario.objects.all()
     serializer_class = AdministradorDetailSerializer
     lookup_field = 'cedula'
+    permission_classes = [IsAdminUser]
 
 class AdministradorUpdateAPIView(RetrieveUpdateAPIView):
     queryset = Usuario.objects.all()
     serializer_class = AdministradorDetailSerializer
     lookup_field = 'cedula'
+    permission_classes = [IsAdminUser]
 
 class AdministradorDeleteAPIView(DestroyAPIView):
     queryset = Usuario.objects.all()
     serializer_class = AdministradorDetailSerializer
     lookup_field = 'cedula'
+    permission_classes = [IsAdminUser]
 
 
 """
@@ -65,11 +70,13 @@ Estudiante
 class EstudianteListCreateAPIView(ListCreateAPIView):
     queryset = Estudiante.objects.all()
     serializer_class = EstudianteSerializer
+    permission_classes = [IsAuthenticated, onlyListNotCreate]
 
 class EstudianteDetailAPIView(RetrieveAPIView):
     queryset = Estudiante.objects.all()
     serializer_class = EstudianteDetailSerializer
     lookup_field = 'usuario__cedula'
+    permission_classes = [IsAuthenticated]
 
 class EstudianteUpdateAPIView(RetrieveUpdateAPIView):
     queryset = Estudiante.objects.all()
@@ -91,6 +98,8 @@ TipoPostgrado
 class TipoPostgradoListCreateAPIView(ListCreateAPIView):
     queryset = TipoPostgrado.objects.all()
     serializer_class = TipoPostgradoSerializer
+    permission_classes = [onlyListNotCreate, IsAuthenticated]
+    print('fjsdkjnd')
 
 
 """

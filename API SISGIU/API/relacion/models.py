@@ -14,14 +14,24 @@ class PeriodoEstudiante(models.Model):
 	pagado = models.BooleanField()
 
 
+DIAS_DE_LA_SEMANA = (
+    ('0', 'lunes'),
+    ('1', 'martes'),
+    ('2', 'miercoles'),
+    ('3', 'jueves'),
+    ('4', 'viernes'),
+    ('5', 'sabado'),
+    ('6', 'domingo'),
+)
+
 # Tabla intermedia entre Docente y Asignatura
 class DocenteAsignatura(models.Model):
 	docente = models.ForeignKey(PersonalDocente, on_delete=models.CASCADE)
 	asignatura = models.ForeignKey(Asignatura, on_delete=models.CASCADE)
 	periodo = models.ForeignKey(Periodo, on_delete=models.CASCADE)
 	aula = models.IntegerField()
-	horario_dia = models.CharField(max_length=10)
-	horario_hora = models.TimeField()
+	horario_dia = models.CharField(max_length=1, choices=DIAS_DE_LA_SEMANA)
+	horario_hora = models.CharField(max_length=15)
 
 
 # Tabla intermedia entre Estudiante y Asignatura
