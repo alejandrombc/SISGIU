@@ -5,10 +5,12 @@ from rest_framework.permissions import (
     IsAdminUser,
     IsAuthenticated,
     IsAuthenticatedOrReadOnly,
-    
     )
 
-from .permissions import isOwnerOrReadOnly, onlyListNotCreate
+from .permissions import (
+    isOwnerOrReadOnly, 
+    IsListOrCreate,
+    )
 
 from usuario.models import (
     Usuario,
@@ -70,7 +72,7 @@ Estudiante
 class EstudianteListCreateAPIView(ListCreateAPIView):
     queryset = Estudiante.objects.all()
     serializer_class = EstudianteSerializer
-    permission_classes = [IsAuthenticated, onlyListNotCreate]
+    permission_classes = [IsAuthenticated, IsListOrCreate]
 
 class EstudianteDetailAPIView(RetrieveAPIView):
     queryset = Estudiante.objects.all()
@@ -98,8 +100,13 @@ TipoPostgrado
 class TipoPostgradoListCreateAPIView(ListCreateAPIView):
     queryset = TipoPostgrado.objects.all()
     serializer_class = TipoPostgradoSerializer
-    permission_classes = [onlyListNotCreate, IsAuthenticated]
-    print('fjsdkjnd')
+    permission_classes = [IsListOrCreate, IsAuthenticated]
+
+
+class TipoPostgradoDeleteAPIView(DestroyAPIView):
+    queryset = TipoPostgrado.objects.all()
+    serializer_class = TipoPostgradoSerializer
+    permission_classes = [IsAdminUser]
 
 
 """
@@ -108,6 +115,16 @@ EstadoEstudiante
 class EstadoEstudianteListCreateAPIView(ListCreateAPIView):
     queryset = EstadoEstudiante.objects.all()
     serializer_class = EstadoEstudianteSerializer
+    permission_classes = [IsListOrCreate, IsAuthenticated]
+
+
+class EstadoEstudianteDeleteAPIView(DestroyAPIView):
+    queryset = EstadoEstudiante.objects.all()
+    serializer_class = EstadoEstudianteSerializer
+    permission_classes = [IsAdminUser]
+
+
+
 
 
 """
@@ -116,10 +133,12 @@ Docente
 class DocenteListCreateAPIView(ListCreateAPIView):
     queryset = PersonalDocente.objects.all()
     serializer_class = DocenteSerializer
+    permission_classes = [IsAuthenticated, IsListOrCreate]
 
 class DocenteDetailAPIView(RetrieveAPIView):
     queryset = PersonalDocente.objects.all()
     serializer_class = DocenteDetailSerializer
+    permission_classes = [IsAuthenticated]
     lookup_field = 'usuario__cedula'
 
 class DocenteUpdateAPIView(RetrieveUpdateAPIView):
@@ -142,10 +161,12 @@ Personal Administrativo
 class AdministrativoListCreateAPIView(ListCreateAPIView):
     queryset = PersonalAdministrativo.objects.all()
     serializer_class = AdministrativoSerializer
+    permission_classes = [IsAuthenticated, IsListOrCreate]
 
 class AdministrativoDetailAPIView(RetrieveAPIView):
     queryset = PersonalAdministrativo.objects.all()
     serializer_class = AdministrativoDetailSerializer
+    permission_classes = [IsAuthenticated]
     lookup_field = 'usuario__cedula'
 
 class AdministrativoUpdateAPIView(RetrieveUpdateAPIView):

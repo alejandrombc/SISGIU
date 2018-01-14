@@ -6,8 +6,10 @@ from usuario.views import (
 	AdministradorUpdateAPIView,
 	AdministradorDeleteAPIView,
 	TipoPostgradoListCreateAPIView,
+    TipoPostgradoDeleteAPIView,
 	EstadoEstudianteListCreateAPIView,
     EstudianteListCreateAPIView,
+    EstadoEstudianteDeleteAPIView,
 	EstudianteDetailAPIView,
 	EstudianteUpdateAPIView,
     EstudianteDeleteAPIView,
@@ -48,10 +50,14 @@ urlpatterns = format_suffix_patterns([
     url(r'^api/administrativo/(?P<usuario__cedula>\d+)/edit/$', AdministrativoUpdateAPIView.as_view(), name='administrativo-update'),
     url(r'^api/administrativo/(?P<usuario__cedula>\d+)/delete/$', AdministrativoDeleteAPIView.as_view(), name='administrativo-delete'),
 
-
+    #Tipo Postgrado
     url(r'^api/tipoPostgrado/$', TipoPostgradoListCreateAPIView.as_view(), name='tipoPostgrado-list-create'),
-    
+    url(r'^api/tipoPostgrado/(?P<pk>\d+)/delete/$', TipoPostgradoDeleteAPIView.as_view(), name='tipoPostgrado-delete'),
+
+
+    #Estado Estudiante
     url(r'^api/estadoEstudiante/$', EstadoEstudianteListCreateAPIView.as_view(), name='estadoEstudiante-list-create'),
+    url(r'^api/estadoEstudiante/(?P<pk>\d+)/delete/$', EstadoEstudianteDeleteAPIView.as_view(), name='estadoEstudiante-delete'),
 
 
 ])
