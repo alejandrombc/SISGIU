@@ -7,7 +7,6 @@ from relacion.models import (
 	AsignaturaTipoPostgrado,
 	)
 
-
 """
 Serializer de Periodo Estudiante
 """
@@ -21,6 +20,11 @@ class PeriodoEstudianteDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = PeriodoEstudiante
         fields = ('__all__')
+
+    def get_object(self):
+        queryset = self.get_queryset()             # Get the base queryset
+        print("##################")
+        print(queryset)
 
 
 """

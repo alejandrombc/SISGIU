@@ -1,5 +1,5 @@
 from rest_framework.permissions import BasePermission
-from .models import Asignatura
+from usuario.models import Usuario
 
 class IsListOrCreate(BasePermission):
 	message = "No posee permiso para realizar esta accion."
