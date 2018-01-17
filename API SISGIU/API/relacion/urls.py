@@ -30,14 +30,15 @@ urlpatterns = format_suffix_patterns([
 
 	# PeriodoEstudiante
     url(r'^api/periodoEstudiante/$', PeriodoEstudianteListCreateAPIView.as_view(), name='PeriodoEstudiante-list-create'),
-    url(r'^api/periodoEstudiante/(?P<estudiante__usuario__cedula>\d+)/$', PeriodoEstudianteDetailAPIView.as_view(), name='PeriodoEstudiante-detail'),
+    url(r'^api/periodoEstudiante/(?P<cedula>[0-9]{8})/periodo/(?P<periodo>[\w\-]+)/$', PeriodoEstudianteDetailAPIView.get_periodo, name='PeriodoEstudiante-detail'),
     url(r'^api/periodoEstudiante/(?P<pk>\d+)/edit/$', PeriodoEstudianteUpdateAPIView.as_view(), name='PeriodoEstudiante-update'),
     url(r'^api/periodoEstudiante/(?P<pk>\d+)/delete/$', PeriodoEstudianteDeleteAPIView.as_view(), name='PeriodoEstudiante-delete'),
 
    
     # DocenteAsignatura
     url(r'^api/docenteAsignatura/$', DocenteAsignaturaListCreateAPIView.as_view(), name='DocenteAsignatura-list-create'),
-    url(r'^api/docenteAsignatura/(?P<estudiante__usuario__cedula>\d+)/$', DocenteAsignaturaDetailAPIView.as_view(), name='DocenteAsignatura-detail'),
+    url(r'^api/docenteAsignatura/(?P<cedula>[0-9]{8})/periodo/(?P<periodo>[\w\-]+)/$', DocenteAsignaturaDetailAPIView.get_periodo, name='DocenteAsignatura-detail'),
+    url(r'^api/docenteAsignatura/(?P<asignatura>[\w\-]+)/periodo/(?P<periodo>[\w\-]+)/$', DocenteAsignaturaDetailAPIView.get_docente, name='DocenteAsignatura-detail'),
     url(r'^api/docenteAsignatura/(?P<pk>\d+)/edit/$', DocenteAsignaturaUpdateAPIView.as_view(), name='DocenteAsignatura-update'),
     url(r'^api/docenteAsignatura/(?P<pk>\d+)/delete/$', DocenteAsignaturaDeleteAPIView.as_view(), name='DocenteAsignatura-delete'),
 

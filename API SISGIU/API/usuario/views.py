@@ -1,4 +1,9 @@
 from django.shortcuts import render
+from django.http import HttpResponse
+from usuario.utils import render_to_pdf, date_handler
+import json
+
+from bson import json_util
 
 from rest_framework.permissions import (
     AllowAny,
@@ -39,6 +44,7 @@ from rest_framework.generics import (
     DestroyAPIView,
 	)
 
+
 """
 Usuario
 """
@@ -52,6 +58,15 @@ class AdministradorDetailAPIView(RetrieveAPIView):
     serializer_class = AdministradorDetailSerializer
     lookup_field = 'cedula'
     permission_classes = [IsAdminUser]
+
+    def get_usr_id(request, id_usr):
+        if(request.user.is_anonymous == False):
+            member = Usuario.objects.filter(id=id_usr)
+            list_result = [entry for entry in member.values()]
+            return HttpResponse(json.dumps(list_result, default=date_handler), content_type="application/json")
+        response_data = {}
+        response_data['error'] = 'No tiene privilegios para realizar esta accion'      
+        return HttpResponse(json.dumps(response_data), content_type="application/json")
 
 class AdministradorUpdateAPIView(RetrieveUpdateAPIView):
     queryset = Usuario.objects.all()
@@ -141,6 +156,7 @@ class DocenteDetailAPIView(RetrieveAPIView):
     permission_classes = [IsAuthenticated]
     lookup_field = 'usuario__cedula'
 
+
 class DocenteUpdateAPIView(RetrieveUpdateAPIView):
     queryset = PersonalDocente.objects.all()
     serializer_class = DocenteDetailSerializer
@@ -180,3 +196,20 @@ class AdministrativoDeleteAPIView(DestroyAPIView):
     serializer_class = AdministrativoDetailSerializer
     permission_classes = [IsAdminUser]
     lookup_field = 'usuario__cedula'
+
+
+
+class Reportes():
+    def report_test(request, cedula):
+        if(request.user.is_anonymous != False):
+            member = Usuario.objects.get(username=request.user)
+            if(member.is_superuser == True or cedula == str(request.user.cedula)):
+                content = 'attachment; filename="constancia_'+str(cedula)+'.pdf"'
+                member = Usuario.objects.get(cedula=cedula)
+                pdf = render_to_pdf('constancia.html', member.__dict__)
+                pdf['Content-Disposition'] = content
+                return HttpResponse(pdf, content_type='application/pdf')
+
+        response_data = {}
+        response_data['error'] = 'No tiene privilegios para realizar esta accion'      
+        return HttpResponse(json.dumps(response_data), content_type="application/json")

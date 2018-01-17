@@ -1,4 +1,6 @@
 from django.shortcuts import render
+from django.http import HttpResponse
+import json
 from relacion.models import (
 	PeriodoEstudiante,
 	DocenteAsignatura,
@@ -52,11 +54,15 @@ class PeriodoEstudianteListCreateAPIView(ListCreateAPIView):
     permission_classes = [EsEstudianteOAdministrador]
 
 
-class PeriodoEstudianteDetailAPIView(RetrieveAPIView):
-    queryset = PeriodoEstudiante.objects.all()
-    serializer_class = PeriodoEstudianteDetailSerializer
-    lookup_field = 'estudiante__usuario__cedula'
-    permission_classes = [IsAuthenticated]
+class PeriodoEstudianteDetailAPIView():
+    def get_periodo(request, cedula, periodo):
+        if(request.user.is_anonymous == False):
+            member = PeriodoEstudiante.objects.filter(estudiante__usuario__cedula=cedula , periodo__estado_periodo__estado=periodo)
+            list_result = [entry for entry in member.values()]
+            return HttpResponse(json.dumps(list_result), content_type="application/json")
+        response_data = {}
+        response_data['error'] = 'No tiene privilegios para realizar esta accion'      
+        return HttpResponse(json.dumps(response_data), content_type="application/json")
 
 class PeriodoEstudianteUpdateAPIView(RetrieveUpdateAPIView):
     queryset = PeriodoEstudiante.objects.all()
@@ -78,11 +84,24 @@ class DocenteAsignaturaListCreateAPIView(ListCreateAPIView):
     serializer_class = DocenteAsignaturaListSerializer
     permission_classes = [EsAdministrativoOAdministrador]
 
-class DocenteAsignaturaDetailAPIView(RetrieveAPIView):
-    queryset = DocenteAsignatura.objects.all()
-    serializer_class = DocenteAsignaturaDetailSerializer
-    lookup_field = 'estudiante__usuario__cedula'
-    permission_classes = [IsAuthenticated]
+class DocenteAsignaturaDetailAPIView():
+    def get_periodo(request, cedula, periodo):
+        if(request.user.is_anonymous == False):
+            member = DocenteAsignatura.objects.filter(docente__usuario__cedula=cedula , periodo__estado_periodo__estado=periodo)
+            list_result = [entry for entry in member.values()]
+            return HttpResponse(json.dumps(list_result), content_type="application/json")
+        response_data = {}
+        response_data['error'] = 'No tiene privilegios para realizar esta accion'      
+        return HttpResponse(json.dumps(response_data), content_type="application/json")
+
+    def get_docente(request, asignatura, periodo):
+        if(request.user.is_anonymous == False):
+            member = DocenteAsignatura.objects.filter(asignatura__codigo=asignatura , periodo__estado_periodo__estado=periodo)
+            list_result = [entry for entry in member.values()]
+            return HttpResponse(json.dumps(list_result), content_type="application/json")
+        response_data = {}
+        response_data['error'] = 'No tiene privilegios para realizar esta accion'      
+        return HttpResponse(json.dumps(response_data), content_type="application/json")
 
 class DocenteAsignaturaUpdateAPIView(RetrieveUpdateAPIView):
     queryset = DocenteAsignatura.objects.all()
