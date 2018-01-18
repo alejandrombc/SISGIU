@@ -7,6 +7,7 @@ from asignatura.models import (
 	)
 from relacion.models import (
     DocenteAsignatura,
+    EstudianteAsignatura,
     )
 from asignatura.serializers import (
 	TipoAsignaturaListSerializer,
@@ -89,6 +90,24 @@ class AsignaturaListCreateAPIView(ListCreateAPIView):
             print('la lista de asignaturas es = ' + str(lista_asignaturas))
 
             print('##############\n\n')
+            return HttpResponse(json.dumps(lista_asignaturas), content_type="application/json")
+        response_data = {}
+        response_data['error'] = 'No tiene privilegios para realizar esta accion'      
+        return HttpResponse(json.dumps(response_data), content_type="application/json")
+
+    def get_asignaturas_por_estudiante(request, cedula):
+        if (request.user.is_anonymous == False):
+            member = EstudianteAsignatura.objects.filter(periodo_estudiante__estudiante__usuario__cedula=cedula , periodo_estudiante__periodo__estado_periodo__estado="activo").values()
+
+            lista_estudiante_asignatura = [entry for entry in member]
+
+            lista_asignaturas = []
+
+            for estudiante_asignatura in lista_estudiante_asignatura:
+                asignatura = Asignatura.objects.filter(id=estudiante_asignatura['asignatura_id']).values()[0]
+
+                lista_asignaturas.append(asignatura)
+
             return HttpResponse(json.dumps(lista_asignaturas), content_type="application/json")
         response_data = {}
         response_data['error'] = 'No tiene privilegios para realizar esta accion'      
