@@ -66,5 +66,8 @@ urlpatterns = format_suffix_patterns([
     url(r'^api/reporte/(?P<cedula>[0-9]{8})/$', Reportes.report_test, name='reportes'),
 
 
+    #Lista de estudiantes que cursan una asignatura
+    url(r'^api/estudiantes/asignatura/(?P<codigo_asignatura>\d+)/$', EstudianteDetailAPIView.get_estudiantes_asignatura, name='estudiantes-asignatura'),
+
 
 ])

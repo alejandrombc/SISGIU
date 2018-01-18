@@ -37,6 +37,10 @@ from usuario.serializers import (
     AdministrativoSerializer,
     AdministrativoDetailSerializer
     )
+from relacion.models import (
+    EstudianteAsignatura,
+    PeriodoEstudiante,
+    )
 from rest_framework.generics import (
 	ListCreateAPIView,
 	RetrieveAPIView,
@@ -94,6 +98,66 @@ class EstudianteDetailAPIView(RetrieveAPIView):
     serializer_class = EstudianteDetailSerializer
     lookup_field = 'usuario__cedula'
     permission_classes = [IsAuthenticated]
+
+    # def get_estudiante_asignatura(request, codigo_asignatura):
+
+
+    def get_estudiantes_asignatura(request, codigo_asignatura):
+        if (request.user.is_anonymous == False):
+            member = EstudianteAsignatura.objects.filter(asignatura__codigo=codigo_asignatura, periodo_estudiante__periodo__estado_periodo__estado="activo").values()
+            
+            lista_estudiante_asignatura = [entry for entry in member]
+
+
+            """
+            print('\n\n###############')
+            print('la lista de estudiante_asignatura es = ' + str(lista_estudiante_asignatura))
+            print('\n')
+            """
+
+            lista_periodo_estudiante = []
+            lista_estudiantes = []
+
+            for estudiante_asignatura in lista_estudiante_asignatura:
+                periodo_estudiante = PeriodoEstudiante.objects.filter(id=estudiante_asignatura['periodo_estudiante_id']).values()[0]
+                estudiante = Usuario.objects.filter(id=periodo_estudiante['estudiante_id']).values()[0]
+                
+                estudiante_asignatura['periodo_estudiante'] = periodo_estudiante
+                estudiante_asignatura['estudiante'] = estudiante
+                
+                # periodo_estudiante['estudiante'] = estudiante
+
+                # lista_periodo_estudiante.append(periodo_estudiante)
+
+            for element in lista_estudiante_asignatura: 
+                del element['estudiante']['sexo'] 
+                del element['estudiante']['username'] 
+                del element['estudiante']['date_joined'] 
+                del element['estudiante']['last_login'] 
+                del element['estudiante']['correo_alternativo'] 
+                del element['estudiante']['is_active'] 
+                del element['estudiante']['is_staff'] 
+                del element['estudiante']['nacionalidad'] 
+                del element['estudiante']['foto'] 
+                del element['estudiante']['telefono_trabajo'] 
+                del element['estudiante']['password'] 
+                del element['estudiante']['estado_civil'] 
+                del element['estudiante']['celular'] 
+                del element['estudiante']['is_superuser'] 
+                del element['estudiante']['email'] 
+                del element['estudiante']['telefono_casa'] 
+                del element['estudiante']['fecha_nacimiento'] 
+
+            # print('--->' + str(lista_estudiante_asignatura))
+            # print('###############\n\n')
+
+            return HttpResponse(json.dumps(lista_estudiante_asignatura, default=date_handler), content_type="application/json")
+
+        response_data = {}
+        response_data['error'] = 'No tiene privilegios para realizar esta accion'      
+        return HttpResponse(json.dumps(response_data), content_type="application/json")
+
+
 
 class EstudianteUpdateAPIView(RetrieveUpdateAPIView):
     queryset = Estudiante.objects.all()

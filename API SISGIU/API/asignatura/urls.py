@@ -25,7 +25,7 @@ urlpatterns = format_suffix_patterns([
     url(r'^api/asignaturas/(?P<codigo>[0-9]{4})/edit/$', AsignaturaUpdateAPIView.as_view(), name='Asignatura-update'),
     url(r'^api/asignaturas/(?P<codigo>[0-9]{4})/delete/$', AsignaturaDeleteAPIView.as_view(), name='Asignatura-delete'),
 
-
-    url(r'^api/docentes/(?P<cedula>[0-9]{8})/asignaturas/$', AsignaturaListCreateAPIView.get_asignaturas_por_docente, name='asignaturas-por-docente'),
+    # Todas las asignaturas dictadas por un docente
+    url(r'^api/asignaturas/docente/(?P<cedula>[0-9]{8})/$', AsignaturaListCreateAPIView.get_asignaturas_por_docente, name='asignaturas-por-docente'),
 
 ])
