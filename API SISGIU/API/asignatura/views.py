@@ -99,13 +99,16 @@ class AsignaturaDetailAPIView(RetrieveAPIView):
     queryset = Asignatura.objects.all()
     serializer_class = AsignaturaDetailSerializer
     permission_classes = [IsAuthenticated]
+    lookup_field = 'codigo'
 
 class AsignaturaUpdateAPIView(RetrieveUpdateAPIView):
     queryset = Asignatura.objects.all()
     serializer_class = AsignaturaDetailSerializer
     permission_classes = [IsAdminUser]
+    lookup_field = 'codigo'
 
 class AsignaturaDeleteAPIView(DestroyAPIView):
     queryset = Asignatura.objects.all()
     serializer_class = AsignaturaDetailSerializer
     permission_classes = [IsAdminUser]
+    lookup_field = 'codigo'
