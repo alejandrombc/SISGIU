@@ -107,14 +107,6 @@ class EstudianteDetailAPIView(RetrieveAPIView):
             member = EstudianteAsignatura.objects.filter(asignatura__codigo=codigo_asignatura, periodo_estudiante__periodo__estado_periodo__estado="activo").values()
             
             lista_estudiante_asignatura = [entry for entry in member]
-
-
-            """
-            print('\n\n###############')
-            print('la lista de estudiante_asignatura es = ' + str(lista_estudiante_asignatura))
-            print('\n')
-            """
-
             lista_periodo_estudiante = []
             lista_estudiantes = []
 

@@ -29,7 +29,8 @@ from relacion.views import (
 urlpatterns = format_suffix_patterns([
 
 	# PeriodoEstudiante
-    url(r'^api/periodoEstudiante/$', PeriodoEstudianteListCreateAPIView.as_view(), name='PeriodoEstudiante-list-create'),
+    url(r'^api/periodoEstudiante/all/$', PeriodoEstudianteListCreateAPIView.as_view(), name='PeriodoEstudiante-list-create'),
+    url(r'^api/periodoEstudiante/$', PeriodoEstudianteListCreateAPIView.get_all_estudiantes, name='PeriodoEstudiante-list-all'),
     url(r'^api/periodoEstudiante/(?P<cedula>[0-9]{8})/periodo/(?P<periodo>[\w\-]+)/$', PeriodoEstudianteDetailAPIView.get_periodo, name='PeriodoEstudiante-detail'),
     url(r'^api/periodoEstudiante/(?P<pk>\d+)/edit/$', PeriodoEstudianteUpdateAPIView.as_view(), name='PeriodoEstudiante-update'),
     url(r'^api/periodoEstudiante/(?P<pk>\d+)/delete/$', PeriodoEstudianteDeleteAPIView.as_view(), name='PeriodoEstudiante-delete'),
@@ -37,6 +38,7 @@ urlpatterns = format_suffix_patterns([
    
     # DocenteAsignatura
     url(r'^api/docenteAsignatura/$', DocenteAsignaturaListCreateAPIView.as_view(), name='DocenteAsignatura-list-create'),
+    url(r'^api/docenteAsignatura/periodo/(?P<periodo>[\w\-]+)/$', DocenteAsignaturaDetailAPIView.get_all_docentes, name='DocenteAsignatura-detail'),
     url(r'^api/docenteAsignatura/(?P<cedula>[0-9]{8})/periodo/(?P<periodo>[\w\-]+)/$', DocenteAsignaturaDetailAPIView.get_periodo, name='DocenteAsignatura-detail'),
     url(r'^api/docenteAsignatura/(?P<asignatura>[\w\-]+)/periodo/(?P<periodo>[\w\-]+)/$', DocenteAsignaturaDetailAPIView.get_docente, name='DocenteAsignatura-detail'),
     url(r'^api/docenteAsignatura/(?P<pk>\d+)/edit/$', DocenteAsignaturaUpdateAPIView.as_view(), name='DocenteAsignatura-update'),
@@ -51,7 +53,8 @@ urlpatterns = format_suffix_patterns([
 
 
     # EstudianteTramite
-    url(r'^api/estudianteTramite/$', EstudianteTramiteListCreateAPIView.as_view(), name='EstudianteTramite-list-create'),
+    url(r'^api/estudianteTramite/all$', EstudianteTramiteListCreateAPIView.as_view(), name='EstudianteTramite-list-create'),
+    url(r'^api/estudianteTramite/$', EstudianteTramiteListCreateAPIView.get_tramites, name='EstudianteTramite-list-total'),
     url(r'^api/estudianteTramite/(?P<estudiante__usuario__cedula>\d+)/$', EstudianteTramiteDetailAPIView.as_view(), name='EstudianteTramite-detail'),
     url(r'^api/estudianteTramite/(?P<pk>\d+)/edit/$', EstudianteTramiteUpdateAPIView.as_view(), name='EstudianteTramite-update'),
     url(r'^api/estudianteTramite/(?P<pk>\d+)/delete/$', EstudianteTramiteDeleteAPIView.as_view(), name='EstudianteTramite-delete'),
