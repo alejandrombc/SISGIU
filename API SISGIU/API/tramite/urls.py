@@ -28,4 +28,8 @@ urlpatterns = format_suffix_patterns([
     url(r'^api/tramites/(?P<pk>\d+)/edit/$', TramiteUpdateAPIView.as_view(), name='Tramite-update'),
     url(r'^api/tramites/(?P<pk>\d+)/delete/$', TramiteDeleteAPIView.as_view(), name='Tramite-delete'),
 
+    # Tramites por un estudiante
+    url(r'^api/tramites/estudiante/(?P<cedula>[0-9]{8})/$', TramiteListCreateAPIView.get_tramites_por_estudiante, name='tramite-por-estudiante'),
+
+
 ])

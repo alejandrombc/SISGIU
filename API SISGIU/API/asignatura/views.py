@@ -5,9 +5,15 @@ from asignatura.models import (
 	TipoAsignatura,
 	Asignatura,
 	)
+
+from usuario.models import(
+    TipoPostgrado
+    )
+
 from relacion.models import (
     DocenteAsignatura,
     EstudianteAsignatura,
+    AsignaturaTipoPostgrado
     )
 from asignatura.serializers import (
 	TipoAsignaturaListSerializer,
@@ -77,7 +83,6 @@ class AsignaturaListCreateAPIView(ListCreateAPIView):
             member = member.values()
             lista_docente_asignatura = [entry for entry in member]  # converts ValuesQuerySet into Python list
             
-            print('\n\n###############')
         
             # print(lista_docente_asignatura)
             # print('\n')
@@ -85,11 +90,18 @@ class AsignaturaListCreateAPIView(ListCreateAPIView):
 
             for docente_asignatura in lista_docente_asignatura:
                 asignatura = Asignatura.objects.filter(id=docente_asignatura['asignatura_id']).values()[0]
+                tipo_asignatura = TipoAsignatura.objects.filter(id=asignatura['id']).values()[0]
+                asig_tipo = AsignaturaTipoPostgrado.objects.filter(asignatura_id=asignatura['id']).values()[0]
+                tipo_postgrado = TipoPostgrado.objects.filter(id=asig_tipo['tipo_postgrado_id']).values()[0]
+
+
+                asignatura['tipo_asignatura'] = tipo_asignatura['nombre']
+                asignatura['tipo_postgrado'] = tipo_postgrado['tipo']
+
+                del asignatura['tipo_asignatura_id']
+                del asignatura['tipo_postgrado_id']
                 lista_asignaturas.append(asignatura)
 
-            print('la lista de asignaturas es = ' + str(lista_asignaturas))
-
-            print('##############\n\n')
             return HttpResponse(json.dumps(lista_asignaturas), content_type="application/json")
         response_data = {}
         response_data['error'] = 'No tiene privilegios para realizar esta accion'      
@@ -105,6 +117,16 @@ class AsignaturaListCreateAPIView(ListCreateAPIView):
 
             for estudiante_asignatura in lista_estudiante_asignatura:
                 asignatura = Asignatura.objects.filter(id=estudiante_asignatura['asignatura_id']).values()[0]
+                tipo_asignatura = TipoAsignatura.objects.filter(id=asignatura['id']).values()[0]
+                asig_tipo = AsignaturaTipoPostgrado.objects.filter(asignatura_id=asignatura['id']).values()[0]
+                tipo_postgrado = TipoPostgrado.objects.filter(id=asig_tipo['tipo_postgrado_id']).values()[0]
+
+
+                asignatura['tipo_asignatura'] = tipo_asignatura['nombre']
+                asignatura['tipo_postgrado'] = tipo_postgrado['tipo']
+
+                del asignatura['tipo_asignatura_id']
+                del asignatura['tipo_postgrado_id']
 
                 lista_asignaturas.append(asignatura)
 
