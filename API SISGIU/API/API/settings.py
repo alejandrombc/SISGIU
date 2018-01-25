@@ -34,6 +34,7 @@ MEDIA_ROOT = (
     BASE_DIR+"/media"
 )
 
+CORS_ORIGIN_ALLOW_ALL = True
 
 MEDIA_URL = '/media/'
 
@@ -57,9 +58,11 @@ INSTALLED_APPS = [
     'allauth',
     'allauth.account',
     'rest_auth.registration',
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
