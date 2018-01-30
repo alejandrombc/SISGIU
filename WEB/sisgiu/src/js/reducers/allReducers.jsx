@@ -1,4 +1,5 @@
 import {combineReducers} from 'redux';
+import ActiveUserReducer from './reducer-active-user'
 
 /*
  * Combinamos todos los reducers en un solo objeto para enviar al store
@@ -7,7 +8,7 @@ import {combineReducers} from 'redux';
 
 
 const allReducers = combineReducers({
-
+	activeUser: ActiveUserReducer,
 });
 
 
