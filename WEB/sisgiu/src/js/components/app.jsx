@@ -1,29 +1,39 @@
+// Dependencies
 import React from 'react';
+import { connect } from 'react-redux';
+import {BrowserRouter, Route, Redirect, Switch } from 'react-router-dom';
+
+// Components
 import Header from './header'
 import Login from './login'
 import Footer from './footer'
-// import UserList from '../containers/user-list';
-// import UserDetails from '../containers/user-detail';
-import { connect } from 'react-redux';
-import {Route, Redirect, Switch } from 'react-router-dom';
-require('../../css/App.css');
+import Page404 from './page404';
+import Inicio from '../containers/inicio';
 
 
 class App extends React.Component {
 	render() {
 		return(
-			<div>
+			<BrowserRouter>
+				<div>
+					<Header />
+					<hr /> 
 
-				
+					<Switch>
+					   	<Route exact path="/" component={Inicio} ></Route>
+					   	<Route exact path="/inicio" component={Inicio} ></Route>
+					   	<Route exact path="/login" component={Login} ></Route>
+					   	<Route component={Page404} ></Route>
+					</Switch>
 
+					{/*
+					  {this.props.children}
+					*/}
 
-				<Header />
-				<hr /> 
-				{/*Esto va a representar todo lo variante de la pagina*/}
-				{this.props.children}
-				<hr/>
-				<Footer />
-			</div>
+					<hr/>
+					<Footer />
+				</div>
+			</BrowserRouter>
 		);
 	}
 };
