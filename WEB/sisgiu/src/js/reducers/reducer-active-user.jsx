@@ -1,5 +1,7 @@
 let user = localStorage.getItem('user_token');
-const initialState = user ? { loggedIn: true, user } : {};
+let modulo = localStorage.getItem('modulo');
+
+const initialState = user ? { loggedIn: true, modulo: modulo, user } : {};
 
 export default function (state=initialState, action) {
 
@@ -9,6 +11,7 @@ switch (action.type){
 	return {
 		loggedIn: true,
 		bad_input: false,
+		modulo: modulo,
 		user: action.user
 	};
 

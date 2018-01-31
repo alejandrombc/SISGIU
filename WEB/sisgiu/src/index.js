@@ -10,10 +10,8 @@ import {createLogger} from 'redux-logger';
 import allReducers from './js/reducers/allReducers.jsx';
 import App from './js/components/app';
 import registerServiceWorker from './js/registerServiceWorker';
-// import createBrowserHistory from 'history/createBrowserHistory'
 
 
-// const history = createBrowserHistory();
 
 const logger = createLogger();
 const store = createStore(
