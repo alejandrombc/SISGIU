@@ -1,7 +1,5 @@
 // Dependencies
 import React from 'react';
-import { connect } from 'react-redux';
-import {BrowserRouter, Route, Redirect, Switch } from 'react-router-dom';
 
 // Components
 import Header from './header'

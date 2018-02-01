@@ -30,7 +30,7 @@ urlpatterns = format_suffix_patterns([
     # Usuarios
     url(r'^api/usuarios/$', AdministradorListCreateAPIView.as_view(), name='usuario-list-create'),
     url(r'^api/usuarios/(?P<cedula>\d+)/$', AdministradorDetailAPIView.as_view(), name='usuario-detail'),
-    url(r'^api/usuarios/id/(?P<id_usr>[0-9]\d{1,})/$', AdministradorDetailAPIView.get_usr_id, name='usuario-detail'),
+    url(r'^api/usuarios/id/(?P<id_usr>[0-9]{1})/$', AdministradorDetailAPIView.get_usr_id, name='usuario-detail'),
     url(r'^api/usuarios/(?P<cedula>\d+)/edit/$', AdministradorUpdateAPIView.as_view(), name='usuario-update'),
     url(r'^api/usuarios/(?P<cedula>\d+)/delete/$', AdministradorDeleteAPIView.as_view(), name='usuario-delete'),
 

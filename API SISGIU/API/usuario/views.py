@@ -72,6 +72,7 @@ class AdministradorDetailAPIView(RetrieveAPIView):
         response_data['error'] = 'No tiene privilegios para realizar esta accion'      
         return HttpResponse(json.dumps(response_data), content_type="application/json")
 
+
 class AdministradorUpdateAPIView(RetrieveUpdateAPIView):
     queryset = Usuario.objects.all()
     serializer_class = AdministradorDetailSerializer

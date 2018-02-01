@@ -1,5 +1,5 @@
 // Login de la pagina
-import { Button, Input, Row, Col, Form, FormGroup, Label, Alert, Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
+import { Button, Input, Row, Col, Form, FormGroup, Label, Alert} from 'reactstrap';
 import React,{Component} from 'react';
 import {login} from '../actions/login.jsx';
 import {bindActionCreators} from 'redux';
@@ -25,7 +25,6 @@ class Login extends Component{
 
     handleChange(e) {
         const { name, value } = e.target;
-        console.log(value);
         this.setState({ [name]: value });
     }
 
@@ -65,10 +64,15 @@ class Login extends Component{
 								        Credenciales erróneas
 								      </Alert>
                     				}
+                    				{this.props.token['bad_module'] &&
+	                    		      <Alert color="danger">
+								        Usted no pertenece a ese módulo
+								      </Alert>
+                    				}
 							       	<hr />
 									<FormGroup>
 							          <Label for="exampleSelect">Módulo</Label>
-							          <select className="form-control" value={this.state.value} onChange={this.handleChange} >
+							          <select name="modulo"  className="form-control" value={this.state.value} onChange={this.handleChange} >
 							            <option value="estudiantes">Estudiante</option>
 							            <option value="docentes">Docente</option>
 							            <option value="administrativo">Administrativo</option>
@@ -105,7 +109,7 @@ class Login extends Component{
 						        	
 						        	<Button color="primary">Enviar</Button>
 						        	<br/>
-						        	<a href='#'>Olvidé mi contraseña</a>
+						        	<a href='/login'>Olvidé mi contraseña</a>
 						        	<br/><br/>
 						      	</Col>
 						      	<Col lg='4' md='4' sm='4' xs='4'></Col>
