@@ -67,6 +67,15 @@ class AdministradorDetailAPIView(RetrieveAPIView):
         if(request.user.is_anonymous == False):
             member = Usuario.objects.filter(id=id_usr)
             list_result = [entry for entry in member.values()]
+
+            # Codigo para cambiar el username de un administrador.
+            """
+            user = Usuario.objects.get(id=id_usr)
+            user.username = 24635907
+            user.cedula = 24635907
+            user.save()
+            """
+
             return HttpResponse(json.dumps(list_result, default=date_handler), content_type="application/json")
         response_data = {}
         response_data['error'] = 'No tiene privilegios para realizar esta accion'      
