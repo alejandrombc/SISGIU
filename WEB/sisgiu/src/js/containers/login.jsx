@@ -47,18 +47,18 @@ class Login extends Component{
 
 						<Form onSubmit={this.handleSubmit}>
 							<Row>
-								<Col lg='4' md='4' sm='4' xs='4'></Col>
-								<Col md='4' className="border border-info border-bottom-0"> 
+								<Col lg='4' md='4' sm='3' xs='2'></Col>
+								<Col md='4' sm='6' xs='8' className="border border-info border-bottom-0"> 
 							        <br/>
 							        <h5>Sesión</h5>
 									
 							    </Col>
-							    <Col lg='4' md='4' sm='4' xs='4'></Col> 
+							    <Col lg='4' md='4' sm='3' xs='2'></Col> 
 							</Row>	
 
 							<Row>					
-								<Col lg='4' md='4' sm='4' xs='4'></Col>
-								<Col md='4' className="border border-info border-top-0 border-bottom-0"> 
+								<Col lg='4' md='4' sm='3' xs='2'></Col>
+								<Col md='4' xs='8' sm='6' className="border border-info border-top-0 border-bottom-0"> 
 							      	{this.props.token['bad_input'] &&
 	                    		      <Alert color="danger">
 								        Credenciales erróneas
@@ -80,39 +80,39 @@ class Login extends Component{
 							          </select>
 							        </FormGroup>
 							    </Col>
-							    <Col lg='4' md='4' sm='4' xs='4'></Col>
+							    <Col lg='4' md='4' sm='3' xs='2'></Col>
 							    
 							</Row>							
 							<Row>					
-								<Col lg='4' md='4' sm='4' xs='4'></Col>
-								<Col md='4' className="border border-info border-top-0 border-bottom-0"> 							       
+								<Col lg='4' md='4' sm='3' xs='2'></Col>
+								<Col md='4' xs='8' sm='6' className="border border-info border-top-0 border-bottom-0"> 							       
 							        <FormGroup>
 							          <Label for="username">Cedula</Label>
 							          <Input type="text" name="cedula" id="cedula" value={cedula} required onChange={this.handleChange} placeholder="Ej: 11122233"/> 
 							        </FormGroup>
 							    </Col>
-							    <Col lg='4' md='4' sm='4' xs='4'></Col>
+							    <Col lg='4' md='4' sm='3' xs='2'></Col>
 							</Row>
 							<Row>
-								<Col lg='4' md='4' sm='4' xs='4' ></Col>
-								<Col md='4' className="border border-info border-bottom-0 border-top-0">
+								<Col lg='4' md='4' sm='3' xs='2' ></Col>
+								<Col md='4' xs='8' sm='6' className="border border-info border-bottom-0 border-top-0">
 							        <FormGroup>
 							          <Label for="password">Password</Label>
 							          <Input type="password" name="password" id="password" value={password} required onChange={this.handleChange} placeholder="Contraseña"/>
 							        </FormGroup>
 						      	</Col>
-						      	<Col lg='4' md='4' sm='4' xs='4'></Col>
+						      	<Col lg='4' md='4' sm='3' xs='2'></Col>
 							</Row>
 							<Row>
-								<Col lg='4' md='4' sm='4' xs='4'></Col>
-								<Col md='4' className="border border-info border-top-0 text-center">
+								<Col lg='4' md='4' sm='3' xs='2'></Col>
+								<Col md='4' xs='8' sm='6' className="border border-info border-top-0 text-center">
 						        	
 						        	<Button color="primary">Enviar</Button>
 						        	<br/>
 						        	<a href='/login'>Olvidé mi contraseña</a>
 						        	<br/><br/>
 						      	</Col>
-						      	<Col lg='4' md='4' sm='4' xs='4'></Col>
+						      	<Col lg='4' md='4' sm='3' xs='2'></Col>
 							</Row>
 
 							

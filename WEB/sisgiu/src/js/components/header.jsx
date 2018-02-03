@@ -3,7 +3,7 @@
 import React,{Component} from 'react';
 import { Jumbotron, Media, Row, Col} from 'reactstrap';
 import '../../css/header.css'; 
-
+import NavigationBar from '../containers/navbar';
 
 class Header extends Component{
 
@@ -41,6 +41,8 @@ class Header extends Component{
 				        <hr className="my-2" />
 				        {/*Aqui abajo podria ir el navbar, y hacemos todo lo del responsive del logo y eso con hamburguesa (asi lo tiene ucv.ve)*/}
 
+
+				        <NavigationBar />
 				    </Jumbotron>
 				</div>
 			)
