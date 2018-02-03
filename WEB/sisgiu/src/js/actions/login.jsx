@@ -13,13 +13,14 @@ export const login = (cedula, password, modulo) => {
 			return request
 			   .get(url)
 			   .set('Authorization', 'JWT '+localStorage.getItem('user_token'))
-			   .then(function(res) {
+			   .then(function(response) {
 			      return {
 						type: "LOGIN_EXITOSO",
-						payload: {user: res.body, modulo:modulo}
+						payload: {user: response.body, modulo:modulo}
 					}
 			   })
 			   .catch(function(err) {
+			   		console.log("RESPONSEEE: "+err);
 			   		localStorage.removeItem('user_token');
 			   		localStorage.removeItem('modulo');
 			      	return {

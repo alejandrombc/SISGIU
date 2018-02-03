@@ -5,3 +5,19 @@
 .jumbotron {
 	padding: 0;
 }
+
+body{
+	overflow-x:hidden;
+}
+
+
+/*nav a:hover{
+	background-color: #9c9a9a;
+	color:white;
+	border-radius: 5px;
+}
+*/
+
+.new_align{
+	float:right;
+}

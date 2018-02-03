@@ -7,15 +7,12 @@ export default function (state=initialState, action) {
 
 switch (action.type){
 	case "LOGIN_EXITOSO":
-
-		console.log(action.user);
-		console.log(action.modulo);
 		return {
 			loggedIn: true,
 			bad_input: false,
 			bad_module: false,
-			user: action.user,
-			modulo: action.modulo
+			user: action.payload['user'],
+			modulo: action.payload['modulo']
 		};
 
 	case "LOGIN_ERROR":

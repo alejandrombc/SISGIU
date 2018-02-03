@@ -39,9 +39,6 @@ class NavigationBar extends Component {
 
       let modulo = this.props.token['modulo'];
 
-      alert('---> ' + this.props.token['modulo']);
-      
-
       switch ( modulo ) {
 
         case 'estudiantes':
