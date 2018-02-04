@@ -10,14 +10,29 @@ body{
 	overflow-x:hidden;
 }
 
-
-/*nav a:hover{
-	background-color: #9c9a9a;
-	color:white;
-	border-radius: 5px;
-}
-*/
-
 .new_align{
 	float:right;
+}
+
+.navBarBrand-title {
+	display: none;
+}
+
+.navbar-light .navbar-collapse .navbar-nav > li > a:hover {
+  /*background-color: #E4EAF0;*/
+  background-color: #CCDFF1;
+}
+
+
+@media (max-width: 600px) {
+  .logo-header, .titulo-app, .hr-header {
+    display: none;
+  }
+
+  .navBarBrand-title  {
+    display: inline;
+    font-weight: bold;
+  }
+
+
 }

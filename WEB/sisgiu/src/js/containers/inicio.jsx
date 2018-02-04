@@ -1,7 +1,12 @@
+//Dependencies
 import React,{Component} from 'react';
 import {check_login} from '../actions/inicio.jsx';
 import {bindActionCreators} from 'redux';
 import { connect } from 'react-redux';
+
+//Components
+import InicioEstudiante from '../components/inicioEstudiante';
+
 
 class Inicio extends Component{
 
@@ -13,7 +18,14 @@ class Inicio extends Component{
 	render(){
 		return (
 			<div>
+
+		{/*
 				<h1>Bienvenido. SIIIIII</h1>
+		*/}
+
+				<InicioEstudiante />
+
+
 			</div>
 			)
 	}

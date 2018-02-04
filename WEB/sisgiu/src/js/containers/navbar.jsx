@@ -1,7 +1,7 @@
 // Dependencies
 import React, {Component} from 'react';
 import { connect } from 'react-redux';
-import {Collapse, Navbar, NavbarToggler} from 'reactstrap';
+import {Collapse, Navbar, NavbarToggler, NavbarBrand} from 'reactstrap';
 
 // Components
 import NavBarInicio from '../components/navBarInicio';
@@ -72,12 +72,12 @@ class NavigationBar extends Component {
       <div>
         <Navbar color="faded" light expand="md">
           
-          {/*
-          <NavbarBrand href="/">
+          
+          <NavbarToggler onClick={this.toggle} />
+          <NavbarBrand href="/" className="navBarBrand-title">
             SISGIU
           </NavbarBrand>
-          */}
-          <NavbarToggler onClick={this.toggle} />
+          
           <Collapse isOpen={this.state.isOpen} navbar>           
                 
                
