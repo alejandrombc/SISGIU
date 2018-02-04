@@ -21,6 +21,7 @@ body{
 .navbar-light .navbar-collapse .navbar-nav > li > a:hover {
   /*background-color: #E4EAF0;*/
   background-color: #CCDFF1;
+  border-radius: 10%;
 }
 
 

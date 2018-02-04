@@ -11,7 +11,7 @@ const NavBarEstudiante = () => (
     </NavItem>
 
     <NavItem>
-        <NavLink href="/#">Cargar Notas</NavLink>
+        <NavLink href="/#">Historial Académico</NavLink>
     </NavItem>
 
     <NavItem>
@@ -19,6 +19,10 @@ const NavBarEstudiante = () => (
     </NavItem>
 
     <NavItem>
+      <NavLink href="/#">Trámites</NavLink>
+    </NavItem>
+
+    <NavItem >
       <NavLink href="/#">Perfil</NavLink>
     </NavItem>
 
