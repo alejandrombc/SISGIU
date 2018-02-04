@@ -9,7 +9,7 @@ import Footer from './footer'
 const App = () => (
 		<div>
 			<Header />
-			<hr /> 
+			{/* <hr /> */} 
 			<RutasPrincipales />
 			<hr />
 			<Footer />

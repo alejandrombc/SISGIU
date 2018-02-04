@@ -18,9 +18,6 @@ const NavBarDocente = () => (
       <NavLink href="/#">Constancias</NavLink>
     </NavItem>
 
-    <NavItem>
-      <NavLink href="/#">Perfil</NavLink>
-    </NavItem>
 
   </Nav>
 );

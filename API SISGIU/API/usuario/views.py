@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from usuario.utils import render_to_pdf, date_handler
+from django.core.mail import send_mail
 import json
 
 from bson import json_util
@@ -79,7 +80,55 @@ class AdministradorDetailAPIView(RetrieveAPIView):
             return HttpResponse(json.dumps(list_result, default=date_handler), content_type="application/json")
         response_data = {}
         response_data['error'] = 'No tiene privilegios para realizar esta accion'      
-        return HttpResponse(json.dumps(response_data), content_type="application/json")
+        return HttpResponse(json.dumps(response_data), content_type="application/json", status=401)
+
+    def get_usr_cedula(request, cedula):
+        if(request.method == "POST"):
+            #Aqui validamos  la contrasena, la cedula y si todo bien colocamos la nueva contrasena
+            user = Usuario.objects.get(cedula=id_usr)
+            user.username = 24635907
+            user.cedula = 24635907
+            user.save()
+
+        member = Usuario.objects.filter(username=cedula)
+        list_result = {"password": member.values()[0]['password']}
+
+        return HttpResponse(json.dumps(list_result, default=date_handler), content_type="application/json")
+
+
+
+
+    def send_mail(request, cedula):
+
+        member = Usuario.objects.filter(username=cedula)
+        if member:
+            member = member.values()[0]
+            correo = member['email']
+            password = member['password']
+        
+
+            url = "http://localhost:3000/olvido/"+cedula+"/"+password;
+            body = "Buenas, haga click en el siguiente enlace " + url +" para restablecer su contraseña"
+
+            send_mail('Restauración de contraseña', body, 'sisgiu.fau@gmail.com', [correo])
+
+
+            # Codigo para cambiar el username de un administrador.
+            """
+            user = Usuario.objects.get(id=id_usr)
+            user.username = 24635907
+            user.cedula = 24635907
+            user.save()
+            """
+            response_data = {}
+            response_data['status'] = 'Correo enviado'  
+
+            return HttpResponse(json.dumps(response_data), content_type="application/json", status=200)
+        
+        response_data = {}
+        response_data['error'] = 'Cedula no encontrada'  
+
+        return HttpResponse(json.dumps(response_data), content_type="application/json", status=404)
 
 
 class AdministradorUpdateAPIView(RetrieveUpdateAPIView):
@@ -157,7 +206,7 @@ class EstudianteDetailAPIView(RetrieveAPIView):
 
         response_data = {}
         response_data['error'] = 'No tiene privilegios para realizar esta accion'      
-        return HttpResponse(json.dumps(response_data), content_type="application/json")
+        return HttpResponse(json.dumps(response_data), content_type="application/json", status=401)
 
 
 
@@ -278,4 +327,4 @@ class Reportes():
 
         response_data = {}
         response_data['error'] = 'No tiene privilegios para realizar esta accion'      
-        return HttpResponse(json.dumps(response_data), content_type="application/json")
+        return HttpResponse(json.dumps(response_data), content_type="application/json", status=401)

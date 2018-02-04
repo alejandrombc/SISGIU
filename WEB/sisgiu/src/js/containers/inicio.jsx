@@ -3,9 +3,9 @@ import React,{Component} from 'react';
 import {check_login} from '../actions/inicio.jsx';
 import {bindActionCreators} from 'redux';
 import { connect } from 'react-redux';
+import Usuario from './usuario';
+import Content from './content'; 
 
-//Components
-import InicioEstudiante from '../components/inicioEstudiante';
 
 
 class Inicio extends Component{
@@ -16,18 +16,21 @@ class Inicio extends Component{
     }
 
 	render(){
-		return (
-			<div>
-
-		{/*
-				<h1>Bienvenido. SIIIIII</h1>
-		*/}
-
-				<InicioEstudiante />
-
-
-			</div>
+		if ( this.props.token['user'].usuario ) {
+			return (
+		        <div>
+		          <div className="container">
+		              <div className="row profile">
+		                <Usuario />
+		               
+		                <Content />
+		            </div>
+		          </div>
+		        </div>
 			)
+	   	}else{
+      		return (<center><div>Cargando usuario...</div></center>)
+    	}
 	}
 }
 

@@ -26,10 +26,6 @@ const NavBarAdministrador = () => (
       <NavLink href="/#">Periodos</NavLink>
     </NavItem>
 
-    <NavItem>
-      <NavLink href="/#">Perfil</NavLink>
-    </NavItem>
-
   </Nav>
 );
 

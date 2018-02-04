@@ -173,3 +173,11 @@ JWT_AUTH = {
 REST_USE_JWT = True
 
 SITE_ID = 1
+
+#Email settings (SMTP)
+
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'sisgiu.fau@gmail.com' 
+EMAIL_HOST_PASSWORD = 'sisgiu2018'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True

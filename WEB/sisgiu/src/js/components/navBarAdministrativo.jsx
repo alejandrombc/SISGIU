@@ -18,9 +18,6 @@ const NavBarAdministrativo = () => (
       <NavLink href="/#">Estudiantes</NavLink>
     </NavItem>
 
-    <NavItem>
-      <NavLink href="/#">Perfil</NavLink>
-    </NavItem>
 
   </Nav>
 );

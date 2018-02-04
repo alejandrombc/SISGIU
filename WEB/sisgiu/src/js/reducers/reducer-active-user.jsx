@@ -29,7 +29,13 @@ switch (action.type){
 			bad_module: true,
 
 		}; 
+		
 	case "INIT_LOGIN_ERROR":
+		return {
+			loggedIn: false, 
+		}; 
+
+	case "LOGOUT_SUCESS":
 		return {
 			loggedIn: false, 
 		}; 

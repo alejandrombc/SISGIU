@@ -22,10 +22,6 @@ const NavBarEstudiante = () => (
       <NavLink href="/#">Trámites</NavLink>
     </NavItem>
 
-    <NavItem >
-      <NavLink href="/#">Perfil</NavLink>
-    </NavItem>
-
   </Nav>
 );
 

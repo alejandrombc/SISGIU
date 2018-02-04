@@ -20,7 +20,6 @@ export const login = (cedula, password, modulo) => {
 					}
 			   })
 			   .catch(function(err) {
-			   		console.log("RESPONSEEE: "+err);
 			   		localStorage.removeItem('user_token');
 			   		localStorage.removeItem('modulo');
 			      	return {

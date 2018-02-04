@@ -7,9 +7,11 @@ class Footer extends Component{
 
 	render(){
 		return (
-			<div>
-				<p>© SIGEPAS 2018 - UCV - Facultad de Ciencias - Escuela de Computación</p>
-			</div>
+			<center>
+				<div>
+					<p>© SISGIU 2018 - UCV - Facultad de Arquitectura - Instituto de Urbanismo</p>
+				</div>
+			</center>
 			)
 	}
 }

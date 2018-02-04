@@ -187,7 +187,7 @@ class DocenteAsignaturaDetailAPIView():
             return HttpResponse(json.dumps(lista_docentes), content_type="application/json")
         response_data = {}
         response_data['error'] = 'No tiene privilegios para realizar esta accion'      
-        return HttpResponse(json.dumps(response_data), content_type="application/json")
+        return HttpResponse(json.dumps(response_data), content_type="application/json", status=401)
 
     def get_docente(request, asignatura, periodo):
         if(request.user.is_anonymous == False):
@@ -224,7 +224,7 @@ class DocenteAsignaturaDetailAPIView():
             return HttpResponse(json.dumps(lista_docentes), content_type="application/json")
         response_data = {}
         response_data['error'] = 'No tiene privilegios para realizar esta accion'      
-        return HttpResponse(json.dumps(response_data), content_type="application/json")
+        return HttpResponse(json.dumps(response_data), content_type="application/json", status=401)
 
     def get_all_docentes(request, periodo):
         if(request.user.is_anonymous == False):
@@ -261,7 +261,7 @@ class DocenteAsignaturaDetailAPIView():
             return HttpResponse(json.dumps(lista_docentes), content_type="application/json")
         response_data = {}
         response_data['error'] = 'No tiene privilegios para realizar esta accion'      
-        return HttpResponse(json.dumps(response_data), content_type="application/json")
+        return HttpResponse(json.dumps(response_data), content_type="application/json", status=401)
 
 
 

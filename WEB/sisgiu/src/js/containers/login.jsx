@@ -87,7 +87,7 @@ class Login extends Component{
 								<Col lg='4' md='4' sm='3' xs='2'></Col>
 								<Col md='4' xs='8' sm='6' className="border border-info border-top-0 border-bottom-0"> 							       
 							        <FormGroup>
-							          <Label for="username">Cedula</Label>
+							          <Label for="username">Cédula</Label>
 							          <Input type="text" name="cedula" id="cedula" value={cedula} required onChange={this.handleChange} placeholder="Ej: 11122233"/> 
 							        </FormGroup>
 							    </Col>
@@ -109,7 +109,7 @@ class Login extends Component{
 						        	
 						        	<Button color="primary">Enviar</Button>
 						        	<br/>
-						        	<a href='/login'>Olvidé mi contraseña</a>
+						        	<a href='/olvido'>Olvidé mi contraseña</a>
 						        	<br/><br/>
 						      	</Col>
 						      	<Col lg='4' md='4' sm='3' xs='2'></Col>
