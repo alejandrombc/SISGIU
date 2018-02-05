@@ -51,6 +51,8 @@ from rest_framework.generics import (
 	)
 
 
+host_react = 'http://localhost:3000/'
+
 """
 Usuario
 """
@@ -122,12 +124,12 @@ class AdministradorDetailAPIView(RetrieveAPIView):
             member = member.values()[0]
             correo = member['email']
             password = member['password']
-        
+            
 
-            url = "http://localhost:3000/olvido/"+cedula+"/"+password;
-            body = "Buenas, haga click en el siguiente enlace " + url +" para restablecer su contraseña"
+            url = host_react + "recuperarContrasena/"+cedula+"/"+password;
+            body = "Haga click en el siguiente enlace " + url +" para restablecer su contraseña"
 
-            send_mail('Restauración de contraseña', body, 'sisgiu.fau@gmail.com', [correo])
+            send_mail('Rescuperación de contraseña', body, 'sisgiu.fau@gmail.com', [correo])
 
 
             # Codigo para cambiar el username de un administrador.

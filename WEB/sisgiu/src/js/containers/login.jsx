@@ -114,7 +114,7 @@ class Login extends Component{
 						        	
 						        	<Button color="primary">Enviar</Button>
 						        	<br/>
-						        	<a href='/olvido'>Olvidé mi contraseña</a>
+						        	<a href='/recuperarContraseña'>Olvidé mi contraseña</a>
 						        	<br/><br/>
 						      	</Col>
 						      	<Col lg='4' md='4' sm='3' xs='2'></Col>
@@ -132,7 +132,7 @@ class Login extends Component{
 const mapStateToProps = (state)=> {
 	return{
 		token: state.activeUser,
-		recuperacion: state.olvidoContrasena
+		recuperacion: state.recuperarContrasena
 	};
 }
 

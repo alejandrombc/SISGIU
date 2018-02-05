@@ -1,11 +1,11 @@
 import request from 'superagent';
 
+const host_server = 'http://127.0.0.1:8000/';
 
-export function check_url_olvido_contraseña (cedula, contraseña) {
+export function check_url_recuperacion_contraseña (cedula, contraseña) {
 	return request
-	   .get('http://127.0.0.1:8000/api/usuarios/cedula_information/'+cedula+'/olvido/')
+	   .get(host_server + 'api/usuarios/'+cedula+'/cambiarContrasena/')
 	   .then(function(res) {
-
 	   		if ( res.body['password'] === contraseña ) {
 		      	return {
 					type: "URL_CORRECTO",
@@ -26,9 +26,9 @@ export function check_url_olvido_contraseña (cedula, contraseña) {
 
 
 
-export function recuperar (nueva_contrasena, cedula, contraseña ) {
+export function cambiar_contraseña (nueva_contrasena, cedula, contraseña ) {
 	return request
-		.post('http://127.0.0.1:8000/api/usuarios/cedula_information/'+cedula+'/olvido/')
+		.post(host_server+'api/usuarios/'+cedula+'/cambiarContrasena/')
 		.set('Content-Type', 'application/json')
 		.send({ cedula: cedula, password: contraseña, nueva_contrasena: nueva_contrasena })
 		.then(function(res) {
@@ -36,7 +36,7 @@ export function recuperar (nueva_contrasena, cedula, contraseña ) {
 				type: "RECUPERACION_EXITOSA",
 			} 
 		})
-		.catch(function(err) { // err.message, err.response });
+		.catch(function(err) {
 			alert("test");
 			return {
 				type: "RECUPERACION_ERRONEA"

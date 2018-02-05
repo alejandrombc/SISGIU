@@ -1,6 +1,6 @@
 import {combineReducers} from 'redux';
 import ActiveUserReducer from './reducer-active-user'
-import OlvidoContrasenaReducer from './reducer-olvido-contrasena'
+import RecuperarContrasena from './reducer-olvido-contrasena'
 
 /*
  * Combinamos todos los reducers en un solo objeto para enviar al store
@@ -10,7 +10,7 @@ import OlvidoContrasenaReducer from './reducer-olvido-contrasena'
 
 const allReducers = combineReducers({
 	activeUser: ActiveUserReducer,
-	olvidoContrasena : OlvidoContrasenaReducer,
+	recuperarContrasena : RecuperarContrasena,
 });
 
 

@@ -31,10 +31,10 @@ urlpatterns = format_suffix_patterns([
     url(r'^api/usuarios/$', AdministradorListCreateAPIView.as_view(), name='usuario-list-create'),
     url(r'^api/usuarios/(?P<cedula>\d+)/$', AdministradorDetailAPIView.as_view(), name='usuario-detail'),
     url(r'^api/usuarios/id/(?P<id_usr>[0-9]{1})/$', AdministradorDetailAPIView.get_usr_id, name='usuario-detail'),
-    url(r'^api/usuarios/cedula_information/(?P<cedula>[0-9]{8})/olvido/$', AdministradorDetailAPIView.get_usr_cedula, name='usuario-detail'),
     url(r'^api/usuarios/(?P<cedula>\d+)/edit/$', AdministradorUpdateAPIView.as_view(), name='usuario-update'),
     url(r'^api/usuarios/(?P<cedula>\d+)/delete/$', AdministradorDeleteAPIView.as_view(), name='usuario-delete'),
-    url(r'^api/usuarios/(?P<cedula>\d+)/olvido/$', AdministradorDetailAPIView.send_mail, name='usuario-olvido'),
+    url(r'^api/usuarios/(?P<cedula>\d+)/recuperarContrasena/$', AdministradorDetailAPIView.send_mail, name='usuario-olvido'),
+    url(r'^api/usuarios/(?P<cedula>[0-9]{8})/cambiarContrasena/$', AdministradorDetailAPIView.get_usr_cedula, name='usuario-detail'),
 
 
     #Estudiantes

@@ -1,7 +1,9 @@
 import request from 'superagent';
 
-export const recuperar = (cedula) => {
-	var url = 'http://127.0.0.1:8000/api/usuarios/'+cedula+'/olvido/';
+const host_server = 'http://127.0.0.1:8000/'
+
+export const recuperarContrasenaMail = (cedula) => {
+	var url = host_server+'api/usuarios/'+cedula+'/recuperarContrasena/';
 	return request
 	   .get(url)
 	   .then(function(response) {

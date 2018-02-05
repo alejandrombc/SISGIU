@@ -1,11 +1,11 @@
 // Login de la pagina
 import { Button, Input, Row, Col, Form, FormGroup, Label, Alert} from 'reactstrap';
 import React,{Component} from 'react';
-import {recuperar} from '../actions/olvido.jsx';
+import {recuperarContrasenaMail} from '../actions/recuperarContrasenaMail.jsx';
 import {bindActionCreators} from 'redux';
 import { connect } from 'react-redux';
 
-class OlvideContrasena extends Component{      
+class RecuperarContrasenaForm extends Component{      
 
 	constructor(props) {
         super(props);
@@ -26,10 +26,9 @@ class OlvideContrasena extends Component{
     handleSubmit(e) {
         e.preventDefault();
 
-        // this.setState({ submitted: true });
         const { cedula } = this.state;
         if (cedula) {
-            this.props.recuperar(cedula);
+            this.props.recuperarContrasenaMail(cedula);
         }
     }
 
@@ -43,7 +42,7 @@ class OlvideContrasena extends Component{
 								<Col lg='4' md='4' sm='3' xs='2'></Col>
 								<Col md='4' sm='6' xs='8' className="border border-info border-bottom-0"> 
 							        <br/>
-							        <h5>Olvido de contraseña</h5>
+							        <h5>Recuperación de contraseña</h5>
 									
 							    </Col>
 							    <Col lg='4' md='4' sm='3' xs='2'></Col> 
@@ -65,9 +64,9 @@ class OlvideContrasena extends Component{
 
                     				<hr />
 							        <FormGroup>
-							          <Label for="username">Cédula</Label>
+							          <Label for="cedula">Cédula</Label>
 							          <Input type="text" name="cedula" id="cedula" value={cedula} required onChange={this.handleChange} placeholder="Ej: 11122233"/> 
-							          <font size="1">Se le enviará un correo electronico para poder restablecer su contraseña</font>
+							          <font size="1">Se le enviará un correo electronico con un link para poder restablecer su contraseña</font>
 							        </FormGroup>
 							    </Col>
 							    <Col lg='4' md='4' sm='3' xs='2'></Col>
@@ -94,12 +93,12 @@ class OlvideContrasena extends Component{
 
 const mapStateToProps = (state)=> {
 	return{
-		status: state.olvidoContrasena
+		status: state.recuperarContrasena
 	};
 }
 
 const mapDispatchToProps = (dispatch) => {
-	return bindActionCreators({recuperar: recuperar}, dispatch )
+	return bindActionCreators({recuperarContrasenaMail: recuperarContrasenaMail}, dispatch )
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(OlvideContrasena);
+export default connect(mapStateToProps, mapDispatchToProps)(RecuperarContrasenaForm);

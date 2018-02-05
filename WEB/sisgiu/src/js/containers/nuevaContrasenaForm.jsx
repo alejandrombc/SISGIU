@@ -6,11 +6,10 @@ import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 
 // Components
-import {recuperar} from '../actions/restablecerContraseña';
-import {check_url_olvido_contraseña} from '../actions/restablecerContraseña';
+import {check_url_recuperacion_contraseña, cambiar_contraseña} from '../actions/restablecerContrasena';
 
 
-class RestablecerContrasena extends Component{      
+class NuevaContrasenaForm extends Component{      
 
 	constructor(props) {
         super(props);
@@ -34,7 +33,7 @@ class RestablecerContrasena extends Component{
     		i + 1 === len_password ? password += ruta[i] : password += ruta[i] + '/';
     	}
 
-        this.props.check_url_olvido_contraseña(this.props.cedula, password);
+        this.props.check_url_recuperacion_contraseña(this.props.cedula, password);
 
         this.state.url_pass = password;
         this.state.url_cedula = this.props.cedula;
@@ -49,7 +48,7 @@ class RestablecerContrasena extends Component{
     handleSubmit(e) {
         e.preventDefault();
         if (this.state.password && this.state.confirmation_password) {
-            this.props.recuperar(this.state.password, this.state.url_cedula, this.state.url_pass);
+            this.props.cambiar_contraseña(this.state.password, this.state.url_cedula, this.state.url_pass);
         }
     }
 
@@ -62,7 +61,7 @@ class RestablecerContrasena extends Component{
 				return (<Redirect to={"/login"} />)
 			}
 
-			if ( this.props.status['check_url'] ) {
+			if ( this.props.status['check_url'] == true ) {
 
 				return (
 					<div >
@@ -71,7 +70,7 @@ class RestablecerContrasena extends Component{
 								<Col lg='4' md='4' sm='3' xs='2'></Col>
 								<Col md='4' sm='6' xs='8' className="border border-info border-bottom-0"> 
 							        <br/>
-							        <h5>Restablecer contraseña</h5>
+							        <h5>Recuperación de contraseña</h5>
 									
 							    </Col>
 							    <Col lg='4' md='4' sm='3' xs='2'></Col> 
@@ -82,7 +81,7 @@ class RestablecerContrasena extends Component{
 								<Col md='4' xs='8' sm='6' className="border border-info border-top-0 border-bottom-0"> 							       
 							      	{!this.props.status['recuperacion'] && !this.props.status['is_init'] &&
 	                    		      <Alert color="danger">
-								        No se puedo restablecer su contraseña
+								        No es posible restablecer su contraseña
 								      </Alert>
                     				}
 
@@ -126,8 +125,13 @@ class RestablecerContrasena extends Component{
 
 					</div>
 				)
-			} else {
+			} else if ( this.props.status['check_url'] == false ) {
+				console.log('jdkakdnadkjANDKnak');
 				return (<Redirect to={"/login"} />)
+			} else {
+				return (
+					<h1>Cargando...</h1>
+				)
 			}
 
 		}
@@ -135,12 +139,12 @@ class RestablecerContrasena extends Component{
 
 const mapStateToProps = (state)=> {
 	return{
-		status: state.olvidoContrasena
+		status: state.recuperarContrasena
 	};
 }
 
 const mapDispatchToProps = (dispatch) => {
-	return bindActionCreators({check_url_olvido_contraseña: check_url_olvido_contraseña, recuperar: recuperar}, dispatch )
+	return bindActionCreators({check_url_recuperacion_contraseña: check_url_recuperacion_contraseña, cambiar_contraseña: cambiar_contraseña}, dispatch )
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(RestablecerContrasena);
+export default connect(mapStateToProps, mapDispatchToProps)(NuevaContrasenaForm);

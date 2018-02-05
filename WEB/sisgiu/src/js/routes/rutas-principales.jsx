@@ -6,8 +6,8 @@ import {BrowserRouter, Route, Redirect, Switch } from 'react-router-dom';
 
 // Containers
 import Login from '../containers/login';
-import OlvideContrasena from '../containers/olvidoContrasena';
-import RestablecerContrasena from '../containers/restablecerContrasena';
+import RecuperarContrasenaForm from '../containers/recuperarContrasenaForm';
+import NuevaContrasenaForm from '../containers/nuevaContrasenaForm';
 import Inicio from '../containers/inicio';
 import Page404 from '../components/page404';
 
@@ -40,19 +40,19 @@ class RutasPrincipales extends React.Component {
 							  )
 						)}/>
 
-					   	<Route exact path="/olvido" render={() => (
+					   	<Route exact path="/recuperarContraseña" render={() => (
 							  this.props.token['loggedIn'] ? (
 							    <Redirect to="/inicio"/>
 							  ) : (
-							  	<OlvideContrasena />
+							  	<RecuperarContrasenaForm />
 							  )
 						)}/>
 
-						<Route path="/olvido/:cedula/:password" render={(props) => (
+						<Route path="/recuperarContrasena/:cedula/:password" render={(props) => (
 							  this.props.token['loggedIn'] ? (
 							    <Redirect to="/inicio"/>
 							  ) : (
-							  	<RestablecerContrasena cedula={props.match.params.cedula} pathname={props.location.pathname}/>
+							  	<NuevaContrasenaForm cedula={props.match.params.cedula} pathname={props.location.pathname}/>
 							  )
 						)}/>
 
