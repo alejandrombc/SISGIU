@@ -48,11 +48,11 @@ class RutasPrincipales extends React.Component {
 							  )
 						)}/>
 
-						<Route exact path="/olvido/:cedula/:password" render={() => (
+						<Route path="/olvido/:cedula/:password" render={(props) => (
 							  this.props.token['loggedIn'] ? (
 							    <Redirect to="/inicio"/>
 							  ) : (
-							  	<RestablecerContrasena />
+							  	<RestablecerContrasena cedula={props.match.params.cedula} pathname={props.location.pathname}/>
 							  )
 						)}/>
 

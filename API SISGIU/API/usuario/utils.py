@@ -3,7 +3,6 @@ from django.http import HttpResponse
 from django.template.loader import get_template
 import datetime
 import json
-from Crypto.Cipher import AES
 from xhtml2pdf import pisa
 
 def render_to_pdf(template_src, context_dict={}):
