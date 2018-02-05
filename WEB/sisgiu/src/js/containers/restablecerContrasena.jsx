@@ -127,9 +127,7 @@ class RestablecerContrasena extends Component{
 					</div>
 				)
 			} else {
-				return (
-					<h1>PÁGINA NO ENCONTRADA</h1>
-				)
+				return (<Redirect to={"/login"} />)
 			}
 
 		}
