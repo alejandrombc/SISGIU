@@ -64,6 +64,11 @@ class Login extends Component{
 								        Credenciales erróneas
 								      </Alert>
                     				}
+                    				{this.props.recuperacion['recuperacion'] &&
+	                    		      <Alert color="success">
+								        Contraseña actualizada correctamente
+								      </Alert>
+                    				}
                     				{this.props.token['bad_module'] &&
 	                    		      <Alert color="danger">
 								        Usted no pertenece a ese módulo
@@ -126,7 +131,8 @@ class Login extends Component{
 
 const mapStateToProps = (state)=> {
 	return{
-		token: state.activeUser
+		token: state.activeUser,
+		recuperacion: state.olvidoContrasena
 	};
 }
 

@@ -21,7 +21,7 @@ from usuario.views import (
     AdministrativoDetailAPIView,
     AdministrativoUpdateAPIView,
     AdministrativoDeleteAPIView,
-    Reportes
+    Reportes,
 	)
 
 

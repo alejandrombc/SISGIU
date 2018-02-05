@@ -3,8 +3,10 @@ import { Button, Input, Row, Col, Form, FormGroup, Label, Alert} from 'reactstra
 import React,{Component} from 'react';
 import {bindActionCreators} from 'redux';
 import { connect } from 'react-redux';
+import { Redirect } from 'react-router-dom';
 
 // Components
+import {recuperar} from '../actions/restablecerContraseña';
 import {check_url_olvido_contraseña} from '../actions/restablecerContraseña';
 
 
@@ -15,7 +17,9 @@ class RestablecerContrasena extends Component{
 
         this.state = {
 	        password : '',
-	        confirmation_password : ''
+	        confirmation_password : '',
+	        url_pass: '',
+	        url_cedula:'',
         }
 
 
@@ -31,6 +35,9 @@ class RestablecerContrasena extends Component{
     	}
 
         this.props.check_url_olvido_contraseña(this.props.cedula, password);
+
+        this.state.url_pass = password;
+        this.state.url_cedula = this.props.cedula;
     }
 
 
@@ -41,11 +48,8 @@ class RestablecerContrasena extends Component{
 
     handleSubmit(e) {
         e.preventDefault();
-
-        // this.setState({ submitted: true });
-        const { cedula } = this.state;
-        if (cedula) {
-            this.props.recuperar(cedula);
+        if (this.state.password && this.state.confirmation_password) {
+            this.props.recuperar(this.state.password, this.state.url_cedula, this.state.url_pass);
         }
     }
 
@@ -54,6 +58,10 @@ class RestablecerContrasena extends Component{
 	render(){
 			const { password, confirmation_password } = this.state;
 			
+			if ( this.props.status['recuperacion'] && !this.props.status['is_init'] ) {
+				return (<Redirect to={"/login"} />)
+			}
+
 			if ( this.props.status['check_url'] ) {
 
 				return (
@@ -72,21 +80,22 @@ class RestablecerContrasena extends Component{
 							<Row>					
 								<Col lg='4' md='4' sm='3' xs='2'></Col>
 								<Col md='4' xs='8' sm='6' className="border border-info border-top-0 border-bottom-0"> 							       
-							      	{this.props.status['bad_input'] &&
+							      	{!this.props.status['recuperacion'] && !this.props.status['is_init'] &&
 	                    		      <Alert color="danger">
-								        Cédula errónea
+								        No se puedo restablecer su contraseña
 								      </Alert>
                     				}
-                    				{this.props.status['correo_enviado'] &&
-	                    		      <Alert color="success">
-								        Correo enviado satisfactoriamente
+
+                    				{this.state.password !== this.state.confirmation_password &&
+	                    		      <Alert color="warning">
+								        Las contraseñas no coinciden
 								      </Alert>
                     				}
 
                     				<hr />
 							        <FormGroup>
 							          <Label for="password">Contraseña</Label>
-							          <Input type="password" name="contraseña" id="contraseña" value={password} required onChange={this.handleChange} placeholder="Contraseña"/> 
+							          <Input type="password" name="password" id="password" value={password} required onChange={this.handleChange} placeholder="Contraseña"/> 
 							        </FormGroup>
 
 							        <FormGroup>
@@ -100,7 +109,13 @@ class RestablecerContrasena extends Component{
 								<Col lg='4' md='4' sm='3' xs='2'></Col>
 								<Col md='4' xs='8' sm='6' className="border border-info border-top-0 text-center">
 						        	<br />
-						        	<Button color="primary">Aceptar</Button>
+						        	{this.state.password !== this.state.confirmation_password &&
+						        		<Button disabled color="primary">Aceptar</Button>
+						       		}
+
+						       		{this.state.password === this.state.confirmation_password &&
+						        		<Button color="primary">Aceptar</Button>
+						       		}
 						        	<br/><br/>
 						      	</Col>
 						      	<Col lg='4' md='4' sm='3' xs='2'></Col>
@@ -127,7 +142,7 @@ const mapStateToProps = (state)=> {
 }
 
 const mapDispatchToProps = (dispatch) => {
-	return bindActionCreators({check_url_olvido_contraseña: check_url_olvido_contraseña}, dispatch )
+	return bindActionCreators({check_url_olvido_contraseña: check_url_olvido_contraseña, recuperar: recuperar}, dispatch )
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(RestablecerContrasena);

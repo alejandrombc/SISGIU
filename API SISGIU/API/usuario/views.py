@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from usuario.utils import render_to_pdf, date_handler
 from django.core.mail import send_mail
+from django.views.decorators.csrf import csrf_exempt
 import json
 
 from bson import json_util
@@ -82,13 +83,29 @@ class AdministradorDetailAPIView(RetrieveAPIView):
         response_data['error'] = 'No tiene privilegios para realizar esta accion'      
         return HttpResponse(json.dumps(response_data), content_type="application/json", status=401)
 
+
+    @csrf_exempt
     def get_usr_cedula(request, cedula):
+       
         if(request.method == "POST"):
-            #Aqui validamos  la contrasena, la cedula y si todo bien colocamos la nueva contrasena
-            user = Usuario.objects.get(cedula=id_usr)
-            user.username = 24635907
-            user.cedula = 24635907
-            user.save()
+            body_unicode = request.body.decode('utf-8')
+            body = json.loads(body_unicode)
+            cedula = body['cedula']
+            password = body['password']
+            nueva_contrasena = body['nueva_contrasena']
+
+            user = Usuario.objects.get(cedula=cedula)
+            if(user):
+                if(password == user.password):
+                    user.set_password(nueva_contrasena)
+                    user.save()
+                    status = 200
+                else:
+                    status = 404
+            else:
+                status = 404
+           
+            return HttpResponse(json.dumps({"Recuperacion":"OK"}, default=date_handler), content_type="application/json", status=status)
 
         member = Usuario.objects.filter(username=cedula)
         list_result = {"password": member.values()[0]['password']}

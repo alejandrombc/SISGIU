@@ -8,27 +8,38 @@ switch (action.type){
 			correo_enviado: true, 
 			bad_input: false, 
 		};
-	break;
 
 	case "CEDULA_ERROR":
 		return {
 			correo_enviado: false, 
 			bad_input: true, 
 		}; 
-	break;
 
 	case "URL_CORRECTO":
 		return {
-			check_url: true
+			check_url: true,
+			is_init: true
 		}
-	break;
 
 	case "URL_INCORRECTO":
 		return {
-			check_url: false
+			check_url: false,
+			is_init: true
 		}
-	break;
 
+	case "RECUPERACION_EXITOSA":
+		return {
+			recuperacion: true,
+			is_init: false,
+			check_url: true
+		}
+
+	case "RECUPERACION_ERRONEA":
+		return {
+			recuperacion: false,
+			is_init: false,
+			check_url: true
+		}
 
 	default:
 		return state;

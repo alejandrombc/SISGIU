@@ -34,7 +34,7 @@ class OlvideContrasena extends Component{
     }
 
 	render(){
-			const { cedula, password } = this.state;
+			const { cedula } = this.state;
 			return (
 					<div >
 
