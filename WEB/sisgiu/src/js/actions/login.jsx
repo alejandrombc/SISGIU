@@ -5,7 +5,7 @@ const host = 'http://127.0.0.1:8000/';
 
 export const login = (cedula, password, modulo) => {
 	return request
-		.post(host+'api-auth/login/')
+		.post(host+'api/login/')
 		.set('Content-Type', 'application/json')
 		.send({ username: cedula, password: password })
 		.then(function(res) {
@@ -17,6 +17,9 @@ export const login = (cedula, password, modulo) => {
 			   .get(url)
 			   .set('Authorization', 'JWT '+localStorage.getItem('user_token'))
 			   .then(function(response) {
+
+			   	console.log(response);
+
 			      return {
 						type: "LOGIN_EXITOSO",
 						payload: {user: response.body, modulo:modulo}

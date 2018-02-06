@@ -17,10 +17,9 @@ urlpatterns = [
     url(r'^', include('tramite.urls')),
     url(r'^', include('periodo.urls')),
     url(r'^', include('relacion.urls')),
-    url(r'^api-auth/', include('rest_auth.urls' )),
+    url(r'^api/', include('rest_auth.urls' )),
 
-    # url(r'^', include('rest_auth.urls')),
-    url(r'^registration/', include('rest_auth.registration.urls')),
+    url(r'^api/registration/', include('rest_auth.registration.urls')),
 
     url(r'^refresh-token/', refresh_jwt_token),
 ]
