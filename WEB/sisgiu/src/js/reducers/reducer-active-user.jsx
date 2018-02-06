@@ -40,6 +40,10 @@ switch (action.type){
 		return {
 			loggedIn: false, 
 		}; 
+	case "LOGOUT_ERROR":
+		return {
+			loggedIn: true, 
+		};
 
 	default:
 		return state;
