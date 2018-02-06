@@ -5,6 +5,9 @@ import {login} from '../actions/login.jsx';
 import {bindActionCreators} from 'redux';
 import { connect } from 'react-redux';
 
+//Spinner
+import { PulseLoader } from 'halogenium';
+
 class Login extends Component{      
 
 	constructor(props) {
@@ -15,6 +18,7 @@ class Login extends Component{
             	cedula: '',
             	password: '',
             	modulo: 'estudiantes',
+            	loading: false
         	};
         }
 
@@ -33,13 +37,16 @@ class Login extends Component{
 
         // this.setState({ submitted: true });
         const { cedula, password, modulo } = this.state;
+
         if (cedula && password && modulo) {
+        	this.props.token['bad_input'] = false;
+        	this.props.token['bad_module'] = false;
+        	this.setState({ loading: true });
             this.props.login(cedula, password, modulo);
         }
     }
 
 	render(){
-		
 		if(!this.props.token['loggedIn']){
 			const { cedula, password } = this.state;
 			return (
@@ -59,7 +66,10 @@ class Login extends Component{
 							<Row>					
 								<Col lg='4' md='4' sm='3' xs='2'></Col>
 								<Col md='4' xs='8' sm='6' className="border border-info border-top-0 border-bottom-0"> 
-							      	{this.props.token['bad_input'] &&
+							      	{!this.props.token['bad_input'] && !this.props.token['bad_module'] && this.state.loading &&
+	                    		      	<center><PulseLoader color="#b3b1b0" size="16px" margin="4px"/></center>
+                    				}
+                    				{this.props.token['bad_input'] &&
 	                    		      <Alert color="danger">
 								        Credenciales erróneas
 								      </Alert>

@@ -5,12 +5,16 @@ import {recuperarContrasenaMail} from '../actions/recuperarContrasenaMail.jsx';
 import {bindActionCreators} from 'redux';
 import { connect } from 'react-redux';
 
+//Spinner
+import { PulseLoader } from 'halogenium';
+
 class RecuperarContrasenaForm extends Component{      
 
 	constructor(props) {
         super(props);
     	this.state = {
         	cedula: '',
+        	loading: false,
     	};
 
         this.handleChange = this.handleChange.bind(this);
@@ -28,6 +32,9 @@ class RecuperarContrasenaForm extends Component{
 
         const { cedula } = this.state;
         if (cedula) {
+        	this.setState({loading: true})
+        	this.props.status['bad_input'] = false;
+        	this.props.status['correo_enviado'] = false;
             this.props.recuperarContrasenaMail(cedula);
         }
     }
@@ -51,6 +58,12 @@ class RecuperarContrasenaForm extends Component{
 							<Row>					
 								<Col lg='4' md='4' sm='3' xs='2'></Col>
 								<Col md='4' xs='8' sm='6' className="border border-info border-top-0 border-bottom-0"> 							       
+							      	
+							      	{this.state.loading && !this.props.status['bad_input'] && !this.props.status['correo_enviado'] &&
+							      	
+							      		<center><PulseLoader color="#b3b1b0" size="16px" margin="4px"/></center>
+							      	}
+
 							      	{this.props.status['bad_input'] &&
 	                    		      <Alert color="danger">
 								        Cédula errónea
