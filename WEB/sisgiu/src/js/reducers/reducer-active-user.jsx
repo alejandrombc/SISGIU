@@ -1,7 +1,7 @@
 let user = localStorage.getItem('user_token');
 let modulo = localStorage.getItem('modulo');
 
-const initialState = (user && modulo) ? { loggedIn: true, user, modulo } : {};
+const initialState = (user && modulo) ? { loggedIn: true, user, modulo} : {};
 
 export default function (state=initialState, action) {
 
@@ -33,6 +33,7 @@ switch (action.type){
 	case "INIT_LOGIN_ERROR":
 		return {
 			loggedIn: false, 
+
 		}; 
 
 	case "LOGOUT_SUCESS":

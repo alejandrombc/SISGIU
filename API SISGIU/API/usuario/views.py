@@ -129,7 +129,7 @@ class AdministradorDetailAPIView(RetrieveAPIView):
             url = host_react + "recuperarContrasena/"+cedula+"/"+password;
             body = "Haga click en el siguiente enlace " + url +" para restablecer su contraseña"
 
-            send_mail('Rescuperación de contraseña', body, 'sisgiu.fau@gmail.com', [correo])
+            send_mail('Recuperación de contraseña', body, 'sisgiu.fau@gmail.com', [correo])
 
 
             # Codigo para cambiar el username de un administrador.

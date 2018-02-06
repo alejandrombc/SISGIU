@@ -8,6 +8,8 @@ import { Redirect } from 'react-router-dom';
 // Components
 import {check_url_recuperacion_contraseña, cambiar_contraseña} from '../actions/restablecerContrasena';
 
+//Spinner
+import { PulseLoader } from 'halogenium';
 
 class NuevaContrasenaForm extends Component{      
 
@@ -19,6 +21,7 @@ class NuevaContrasenaForm extends Component{
 	        confirmation_password : '',
 	        url_pass: '',
 	        url_cedula:'',
+	        loading: false
         }
 
 
@@ -48,6 +51,7 @@ class NuevaContrasenaForm extends Component{
     handleSubmit(e) {
         e.preventDefault();
         if (this.state.password && this.state.confirmation_password) {
+            this.setState({loading: true})
             this.props.cambiar_contraseña(this.state.password, this.state.url_cedula, this.state.url_pass);
         }
     }
@@ -79,6 +83,12 @@ class NuevaContrasenaForm extends Component{
 							<Row>					
 								<Col lg='4' md='4' sm='3' xs='2'></Col>
 								<Col md='4' xs='8' sm='6' className="border border-info border-top-0 border-bottom-0"> 							       
+							      	
+							      	{this.state.loading &&
+							      	
+							      		<center><PulseLoader color="#b3b1b0" size="16px" margin="4px"/></center>
+							      	}
+
 							      	{!this.props.status['recuperacion'] && !this.props.status['is_init'] &&
 	                    		      <Alert color="danger">
 								        No es posible restablecer su contraseña
