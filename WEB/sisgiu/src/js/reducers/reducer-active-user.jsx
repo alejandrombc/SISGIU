@@ -36,7 +36,7 @@ switch (action.type){
 
 		}; 
 
-	case "LOGOUT_SUCESS":
+	case "LOGOUT_SUCCESS":
 		return {
 			loggedIn: false, 
 		}; 
