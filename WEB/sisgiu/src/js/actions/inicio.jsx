@@ -1,6 +1,8 @@
 import request from 'superagent';
 import jwt_decode from 'jwt-decode';
+// import {host} from '../components/globalVariables';
 
+const host = 'http://127.0.0.1:8000/';
 
 export function check_login () {
 	let user = localStorage.getItem('user_token');
@@ -16,7 +18,7 @@ export function check_login () {
 			}
 		}
 		return request
-		   .get('http://127.0.0.1:8000/api/'+modulo+'/'+decoded['username'])
+		   .get(host+'api/'+modulo+'/'+decoded['username'])
 		   .set('Authorization', 'JWT '+user)
 		   .then(function(res) {
 		      return {

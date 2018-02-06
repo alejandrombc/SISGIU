@@ -1,10 +1,11 @@
 import request from 'superagent';
+// import {host} from '../components/globalVariables';
 
-const host_server = 'http://127.0.0.1:8000/';
+const host = 'http://127.0.0.1:8000/';
 
 export function check_url_recuperacion_contraseña (cedula, contraseña) {
 	return request
-	   .get(host_server + 'api/usuarios/'+cedula+'/cambiarContrasena/')
+	   .get(host + 'api/usuarios/'+cedula+'/cambiarContrasena/')
 	   .then(function(res) {
 	   		if ( res.body['password'] === contraseña ) {
 		      	return {
@@ -28,7 +29,7 @@ export function check_url_recuperacion_contraseña (cedula, contraseña) {
 
 export function cambiar_contraseña (nueva_contrasena, cedula, contraseña ) {
 	return request
-		.post(host_server+'api/usuarios/'+cedula+'/cambiarContrasena/')
+		.post(host+'api/usuarios/'+cedula+'/cambiarContrasena/')
 		.set('Content-Type', 'application/json')
 		.send({ cedula: cedula, password: contraseña, nueva_contrasena: nueva_contrasena })
 		.then(function(res) {

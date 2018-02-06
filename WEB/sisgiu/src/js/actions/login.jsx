@@ -1,15 +1,18 @@
 import request from 'superagent';
+// import {host} from '../components/globalVariables';
+
+const host = 'http://127.0.0.1:8000/';
 
 export const login = (cedula, password, modulo) => {
 	return request
-		.post('http://127.0.0.1:8000/api-auth/login/')
+		.post(host+'api-auth/login/')
 		.set('Content-Type', 'application/json')
 		.send({ username: cedula, password: password })
 		.then(function(res) {
 		
 			localStorage.setItem('user_token',res.body['token']); //Guardo en el local storage
 			localStorage.setItem('modulo',modulo); //Guardo en el local storage
-			var url = 'http://127.0.0.1:8000/api/'+modulo+'/'+cedula+'/';
+			var url = host+'api/'+modulo+'/'+cedula+'/';
 			return request
 			   .get(url)
 			   .set('Authorization', 'JWT '+localStorage.getItem('user_token'))
