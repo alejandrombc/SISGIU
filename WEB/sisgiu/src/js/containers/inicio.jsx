@@ -6,6 +6,8 @@ import { connect } from 'react-redux';
 import Usuario from './usuario';
 import Content from './content'; 
 
+//Spinner
+import { PulseLoader } from 'halogenium';
 
 
 class Inicio extends Component{
@@ -15,7 +17,14 @@ class Inicio extends Component{
     	this.props.check_login();
     }
 
+
 	render(){
+
+		var JSON_FALSO = [{
+
+		}]
+		
+
 		if ( this.props.token['user'].usuario ) {
 			return (
 		        <div>
@@ -29,7 +38,8 @@ class Inicio extends Component{
 		        </div>
 			)
 	   	}else{
-      		return (<center><div>Cargando usuario...</div></center>)
+      		return (<center><PulseLoader color="#b3b1b0" size="16px" margin="4px"/></center>
+)
     	}
 	}
 }

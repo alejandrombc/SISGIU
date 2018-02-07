@@ -162,7 +162,7 @@ class DocenteAsignaturaDetailAPIView():
             for docente_periodo in list_result:
                 docente = Usuario.objects.filter(id=docente_periodo['docente_id']).values()[0]
                 asignatura = Asignatura.objects.filter(id=docente_periodo['asignatura_id']).values()[0]
-                tipo_asignatura = TipoAsignatura.objects.filter(id=asignatura['id']).values()[0]
+                tipo_asignatura = TipoAsignatura.objects.filter(id=asignatura['tipo_asignatura_id']).values()[0]
                 periodo = Periodo.objects.filter(id=docente_periodo['periodo_id']).values()[0]
                 tipo_postgrado = TipoPostgrado.objects.filter(id=periodo['tipo_postgrado_id']).values()[0]
 
@@ -199,7 +199,7 @@ class DocenteAsignaturaDetailAPIView():
             for docente_periodo in list_result:
                 docente = Usuario.objects.filter(id=docente_periodo['docente_id']).values()[0]
                 asignatura = Asignatura.objects.filter(id=docente_periodo['asignatura_id']).values()[0]
-                tipo_asignatura = TipoAsignatura.objects.filter(id=asignatura['id']).values()[0]
+                tipo_asignatura = TipoAsignatura.objects.filter(id=asignatura['tipo_asignatura_id']).values()[0]
                 periodo = Periodo.objects.filter(id=docente_periodo['periodo_id']).values()[0]
                 tipo_postgrado = TipoPostgrado.objects.filter(id=periodo['tipo_postgrado_id']).values()[0]
 
@@ -236,7 +236,7 @@ class DocenteAsignaturaDetailAPIView():
             for docente_periodo in list_result:
                 docente = Usuario.objects.filter(id=docente_periodo['docente_id']).values()[0]
                 asignatura = Asignatura.objects.filter(id=docente_periodo['asignatura_id']).values()[0]
-                tipo_asignatura = TipoAsignatura.objects.filter(id=asignatura['id']).values()[0]
+                tipo_asignatura = TipoAsignatura.objects.filter(id=asignatura['tipo_asignatura_id']).values()[0]
                 periodo = Periodo.objects.filter(id=docente_periodo['periodo_id']).values()[0]
                 tipo_postgrado = TipoPostgrado.objects.filter(id=periodo['tipo_postgrado_id']).values()[0]
 

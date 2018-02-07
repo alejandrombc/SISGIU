@@ -1,6 +1,6 @@
 import request from 'superagent';
 
-const host = 'http://localhost:8000/';
+import {host} from '../components/globalVariables';
 
 export const logout = () => {
 	let jwt_token = localStorage.getItem('user_token');

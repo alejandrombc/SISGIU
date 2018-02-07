@@ -1,8 +1,6 @@
 import request from 'superagent';
 import jwt_decode from 'jwt-decode';
-// import {host} from '../components/globalVariables';
-
-const host = 'http://127.0.0.1:8000/';
+import {host} from '../components/globalVariables';
 
 export function check_login () {
 	let user = localStorage.getItem('user_token');

@@ -7,7 +7,8 @@ from asignatura.models import (
 	)
 
 from usuario.models import(
-    TipoPostgrado
+    TipoPostgrado,
+    Usuario
     )
 
 from relacion.models import (
@@ -90,13 +91,15 @@ class AsignaturaListCreateAPIView(ListCreateAPIView):
 
             for docente_asignatura in lista_docente_asignatura:
                 asignatura = Asignatura.objects.filter(id=docente_asignatura['asignatura_id']).values()[0]
-                tipo_asignatura = TipoAsignatura.objects.filter(id=asignatura['id']).values()[0]
+                tipo_asignatura = TipoAsignatura.objects.filter(id=asignatura['tipo_asignatura_id']).values()[0]
                 asig_tipo = AsignaturaTipoPostgrado.objects.filter(asignatura_id=asignatura['id']).values()[0]
                 tipo_postgrado = TipoPostgrado.objects.filter(id=asig_tipo['tipo_postgrado_id']).values()[0]
 
 
                 asignatura['tipo_asignatura'] = tipo_asignatura['nombre']
                 asignatura['tipo_postgrado'] = tipo_postgrado['tipo']
+                asignatura['horario_dia'] = docente_asignatura['horario_dia']
+                asignatura['horario_hora'] = docente_asignatura['horario_hora']
 
                 del asignatura['tipo_asignatura_id']
                 del asignatura['tipo_postgrado_id']
@@ -116,11 +119,31 @@ class AsignaturaListCreateAPIView(ListCreateAPIView):
             lista_asignaturas = []
 
             for estudiante_asignatura in lista_estudiante_asignatura:
+
                 asignatura = Asignatura.objects.filter(id=estudiante_asignatura['asignatura_id']).values()[0]
-                tipo_asignatura = TipoAsignatura.objects.filter(id=asignatura['id']).values()[0]
+                tipo_asignatura = TipoAsignatura.objects.filter(id=asignatura['tipo_asignatura_id']).values()[0]
                 asig_tipo = AsignaturaTipoPostgrado.objects.filter(asignatura_id=asignatura['id']).values()[0]
                 tipo_postgrado = TipoPostgrado.objects.filter(id=asig_tipo['tipo_postgrado_id']).values()[0]
 
+                docente_asignatura = DocenteAsignatura.objects.filter(asignatura_id=asignatura['id']).values()
+                horarios_dia = []
+                horarios_hora = []
+
+                lista_docente_asignatura = [entry for entry in docente_asignatura]
+                asignatura['docente'] = {}
+
+                docente_informacion = Usuario.objects.filter(id=lista_docente_asignatura[0]['docente_id']).values()[0]
+                asignatura['docente']['first_name'] = docente_informacion['first_name']
+                asignatura['docente']['last_name'] = docente_informacion['last_name']
+                
+
+                for docente in lista_docente_asignatura:
+                    horarios_dia.append(docente['horario_dia'])
+                    horarios_hora.append(docente['horario_hora'])
+                    
+
+                asignatura['docente']['horario_dia'] = horarios_dia
+                asignatura['docente']['horario_hora'] = horarios_hora
 
                 asignatura['tipo_asignatura'] = tipo_asignatura['nombre']
                 asignatura['tipo_postgrado'] = tipo_postgrado['tipo']

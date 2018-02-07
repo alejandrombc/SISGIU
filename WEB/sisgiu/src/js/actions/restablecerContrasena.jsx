@@ -1,7 +1,6 @@
 import request from 'superagent';
-// import {host} from '../components/globalVariables';
+import {host} from '../components/globalVariables';
 
-const host = 'http://127.0.0.1:8000/';
 
 export function check_url_recuperacion_contraseña (cedula, contraseña) {
 	return request
