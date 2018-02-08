@@ -10,6 +10,7 @@ import RecuperarContrasenaForm from '../containers/recuperarContrasenaForm';
 import NuevaContrasenaForm from '../containers/nuevaContrasenaForm';
 import Inicio from '../containers/inicio';
 import Page404 from '../components/page404';
+import PerfilUsuario from '../containers/perfilUsuario'
 
 
 
@@ -54,6 +55,15 @@ class RutasPrincipales extends React.Component {
 							  ) : (
 							  	<NuevaContrasenaForm cedula={props.match.params.cedula} pathname={props.location.pathname}/>
 							  )
+						)}/>
+
+
+						<Route path="/perfil" render={(props) => (
+									  this.props.token['loggedIn'] ? (
+									    <Redirect to="/inicio"/>
+									  ) : (
+									  	<Redirect to="/login"/>
+									  )
 						)}/>
 
 					   	<Route component={Page404} ></Route>

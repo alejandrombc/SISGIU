@@ -77,7 +77,7 @@ class AsignaturaListCreateAPIView(ListCreateAPIView):
     permission_classes = [IsAuthenticatedOrReadOnly, IsListOrCreate]
 
     def get_asignaturas_por_docente(request, cedula):
-        if (request.user.is_anonymous == False):
+        if (request.user.is_anonymous != False):
             member = DocenteAsignatura.objects.filter(docente__usuario__cedula=cedula , periodo__estado_periodo__estado="activo")
             # member = DocenteAsignatura.objects.filter(docente__usuario__cedula=cedula)
 
@@ -111,7 +111,7 @@ class AsignaturaListCreateAPIView(ListCreateAPIView):
         return HttpResponse(json.dumps(response_data), content_type="application/json", status=401)
 
     def get_asignaturas_por_estudiante(request, cedula):
-        if (request.user.is_anonymous == False):
+        if (request.user.is_anonymous != False):
             member = EstudianteAsignatura.objects.filter(periodo_estudiante__estudiante__usuario__cedula=cedula , periodo_estudiante__periodo__estado_periodo__estado="activo").values()
 
             lista_estudiante_asignatura = [entry for entry in member]

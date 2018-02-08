@@ -38,8 +38,7 @@ class Inicio extends Component{
 		        </div>
 			)
 	   	}else{
-      		return (<center><PulseLoader color="#b3b1b0" size="16px" margin="4px"/></center>
-)
+      		return (<center><PulseLoader color="#b3b1b0" size="16px" margin="4px"/></center>)
     	}
 	}
 }

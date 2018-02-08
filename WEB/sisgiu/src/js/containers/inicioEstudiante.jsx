@@ -1,90 +1,23 @@
 // Dependencies
 import React, {Component} from 'react';
 import { connect } from 'react-redux';
-import { Button, Input, Row, Col, Form, FormGroup, Label, Alert, ListGroup, ListGroupItem, ListGroupItemHeading, ListGroupItemText} from 'reactstrap';
+import {bindActionCreators} from 'redux';
+import { Button, Row, Col, ListGroup, ListGroupItem, ListGroupItemHeading, ListGroupItemText} from 'reactstrap';
+import { get_information } from '../actions/inicioEstudiante';
 
+//Spinner
+import { PulseLoader } from 'halogenium';
 
 class InicioEstudiante extends Component{
 
-  render(){
-    var JSON_FALSO = [
-          {
-              "tipo_asignatura": "Electiva",
-              "nombre": "Matematica 4",
-              "codigo": "0004",
-              "unidad_credito": 5,
-              "id": 4,
-              "docente": {
-                  "horario_dia": [
-                      "2"
-                  ],
-                  "horario_hora": [
-                      "1:00 - 3:00"
-                  ],
-                  "first_name": "Gregorio",
-                  "last_name": "Castro"
-              },
-              "tipo_postgrado": "Doctorado"
-          },
-          {
-              "tipo_asignatura": "Electiva",
-              "nombre": "Matematica 3",
-              "codigo": "0003",
-              "unidad_credito": 5,
-              "id": 3,
-              "docente": {
-                  "horario_dia": [
-                      "3"
-                  ],
-                  "horario_hora": [
-                      "3:00 - 5:00"
-                  ],
-                  "first_name": "Gregorio",
-                  "last_name": "Castro"
-              },
-              "tipo_postgrado": "Doctorado"
-          },
-          {
-              "tipo_asignatura": "Electiva",
-              "nombre": "Matematica 2",
-              "codigo": "0002",
-              "unidad_credito": 5,
-              "id": 2,
-              "docente": {
-                  "horario_dia": [
-                      "0",
-                      "4"
-                  ],
-                  "horario_hora": [
-                      "10:00 - 12:00",
-                      "15:00 - 17:00"
-                  ],
-                  "first_name": "Gregorio",
-                  "last_name": "Castro"
-              },
-              "tipo_postgrado": "Doctorado"
-          },
-          {
-              "tipo_asignatura": "Electiva",
-              "nombre": "Matematica 1",
-              "codigo": "0001",
-              "unidad_credito": 5,
-              "id": 1,
-              "docente": {
-                  "horario_dia": [
-                      "0"
-                  ],
-                  "horario_hora": [
-                      "09:00 - 11:00"
-                  ],
-                  "first_name": "Gregorio",
-                  "last_name": "Castro"
-              },
-              "tipo_postgrado": "Doctorado"
-          }
-      ];
+  constructor(props) {
+      super(props);
+      this.props.get_information(this.props.token['user']);
+  }
 
-    const dias = {
+
+  render(){
+     const dias = {
       "0":"Lunes",
       "1":"Martes",
       "2":"Miercoles",
@@ -94,16 +27,32 @@ class InicioEstudiante extends Component{
       "6":"Domingo",
     }
 
-    const listItems = JSON_FALSO.map((valor) =>
-        <ListGroupItem>
-          <ListGroupItemHeading>({valor['codigo']}) {valor['nombre']}</ListGroupItemHeading>
-          <ListGroupItemText>
-              {dias[valor['docente']['horario_dia'][0]]} {valor['docente']['horario_hora'][0]}
-              <br />
-              Prof: {valor['docente']['first_name']} {valor['docente']['last_name']}
-          </ListGroupItemText>
-        </ListGroupItem>
-      );
+    var listItems = "";
+      if(this.props.info_materias['materias'].length > 0){
+        listItems = this.props.info_materias['materias'].map((valor, index) =>{
+          var lista_docentes = [];
+          for (var i = 0; i < valor['docente']['horario_dia'].length; i++) {
+
+              lista_docentes[i] = <font key={i}> {dias[valor['docente']['horario_dia'][i]]} {valor['docente']['horario_hora'][i]} <br /></font>
+          }
+          return (
+            <ListGroupItem key={index}>
+              <ListGroupItemHeading>({valor['codigo']}) {valor['nombre']}</ListGroupItemHeading>
+              <ListGroupItemText key={valor['codigo']}>
+                  {lista_docentes}
+                  Prof: {valor['docente']['first_name']} {valor['docente']['last_name']}
+                  
+              </ListGroupItemText>
+          </ListGroupItem>
+          )
+        });
+      }else{
+        if(!this.props.info_materias['tiene_asignaturas']){
+          listItems = <center><h3>Usted no esta inscrito el periodo actual. Maldito vago</h3></center>
+        }else{
+          listItems = <center><PulseLoader color="#b3b1b0" size="16px" margin="4px"/></center>
+        }
+      }
       return(
           <div>
           <br />
@@ -116,19 +65,30 @@ class InicioEstudiante extends Component{
             </Row>
             <br />
             <br />
-            <Row>
-               <Col md='12' className="text-center">
-                  <h5>Asignaturas Inscritas</h5>
-              </Col>
-            </Row>
-            <br />
-            <Row>
-              <Col md='12'>
-                <ListGroup>
-                  {listItems}
-                </ListGroup>
-              </Col>
-            </Row>
+            {!this.props.info_materias['tiene_asignaturas'] &&
+              <Row>
+                 <Col md='12' className="text-center">
+                    <h5>Usted no se encuentra inscrito en el periodo actual</h5>
+                </Col>
+              </Row>
+            }
+            {this.props.info_materias['tiene_asignaturas'] &&
+              <div>
+                <Row>
+                 <Col md='12' className="text-center">
+                    <h5>Asignaturas Inscritas</h5>
+                </Col>
+                </Row>
+                <br />
+                <Row>
+                  <Col md='12'>
+                    <ListGroup>
+                      {listItems}
+                    </ListGroup>
+                  </Col>
+                </Row>
+              </div>
+            }
           </div>
       )
   }
@@ -137,10 +97,16 @@ class InicioEstudiante extends Component{
 
 const mapStateToProps = (state)=> {
   return{
-    token: state.activeUser
+    token: state.activeUser,
+    info_materias: state.estudianteUser
   };
 }
 
-export default connect(mapStateToProps)(InicioEstudiante);
+const mapDispatchToProps = (dispatch) => {
+  return bindActionCreators({get_information: get_information}, dispatch )
+}
+
+
+export default connect(mapStateToProps, mapDispatchToProps)(InicioEstudiante);
 
 
