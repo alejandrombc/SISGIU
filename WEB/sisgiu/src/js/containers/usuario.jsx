@@ -5,7 +5,6 @@ import {bindActionCreators} from 'redux';
 import {logout} from '../actions/logout.jsx';
 import '../../css/usuario.css'; 
 import { Link } from 'react-router-dom'
-import { cambiarPestana } from '../actions/cambiarPestana';
 
 
 // Components
@@ -49,7 +48,7 @@ class Usuario extends Component{
                 </div>
               </div>
               <div className="profile-userbuttons">
-                <Link to="perfil"><button onClick={this.props.cambiarPestana} type="button" className="btn btn-success btn-sm">Perfil</button></Link>
+                <Link to="perfil"><button type="button" className="btn btn-success btn-sm">Perfil</button></Link>
                 <button onClick={this.props.logout} type="button" className="btn btn-danger btn-sm">Cerrar Sesión</button>
               </div>
             </div>
@@ -66,7 +65,7 @@ const mapStateToProps = (state)=> {
 }
 
 const mapDispatchToProps = (dispatch) => {
-  return bindActionCreators({logout: logout, cambiarPestana: cambiarPestana}, dispatch )
+  return bindActionCreators({logout: logout}, dispatch )
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Usuario);

@@ -28,7 +28,7 @@ class RutasPrincipales extends React.Component {
 						)}/>
 					   	<Route exact path="/inicio" render={() => (
 							  this.props.token['loggedIn'] ? (
-							    <Inicio />
+							    <Inicio pestana="inicio"/>
 							  ) : (
 							  	<Redirect to="/login"/>
 							  )
@@ -59,11 +59,11 @@ class RutasPrincipales extends React.Component {
 
 
 						<Route path="/perfil" render={(props) => (
-									  this.props.token['loggedIn'] ? (
-									    <Redirect to="/inicio"/>
-									  ) : (
-									  	<Redirect to="/login"/>
-									  )
+							  this.props.token['loggedIn'] ? (
+							    <Inicio pestana="perfil" />
+							  ) : (
+							  	<Redirect to="/login"/>
+							  )
 						)}/>
 
 					   	<Route component={Page404} ></Route>

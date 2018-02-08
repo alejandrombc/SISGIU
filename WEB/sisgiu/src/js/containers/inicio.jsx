@@ -32,7 +32,7 @@ class Inicio extends Component{
 		              <div className="row profile">
 		                <Usuario />
 		               
-		                <Content />
+		                <Content pestana={this.props.pestana}/>
 		            </div>
 		          </div>
 		        </div>

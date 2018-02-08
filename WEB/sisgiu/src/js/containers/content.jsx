@@ -15,11 +15,11 @@ class Content extends Component{
 		              <div className="profile-content">
 
 		                
-		                {this.props.pestana['pestana'] == "perfil" &&
+		                {this.props.pestana == "perfil" &&
 		                	<PerfilUsuario/>
 		            	}
 
-		            	{this.props.pestana['pestana'] == "inicio" &&
+		            	{this.props.pestana == "inicio" &&
 		                	<InicioEstudiante/>
 		            	}
 
@@ -33,7 +33,7 @@ class Content extends Component{
 
 const mapStateToProps = (state)=> {
 	return{
-		pestana: state.cambiarPestana
+		
 	};
 }
 
