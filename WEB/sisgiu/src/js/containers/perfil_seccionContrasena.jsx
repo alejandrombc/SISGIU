@@ -1,7 +1,13 @@
-// Dependencies. 
+	// Dependencies. 
 import React,{Component} from 'react';
 import {Alert, Form, FormGroup, Label, Input, Button, Row, Col} from 'reactstrap';
 import FontAwesomeIcon from 'react-fontawesome'
+import {bindActionCreators} from 'redux';
+import { connect } from 'react-redux';
+
+
+// Components
+import { cambiarContrasena } from '../actions/perfilUsuario';
 
 class SeccionContrasena extends Component{
 	 
@@ -40,7 +46,10 @@ class SeccionContrasena extends Component{
 
 
 	changePasswordSubmit(){
-      alert("Cambio exitoso");
+      // if (this.state.password) {
+        	// this.setState({ loading: true });
+            this.props.cambiarContrasena(this.state.password, this.props.token['user']);
+        // }
   	}
 
 	render(){
@@ -49,6 +58,16 @@ class SeccionContrasena extends Component{
 	 			<br />
 	              <Row>
 	                <Col sm="12">
+		                {this.props.edit['bad_input_password'] &&
+	        		      <Alert color="danger">
+					        Hubo un error al intentar cambiar su contraseña
+					      </Alert>
+	            		}
+	            		{this.props.edit['edit_password'] &&
+	        		      <Alert color="success">
+					        Contraseña actualizada exitosamente
+					      </Alert>
+	            		}
 	                  <legend>Contraseña</legend>
 	                  <Form>
 	                  <br />
@@ -121,7 +140,19 @@ class SeccionContrasena extends Component{
 	}
 }
 
-export default (SeccionContrasena);
+
+const mapStateToProps = (state)=> {
+  return{
+    token: state.activeUser,
+    edit: state.editUser
+  };
+}
+
+const mapDispatchToProps = (dispatch) => {
+	return bindActionCreators({cambiarContrasena: cambiarContrasena}, dispatch )
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(SeccionContrasena);
 
 
 
