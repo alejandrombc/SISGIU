@@ -17,8 +17,6 @@ export const login = (cedula, password, modulo) => {
 			   .set('Authorization', 'JWT '+localStorage.getItem('user_token'))
 			   .then(function(response) {
 
-			   	console.log(response);
-
 			      return {
 						type: "LOGIN_EXITOSO",
 						payload: {user: response.body, modulo:modulo}

@@ -10,7 +10,6 @@ import RecuperarContrasenaForm from '../containers/recuperarContrasenaForm';
 import NuevaContrasenaForm from '../containers/nuevaContrasenaForm';
 import Inicio from '../containers/inicio';
 import Page404 from '../components/page404';
-import PerfilUsuario from '../containers/perfilUsuario'
 
 
 

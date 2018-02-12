@@ -4,23 +4,38 @@ import { connect } from 'react-redux';
 
 //Components
 import InicioEstudiante from './inicioEstudiante';
-import PerfilUsuario from '../containers/perfilUsuario';
+import PerfilUsuario from '../components/perfilUsuario';
 
 
 class Content extends Component{
-
+	
 	render(){
+		var modulo = localStorage.getItem('modulo');
 		return (
 		      <div className="col-md-9">
 		              <div className="profile-content">
 
 		                
-		                {this.props.pestana == "perfil" &&
+		                {this.props.pestana === "perfil" &&  
 		                	<PerfilUsuario/>
 		            	}
 
-		            	{this.props.pestana == "inicio" &&
+		            	{this.props.pestana === "inicio" && modulo === "estudiantes" &&
 		                	<InicioEstudiante/>
+		            	}
+
+		            	{this.props.pestana === "inicio" && modulo === "docentes" &&
+		                	<InicioEstudiante/>
+		            	}
+
+
+		            	{this.props.pestana === "inicio" && modulo === "administrativo" &&
+		                	<InicioEstudiante/>
+		            	}
+
+
+		            	{this.props.pestana === "inicio" && modulo === "administradores" &&
+		                	<PerfilUsuario/>
 		            	}
 
 
@@ -34,7 +49,7 @@ class Content extends Component{
 const mapStateToProps = (state)=> {
 	return{
 		
-	};
+	};	
 }
 
 

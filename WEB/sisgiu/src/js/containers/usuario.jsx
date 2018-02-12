@@ -12,10 +12,6 @@ import { Link } from 'react-router-dom'
 
 class Usuario extends Component{
 
-  constructor(props){
-    super(props);
-  }
-
   render(){
       var user = this.props.token['user'];
       var nombre = user.usuario.first_name + ' ' + user.usuario.last_name;
@@ -26,7 +22,7 @@ class Usuario extends Component{
         modulo = "Módulo Docente";
       }else if(modulo === "administrativo"){
         modulo = "Módulo Administrativo";
-      }else if(modulo === "usuarios"){
+      }else if(modulo === "administradores"){
         modulo = "Módulo Administrador";
       }
 
@@ -48,7 +44,7 @@ class Usuario extends Component{
                 </div>
               </div>
               <div className="profile-userbuttons">
-                <Link to="perfil"><button type="button" className="btn btn-success btn-sm">Perfil</button></Link>
+                <Link to="perfil"><button type="button" className="btn btn-success btn-sm">Perfil</button></Link>{' '}
                 <button onClick={this.props.logout} type="button" className="btn btn-danger btn-sm">Cerrar Sesión</button>
               </div>
             </div>

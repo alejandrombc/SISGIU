@@ -54,12 +54,12 @@ class NavigationBar extends Component {
           navigationBar = ( <NavBarAdministrativo /> )
         break;
 
-        case 'usuarios':
+        case 'administradores':
           navigationBar = ( <NavBarAdministrador /> )
         break;
 
         default:
-          console.log('jdknawk');
+          navigationBar = (<NavBarEstudiante />)
         break;
 
       }

@@ -7,7 +7,7 @@ const NavBarEstudiante = () => (
   <Nav navbar >
                                 
     <NavItem>
-      <NavLink href="/inicio">Inicio</NavLink>
+      <NavLink href="inicio">Inicio</NavLink>
     </NavItem>
 
     <NavItem>

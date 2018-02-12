@@ -20,11 +20,6 @@ class Inicio extends Component{
 
 	render(){
 
-		var JSON_FALSO = [{
-
-		}]
-		
-
 		if ( this.props.token['user'].usuario ) {
 			return (
 		        <div>

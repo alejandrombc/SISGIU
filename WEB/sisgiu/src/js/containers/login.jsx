@@ -91,7 +91,7 @@ class Login extends Component{
 							            <option value="estudiantes">Estudiante</option>
 							            <option value="docentes">Docente</option>
 							            <option value="administrativo">Administrativo</option>
-							            <option value="usuarios">Administrador</option>
+							            <option value="administradores">Administrador</option>
 							          </select>
 							        </FormGroup>
 							    </Col>

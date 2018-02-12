@@ -115,6 +115,43 @@ class AdministradorDetailAPIView(RetrieveAPIView):
         return HttpResponse(json.dumps(list_result, default=date_handler), content_type="application/json")
 
 
+    def get_admin(request, cedula):
+        member = Usuario.objects.filter(username=cedula, is_superuser=True)
+        if(member):
+            list_result = {"usuario": member.values()[0]}
+            return HttpResponse(json.dumps(list_result, default=date_handler), content_type="application/json", status=200)
+
+        return HttpResponse(json.dumps({"ERROR":"Usuario no es administrador"}, default=date_handler), content_type="application/json", status=404)
+
+
+    @csrf_exempt
+    def edit_admin(request, cedula):
+        if(request.method == "PUT"):
+            body_unicode = request.body.decode('utf-8')
+            body = json.loads(body_unicode)
+
+            user = Usuario.objects.get(username=cedula)
+            print (user)
+            if(user):
+                user.first_name = body['usuario']['first_name']
+                user.last_name = body['usuario']['last_name']
+                user.estado_civil = body['usuario']['estado_civil']
+                user.email = body['usuario']['email']
+                user.celular = body['usuario']['celular']
+                user.telefono_trabajo = body['usuario']['telefono_trabajo']
+                user.telefono_casa = body['usuario']['telefono_casa']
+                user.save()
+                return HttpResponse(json.dumps({"status":"OK"}, default=date_handler), content_type="application/json", status=200)
+
+        return HttpResponse(json.dumps({"error":"Ese usuario no es un administrador"}, default=date_handler), content_type="application/json", status=404)
+
+
+    def get_all_admin(request):
+        member = Usuario.objects.filter(is_superuser=True)
+        list_result = member.values()[0]
+        return HttpResponse(json.dumps(list_result, default=date_handler), content_type="application/json")
+
+
 
 
     def send_mail(request, cedula):

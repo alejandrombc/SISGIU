@@ -12,13 +12,11 @@ export const logout = () => {
 	.then(function(res) {
 		localStorage.removeItem('user_token');
 		localStorage.removeItem('modulo');
-		console.log(res.body);
 		return {
 			type: "LOGOUT_SUCCESS",
 		}
 	})
 	.catch(function(err) { 
-		console.log(err);
 		return {
 			type: "LOGOUT_ERROR"
 		}

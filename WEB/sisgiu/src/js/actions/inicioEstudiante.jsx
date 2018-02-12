@@ -6,7 +6,7 @@ export const get_information = (user) => {
 	var token = localStorage.getItem('user_token');
 	return request
 	   .get(host+'api/asignaturas/estudiante/'+user['usuario']['cedula']+'/')
-	   .set('Authorization', 'JWT '+this.token)
+	   .set('Authorization', 'JWT '+token)
 	   .then(function(res) {
 	   	  	if(res.body.length > 0){
 		      return {
