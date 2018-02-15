@@ -2,25 +2,42 @@
 import React,{Component} from 'react';
 import { connect } from 'react-redux';
 import { Form, FormGroup, Input, Button, Row, Col} from 'reactstrap';
-
 import '../../css/perfil.css';
+
+// Components
+import { cambiarFoto } from '../actions/perfilUsuario';
 
 class SeccionFoto extends Component{
 	 
 	constructor(props) {
       super(props);
       this.state = {
-
-          };
+      	foto: ''
+      };
 
       this.handleChange = this.handleChange.bind(this);
+      this.changePhotoSubmit = this.changePhotoSubmit.bind(this);
 
   	}
 
   	handleChange(e) {
         const { name, value } = e.target;
+
         this.setState({ [name]: value });
+        console.log( this.state );
+
         
+	}
+
+	changePhotoSubmit() {
+		// alert('subiendo foto...');
+
+
+		console.log( this.state.foto );
+
+		cambiarFoto(this.state.foto, this.props.token['user'])
+
+
 	}
 
 
@@ -75,10 +92,10 @@ class SeccionFoto extends Component{
 									</tbody>
 								</table>
 							<br /><br /><br />
-	                        <Input className="form-control" accept="image/png image/jpg" type="file" name="foto_perfil" id="foto_perfil" />
+	                        <Input className="form-control" accept="image/png image/jpg" type="file" name="foto" id="foto" onChange={this.handleChange} value={this.state.foto} />
 	                      </Col>
 	                    </FormGroup>
-	                    <center><Button color="primary">Guardar</Button></center>
+	                    <center><Button color="primary" onClick={this.changePhotoSubmit} >Guardar</Button></center>
 	                  </Form>
 	                </Col>
               	</Row>

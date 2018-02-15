@@ -5,6 +5,7 @@ import FontAwesomeIcon from 'react-fontawesome'
 import {bindActionCreators} from 'redux';
 import { connect } from 'react-redux';
 
+// Aqui falta que una vez que se haya actualizado la contrasena de forma exitosa se borren los inputs y el mensaje de exito desaparezca luego de unos segundos
 
 // Components
 import { cambiarContrasena } from '../actions/perfilUsuario';

@@ -58,3 +58,31 @@ export const cambiarContrasena = (password, user) => {
 }
 
 
+export const cambiarFoto = (foto, user) => {
+	console.log(foto);
+	user.usuario.foto = foto;
+	console.log(user);
+
+	return request
+	   .put(host+'api/'+modulo+'/'+user.usuario.cedula+'/edit/')
+	   .set('Authorization', 'JWT '+token)
+	   .set('Content-Type', 'application/json')
+	   .send(user)
+	   .then(function(res) {
+	   	console.log(res.body);
+		      return {
+					type: "EDIT_USER_PASSWORD_SUCCESS",
+					payload: {user: res.body }
+				}
+
+	   })
+	   .catch(function(err) {
+	   	console.log(err);
+	      	return {
+				type: "EDIT_USER_PASSWORD_ERROR"
+			}
+	   });
+
+}
+
+

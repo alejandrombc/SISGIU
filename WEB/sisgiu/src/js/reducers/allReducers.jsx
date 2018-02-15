@@ -1,8 +1,9 @@
 import {combineReducers} from 'redux';
-import ActiveUserReducer from './reducer-active-user'
-import RecuperarContrasena from './reducer-olvido-contrasena'
-import EstudianteReducer from './reducer-estudiante'
-import EditUserReducer from './reducer-edit-user'
+import ActiveUserReducer from './reducer-active-user';
+import RecuperarContrasena from './reducer-olvido-contrasena';
+import EstudianteReducer from './reducer-estudiante';
+import EditUserReducer from './reducer-edit-user';
+import AdminReducer from './reducer-administrador';
 
 /*
  * Combinamos todos los reducers en un solo objeto para enviar al store
@@ -14,7 +15,8 @@ const allReducers = combineReducers({
 	activeUser: ActiveUserReducer,
 	estudianteUser: EstudianteReducer,
 	recuperarContrasena : RecuperarContrasena,
-	editUser: EditUserReducer
+	editUser: EditUserReducer,
+	adminUser: AdminReducer,
 });
 
 

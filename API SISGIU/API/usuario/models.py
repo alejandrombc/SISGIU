@@ -18,13 +18,13 @@ class Usuario(AbstractUser):
 	segundo_nombre = models.CharField(max_length=50, null=True)
 	segundo_apellido = models.CharField(max_length=50, null=True)
 	correo_alternativo = models.EmailField(max_length=60, blank=True)
-	celular = models.CharField(max_length=14)
-	telefono_casa = models.CharField(max_length=14)
+	celular = models.CharField(max_length=14, blank=True)
+	telefono_casa = models.CharField(max_length=14, blank=True)
 	telefono_trabajo = models.CharField(max_length=14, blank=True)
 	fecha_nacimiento = models.DateField(default=timezone.now)
-	sexo = models.CharField(max_length=1)
-	nacionalidad = models.CharField(max_length=20)
-	estado_civil = models.CharField(max_length=20)
+	sexo = models.CharField(max_length=1, blank=True)
+	nacionalidad = models.CharField(max_length=20, blank=True)
+	estado_civil = models.CharField(max_length=20, blank=True)
 	foto = models.ImageField(upload_to=user_directory_path, default='sisgiu/no_avatar.jpg')
 
 
@@ -47,7 +47,7 @@ class Estudiante(models.Model):
 		null=True,
 	)
 
-	direccion = models.TextField()
+	direccion = models.TextField(blank=True)
 
 
 

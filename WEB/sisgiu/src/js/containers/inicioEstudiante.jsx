@@ -3,7 +3,7 @@ import React, {Component} from 'react';
 import { connect } from 'react-redux';
 import {bindActionCreators} from 'redux';
 import { Button, Row, Col, ListGroup, ListGroupItem, ListGroupItemHeading, ListGroupItemText} from 'reactstrap';
-import { get_information } from '../actions/inicioEstudiante';
+import { get_information } from '../actions/inicio';
 
 //Spinner
 import { PulseLoader } from 'halogenium';
@@ -28,7 +28,7 @@ class InicioEstudiante extends Component{
     }
 
     var listItems = "";
-      if(this.props.info_materias['materias'].length > 0){
+      if(this.props.info_materias['materias'] && this.props.info_materias['materias'].length > 0){
         listItems = this.props.info_materias['materias'].map((valor, index) =>{
           var lista_docentes = [];
           for (var i = 0; i < valor['docente']['horario_dia'].length; i++) {
@@ -47,9 +47,7 @@ class InicioEstudiante extends Component{
           )
         });
       }else{
-        if(!this.props.info_materias['tiene_asignaturas']){
-          listItems = <center><h3>Usted no esta inscrito el periodo actual. Maldito vago</h3></center>
-        }else{
+        if(this.props.info_materias['tiene_asignaturas']){
           listItems = <center><PulseLoader color="#b3b1b0" size="16px" margin="4px"/></center>
         }
       }
@@ -68,7 +66,7 @@ class InicioEstudiante extends Component{
             {!this.props.info_materias['tiene_asignaturas'] &&
               <Row>
                  <Col md='12' className="text-center">
-                    <h5>Usted no se encuentra inscrito en el periodo actual</h5>
+                    <h5>Usted no se encuentra inscrito en el periodo actual.</h5>
                 </Col>
               </Row>
             }

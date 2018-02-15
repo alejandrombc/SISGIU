@@ -2,12 +2,13 @@ import request from 'superagent';
 import jwt_decode from 'jwt-decode';
 import {host} from '../components/globalVariables';
 
+
 export function check_login () {
-	let user = localStorage.getItem('user_token');
+	let token = localStorage.getItem('user_token');
 	let modulo = localStorage.getItem('modulo');
-	if(user && modulo){
+	if(token && modulo){
 		try{
-			var decoded = jwt_decode(user);
+			var decoded = jwt_decode(token);
 		}catch(e){
 			localStorage.removeItem('user_token');
 		   	localStorage.removeItem('modulo');
@@ -17,7 +18,7 @@ export function check_login () {
 		}
 		return request
 		   .get(host+'api/'+modulo+'/'+decoded['username'])
-		   .set('Authorization', 'JWT '+user)
+		   .set('Authorization', 'JWT '+token)
 		   .then(function(res) {
 		      return {
 					type: "LOGIN_EXITOSO",
@@ -26,7 +27,6 @@ export function check_login () {
 
 		   })
 		   .catch(function(err) {
-
 		   		localStorage.removeItem('user_token');
 		   		localStorage.removeItem('modulo');
 		      	return {
@@ -38,5 +38,66 @@ export function check_login () {
 			type: "INIT_LOGIN_ERROR"
 		}	
 	}
+
+}
+
+
+// InicioEstudiante
+export const get_information = (user) => {
+	let token = localStorage.getItem('user_token');
+	return request
+	   .get(host+'api/asignaturas/estudiante/'+user['usuario']['cedula']+'/')
+	   .set('Authorization', 'JWT '+token)
+	   .then(function(res) {
+	   	  	if(res.body.length > 0){
+		      return {
+					type: "GET_INFORMATION_SUCCESS",
+					payload: {materias: res.body }
+				}
+			}else{
+				return {
+					type: "ESTUDIANTE_SIN_ASIGNATURA",
+					payload: {materias: res.body }
+				}
+			}
+
+	   })
+	   .catch(function(err) {
+
+	   		localStorage.removeItem('user_token');
+	   		localStorage.removeItem('modulo');
+	      	return {
+				type: "GET_INFORMATION_ERROR"
+			}
+	   });
+}
+
+
+// InicioAdministrador
+export const get_periodos_actuales = () => {
+	let token = localStorage.getItem('user_token');
+	return request
+	   .get(host+'api/periodo/activo/')
+	   .set('Authorization', 'JWT '+token)
+	   .then(function(res) {
+	   	  	if(res.body.length > 0){
+		      return {
+					type: "GET_PERIODOS_SUCCESS",
+					payload: {periodos: res.body }
+				}
+			}else{
+				return {
+					type: "SIN_PERIODOS_ACTIVOS",
+				}
+			}
+
+	   })
+	   .catch(function(err) {
+	   		localStorage.removeItem('user_token');
+	   		localStorage.removeItem('modulo');
+	      	return {
+				type: "GET_PERIODOS_ERROR"
+			}
+	   });
 
 }

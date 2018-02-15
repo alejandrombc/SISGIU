@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 
 //Components
 import InicioEstudiante from './inicioEstudiante';
+import InicioAdministrador from './inicioAdministrador';
 import PerfilUsuario from '../components/perfilUsuario';
 
 
@@ -35,7 +36,7 @@ class Content extends Component{
 
 
 		            	{this.props.pestana === "inicio" && modulo === "administradores" &&
-		                	<PerfilUsuario/>
+		                	<InicioAdministrador/>
 		            	}
 
 

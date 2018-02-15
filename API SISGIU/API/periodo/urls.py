@@ -20,7 +20,8 @@ urlpatterns = format_suffix_patterns([
     url(r'^api/estadoPeriodo/(?P<pk>\d+)/delete/$', EstadoPeriodoDeleteAPIView.as_view(), name='EstadoPeriodo-delete'),
 
     # Periodo
-    url(r'^api/periodo/$', PeriodoListCreateAPIView.as_view(), name='Periodo-list-create'),
+    url(r'^api/periodo/$', PeriodoListCreateAPIView.as_view(), name='Periodo-list-create'),    
+    url(r'^api/periodo/(?P<filtro>[\w\-]+)/$', PeriodoListCreateAPIView.get_periodos_by_filter, name='Periodo-list-filter'),    
     url(r'^api/periodo/(?P<pk>\d+)/$', PeriodoDetailAPIView.as_view(), name='Periodo-detail'),
     url(r'^api/periodo/(?P<pk>\d+)/edit/$', PeriodoUpdateAPIView.as_view(), name='Periodo-update'),
     url(r'^api/periodo/(?P<pk>\d+)/delete/$', PeriodoDeleteAPIView.as_view(), name='Periodo-delete'),
