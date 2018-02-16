@@ -2,8 +2,9 @@
 import React, {Component} from 'react';
 import { connect } from 'react-redux';
 import {bindActionCreators} from 'redux';
-import { Button, Row, Col, ListGroup, ListGroupItem, ListGroupItemHeading, ListGroupItemText} from 'reactstrap';
+import { Alert, Button, Row, Col, ListGroup, ListGroupItem, ListGroupItemHeading, ListGroupItemText} from 'reactstrap';
 import { get_periodos_actuales } from '../actions/inicio';
+import { terminarPeriodo } from '../actions/inicio';
 
 //Spinner
 import { PulseLoader } from 'halogenium';
@@ -15,6 +16,9 @@ class InicioAdministrador extends Component{
       this.props.get_periodos_actuales();
   }
 
+  terminarPeriodo(periodo){
+    this.props.terminarPeriodo(periodo);
+  }
 
   render(){
 
@@ -31,7 +35,7 @@ class InicioAdministrador extends Component{
                   </Col>
                   <Col md='3'>
                     <ListGroupItemText key={index}>
-                        <Button color="danger" size='sm' key={valor['tipo_postgrado_id']}>Terminar Perido</Button>
+                        <Button color="danger" size='sm' onClick={() => { this.props.terminarPeriodo(valor) }} key={valor['tipo_postgrado_id']}>Terminar Periodo</Button>
                     </ListGroupItemText>
                   </Col>
                 </Row>
@@ -52,6 +56,11 @@ class InicioAdministrador extends Component{
           <div>
             <br/>
             <Row>
+            {this.props.adminUser['periodo_terminado_error'] &&
+              <Alert color="danger">
+                No se pudo terminar el periodo
+              </Alert>
+            }
             { this.props.adminUser['tiene_periodos_activos'] &&
               <Col md='12' className="text-center">
                 <h5>Periodos Actuales</h5>
@@ -60,7 +69,7 @@ class InicioAdministrador extends Component{
 
             { !this.props.adminUser['tiene_periodos_activos'] &&
               <Col md='12' className="text-center">
-                <h5>Usted no se encuentra inscrito en el periodo actual</h5>
+                <h5>No hay ningun periodo activo actualmente</h5>
               </Col>
             }
 
@@ -88,7 +97,11 @@ const mapStateToProps = (state)=> {
 }
 
 const mapDispatchToProps = (dispatch) => {
-  return bindActionCreators({get_periodos_actuales: get_periodos_actuales}, dispatch )
+  return bindActionCreators({
+    get_periodos_actuales: get_periodos_actuales, 
+    terminarPeriodo:terminarPeriodo,
+    }
+    , dispatch )
 }
 
 

@@ -101,3 +101,47 @@ export const get_periodos_actuales = () => {
 	   });
 
 }
+
+
+export const terminarPeriodo = (periodo, ) =>{
+	let token = localStorage.getItem('user_token');
+	var result ={
+		"estado_periodo":3,
+		"tipo_postgrado":periodo['tipo_postgrado_id']
+	}
+	return request
+	   .put(host+'api/periodo/'+periodo['id']+'/edit/')
+	   .set('Authorization', 'JWT '+token)
+	   .set('Content-Type', 'application/json')
+	   .send(result)
+	   .then(function(res) {
+			return request
+			   .get(host+'api/periodo/activo/')
+			   .set('Authorization', 'JWT '+token)
+			   .then(function(res) {
+			   	  	if(res.body.length > 0){
+				      return {
+							type: "GET_PERIODOS_SUCCESS",
+							payload: {periodos: res.body }
+						}
+					}else{
+						return {
+							type: "SIN_PERIODOS_ACTIVOS",
+						}
+					}
+
+			   })
+			   .catch(function(err) {
+			   		localStorage.removeItem('user_token');
+			   		localStorage.removeItem('modulo');
+			      	return {
+						type: "GET_PERIODOS_ERROR"
+					}
+			   });
+	   })
+	   .catch(function(err) {
+	      	return {
+				type: "PERIODO_TERMINADO_ERROR"
+			}
+	   });
+}

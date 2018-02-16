@@ -1,4 +1,4 @@
-const initialState = {periodos: [], tiene_periodos_activos: true};
+const initialState = {periodos: [], tiene_periodos_activos: true, periodo_terminado_error: false};
 
 export default function (state=initialState, action) {
 
@@ -16,6 +16,17 @@ export default function (state=initialState, action) {
 		case "GET_PERIODOS_ERROR":
 			return {
 				loggedIn: false, 
+			};
+
+		case "PERIODO_TERMINADO_SUCCESS":
+			return {
+				periodo_terminado_error: false, 
+				tiene_periodos_activos: true,
+			};
+
+		case "PERIODO_TERMINADO_ERROR":
+			return {
+				periodo_terminado_error: true, 
 			};
 
 
