@@ -7,7 +7,7 @@ const NavBarAdministrador = () => (
   <Nav navbar >
                                 
     <NavItem>
-      <NavLink href="/#">Inicio</NavLink>
+      <NavLink href="/inicio">Inicio</NavLink>
     </NavItem>
 
     <NavItem>
@@ -15,7 +15,7 @@ const NavBarAdministrador = () => (
     </NavItem>
 
     <NavItem>
-      <NavLink href="/#">Usuarios</NavLink>
+      <NavLink href="/moduloUsuarioAdministrador">Usuarios</NavLink>
     </NavItem>
 
     <NavItem>
