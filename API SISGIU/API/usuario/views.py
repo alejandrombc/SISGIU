@@ -3,6 +3,7 @@ from django.http import HttpResponse
 from usuario.utils import render_to_pdf, date_handler
 from django.core.mail import send_mail
 from django.views.decorators.csrf import csrf_exempt
+from django import forms
 import json
 
 from bson import json_util
@@ -144,6 +145,22 @@ class AdministradorDetailAPIView(RetrieveAPIView):
                 return HttpResponse(json.dumps({"status":"OK"}, default=date_handler), content_type="application/json", status=200)
 
         return HttpResponse(json.dumps({"error":"Ese usuario no es un administrador"}, default=date_handler), content_type="application/json", status=404)
+
+    @csrf_exempt
+    def update_photo(request, cedula):
+        if(request.method == "POST"):
+            username = request.POST.get("username")
+            if(username == cedula):
+                foto = request.FILES['foto']
+                user = Usuario.objects.get(username=username)
+                if(user):
+                    user.foto = foto
+                    user.save()
+                    updated_user = Usuario.objects.filter(username=username).values()[0]
+                    print(updated_user)
+                    return HttpResponse(json.dumps({"foto":updated_user['foto']}, default=date_handler), content_type="application/json", status=200)
+
+        return HttpResponse(json.dumps({"error":"No tiene privilegios para realizar esta accion"}, default=date_handler), content_type="application/json", status=404)
 
 
     def get_all_admin(request):

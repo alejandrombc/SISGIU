@@ -1,7 +1,8 @@
 // Dependencies. 
 import React,{Component} from 'react';
 import { connect } from 'react-redux';
-import { Form, FormGroup, Input, Button, Row, Col} from 'reactstrap';
+import {bindActionCreators} from 'redux';
+import { Alert, Form, FormGroup, Input, Button, Row, Col} from 'reactstrap';
 import '../../css/perfil.css';
 
 // Components
@@ -12,7 +13,7 @@ class SeccionFoto extends Component{
 	constructor(props) {
       super(props);
       this.state = {
-      	foto: ''
+      	foto: undefined
       };
 
       this.handleChange = this.handleChange.bind(this);
@@ -21,23 +22,13 @@ class SeccionFoto extends Component{
   	}
 
   	handleChange(e) {
-        const { name, value } = e.target;
-
-        this.setState({ [name]: value });
-        console.log( this.state );
-
+		this.setState({foto:e.target.files[0]})
         
 	}
 
-	changePhotoSubmit() {
-		// alert('subiendo foto...');
-
-
-		console.log( this.state.foto );
-
-		cambiarFoto(this.state.foto, this.props.token['user'])
-
-
+	changePhotoSubmit(e) {
+		e.preventDefault() // Stop form submit
+		this.props.cambiarFoto(this.state.foto, this.props.token['user'])
 	}
 
 
@@ -48,10 +39,16 @@ class SeccionFoto extends Component{
               	<Row>
 	                <Col sm="12">
 	                  <legend>Foto</legend>
-	                  <Form>
+	                  <Form onSubmit={this.changePhotoSubmit}>
 	                    <FormGroup row>
 	                     
 	                      <Col sm={12}>
+	                      <br />
+		                    {this.props.edit['bad_photo_request'] &&
+		        		      <Alert color="danger">
+						        Hubo un error al intentar actualizar su foto
+						      </Alert>
+		            		}
 	                      <br />
 	                      	<h5>Normas para actualizar su foto</h5>
 								<ul>
@@ -92,10 +89,10 @@ class SeccionFoto extends Component{
 									</tbody>
 								</table>
 							<br /><br /><br />
-	                        <Input className="form-control" accept="image/png image/jpg" type="file" name="foto" id="foto" onChange={this.handleChange} value={this.state.foto} />
+	                        <Input className="form-control" accept="image/png image/jpg" type="file" name="foto" id="foto" onChange={this.handleChange} />
 	                      </Col>
 	                    </FormGroup>
-	                    <center><Button color="primary" onClick={this.changePhotoSubmit} >Guardar</Button></center>
+	                    <center><Button type="submit" color="primary" >Guardar</Button></center>
 	                  </Form>
 	                </Col>
               	</Row>
@@ -107,10 +104,19 @@ class SeccionFoto extends Component{
 const mapStateToProps = (state)=> {
   return{
     token: state.activeUser,
+    edit: state.editUser
   };
 }
 
-export default connect(mapStateToProps)(SeccionFoto);
+const mapDispatchToProps = (dispatch) => {
+  return bindActionCreators({
+    cambiarFoto:cambiarFoto,
+    }
+    , dispatch )
+}
+
+
+export default connect(mapStateToProps, mapDispatchToProps)(SeccionFoto);
 
 
 

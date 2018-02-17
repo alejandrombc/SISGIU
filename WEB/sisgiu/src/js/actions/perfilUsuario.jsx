@@ -1,6 +1,7 @@
 import request from 'superagent';
 import {host} from '../components/globalVariables';
 import mergeJSON from 'merge-json';
+import {check_login} from './inicio'
 
 let token = localStorage.getItem('user_token');
 let modulo = localStorage.getItem('modulo');
@@ -59,27 +60,26 @@ export const cambiarContrasena = (password, user) => {
 
 
 export const cambiarFoto = (foto, user) => {
-	console.log(foto);
-	user.usuario.foto = foto;
-	console.log(user);
-
+    const formData = new FormData();
+    formData.append('foto',foto)
+    formData.append('username',user.usuario.cedula)
+    console.log(formData.values());
+	let modulo = localStorage.getItem('modulo');
+	let token = localStorage.getItem('user_token');
 	return request
-	   .put(host+'api/'+modulo+'/'+user.usuario.cedula+'/edit/')
+	   .post(host+'api/usuarios/'+user.usuario.cedula+'/cambiarFoto/')
 	   .set('Authorization', 'JWT '+token)
-	   .set('Content-Type', 'application/json')
-	   .send(user)
+	   .field('username', user.usuario.cedula)
+	   .field('foto', foto)
 	   .then(function(res) {
-	   	console.log(res.body);
-		      return {
-					type: "EDIT_USER_PASSWORD_SUCCESS",
-					payload: {user: res.body }
+		   	  	return function (dispatch) {
+				    dispatch(check_login());
 				}
-
 	   })
 	   .catch(function(err) {
 	   	console.log(err);
 	      	return {
-				type: "EDIT_USER_PASSWORD_ERROR"
+				type: "EDIT_USER_PHOTO_ERROR"
 			}
 	   });
 

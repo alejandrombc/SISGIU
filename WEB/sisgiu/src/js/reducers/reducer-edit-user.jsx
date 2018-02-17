@@ -1,4 +1,10 @@
-const initialState = {bad_input:false, edit: false, bad_input_password: false ,edit_password: false};
+const initialState = {
+	bad_input:false, 
+	edit: false, bad_input_password: false ,
+	edit_password: false,
+	bad_photo_request: false,
+	edit_photo: false, 
+	};
 
 export default function (state=initialState, action) {
 
@@ -27,6 +33,12 @@ switch (action.type){
 		return {
 			bad_input_password: true 
 		};
+
+	case "EDIT_USER_PHOTO_ERROR":
+		return {
+			bad_photo_request: true 
+		};
+
 
 	default:
 		return state;

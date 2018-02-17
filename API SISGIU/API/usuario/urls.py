@@ -35,6 +35,8 @@ urlpatterns = format_suffix_patterns([
     url(r'^api/usuarios/(?P<cedula>\d+)/delete/$', AdministradorDeleteAPIView.as_view(), name='usuario-delete'),
     url(r'^api/usuarios/(?P<cedula>\d+)/recuperarContrasena/$', AdministradorDetailAPIView.send_mail, name='usuario-olvido'),
     url(r'^api/usuarios/(?P<cedula>[0-9]{8})/cambiarContrasena/$', AdministradorDetailAPIView.get_usr_cedula, name='usuario-detail'),
+    url(r'^api/usuarios/(?P<cedula>[0-9]{8})/cambiarFoto/$', AdministradorDetailAPIView.update_photo, name='usuario-detail'),
+
 
     # Admin 
     url(r'^api/administradores/$', AdministradorDetailAPIView.get_all_admin, name='admin-all'),

@@ -1,5 +1,6 @@
 import React from 'react';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
+import FontAwesomeIcon from 'react-fontawesome';
 
 class ModalUsuarioEdit extends React.Component {
   constructor(props) {
@@ -20,7 +21,7 @@ class ModalUsuarioEdit extends React.Component {
   render() {
     return (
       <div>
-        <Button color="danger" onClick={this.toggle}>{this.props.buttonLabel}</Button>
+        <Button color="success" size='sm' onClick={this.toggle} data-toggle="tooltip" title="Editar"><FontAwesomeIcon name="edit"/></Button>
         <Modal isOpen={this.state.modal} toggle={this.toggle} className={this.props.className}>
           <ModalHeader toggle={this.toggle}>Editar Usuario</ModalHeader>
           <ModalBody>
@@ -33,6 +34,8 @@ class ModalUsuarioEdit extends React.Component {
             <Button color="secondary" onClick={this.toggle}>Cancelar</Button>
           </ModalFooter>
         </Modal>
+        &nbsp;&nbsp; {/*Dummy Spaces*/}
+        <Button color="danger" size='sm' data-toggle="tooltip" title="Eliminar"><FontAwesomeIcon name="trash-alt"/></Button>
       </div>
     );
   }
