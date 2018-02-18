@@ -119,7 +119,9 @@ class AdministradorDetailAPIView(RetrieveAPIView):
     def get_admin(request, cedula):
         member = Usuario.objects.filter(username=cedula, is_superuser=True)
         if(member):
-            list_result = {"usuario": member.values()[0]}
+            user = member.values()[0]
+            user['foto'] = request.build_absolute_uri('/')+"media/"+user['foto']
+            list_result = {"usuario": user}
             return HttpResponse(json.dumps(list_result, default=date_handler), content_type="application/json", status=200)
 
         return HttpResponse(json.dumps({"ERROR":"Usuario no es administrador"}, default=date_handler), content_type="application/json", status=404)
@@ -148,19 +150,20 @@ class AdministradorDetailAPIView(RetrieveAPIView):
 
     @csrf_exempt
     def update_photo(request, cedula):
+        print("HOLAAAA")
         if(request.method == "POST"):
             username = request.POST.get("username")
-            if(username == cedula):
+            user = Usuario.objects.get(username=username)
+            if(username == cedula or user['is_superuser']):
                 foto = request.FILES['foto']
-                user = Usuario.objects.get(username=username)
                 if(user):
                     user.foto = foto
                     user.save()
-                    updated_user = Usuario.objects.filter(username=username).values()[0]
-                    print(updated_user)
-                    return HttpResponse(json.dumps({"foto":updated_user['foto']}, default=date_handler), content_type="application/json", status=200)
+                    return HttpResponse(json.dumps({"status":"OK"}, default=date_handler), content_type="application/json", status=200)
 
-        return HttpResponse(json.dumps({"error":"No tiene privilegios para realizar esta accion"}, default=date_handler), content_type="application/json", status=404)
+            return HttpResponse(json.dumps({"error":"No tiene privilegios para realizar esta accion"}, default=date_handler), content_type="application/json", status=403)
+
+        return HttpResponse(json.dumps({"error":"Metodo no permitido"}, default=date_handler), content_type="application/json", status=405)
 
 
     def get_all_admin(request):
