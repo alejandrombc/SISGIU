@@ -64,7 +64,7 @@ export const cambiarFoto = (foto, user) => {
     formData.append('foto',foto)
     formData.append('username',user.usuario.cedula)
     console.log(formData.values());
-	let modulo = localStorage.getItem('modulo');
+	// let modulo = localStorage.getItem('modulo');
 	let token = localStorage.getItem('user_token');
 	return request
 	   .post(host+'api/usuarios/'+user.usuario.cedula+'/cambiarFoto/')

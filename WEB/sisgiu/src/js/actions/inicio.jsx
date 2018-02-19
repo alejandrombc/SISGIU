@@ -135,7 +135,7 @@ export const terminarPeriodo = (periodo, ) =>{
 			   		localStorage.removeItem('user_token');
 			   		localStorage.removeItem('modulo');
 			      	return {
-						type: "GET_PERIODOS_ERROR"
+						type: "ERROR"
 					}
 			   });
 	   })

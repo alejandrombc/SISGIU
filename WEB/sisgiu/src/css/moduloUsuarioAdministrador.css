@@ -14,3 +14,13 @@
 .tabla_usuarios {
 	cursor: pointer;
 }
+
+.nav-link {
+    cursor: pointer;
+}
+
+.center-img{
+   margin: auto;    
+   display: block;
+   border-radius: 0.25rem;
+}

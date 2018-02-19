@@ -7,6 +7,7 @@ from usuario.views import (
 	AdministradorDeleteAPIView,
 	TipoPostgradoListCreateAPIView,
     TipoPostgradoDeleteAPIView,
+    TipoPostgradoUpdateAPIView,
 	EstadoEstudianteListCreateAPIView,
     EstudianteListCreateAPIView,
     EstadoEstudianteDeleteAPIView,
@@ -29,6 +30,7 @@ urlpatterns = format_suffix_patterns([
 
     # Usuarios
     url(r'^api/usuarios/$', AdministradorListCreateAPIView.as_view(), name='usuario-list-create'),
+    url(r'^api/usuarios/(?P<modulo>[\w\-]+)/$', AdministradorListCreateAPIView.get_usuarios, name='usuario-list'),
     url(r'^api/usuarios/(?P<cedula>\d+)/$', AdministradorDetailAPIView.as_view(), name='usuario-detail'),
     url(r'^api/usuarios/id/(?P<id_usr>[0-9]{1})/$', AdministradorDetailAPIView.get_usr_id, name='usuario-detail'),
     url(r'^api/usuarios/(?P<cedula>\d+)/edit/$', AdministradorUpdateAPIView.as_view(), name='usuario-update'),
@@ -65,6 +67,7 @@ urlpatterns = format_suffix_patterns([
 
     #Tipo Postgrado
     url(r'^api/tipoPostgrado/$', TipoPostgradoListCreateAPIView.as_view(), name='tipoPostgrado-list-create'),
+    url(r'^api/tipoPostgrado/(?P<pk>\d+)/edit/$', TipoPostgradoUpdateAPIView.as_view(), name='tipoPostgrado-update'),
     url(r'^api/tipoPostgrado/(?P<pk>\d+)/delete/$', TipoPostgradoDeleteAPIView.as_view(), name='tipoPostgrado-delete'),
 
 

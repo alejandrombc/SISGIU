@@ -62,6 +62,81 @@ class AdministradorListCreateAPIView(ListCreateAPIView):
     serializer_class = AdministradorListSerializer
     permission_classes = [IsAdminUser]
 
+    def get_usuarios(request, modulo):
+
+        try:
+            response_data = []
+            if ( modulo == 'estudiantes' ):
+                member = Estudiante.objects.all().values()
+                lista_estudiantes = [entry for entry in member]
+
+                for estudiante in lista_estudiantes:
+                    usuario = Usuario.objects.filter(id=estudiante['usuario_id']).values()[0]
+                    tipo_postgrado = TipoPostgrado.objects.filter(id=estudiante['id_tipo_postgrado_id']).values()[0]['tipo']
+                    estado_estudiante = EstadoEstudiante.objects.filter(id=estudiante['id_estado_estudiante_id']).values()[0]['estado']
+
+                    usuario['tipo_postgrado'] = tipo_postgrado
+                    usuario['estado_estudiante'] = estado_estudiante
+                    usuario['direccion'] = estudiante['direccion']
+                    usuario['foto'] = request.build_absolute_uri('/')+"media/"+usuario['foto']
+
+
+                    response_data.append(usuario)
+
+            elif ( modulo == 'docentes' ):
+                member = PersonalDocente.objects.all().values()
+                lista_docentes = [entry for entry in member]
+
+                for docente in lista_docentes:
+                    usuario = Usuario.objects.filter(id=docente['usuario_id']).values()[0]
+
+                    usuario['direccion'] = docente['direccion']
+                    usuario['rif'] = request.build_absolute_uri('/')+"media/"+docente['rif']
+                    usuario['curriculum'] = request.build_absolute_uri('/')+"media/"+docente['curriculum']
+                    usuario['permiso_ingresos'] = request.build_absolute_uri('/')+"media/"+docente['permiso_ingresos']
+                    usuario['coordinador'] = docente['coordinador']
+                    usuario['foto'] = request.build_absolute_uri('/')+"media/"+usuario['foto']
+
+                    response_data.append(usuario)
+
+            elif (modulo == 'administradores' ):
+                member = Usuario.objects.filter(is_superuser=True).values()
+                lista_usuarios = [entry for entry in member]
+
+                for usuario in lista_usuarios:
+                    usuario['foto'] = request.build_absolute_uri('/')+"media/"+usuario['foto']
+                    response_data.append(usuario)
+
+            elif (modulo == 'administrativo' ):
+                member = PersonalAdministrativo.objects.all().values()
+                lista_usuarios = [entry for entry in member]
+
+                for usuario in lista_usuarios:
+                    usuario['foto'] = request.build_absolute_uri('/')+"media/"+usuario['foto']
+                    response_data.append(usuario)
+
+            else:
+                response_data = {}
+                response_data['error'] = "No existe el modulo especificado."
+                return HttpResponse(json.dumps(response_data, default=date_handler), content_type="application/json", status=400)
+
+
+
+            for usuario in response_data:
+                del usuario['password']
+                del usuario['is_staff']
+                del usuario['is_superuser']
+                del usuario['date_joined']
+                del usuario['id']
+                del usuario['is_active']
+
+            return HttpResponse(json.dumps(response_data, default=date_handler), content_type="application/json", status=200)
+        
+        except:
+            response_data = {}
+            response_data['error'] = "Ha ocurrido un error obteniendo la lista de usuarios."
+            return HttpResponse(json.dumps(response_data, default=date_handler), content_type="application/json", status=500)
+
 class AdministradorDetailAPIView(RetrieveAPIView):
     queryset = Usuario.objects.all()
     serializer_class = AdministradorDetailSerializer
@@ -307,6 +382,11 @@ class TipoPostgradoListCreateAPIView(ListCreateAPIView):
     queryset = TipoPostgrado.objects.all()
     serializer_class = TipoPostgradoSerializer
     permission_classes = [IsListOrCreate, IsAuthenticated]
+
+class TipoPostgradoUpdateAPIView(RetrieveUpdateAPIView):
+    queryset = TipoPostgrado.objects.all()
+    serializer_class = TipoPostgradoSerializer
+    permission_classes = [IsAdminUser, IsAuthenticated]
 
 
 class TipoPostgradoDeleteAPIView(DestroyAPIView):

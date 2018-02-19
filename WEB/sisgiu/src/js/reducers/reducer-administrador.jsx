@@ -1,4 +1,4 @@
-const initialState = {periodos: [], tiene_periodos_activos: true, periodo_terminado_error: false};
+const initialState = {periodos: [], tiene_periodos_activos: true, periodo_terminado_error: false, lista_usuarios: []};
 
 export default function (state=initialState, action) {
 
@@ -13,7 +13,7 @@ export default function (state=initialState, action) {
 			return {
 				tiene_periodos_activos: false,
 			};
-		case "GET_PERIODOS_ERROR":
+		case "ERROR":
 			return {
 				loggedIn: false, 
 			};
@@ -27,6 +27,11 @@ export default function (state=initialState, action) {
 		case "PERIODO_TERMINADO_ERROR":
 			return {
 				periodo_terminado_error: true, 
+			};
+
+		case "GET_USUARIOS_EXITOSO":
+			return {
+				lista_usuarios: action.payload['lista_usuarios'],
 			};
 
 
