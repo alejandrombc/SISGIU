@@ -58,7 +58,7 @@ class ListaUsuarios extends Component{
           <td>{usuario['cedula']}</td>
           <td>{usuario['first_name']} {usuario['last_name']}</td>
           <td>  
-            <ModalUsuarioEdit usuario={usuario}/>
+            <ModalUsuarioEdit usuario={usuario} tipo_usuario={this.props.tipo_usuario}/>
             {/*<Button color="success" size='sm' data-toggle="tooltip" title="Editar"><FontAwesomeIcon name="edit"/></Button>*/}
           </td>
         </tr>

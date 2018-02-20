@@ -20,12 +20,15 @@ class SeccionGeneral extends Component{
 	      		"telefono_trabajo":this.props.token['user']['usuario']['telefono_trabajo']
 	      	},
       		"direccion":this.props.token['user']['direccion'],
-      		"loading":false
+      		"loading":false,
+      		"modulo": localStorage.getItem('modulo')
           };
 
       this.handleChangeUsuario = this.handleChangeUsuario.bind(this);
       this.handleChangeExtraData = this.handleChangeExtraData.bind(this);
       this.handleSubmit = this.handleSubmit.bind(this);
+
+      
 
   	}
 
@@ -122,13 +125,14 @@ class SeccionGeneral extends Component{
 		                        </Input>
 		                      </Col>
 		                    </FormGroup>
-		                    {/*Aqui ponemos if para mostrar el extra por cada modulo*/}
-		                    <FormGroup row>
-		                      <Label for="direccion" sm={2}>Direccion</Label>
-		                      <Col sm={10}>
-		                        <Input type="textarea" name="direccion" id="direccion" onChange={this.handleChangeExtraData} value={this.state.direccion} />
-		                      </Col>
-		                    </FormGroup>
+		                    { (this.state.modulo === 'estudiantes' || this.state.modulo === 'docentes') &&
+			                    <FormGroup row>
+			                      <Label for="direccion" sm={2}>Dirección</Label>
+			                      <Col sm={10}>
+			                        <Input type="textarea" name="direccion" id="direccion" onChange={this.handleChangeExtraData} value={this.state.direccion} />
+			                      </Col>
+			                    </FormGroup>
+		                    }
 		                    <center><Button color="primary">Guardar</Button></center>
 		                  </Form>
 		                </Col>

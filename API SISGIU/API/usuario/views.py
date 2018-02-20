@@ -225,7 +225,6 @@ class AdministradorDetailAPIView(RetrieveAPIView):
 
     @csrf_exempt
     def update_photo(request, cedula):
-        print("HOLAAAA")
         if(request.method == "POST"):
             username = request.POST.get("username")
             user = Usuario.objects.get(username=username)
@@ -427,12 +426,38 @@ class DocenteDetailAPIView(RetrieveAPIView):
     permission_classes = [IsAuthenticated]
     lookup_field = 'usuario__cedula'
 
+    @csrf_exempt
+    def update_file(request, cedula, tipo_documento):
+
+        if(request.method == "POST"):
+            
+            username = request.POST.get("username")
+            user = PersonalDocente.objects.get(usuario__username=username)
+            
+            if(username == cedula):
+                documento = request.FILES[tipo_documento]
+                if(user):
+                    
+                    if (tipo_documento == 'rif'):
+                        user.rif = documento
+                    elif (tipo_documento == 'curriculum'):
+                        user.curriculum = documento
+                    elif (tipo_documento == 'permiso_ingresos'):
+                        user.permiso_ingresos = documento
+
+                    user.save()
+                    return HttpResponse(json.dumps({"status":"OK"}, default=date_handler), content_type="application/json", status=200)
+
+            return HttpResponse(json.dumps({"error":"No tiene privilegios para realizar esta acción"}, default=date_handler), content_type="application/json", status=403)
+
+        return HttpResponse(json.dumps({"error":"Método no permitido"}, default=date_handler), content_type="application/json", status=405)
 
 class DocenteUpdateAPIView(RetrieveUpdateAPIView):
     queryset = PersonalDocente.objects.all()
     serializer_class = DocenteDetailSerializer
     permission_classes = [IsAuthenticatedOrReadOnly, isOwnerOrReadOnly]
     lookup_field = 'usuario__cedula'
+
 
 class DocenteDeleteAPIView(DestroyAPIView):
     queryset = PersonalDocente.objects.all()

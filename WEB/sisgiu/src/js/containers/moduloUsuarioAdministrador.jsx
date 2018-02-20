@@ -66,7 +66,7 @@ class ModuloUsuarioAdministrador extends Component{
             <TabPane tabId="1">
               <Row>
                 <Col sm="12">
-                { this.state.activeTab == '1' &&
+                { this.state.activeTab === '1' &&
                   <ListaUsuarios tipo_usuario='estudiantes'/>
                 }
                 </Col>
@@ -76,7 +76,7 @@ class ModuloUsuarioAdministrador extends Component{
             <TabPane tabId="2">
               <Row>
                 <Col sm="12">
-                { this.state.activeTab == '2' &&
+                { this.state.activeTab === '2' &&
                   <ListaUsuarios tipo_usuario='docentes'/>
                 }
                 </Col>
@@ -86,7 +86,7 @@ class ModuloUsuarioAdministrador extends Component{
             <TabPane tabId="3">
               <Row>
                 <Col sm="12">
-                { this.state.activeTab == '3' &&
+                { this.state.activeTab === '3' &&
                   <ListaUsuarios tipo_usuario='administrativo'/>
                 }
                 </Col>
@@ -96,7 +96,7 @@ class ModuloUsuarioAdministrador extends Component{
             <TabPane tabId="4">
               <Row>
                 <Col sm="12">
-                { this.state.activeTab == '4' &&
+                { this.state.activeTab === '4' &&
                   <ListaUsuarios tipo_usuario='administradores'/>
                 }
                 </Col>

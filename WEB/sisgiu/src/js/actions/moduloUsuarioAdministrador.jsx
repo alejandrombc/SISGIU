@@ -7,7 +7,7 @@ export function get_usuarios (tipo_usuario) {
 	let token = localStorage.getItem('user_token');
 
 	try{
-		var decoded = jwt_decode(token);
+		jwt_decode(token);
 	}catch(e){
 		localStorage.removeItem('user_token');
 		return {

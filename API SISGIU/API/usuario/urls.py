@@ -57,7 +57,8 @@ urlpatterns = format_suffix_patterns([
     url(r'^api/docentes/$', DocenteListCreateAPIView.as_view(), name='docente-list-create'),
     url(r'^api/docentes/(?P<usuario__cedula>\d+)/$', DocenteDetailAPIView.as_view(), name='docente-detail'),
     url(r'^api/docentes/(?P<usuario__cedula>\d+)/edit/$', DocenteUpdateAPIView.as_view(), name='docente-update'),
-	url(r'^api/docentes/(?P<usuario__cedula>\d+)/delete/$', DocenteDeleteAPIView.as_view(), name='docente-delete'),
+    url(r'^api/docentes/(?P<usuario__cedula>\d+)/delete/$', DocenteDeleteAPIView.as_view(), name='docente-delete'),
+    url(r'^api/docentes/(?P<cedula>\d+)/cambiarDocumento/(?P<tipo_documento>[\w\-]+)/$', DocenteDetailAPIView.update_file, name='docente-archivo'),
 
     #Administrativo
     url(r'^api/administrativo/$', AdministrativoListCreateAPIView.as_view(), name='administrativo-list-create'),
