@@ -7,11 +7,6 @@ let token = localStorage.getItem('user_token');
 let modulo = localStorage.getItem('modulo');
 
 export const editarUsuario = (cambios, user) => {
-	console.log('cambios = ');
-	console.log(cambios);
-
-	console.log(user);
-
 	var result = mergeJSON.merge(user, cambios);
 	delete result.usuario.foto;
 

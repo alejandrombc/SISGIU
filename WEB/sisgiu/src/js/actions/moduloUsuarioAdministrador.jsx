@@ -4,28 +4,38 @@ import {host} from '../components/globalVariables';
 import mergeJSON from 'merge-json';
 
 
-export function get_usuarios (tipo_usuario) {
+export function get_usuarios (tipo_usuario, edit) {
 	let token = localStorage.getItem('user_token');
 
 	try{
 		jwt_decode(token);
 	}catch(e){
 		localStorage.removeItem('user_token');
+		localStorage.removeItem('modulo');
 		return {
-			type: "GET_USUARIOS_ERROR"
+			type: "ERROR"
 		}
 	}
 	return request
 	   .get(host+'api/usuarios/'+tipo_usuario+'/')
 	   .set('Authorization', 'JWT '+token)
 	   .then(function(res) {
-      		return {
-				type: "GET_USUARIOS_EXITOSO",
-				payload: {lista_usuarios: res.body}
-			}
+	   		if(edit){
+	   			return {
+					type: "EDIT_USER_INFO_SUCCESS",
+					payload: {lista_usuarios: res.body}
+				}
+	   		}else{
+	   			return {
+					type: "GET_USUARIOS_EXITOSO",
+					payload: {lista_usuarios: res.body}
+				}
+	   		}
+
 	   })
 	   .catch(function(err) {
 	   		localStorage.removeItem('user_token');
+	   		localStorage.removeItem('modulo');
 	      	return {
 				type: "ERROR"
 			}
@@ -39,8 +49,6 @@ export const editarUsuario = (cambios, user, tipo_usuario) => {
 	let usuario = {
 		"usuario": user
 	}
-	console.log(usuario);
-	console.log(cambios);
 
 	var result = mergeJSON.merge(usuario, cambios);
 	delete result.usuario.foto;
@@ -52,13 +60,14 @@ export const editarUsuario = (cambios, user, tipo_usuario) => {
 	   .set('Content-Type', 'application/json')
 	   .send(result)
 	   .then(function(res) {
-		      return {
-					type: "EDIT_USER_INFO_SUCCESS",
-					payload: {user: res.body }
+		   	  	return function (dispatch) {
+				    dispatch(get_usuarios(tipo_usuario ,true));
 				}
 
 	   })
 	   .catch(function(err) {
+	   	alert("MAL NO SE CAMBIO");
+	   	console.log(err)
 	      	return {
 				type: "EDIT_USER_INFO_ERROR"
 			}

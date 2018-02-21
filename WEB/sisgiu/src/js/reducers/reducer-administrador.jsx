@@ -1,4 +1,4 @@
-const initialState = {periodos: [], tiene_periodos_activos: true, periodo_terminado_error: false, lista_usuarios: [], bad_input: false};
+const initialState = {periodos: [], edit:false, tiene_periodos_activos: true, periodo_terminado_error: false, lista_usuarios: [], bad_input: false};
 
 export default function (state=initialState, action) {
 
@@ -7,7 +7,8 @@ export default function (state=initialState, action) {
 		case "GET_PERIODOS_SUCCESS":
 			return {
 				periodos:action.payload['periodos'],
-				tiene_periodos_activos: true 
+				tiene_periodos_activos: true,
+				edit:false 
 			};
 		case "SIN_PERIODOS_ACTIVOS":
 			return {
@@ -15,7 +16,7 @@ export default function (state=initialState, action) {
 			};
 		case "ERROR":
 			return {
-				loggedIn: false, 
+				nada: false, 
 			};
 
 		case "PERIODO_TERMINADO_SUCCESS":
@@ -37,7 +38,9 @@ export default function (state=initialState, action) {
 		case "EDIT_USER_INFO_SUCCESS":
 			return {
 				bad_input: false,
+				edit: true,
 				user:action.payload['user'],
+				lista_usuarios: action.payload['lista_usuarios'],
 			};
 
 		case "EDIT_USER_INFO_ERROR":

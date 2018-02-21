@@ -26,7 +26,8 @@ class ModalUsuarioEdit extends React.Component {
         nacionalidad: this.props.usuario['nacionalidad'],
         sexo: this.props.usuario['sexo'],
         estado_civil: this.props.usuario['estado_civil'],
-        foto: this.props.usuario['foto']
+        foto: this.props.usuario['foto'],
+        password: this.props.usuario['password']
       },
       direccion: this.props.usuario['direccion'],
       rif: this.props.usuario['rif'],
@@ -34,11 +35,11 @@ class ModalUsuarioEdit extends React.Component {
       permiso_ingresos: this.props.usuario['permiso_ingresos'],
       coordinador: this.props.usuario['coordinador'],
       tipo_postgrado: this.props.usuario['tipo_postgrado'],
+      id_tipo_postgrado: this.props.usuario['id_tipo_postgrado'],
+      id_estado_estudiante: this.props.usuario['id_estado_estudiante'],
       estado_estudiante: this.props.usuario['estado_estudiante'],
 
     };
-
-    console.log(this.state.coordinador);
 
     this.toggle = this.toggle.bind(this);
     this.handleChangeUsuario = this.handleChangeUsuario.bind(this);
@@ -54,9 +55,6 @@ class ModalUsuarioEdit extends React.Component {
 
   handleChangeUsuario(e) {
     const { name, value } = e.target;
-
-    console.log(name);
-    console.log(value);
     var usuario = this.state.usuario;
     usuario[name] = value;
     this.setState({usuario})
@@ -70,7 +68,7 @@ class ModalUsuarioEdit extends React.Component {
     handleSubmit(e) {
         e.preventDefault();
 
-        editarUsuario(this.state, this.props.usuario, this.props.tipo_usuario);
+        this.props.editarUsuario(this.state, this.props.usuario, this.props.tipo_usuario);
 
     }
 
@@ -183,10 +181,10 @@ class ModalUsuarioEdit extends React.Component {
                               <FormGroup row>
                                 <Label for="tipo_postgrado" sm={4}>Tipo de Postgrado</Label>
                                 <Col sm={8}>
-                                  <Input value={this.state.value} defaultValue={this.state['tipo_postgrado']} onChange={this.handleChangeExtraData} type="select" name="tipo_postgrado" id="tipo_postgrado">
-                                    <option value="doctorado" name="doctorado">Doctorado</option>
-                                    <option value="especializacion" name="especializacion">Especialización</option>
-                                    <option value="maestria" name="maestria">Maestría</option>
+                                  <Input value={this.state.value} defaultValue={this.state['tipo_postgrado']} onChange={this.handleChangeExtraData} type="select" name="id_tipo_postgrado" id="id_tipo_postgrado">
+                                    <option value="1" name="doctorado">Doctorado</option>
+                                    <option value="2" name="especializacion">Especialización</option>
+                                    <option value="3" name="maestria">Maestría</option>
                                   </Input>
                                 </Col>
                               </FormGroup>
@@ -194,9 +192,9 @@ class ModalUsuarioEdit extends React.Component {
                               <FormGroup row>
                                 <Label for="estado_estudiante" sm={4}>Estado</Label>
                                 <Col sm={8}>
-                                  <Input value={this.state.value} defaultValue={this.state['estado_estudiante']} onChange={this.handleChangeExtraData} type="select" name="estado_estudiante" id="tipo_postgrado">
-                                    <option value="activo" name="activo">Activo</option>
-                                    <option value="retirado" name="retirado">Retirado</option>
+                                  <Input value={this.state.value} defaultValue={this.state['estado_estudiante']} onChange={this.handleChangeExtraData} type="select" name="id_estado_estudiante" id="id_tipo_postgrado">
+                                    <option value="1" name="activo">Activo</option>
+                                    <option value="2" name="retirado">Retirado</option>
                                   </Input>
                                 </Col>
                               </FormGroup>
@@ -264,8 +262,15 @@ class ModalUsuarioEdit extends React.Component {
   }
 }
 
+const mapStateToProps = (state)=> {
+  return{
+    token: state.activeUser,
+    adminUser: state.adminUser,
+  };
+}
+
 const mapDispatchToProps = (dispatch) => {
   return bindActionCreators({editarUsuario: editarUsuario}, dispatch )
 }
 
-export default connect(mapDispatchToProps)(ModalUsuarioEdit);
+export default connect(mapStateToProps, mapDispatchToProps)(ModalUsuarioEdit);

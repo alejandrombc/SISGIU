@@ -3,7 +3,7 @@ import React, {Component} from 'react';
 import { connect } from 'react-redux';
 // import {bindActionCreators} from 'redux';
 import FontAwesomeIcon from 'react-fontawesome';
-import { Table, Button, Row, Col } from 'reactstrap';
+import { Alert, Table, Button, Row, Col } from 'reactstrap';
 import SearchInput, {createFilter} from 'react-search-input';
 import '../../css/moduloUsuarioAdministrador.css'; 
 import {bindActionCreators} from 'redux';
@@ -30,7 +30,7 @@ class ListaUsuarios extends Component{
 
       console.log(this.props);
 
-      this.props.get_usuarios(this.props.tipo_usuario);
+      this.props.get_usuarios(this.props.tipo_usuario, false);
 
       this.searchUpdated = this.searchUpdated.bind(this)
   }
@@ -43,57 +43,69 @@ class ListaUsuarios extends Component{
   render(){
 
       let listItems = '';
+      if(this.props.adminUser.lista_usuarios){
+        let cant_usuarios = this.props.adminUser.lista_usuarios.length;
+        let usuarios = [];
 
-      let cant_usuarios = this.props.adminUser.lista_usuarios.length;
-      let usuarios = [];
+        for (var i = 0; i < cant_usuarios; i++) {
+          usuarios.push(this.props.adminUser.lista_usuarios[i]);
+        }
 
-      for (var i = 0; i < cant_usuarios; i++) {
-        usuarios.push(this.props.adminUser.lista_usuarios[i]);
-      }
+        const filteredUsuarios = usuarios.filter(createFilter(this.state.searchTerm, KEYS_TO_FILTERS));
 
-      const filteredUsuarios = usuarios.filter(createFilter(this.state.searchTerm, KEYS_TO_FILTERS));
-
-      listItems = filteredUsuarios.map((usuario) =>
-        <tr key={usuario['cedula']}>
-          <td>{usuario['cedula']}</td>
-          <td>{usuario['first_name']} {usuario['last_name']}</td>
-          <td>  
-            <ModalUsuarioEdit usuario={usuario} tipo_usuario={this.props.tipo_usuario}/>
-            {/*<Button color="success" size='sm' data-toggle="tooltip" title="Editar"><FontAwesomeIcon name="edit"/></Button>*/}
-          </td>
-        </tr>
-      );
+        listItems = filteredUsuarios.map((usuario) =>
+          <tr key={usuario['cedula']}>
+            <td>{usuario['cedula']}</td>
+            <td>{usuario['first_name']} {usuario['last_name']}</td>
+            <td>  
+              <ModalUsuarioEdit usuario={usuario} tipo_usuario={this.props.tipo_usuario}/>
+              {/*<Button color="success" size='sm' data-toggle="tooltip" title="Editar"><FontAwesomeIcon name="edit"/></Button>*/}
+            </td>
+          </tr>
+        );
 
 
-      return(
-  		<div>
-            <br />
-            <Row>
-              <Col md='4'>
-                <Button color="primary" size='sm' data-toggle="tooltip" title="Nuevo usuario"><FontAwesomeIcon name="plus"/></Button>
+        return(
+    		<div>
+              <br />
+              {this.props.adminUser['edit'] &&
+                <Alert color="success">
+                    Datos actualizados exitosamente
+                </Alert>
+              }
+              <Row>
+                <Col md='4'>
+                  <Button color="primary" size='sm' data-toggle="tooltip" title="Nuevo usuario"><FontAwesomeIcon name="plus"/></Button>
+                </Col>
+                <Col md='8'>
+                  <SearchInput className="searchBox" placeholder="Buscar usuario..." onChange={this.searchUpdated} />
+                </Col>
+              </Row>
+              <br />
+              <Col md='12' className='text-right'>
+                
               </Col>
-              <Col md='8'>
-                <SearchInput className="searchBox" placeholder="Buscar usuario..." onChange={this.searchUpdated} />
-              </Col>
-            </Row>
-            <br />
-            <Col md='12' className='text-right'>
-              
-            </Col>
-            <Table bordered hover responsive striped size="sm">
-              <thead>
-                <tr>
-                  <th>Cédula</th>
-                  <th>Nombre</th>
-                  <th>Acción</th>
-                </tr>
-              </thead>
-              <tbody className="tabla_usuarios">
-                {listItems}
-              </tbody>
-            </Table>
-    	</div>
-      )
+              <Table bordered hover responsive striped size="sm">
+                <thead>
+                  <tr>
+                    <th>Cédula</th>
+                    <th>Nombre</th>
+                    <th>Acción</th>
+                  </tr>
+                </thead>
+                <tbody className="tabla_usuarios">
+                  {listItems}
+                </tbody>
+              </Table>
+      	</div>
+        )
+    }else{
+      return (
+          <div>
+            No hay usuarios para ese modulo
+          </div>
+        )
+    }
   }
 }
 

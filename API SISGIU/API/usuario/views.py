@@ -72,11 +72,13 @@ class AdministradorListCreateAPIView(ListCreateAPIView):
 
                 for estudiante in lista_estudiantes:
                     usuario = Usuario.objects.filter(id=estudiante['usuario_id']).values()[0]
-                    tipo_postgrado = TipoPostgrado.objects.filter(id=estudiante['id_tipo_postgrado_id']).values()[0]['tipo']
-                    estado_estudiante = EstadoEstudiante.objects.filter(id=estudiante['id_estado_estudiante_id']).values()[0]['estado']
+                    tipo_postgrado = TipoPostgrado.objects.filter(id=estudiante['id_tipo_postgrado_id']).values()[0]
+                    estado_estudiante = EstadoEstudiante.objects.filter(id=estudiante['id_estado_estudiante_id']).values()[0]
 
-                    usuario['tipo_postgrado'] = tipo_postgrado
-                    usuario['estado_estudiante'] = estado_estudiante
+                    usuario['tipo_postgrado'] = tipo_postgrado['tipo']
+                    usuario['estado_estudiante'] = estado_estudiante['estado']
+                    usuario['id_tipo_postgrado'] = tipo_postgrado['id']
+                    usuario['id_estado_estudiante'] = estado_estudiante['id']
                     usuario['direccion'] = estudiante['direccion']
                     usuario['foto'] = request.build_absolute_uri('/')+"media/"+usuario['foto']
 
@@ -109,10 +111,13 @@ class AdministradorListCreateAPIView(ListCreateAPIView):
 
             elif (modulo == 'administrativo' ):
                 member = PersonalAdministrativo.objects.all().values()
-                lista_usuarios = [entry for entry in member]
+                lista_estudiantes = [entry for entry in member]
 
-                for usuario in lista_usuarios:
+                for administrativo in lista_estudiantes:
+                    usuario = Usuario.objects.filter(id=administrativo['usuario_id']).values()[0]
                     usuario['foto'] = request.build_absolute_uri('/')+"media/"+usuario['foto']
+
+
                     response_data.append(usuario)
 
             else:
@@ -123,7 +128,6 @@ class AdministradorListCreateAPIView(ListCreateAPIView):
 
 
             for usuario in response_data:
-                del usuario['password']
                 del usuario['is_staff']
                 del usuario['is_superuser']
                 del usuario['date_joined']
@@ -363,7 +367,7 @@ class EstudianteDetailAPIView(RetrieveAPIView):
 class EstudianteUpdateAPIView(RetrieveUpdateAPIView):
     queryset = Estudiante.objects.all()
     serializer_class = EstudianteDetailSerializer
-    permission_classes = [IsAuthenticatedOrReadOnly, isOwnerOrReadOnly]
+    permission_classes = [isOwnerOrReadOnly]
     lookup_field = 'usuario__cedula'
 
 class EstudianteDeleteAPIView(DestroyAPIView):

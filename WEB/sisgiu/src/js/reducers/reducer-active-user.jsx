@@ -1,7 +1,7 @@
 let user = localStorage.getItem('user_token');
 let modulo = localStorage.getItem('modulo');
 
-const initialState = (user && modulo) ? { loggedIn: true, user, modulo} : {};
+const initialState = (user && modulo) ? { loggedIn: true, user, modulo} : {loggedIn: false};
 
 export default function (state=initialState, action) {
 
@@ -48,5 +48,5 @@ switch (action.type){
 
 	default:
 		return state;
-}
+	}
 }
