@@ -2,6 +2,11 @@ import React from 'react';
 import { Input, Form, FormGroup, Label, Row, Col, Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import FontAwesomeIcon from 'react-fontawesome';
 import '../../css/moduloUsuarioAdministrador.css';
+import {bindActionCreators} from 'redux';
+import { connect } from 'react-redux';
+
+// Components
+import { editarUsuario } from '../actions/moduloUsuarioAdministrador';
 
 class ModalUsuarioEdit extends React.Component {
   constructor(props) {
@@ -65,8 +70,7 @@ class ModalUsuarioEdit extends React.Component {
     handleSubmit(e) {
         e.preventDefault();
 
-        console.log(this.state);
-        // Llamo a la funcion guardar
+        editarUsuario(this.state, this.props.usuario, this.props.tipo_usuario);
 
     }
 
@@ -260,7 +264,8 @@ class ModalUsuarioEdit extends React.Component {
   }
 }
 
+const mapDispatchToProps = (dispatch) => {
+  return bindActionCreators({editarUsuario: editarUsuario}, dispatch )
+}
 
-
-
-export default ModalUsuarioEdit;
+export default connect(mapDispatchToProps)(ModalUsuarioEdit);

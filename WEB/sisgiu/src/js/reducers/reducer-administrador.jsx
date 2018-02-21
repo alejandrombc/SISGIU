@@ -1,4 +1,4 @@
-const initialState = {periodos: [], tiene_periodos_activos: true, periodo_terminado_error: false, lista_usuarios: []};
+const initialState = {periodos: [], tiene_periodos_activos: true, periodo_terminado_error: false, lista_usuarios: [], bad_input: false};
 
 export default function (state=initialState, action) {
 
@@ -32,6 +32,17 @@ export default function (state=initialState, action) {
 		case "GET_USUARIOS_EXITOSO":
 			return {
 				lista_usuarios: action.payload['lista_usuarios'],
+			};
+
+		case "EDIT_USER_INFO_SUCCESS":
+			return {
+				bad_input: false,
+				user:action.payload['user'],
+			};
+
+		case "EDIT_USER_INFO_ERROR":
+			return {
+				bad_input: true,
 			};
 
 
