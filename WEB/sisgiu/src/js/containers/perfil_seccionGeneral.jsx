@@ -48,7 +48,6 @@ class SeccionGeneral extends Component{
     handleSubmit(e) {
         e.preventDefault();
 
-        // this.setState({ submitted: true });
         if (this.state.usuario.email) {
         	this.setState({ loading: true });
             this.props.editarUsuario(this.state, this.props.token['user']);
@@ -125,14 +124,49 @@ class SeccionGeneral extends Component{
 		                        </Input>
 		                      </Col>
 		                    </FormGroup>
-		                    { (this.state.modulo === 'estudiantes' || this.state.modulo === 'docentes') &&
-			                    <FormGroup row>
-			                      <Label for="direccion" sm={2}>Dirección</Label>
-			                      <Col sm={10}>
-			                        <Input type="textarea" name="direccion" id="direccion" onChange={this.handleChangeExtraData} value={this.state.direccion} />
-			                      </Col>
-			                    </FormGroup>
-		                    }
+	
+
+
+		                    { this.state.modulo === 'estudiantes' &&
+                      			
+                      			<FormGroup row>
+                              		<Label for="direccion" sm={2}>Dirección</Label>
+                              		<Col sm={10}>
+                                		<Input type="textarea" name="direccion" id="direccion" onChange={this.handleChangeExtraData} value={this.state.direccion} />
+                              		</Col>
+                          		</FormGroup>
+
+                      		}
+
+							{ this.state.modulo === 'docentes' &&
+								<div>
+								  <FormGroup row>
+								      <Label for="direccion" sm={2}>Dirección</Label>
+								      <Col sm={10}>
+								        <Input type="textarea" name="direccion" id="direccion" onChange={this.handleChangeExtraData} value={this.state.direccion} />
+								      </Col>
+								  </FormGroup>
+
+								  <FormGroup row>
+								      <Label for="rif" sm={2}>RIF</Label>
+								      <Col sm={10}>
+								        <a href={this.props.token['user']['rif']} target='_blank'><Button type='button' color="info" size='sm' name="rif"> Descargar </Button> </a>
+								      </Col>
+							      </FormGroup>
+
+								  <FormGroup row>
+								      <Label for="curriculum" sm={2}>Curriculum</Label>
+								      <Col sm={10}>
+								        <a href={this.props.token['user']['curriculum']} target='_blank'><Button type='button' color="info" size='sm' name="curriculum" > Descargar </Button> </a>
+								      </Col>
+								  </FormGroup>
+								</div>
+							}
+
+
+
+
+
 		                    <center><Button color="primary">Guardar</Button></center>
 		                  </Form>
 		                </Col>

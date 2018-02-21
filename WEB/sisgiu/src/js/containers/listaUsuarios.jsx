@@ -1,18 +1,16 @@
 // Dependencies
 import React, {Component} from 'react';
 import { connect } from 'react-redux';
-// import {bindActionCreators} from 'redux';
 import FontAwesomeIcon from 'react-fontawesome';
-import { Alert, Table, Button, Row, Col } from 'reactstrap';
+import { Table, Button, Row, Col } from 'reactstrap';
 import SearchInput, {createFilter} from 'react-search-input';
 import '../../css/moduloUsuarioAdministrador.css'; 
 import {bindActionCreators} from 'redux';
-
-//Spinner
-// import { PulseLoader } from 'halogenium';
+// import { PulseLoader } from 'halogenium'; //Spinner
 
 // Components
 import ModalUsuarioEdit from './modalUsuarioEdit';
+import ModalUsuarioNew from './modalUsuarioNew';
 import {get_usuarios} from '../actions/moduloUsuarioAdministrador';
 
 // const KEYS_TO_FILTERS = ['user', 'subject', 'dest', 'otro'];
@@ -27,11 +25,11 @@ class ListaUsuarios extends Component{
       this.state = {
         searchTerm: '',
       }
-
+      
       console.log(this.props);
 
       this.props.get_usuarios(this.props.tipo_usuario, false);
-
+      
       this.searchUpdated = this.searchUpdated.bind(this)
   }
 
@@ -39,11 +37,11 @@ class ListaUsuarios extends Component{
     this.setState({searchTerm: term})
   }
 
-
   render(){
 
+
       let listItems = '';
-      if(this.props.adminUser.lista_usuarios){
+      if(this.props.adminUser.lista_usuarios.length > 0){
         let cant_usuarios = this.props.adminUser.lista_usuarios.length;
         let usuarios = [];
 
@@ -59,23 +57,22 @@ class ListaUsuarios extends Component{
             <td>{usuario['first_name']} {usuario['last_name']}</td>
             <td>  
               <ModalUsuarioEdit usuario={usuario} tipo_usuario={this.props.tipo_usuario}/>
-              {/*<Button color="success" size='sm' data-toggle="tooltip" title="Editar"><FontAwesomeIcon name="edit"/></Button>*/}
             </td>
           </tr>
         );
 
 
+
+
         return(
     		<div>
               <br />
-              {this.props.adminUser['edit'] &&
-                <Alert color="success">
-                    Datos actualizados exitosamente
-                </Alert>
-              }
               <Row>
                 <Col md='4'>
+                  <ModalUsuarioNew usuario={usuarios[0]} tipo_usuario={this.props.tipo_usuario}/>
+                  {/*
                   <Button color="primary" size='sm' data-toggle="tooltip" title="Nuevo usuario"><FontAwesomeIcon name="plus"/></Button>
+                  */}
                 </Col>
                 <Col md='8'>
                   <SearchInput className="searchBox" placeholder="Buscar usuario..." onChange={this.searchUpdated} />
@@ -95,14 +92,21 @@ class ListaUsuarios extends Component{
                 </thead>
                 <tbody className="tabla_usuarios">
                   {listItems}
+
+
+                  
                 </tbody>
               </Table>
+
       	</div>
         )
     }else{
       return (
           <div>
-            No hay usuarios para ese modulo
+            <br/>
+            <center>
+            <h4>No existe ningún usuario perteneciente a este módulo.</h4>
+            </center>
           </div>
         )
     }

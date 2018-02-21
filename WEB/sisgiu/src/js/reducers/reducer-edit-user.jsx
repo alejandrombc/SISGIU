@@ -1,6 +1,7 @@
 const initialState = {
 	bad_input:false, 
-	edit: false, bad_input_password: false ,
+	edit: false, 
+	bad_input_password: false ,
 	edit_password: false,
 	bad_photo_request: false,
 	edit_photo: false, 

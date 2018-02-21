@@ -60,16 +60,23 @@ export const editarUsuario = (cambios, user, tipo_usuario) => {
 	   .set('Content-Type', 'application/json')
 	   .send(result)
 	   .then(function(res) {
+	   	console.log(res.body);
 		   	  	return function (dispatch) {
 				    dispatch(get_usuarios(tipo_usuario ,true));
 				}
 
 	   })
 	   .catch(function(err) {
-	   	alert("MAL NO SE CAMBIO");
 	   	console.log(err)
 	      	return {
 				type: "EDIT_USER_INFO_ERROR"
 			}
 	   });
+}
+
+
+export const crearUsuario = (user, tipo_usuario) => {
+	// Aqui se crea un usuario y luego se crea el modulo al cual pertenece dicho usuario (estudiante/docente/administrativo)
+	console.log(user);
+	console.log(tipo_usuario);
 }

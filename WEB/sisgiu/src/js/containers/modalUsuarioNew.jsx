@@ -6,38 +6,37 @@ import {bindActionCreators} from 'redux';
 import { connect } from 'react-redux';
 
 // Components
-import { editarUsuario } from '../actions/moduloUsuarioAdministrador';
+import { crearUsuario } from '../actions/moduloUsuarioAdministrador';
 
-class ModalUsuarioEdit extends React.Component {
+class ModalUsuarioNew extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       modal: false,
       usuario: {
-        cedula: this.props.usuario['cedula'],
-        first_name: this.props.usuario['first_name'],
-        segundo_nombre: this.props.usuario['segundo_nombre'],
-        last_name: this.props.usuario['last_name'],
-        segundo_apellido: this.props.usuario['segundo_apellido'],
-        email: this.props.usuario['email'],
-        celular: this.props.usuario['celular'],
-        telefono_casa: this.props.usuario['telefono_casa'],
-        telefono_trabajo: this.props.usuario['telefono_trabajo'],
-        nacionalidad: this.props.usuario['nacionalidad'],
-        sexo: this.props.usuario['sexo'],
-        estado_civil: this.props.usuario['estado_civil'],
-        foto: this.props.usuario['foto'],
-        password: this.props.usuario['password']
+        cedula: '',
+        first_name: '',
+        segundo_nombre: '',
+        last_name: '',
+        segundo_apellido: '',
+        email: '',
+        celular: '',
+        telefono_casa:'',
+        telefono_trabajo: '',
+        nacionalidad: '',
+        sexo: 'M',
+        estado_civil: 'Soltero',
+        password: '',
       },
-      direccion: this.props.usuario['direccion'],
-      rif: this.props.usuario['rif'],
-      curriculum: this.props.usuario['curriculum'],
-      permiso_ingresos: this.props.usuario['permiso_ingresos'],
-      coordinador: this.props.usuario['coordinador'],
-      tipo_postgrado: this.props.usuario['tipo_postgrado'],
-      id_tipo_postgrado: this.props.usuario['id_tipo_postgrado'],
-      id_estado_estudiante: this.props.usuario['id_estado_estudiante'],
-      estado_estudiante: this.props.usuario['estado_estudiante'],
+      direccion: '',
+      rif: '',
+      curriculum: '',
+      permiso_ingresos: '',
+      coordinador: false,
+      tipo_postgrado: 'doctorado',
+      id_tipo_postgrado: '1',
+      id_estado_estudiante: '1',
+      estado_estudiante: '',
 
     };
 
@@ -68,22 +67,21 @@ class ModalUsuarioEdit extends React.Component {
   handleSubmit(e) {
     e.preventDefault();
 
-    this.props.editarUsuario(this.state, this.props.usuario, this.props.tipo_usuario);
+    console.log(this.state);
+    this.props.crearUsuario(this.state, this.props.tipo_usuario);
   }
 
 
   render() {
     return (
       <div>
-        <Button color="success" size='sm' onClick={this.toggle} data-toggle="tooltip" title="Editar"><FontAwesomeIcon name="edit"/></Button>
+        <Button color="primary" size='sm' onClick={this.toggle} data-toggle="tooltip" title="Nuevo usuario"><FontAwesomeIcon name="plus"/></Button>
         <Modal isOpen={this.state.modal} toggle={this.toggle} className={this.props.className}>
           <ModalHeader toggle={this.toggle}> 
-                Editar usuario 
+                Agregar nuevo usuario 
           </ModalHeader>
           <Form onSubmit={this.handleSubmit}>
             <ModalBody>
-                <img className="center-img" width="100px" height="100px" src={this.state.usuario['foto']} alt="foto_usuario" />
-                <br />
                 <div>
                   <br />
                     <Row>
@@ -91,7 +89,7 @@ class ModalUsuarioEdit extends React.Component {
                           <FormGroup row>
                             <Label for="first_name" sm={4}>Cedula</Label>
                             <Col sm={8}>
-                              <Input bsSize="sm" type="text" name="cedula" id="cedula" defaultValue={this.state.usuario['cedula']} readOnly/>
+                              <Input bsSize="sm" type="text" name="cedula" id="cedula" defaultValue={this.state.usuario['cedula']} />
                             </Col>
                           </FormGroup>
                           <FormGroup row>
@@ -267,9 +265,6 @@ class ModalUsuarioEdit extends React.Component {
         </Modal>
         &nbsp;&nbsp; {/*Dummy Spaces*/}
 
-
-        {/*Eliminar un usuario*/}
-        <Button color="danger" size='sm' data-toggle="tooltip" title="Eliminar"><FontAwesomeIcon name="trash-alt"/></Button>
       </div>
     );
   }
@@ -284,10 +279,10 @@ const mapStateToProps = (state)=> {
 
 const mapDispatchToProps = (dispatch) => {
   return bindActionCreators({
-    editarUsuario: editarUsuario
+    crearUsuario: crearUsuario
     }, 
     dispatch 
   )
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(ModalUsuarioEdit);
+export default connect(mapStateToProps, mapDispatchToProps)(ModalUsuarioNew);

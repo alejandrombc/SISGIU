@@ -16,7 +16,7 @@ export default function (state=initialState, action) {
 			};
 		case "ERROR":
 			return {
-				nada: false, 
+				loggedIn: false, 
 			};
 
 		case "PERIODO_TERMINADO_SUCCESS":
