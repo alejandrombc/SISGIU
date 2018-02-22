@@ -1,8 +1,7 @@
 // Dependencies
 import React, {Component} from 'react';
 import { connect } from 'react-redux';
-import FontAwesomeIcon from 'react-fontawesome';
-import { Table, Button, Row, Col } from 'reactstrap';
+import { Table, Row, Col } from 'reactstrap';
 import SearchInput, {createFilter} from 'react-search-input';
 import '../../css/moduloUsuarioAdministrador.css'; 
 import {bindActionCreators} from 'redux';

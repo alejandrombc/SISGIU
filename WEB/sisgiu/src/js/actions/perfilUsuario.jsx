@@ -9,7 +9,9 @@ let modulo = localStorage.getItem('modulo');
 export const editarUsuario = (cambios, user) => {
 	var result = mergeJSON.merge(user, cambios);
 	delete result.usuario.foto;
-
+	delete result.rif;
+	delete result.curriculum;
+	delete result.permiso_ingresos;
 	console.log(result);
 	return request
 	   .put(host+'api/'+modulo+'/'+user['usuario']['cedula']+'/edit/')

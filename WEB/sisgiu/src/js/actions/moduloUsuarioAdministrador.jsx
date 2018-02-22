@@ -52,7 +52,9 @@ export const editarUsuario = (cambios, user, tipo_usuario) => {
 
 	var result = mergeJSON.merge(usuario, cambios);
 	delete result.usuario.foto;
-
+	delete result.rif;
+	delete result.curriculum;
+	delete result.permiso_ingresos;
 	console.log(result);
 	return request
 	   .put(host+'api/'+tipo_usuario+'/'+usuario['usuario']['cedula']+'/edit/')
@@ -73,6 +75,34 @@ export const editarUsuario = (cambios, user, tipo_usuario) => {
 			}
 	   });
 }
+
+
+
+export const editarRif = (rif, cedula) => {
+    const formData = new FormData();
+    formData.append('rif',rif);
+    console.log(formData.values());
+	// let modulo = localStorage.getItem('modulo');
+	let token = localStorage.getItem('user_token');
+	alert(cedula);
+	return request
+	   .post(host+'api/docentes/'+cedula+'/cambiarDocumento/rif/')
+	   .set('Authorization', 'JWT '+token)
+	   .field('username', cedula)
+	   .field('rif', rif)
+	   .then(function(res) {
+		   	  	return function (dispatch) {
+				    dispatch(get_usuarios("docentes" ,true));
+				}
+	   })
+	   .catch(function(err) {
+	   	console.log(err);
+	      	return {
+				type: "EDIT_USER_INFO_ERROR"
+			}
+	   });
+}
+
 
 
 export const crearUsuario = (user, tipo_usuario) => {
