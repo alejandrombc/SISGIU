@@ -84,12 +84,37 @@ export const editarRif = (rif, cedula) => {
     console.log(formData.values());
 	// let modulo = localStorage.getItem('modulo');
 	let token = localStorage.getItem('user_token');
-	alert(cedula);
+	// alert(cedula);
 	return request
 	   .post(host+'api/docentes/'+cedula+'/cambiarDocumento/rif/')
 	   .set('Authorization', 'JWT '+token)
 	   .field('username', cedula)
 	   .field('rif', rif)
+	   .then(function(res) {
+		   	  	return function (dispatch) {
+				    dispatch(get_usuarios("docentes" ,true));
+				}
+	   })
+	   .catch(function(err) {
+	   	console.log(err);
+	      	return {
+				type: "EDIT_USER_INFO_ERROR"
+			}
+	   });
+}
+
+export const editarDocumento = (tipo_documento, documento, cedula) => {
+    const formData = new FormData();
+    formData.append(tipo_documento ,documento);
+    console.log(formData.values());
+	// let modulo = localStorage.getItem('modulo');
+	let token = localStorage.getItem('user_token');
+	// alert(cedula);
+	return request
+	   .post(host+'api/docentes/'+cedula+'/cambiarDocumento/'+tipo_documento+'/')
+	   .set('Authorization', 'JWT '+token)
+	   .field('username', cedula)
+	   .field(tipo_documento, documento)
 	   .then(function(res) {
 		   	  	return function (dispatch) {
 				    dispatch(get_usuarios("docentes" ,true));

@@ -6,7 +6,7 @@ import {bindActionCreators} from 'redux';
 import { connect } from 'react-redux';
 
 // Components
-import { editarUsuario, editarRif } from '../actions/moduloUsuarioAdministrador';
+import { editarUsuario, editarRif, editarDocumento } from '../actions/moduloUsuarioAdministrador';
 
 class ModalUsuarioEdit extends React.Component {
 
@@ -42,13 +42,15 @@ class ModalUsuarioEdit extends React.Component {
       rif_file: undefined,
       curriculum_file:undefined,
       permiso_ingresos_file:undefined,
+      visible: true
     };
     this.toggle = this.toggle.bind(this);
     this.handleChangeUsuario = this.handleChangeUsuario.bind(this);
     this.handleChangeExtraData = this.handleChangeExtraData.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
-    this.subirRif = this.subirRif.bind(this);
-    this.handleChangeRIF = this.handleChangeRIF.bind(this);
+    this.subirDocumento = this.subirDocumento.bind(this);
+    this.handleChangeDocumento = this.handleChangeDocumento.bind(this);
+    this.onDismiss = this.onDismiss.bind(this);
     
   }
 
@@ -56,6 +58,10 @@ class ModalUsuarioEdit extends React.Component {
     this.setState({
       modal: !this.state.modal
     });
+  }
+
+  onDismiss() {
+    this.setState({ visible: false });
   }
 
   componentWillReceiveProps(props) { 
@@ -77,8 +83,18 @@ class ModalUsuarioEdit extends React.Component {
     this.setState({usuario})
   }
 
-  handleChangeRIF(e){
-    this.setState({rif_file:e.target.files[0]})
+  handleChangeDocumento(e){
+    let name = e.target.name + '_file';
+    this.setState({ [name] :e.target.files[0]})
+  }
+
+  handleChangeCurriculum(e){
+    console.log(e.target.files);
+    this.setState({curriculum_file:e.target.files[0]})
+  }
+
+  handleChangePermisoIngresos(e){
+    this.setState({permiso_ingresos_file:e.target.files[0]})
   }
 
   handleChangeExtraData(e) {
@@ -91,8 +107,31 @@ class ModalUsuarioEdit extends React.Component {
     this.props.editarUsuario(this.state, this.props.usuario, this.props.tipo_usuario);
   }
 
-  subirRif(e){
-    this.props.editarRif(this.state.rif_file, this.state.usuario.cedula);
+  subirDocumento(tipo_documento){
+    let documento;
+    switch(tipo_documento) {
+      
+      case 'rif':
+        documento = this.state.rif_file
+        console.log(documento);
+        break;
+
+      case 'curriculum':
+        documento = this.state.curriculum_file
+        break;
+
+      case 'permiso_ingresos':
+        documento = this.state.permiso_ingresos_file
+        break;
+
+      default:
+        break;
+    }
+    if (documento) {
+      this.props.editarDocumento(tipo_documento, documento, this.state.usuario.cedula);
+    } else {
+      alert('No ha subido ningún archivo');
+    }
   }
 
   render() {
@@ -236,39 +275,39 @@ class ModalUsuarioEdit extends React.Component {
                                 <FormGroup row>
                                     <Label for="rif" sm={3}>RIF</Label>
                                     <Col sm={5}>
-                                      <Input className="form-control" bsSize="sm" type="file" name="rif" id="rif" onChange={this.handleChangeRIF} />                                    
+                                      <Input className="form-control" bsSize="sm" type="file" name="rif" id="rif" onChange={this.handleChangeDocumento} />                                    
                                     </Col>
                                     <Col sm={2}>
-                                      <a href={this.state.rif} ><Button color="primary" size='sm'> Descargar </Button> </a>
+                                      <a href={this.state.rif} target='_blank' ><Button color="primary" size='sm' type='button'> Descargar </Button> </a>
                                     </Col>
                                     <Col sm={2}>
-                                      <Button onClick={() => { this.subirRif() }} color="primary" size='sm'> Subir </Button>
+                                      <Button onClick={() => { this.subirDocumento('rif') }} color="primary" size='sm'> Subir </Button>
                                     </Col>
                                 </FormGroup>
 
                                 <FormGroup row>
                                     <Label for="curriculum" sm={3}>Curriculum</Label>
                                     <Col sm={5}>
-                                      <Input className="form-control" bsSize="sm" type="file" name="curriculum" id="curriculum" onChange={this.handleChangeExtraData} />
+                                      <Input className="form-control" bsSize="sm" type="file" name="curriculum" id="curriculum" onChange={this.handleChangeDocumento} />
                                     </Col>
                                     <Col sm={2}>
-                                      <a href={this.state.curriculum} ><Button color="primary" size='sm'> Descargar </Button> </a>
+                                      <a href={this.state.curriculum} target='_blank'><Button color="primary" size='sm' type='button'> Descargar </Button> </a>
                                     </Col>
                                     <Col sm={2}>
-                                      <Button color="primary" size='sm'> Subir </Button>
+                                      <Button onClick={() => { this.subirDocumento('curriculum') }} color="primary" size='sm'> Subir </Button>
                                     </Col>
                                 </FormGroup>
 
                                 <FormGroup row>
                                     <Label for="permiso_ingresos" sm={3}>Permisos</Label>
                                     <Col sm={5}>
-                                      <Input className="form-control" bsSize="sm" type="file" name="permiso_ingresos" id="permiso_ingresos" onChange={this.handleChangeExtraData} />
+                                      <Input className="form-control" bsSize="sm" type="file" name="permiso_ingresos" id="permiso_ingresos" onChange={this.handleChangeDocumento} />
                                     </Col>
                                     <Col sm={2}>
-                                      <a href={this.state.permiso_ingresos} ><Button color="primary" size='sm'> Descargar </Button> </a>
+                                      <a href={this.state.permiso_ingresos} target='_blank'><Button color="primary" size='sm' type='button'> Descargar </Button> </a>
                                     </Col>
                                     <Col sm={2}>
-                                      <Button color="primary" size='sm'> Subir </Button>
+                                      <Button onClick={() => { this.subirDocumento('permiso_ingresos') }} color="primary" size='sm'> Subir </Button>
                                     </Col>
                                 </FormGroup>
 
@@ -285,7 +324,7 @@ class ModalUsuarioEdit extends React.Component {
                     </Row>
 
                     {this.props.adminUser['edit'] &&
-                      <Alert color="success">
+                      <Alert color="success" isOpen={this.state.visible} toggle={this.onDismiss}>
                           Datos actualizados exitosamente
                       </Alert> 
                     }
@@ -328,7 +367,8 @@ const mapStateToProps = (state)=> {
 const mapDispatchToProps = (dispatch) => {
   return bindActionCreators({
     editarUsuario: editarUsuario,
-    editarRif: editarRif
+    editarRif: editarRif,
+    editarDocumento: editarDocumento,
     }, 
     dispatch 
   )
