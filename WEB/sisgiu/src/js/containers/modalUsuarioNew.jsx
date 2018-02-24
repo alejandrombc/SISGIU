@@ -87,13 +87,13 @@ class ModalUsuarioNew extends React.Component {
                           <FormGroup row>
                             <Label for="cedula" sm={4}>Cedula</Label>
                             <Col sm={8}>
-                              <Input required bsSize="sm" type="text" name="cedula" id="cedula" onChange={this.handleChangeUsuario} defaultValue={this.state.usuario['cedula']} />
+                              <Input bsSize="sm" type="text" name="cedula" id="cedula" onChange={this.handleChangeUsuario} defaultValue={this.state.usuario['cedula']} required/>
                             </Col>
                           </FormGroup>
                           <FormGroup row>
                             <Label for="first_name" sm={4}>Primer Nombre</Label>
                             <Col sm={8}>
-                              <Input bsSize="sm" type="text" name="first_name" id="first_name" onChange={this.handleChangeUsuario} defaultValue={this.state.usuario['first_name']} />
+                              <Input bsSize="sm" type="text" name="first_name" id="first_name" onChange={this.handleChangeUsuario} defaultValue={this.state.usuario['first_name']} required/>
                             </Col>
                           </FormGroup>
                           <FormGroup row>
@@ -105,7 +105,7 @@ class ModalUsuarioNew extends React.Component {
                           <FormGroup row>
                             <Label for="last_name" sm={4}>Primer Apellido</Label>
                             <Col sm={8}>
-                              <Input bsSize="sm" type="text" name="last_name" id="last_name" onChange={this.handleChangeUsuario} defaultValue={this.state.usuario['last_name']} />
+                              <Input bsSize="sm" type="text" name="last_name" id="last_name" onChange={this.handleChangeUsuario} defaultValue={this.state.usuario['last_name']} required/>
                             </Col>
                           </FormGroup>
                           <FormGroup row>
@@ -115,15 +115,15 @@ class ModalUsuarioNew extends React.Component {
                             </Col>
                           </FormGroup>
                           <FormGroup row>
-                            <Label for="fecha_nacimiento" sm={4}>Nacimiento</Label>
+                            <Label for="fecha_nacimiento" sm={4}>F. Nacimiento</Label>
                             <Col sm={8}>
-                              <Input bsSize="sm" required type="date" name="fecha_nacimiento" id="fecha_nacimiento" onChange={this.handleChangeUsuario} defaultValue={this.state.usuario['fecha_nacimiento']} />
+                              <Input bsSize="sm" type="date" name="fecha_nacimiento" id="fecha_nacimiento" onChange={this.handleChangeUsuario} defaultValue={this.state.usuario['fecha_nacimiento']} required/>
                             </Col>
                           </FormGroup>
                           <FormGroup row>
                             <Label for="email" sm={4}>Correo</Label>
                             <Col sm={8}>
-                              <Input bsSize="sm" type="email" name="email" id="email"  onChange={this.handleChangeUsuario} value={this.state.usuario['email']} />
+                              <Input bsSize="sm" type="email" name="email" id="email"  onChange={this.handleChangeUsuario} value={this.state.usuario['email']} required/>
                             </Col>
                           </FormGroup>
                           <FormGroup row>

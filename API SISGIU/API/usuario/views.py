@@ -304,7 +304,7 @@ Estudiante
 class EstudianteListCreateAPIView(ListCreateAPIView):
     queryset = Estudiante.objects.all()
     serializer_class = EstudianteSerializer
-    # permission_classes = [IsAuthenticated, IsListOrCreate]
+    permission_classes = [IsAuthenticated, IsListOrCreate]
 
 class EstudianteDetailAPIView(RetrieveAPIView):
     queryset = Estudiante.objects.all()

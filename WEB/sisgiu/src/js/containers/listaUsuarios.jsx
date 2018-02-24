@@ -22,14 +22,19 @@ class ListaUsuarios extends Component{
   constructor(props) {
       super(props);
       this.state = {
+        visible: true,
         searchTerm: '',
       }
       
       console.log(this.props);
 
       this.props.get_usuarios(this.props.tipo_usuario, false);
-      
+      this.onDismiss = this.onDismiss.bind(this);
       this.searchUpdated = this.searchUpdated.bind(this)
+  }
+
+  onDismiss() {
+    this.setState({ visible: false });
   }
 
   searchUpdated (term) {
@@ -78,10 +83,7 @@ class ListaUsuarios extends Component{
               }
               <Row>
                 <Col md='4'>
-                  <ModalUsuarioNew usuario={usuarios[0]} tipo_usuario={this.props.tipo_usuario}/>
-                  {/*
-                  <Button color="primary" size='sm' data-toggle="tooltip" title="Nuevo usuario"><FontAwesomeIcon name="plus"/></Button>
-                  */}
+                  <ModalUsuarioNew tipo_usuario={this.props.tipo_usuario}/>
                 </Col>
                 <Col md='8'>
                   <SearchInput className="searchBox" placeholder="Buscar usuario..." onChange={this.searchUpdated} />
@@ -113,9 +115,20 @@ class ListaUsuarios extends Component{
       return (
           <div>
             <br/>
-            <center>
-            <h4>No existe ningún usuario perteneciente a este módulo.</h4>
-            </center>
+            <Row>
+              <Col md='12'>
+                <center>
+                <h4>No existe ningún usuario perteneciente a este módulo.</h4>
+                </center>
+              </Col>
+            </Row>
+
+            <Row>
+              <Col md='12'>
+                <ModalUsuarioNew tipo_usuario={this.props.tipo_usuario}/>
+              </Col>
+            </Row>
+
           </div>
         )
     }
