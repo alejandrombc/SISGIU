@@ -1,12 +1,12 @@
 import React from 'react';
-import { Input, Form, FormGroup, Label, Row, Col, Button, Modal, ModalHeader, ModalBody, ModalFooter, Alert } from 'reactstrap';
+import { Input, Form, FormGroup, Label, Row, Col, Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import FontAwesomeIcon from 'react-fontawesome';
 import '../../css/moduloUsuarioAdministrador.css';
 import {bindActionCreators} from 'redux';
 import { connect } from 'react-redux';
 
 // Components
-import { editarUsuario, editarRif, editarDocumento } from '../actions/moduloUsuarioAdministrador';
+import { editarUsuario, eliminarUsuario, editarDocumento } from '../actions/moduloUsuarioAdministrador';
 
 class ModalUsuarioEdit extends React.Component {
 
@@ -28,6 +28,7 @@ class ModalUsuarioEdit extends React.Component {
         sexo: this.props.usuario['sexo'],
         estado_civil: this.props.usuario['estado_civil'],
         foto: this.props.usuario['foto'],
+        fecha_nacimiento:this.props.usuario['fecha_nacimiento'],
         password: this.props.usuario['password']
       },
       direccion: this.props.usuario['direccion'],
@@ -105,6 +106,11 @@ class ModalUsuarioEdit extends React.Component {
   handleSubmit(e) {
     e.preventDefault();
     this.props.editarUsuario(this.state, this.props.usuario, this.props.tipo_usuario);
+    this.toggle();
+  }
+
+  handleDelete() {
+    this.props.eliminarUsuario(this.state.usuario.cedula, this.props.tipo_usuario);
   }
 
   subirDocumento(tipo_documento){
@@ -182,6 +188,12 @@ class ModalUsuarioEdit extends React.Component {
                             </Col>
                           </FormGroup>
                           <FormGroup row>
+                            <Label for="fecha_nacimiento" sm={4}>Nacimiento</Label>
+                            <Col sm={8}>
+                              <Input  bsSize="sm" type="date" name="fecha_nacimiento" id="fecha_nacimiento" onChange={this.handleChangeUsuario} readOnly defaultValue={this.state.usuario['fecha_nacimiento']} />
+                            </Col>
+                          </FormGroup>
+                          <FormGroup row>
                             <Label for="email" sm={4}>Correo</Label>
                             <Col sm={8}>
                               <Input  bsSize="sm" type="email" name="email" id="email"  onChange={this.handleChangeUsuario} value={this.state.usuario['email']} />
@@ -244,7 +256,7 @@ class ModalUsuarioEdit extends React.Component {
                               <FormGroup row>
                                 <Label for="tipo_postgrado" sm={4}>Tipo de Postgrado</Label>
                                 <Col sm={8}>
-                                  <Input  bsSize="sm" value={this.state.value} defaultValue={this.state['tipo_postgrado']} onChange={this.handleChangeRIF} type="select" name="id_tipo_postgrado" id="id_tipo_postgrado">
+                                  <Input  bsSize="sm" value={this.state.value} defaultValue={this.state['id_tipo_postgrado']} onChange={this.handleChangeRIF} type="select" name="id_tipo_postgrado" id="id_tipo_postgrado">
                                     <option value="1" name="doctorado">Doctorado</option>
                                     <option value="2" name="especializacion">Especialización</option>
                                     <option value="3" name="maestria">Maestría</option>
@@ -255,7 +267,7 @@ class ModalUsuarioEdit extends React.Component {
                               <FormGroup row>
                                 <Label for="estado_estudiante" sm={4}>Estado</Label>
                                 <Col sm={8}>
-                                  <Input   bsSize="sm" value={this.state.value} defaultValue={this.state['estado_estudiante']} onChange={this.handleChangeExtraData} type="select" name="id_estado_estudiante" id="id_tipo_postgrado">
+                                  <Input   bsSize="sm" value={this.state.value} defaultValue={this.state['id_estado_estudiante']} onChange={this.handleChangeExtraData} type="select" name="id_estado_estudiante" id="id_tipo_postgrado">
                                     <option value="1" name="activo">Activo</option>
                                     <option value="2" name="retirado">Retirado</option>
                                   </Input>
@@ -323,18 +335,6 @@ class ModalUsuarioEdit extends React.Component {
                       </Col>
                     </Row>
 
-                    {this.props.adminUser['edit'] &&
-                      <Alert color="success" isOpen={this.state.visible} toggle={this.onDismiss}>
-                          Datos actualizados exitosamente
-                      </Alert> 
-                    }
-
-                    {this.props.adminUser['bad_input'] === true &&
-                      <Alert color="error">
-                          Ha ocurrido un error
-                      </Alert>
-                    }
-
                 </div>
 
             </ModalBody>
@@ -348,7 +348,7 @@ class ModalUsuarioEdit extends React.Component {
 
 
         {/*Eliminar un usuario*/}
-        <Button color="danger" size='sm' data-toggle="tooltip" title="Eliminar"><FontAwesomeIcon name="trash-alt"/></Button>
+        <Button color="danger" size='sm' onClick={() => { this.handleDelete() }} data-toggle="tooltip" title="Eliminar"><FontAwesomeIcon name="trash-alt"/></Button>
       </div>
     );
   }else{
@@ -367,8 +367,8 @@ const mapStateToProps = (state)=> {
 const mapDispatchToProps = (dispatch) => {
   return bindActionCreators({
     editarUsuario: editarUsuario,
-    editarRif: editarRif,
     editarDocumento: editarDocumento,
+    eliminarUsuario: eliminarUsuario,
     }, 
     dispatch 
   )

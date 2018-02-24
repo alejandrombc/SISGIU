@@ -16,27 +16,24 @@ class ModalUsuarioNew extends React.Component {
       usuario: {
         cedula: '',
         first_name: '',
-        segundo_nombre: '',
+        segundo_nombre: null,
         last_name: '',
-        segundo_apellido: '',
+        segundo_apellido: null,
         email: '',
         celular: '',
+        fecha_nacimiento:'',
         telefono_casa:'',
         telefono_trabajo: '',
         nacionalidad: '',
         sexo: 'M',
         estado_civil: 'Soltero',
         password: '',
+        username: '',
       },
       direccion: '',
-      rif: '',
-      curriculum: '',
-      permiso_ingresos: '',
       coordinador: false,
-      tipo_postgrado: 'doctorado',
       id_tipo_postgrado: '1',
       id_estado_estudiante: '1',
-      estado_estudiante: '',
 
     };
 
@@ -67,8 +64,9 @@ class ModalUsuarioNew extends React.Component {
   handleSubmit(e) {
     e.preventDefault();
 
-    console.log(this.state);
+    console.log(this.state.usuario['cedula']);
     this.props.crearUsuario(this.state, this.props.tipo_usuario);
+    this.toggle();
   }
 
 
@@ -87,9 +85,9 @@ class ModalUsuarioNew extends React.Component {
                     <Row>
                       <Col sm="12">
                           <FormGroup row>
-                            <Label for="first_name" sm={4}>Cedula</Label>
+                            <Label for="cedula" sm={4}>Cedula</Label>
                             <Col sm={8}>
-                              <Input bsSize="sm" type="text" name="cedula" id="cedula" defaultValue={this.state.usuario['cedula']} />
+                              <Input required bsSize="sm" type="text" name="cedula" id="cedula" onChange={this.handleChangeUsuario} defaultValue={this.state.usuario['cedula']} />
                             </Col>
                           </FormGroup>
                           <FormGroup row>
@@ -114,6 +112,12 @@ class ModalUsuarioNew extends React.Component {
                             <Label for="segundo_apellido" sm={4}>Segundo Apellido</Label>
                             <Col sm={8}>
                               <Input bsSize="sm" type="text" name="segundo_apellido" id="segundo_apellido" onChange={this.handleChangeUsuario} defaultValue={this.state.usuario['segundo_apellido']} />
+                            </Col>
+                          </FormGroup>
+                          <FormGroup row>
+                            <Label for="fecha_nacimiento" sm={4}>Nacimiento</Label>
+                            <Col sm={8}>
+                              <Input bsSize="sm" required type="date" name="fecha_nacimiento" id="fecha_nacimiento" onChange={this.handleChangeUsuario} defaultValue={this.state.usuario['fecha_nacimiento']} />
                             </Col>
                           </FormGroup>
                           <FormGroup row>
@@ -179,7 +183,7 @@ class ModalUsuarioNew extends React.Component {
                               <FormGroup row>
                                 <Label for="tipo_postgrado" sm={4}>Tipo de Postgrado</Label>
                                 <Col sm={8}>
-                                  <Input bsSize="sm" value={this.state.value} defaultValue={this.state['tipo_postgrado']} onChange={this.handleChangeExtraData} type="select" name="id_tipo_postgrado" id="id_tipo_postgrado">
+                                  <Input bsSize="sm" value={this.state.value} defaultValue={this.state['id_tipo_postgrado']} onChange={this.handleChangeExtraData} type="select" name="id_tipo_postgrado" id="id_tipo_postgrado">
                                     <option value="1" name="doctorado">Doctorado</option>
                                     <option value="2" name="especializacion">Especialización</option>
                                     <option value="3" name="maestria">Maestría</option>
@@ -190,7 +194,7 @@ class ModalUsuarioNew extends React.Component {
                               <FormGroup row>
                                 <Label for="estado_estudiante" sm={4}>Estado</Label>
                                 <Col sm={8}>
-                                  <Input bsSize="sm" value={this.state.value} defaultValue={this.state['estado_estudiante']} onChange={this.handleChangeExtraData} type="select" name="id_estado_estudiante" id="id_tipo_postgrado">
+                                  <Input bsSize="sm" value={this.state.value} defaultValue={this.state['id_estado_estudiante']} onChange={this.handleChangeExtraData} type="select" name="id_estado_estudiante" id="id_estado_estudiante">
                                     <option value="1" name="activo">Activo</option>
                                     <option value="2" name="retirado">Retirado</option>
                                   </Input>
@@ -208,34 +212,14 @@ class ModalUsuarioNew extends React.Component {
                                   </Col>
                               </FormGroup>
 
-                              <FormGroup row>
-                                  <Label for="rif" sm={4}>RIF</Label>
-                                  <Col sm={5}>
-                                    <Input bsSize="sm" type="file" name="rif" id="rif" onChange={this.handleChangeExtraData} />
-                                  </Col>
-                                  <Col sm={3}>
-                                    <a href={this.state.rif} ><Button color="primary" size='sm'> Descargar </Button> </a>
-                                  </Col>
-                              </FormGroup>
-
-                              <FormGroup row>
-                                  <Label for="curriculum" sm={4}>Curriculum</Label>
-                                  <Col sm={5}>
-                                    <Input bsSize="sm" type="file" name="curriculum" id="curriculum" onChange={this.handleChangeExtraData} />
-                                  </Col>
-                                  <Col sm={3}>
-                                    <a href={this.state.curriculum} ><Button color="primary" size='sm'> Descargar </Button> </a>
-                                  </Col>
-                              </FormGroup>
-
                               <FormGroup check>
                                 <Label check>
                                   <Input bsSize="sm" defaultChecked={this.state.coordinador} type="checkbox" name="coordinador" id="coordinador"  onChange={this.handleChangeExtraData} />{' '}
                                   Es coordinador
                                 </Label>
                               </FormGroup>
-
-
+                              <br />
+                              <font size="2">Para los archivos, por favor edite el usuario una vez este creado</font>
                             </div>
                           }
                         
@@ -246,12 +230,6 @@ class ModalUsuarioNew extends React.Component {
                       <Alert color="success">
                           Datos actualizados exitosamente
                       </Alert> 
-                    }
-
-                    {this.props.adminUser['bad_input'] === true &&
-                      <Alert color="error">
-                          Ha ocurrido un error
-                      </Alert>
                     }
 
                 </div>

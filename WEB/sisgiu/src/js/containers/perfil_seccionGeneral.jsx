@@ -17,7 +17,8 @@ class SeccionGeneral extends Component{
       			"email":this.props.token['user']['usuario']['email'],
 	      		"celular":this.props.token['user']['usuario']['celular'],
 	      		"telefono_casa":this.props.token['user']['usuario']['telefono_casa'],
-	      		"telefono_trabajo":this.props.token['user']['usuario']['telefono_trabajo']
+	      		"telefono_trabajo":this.props.token['user']['usuario']['telefono_trabajo'],
+	      		"fecha_nacimiento":this.props.token['user']['usuario']['fecha_nacimiento']
 	      	},
       		"direccion":this.props.token['user']['direccion'],
       		"loading":false,
@@ -93,6 +94,12 @@ class SeccionGeneral extends Component{
 		                      <Label for="email" sm={2}>Correo</Label>
 		                      <Col sm={10}>
 		                        <Input type="email" name="email" id="email"  onChange={this.handleChangeUsuario} value={this.state.usuario.email} />
+		                      </Col>
+		                    </FormGroup>
+		                    <FormGroup row>
+		                      <Label for="fecha_nacimiento" sm={2}>Nacimiento</Label>
+		                      <Col sm={10}>
+		                        <Input type="date" name="fecha_nacimiento" id="fecha_nacimiento" readOnly onChange={this.handleChangeUsuario} value={this.state.usuario.fecha_nacimiento} />
 		                      </Col>
 		                    </FormGroup>
 		                    <FormGroup row>

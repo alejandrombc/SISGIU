@@ -20,12 +20,18 @@ export function get_usuarios (tipo_usuario, edit) {
 	   .get(host+'api/usuarios/'+tipo_usuario+'/')
 	   .set('Authorization', 'JWT '+token)
 	   .then(function(res) {
-	   		if(edit){
+	   		if(edit === 1){
 	   			return {
 					type: "EDIT_USER_INFO_SUCCESS",
 					payload: {lista_usuarios: res.body}
 				}
-	   		}else{
+	   		}else if(edit === 2){
+	   			return {
+					type: "EDIT_USER_INFO_ERROR",
+					payload: {lista_usuarios: res.body}
+				}
+	   		}
+	   		else{
 	   			return {
 					type: "GET_USUARIOS_EXITOSO",
 					payload: {lista_usuarios: res.body}
@@ -64,44 +70,18 @@ export const editarUsuario = (cambios, user, tipo_usuario) => {
 	   .then(function(res) {
 	   	console.log(res.body);
 		   	  	return function (dispatch) {
-				    dispatch(get_usuarios(tipo_usuario ,true));
+				    dispatch(get_usuarios(tipo_usuario ,1));
 				}
 
 	   })
 	   .catch(function(err) {
 	   	console.log(err)
-	      	return {
-				type: "EDIT_USER_INFO_ERROR"
+	   	  	return function (dispatch) {
+			    dispatch(get_usuarios(tipo_usuario ,2));
 			}
 	   });
 }
 
-
-
-export const editarRif = (rif, cedula) => {
-    const formData = new FormData();
-    formData.append('rif',rif);
-    console.log(formData.values());
-	// let modulo = localStorage.getItem('modulo');
-	let token = localStorage.getItem('user_token');
-	// alert(cedula);
-	return request
-	   .post(host+'api/docentes/'+cedula+'/cambiarDocumento/rif/')
-	   .set('Authorization', 'JWT '+token)
-	   .field('username', cedula)
-	   .field('rif', rif)
-	   .then(function(res) {
-		   	  	return function (dispatch) {
-				    dispatch(get_usuarios("docentes" ,true));
-				}
-	   })
-	   .catch(function(err) {
-	   	console.log(err);
-	      	return {
-				type: "EDIT_USER_INFO_ERROR"
-			}
-	   });
-}
 
 export const editarDocumento = (tipo_documento, documento, cedula) => {
     const formData = new FormData();
@@ -117,13 +97,13 @@ export const editarDocumento = (tipo_documento, documento, cedula) => {
 	   .field(tipo_documento, documento)
 	   .then(function(res) {
 		   	  	return function (dispatch) {
-				    dispatch(get_usuarios("docentes" ,true));
+				    dispatch(get_usuarios("docentes" ,1));
 				}
 	   })
 	   .catch(function(err) {
 	   	console.log(err);
-	      	return {
-				type: "EDIT_USER_INFO_ERROR"
+	   	  	return function (dispatch) {
+			    dispatch(get_usuarios("docentes" ,2));
 			}
 	   });
 }
@@ -131,7 +111,47 @@ export const editarDocumento = (tipo_documento, documento, cedula) => {
 
 
 export const crearUsuario = (user, tipo_usuario) => {
-	// Aqui se crea un usuario y luego se crea el modulo al cual pertenece dicho usuario (estudiante/docente/administrativo)
-	console.log(user);
-	console.log(tipo_usuario);
+	let token = localStorage.getItem('user_token');
+	user['usuario']['password'] = user['usuario']['cedula'];
+	user['usuario']['username'] = user['usuario']['cedula'];
+ 	console.log(user);
+	return request
+	   .post(host+'api/'+tipo_usuario+'/')
+	   .set('Authorization', 'JWT '+token)
+	   .set('Content-Type', 'application/json')
+	   .send(user)
+	   .then(function(res) {
+		   	  	return function (dispatch) {
+				    dispatch(get_usuarios(tipo_usuario ,1));
+				}
+
+	   })
+	   .catch(function(err) {
+	   	console.log(err)
+	   	  	return function (dispatch) {
+			    dispatch(get_usuarios(tipo_usuario ,2));
+			}
+	   });
+}
+
+
+
+
+export const eliminarUsuario = (cedula, tipo_usuario) => {
+	let token = localStorage.getItem('user_token');
+	return request
+	   .delete(host+'api/'+tipo_usuario+'/'+cedula+'/delete/')
+	   .set('Authorization', 'JWT '+token)
+	   .then(function(res) {
+		   	  	return function (dispatch) {
+				    dispatch(get_usuarios(tipo_usuario ,1));
+				}
+
+	   })
+	   .catch(function(err) {
+	   	console.log(err)
+	   	  	return function (dispatch) {
+			    dispatch(get_usuarios(tipo_usuario ,2));
+			}
+	   });
 }

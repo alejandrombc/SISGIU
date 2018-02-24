@@ -294,7 +294,7 @@ class AdministradorUpdateAPIView(RetrieveUpdateAPIView):
 class AdministradorDeleteAPIView(DestroyAPIView):
     queryset = Usuario.objects.all()
     serializer_class = AdministradorDetailSerializer
-    lookup_field = 'cedula'
+    lookup_field = 'username'
     permission_classes = [IsAdminUser]
 
 
@@ -304,7 +304,7 @@ Estudiante
 class EstudianteListCreateAPIView(ListCreateAPIView):
     queryset = Estudiante.objects.all()
     serializer_class = EstudianteSerializer
-    permission_classes = [IsAuthenticated, IsListOrCreate]
+    # permission_classes = [IsAuthenticated, IsListOrCreate]
 
 class EstudianteDetailAPIView(RetrieveAPIView):
     queryset = Estudiante.objects.all()

@@ -110,13 +110,16 @@ class EstudianteSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         user_data = validated_data.pop('usuario')
-        user = Usuario.objects.get(cedula=user_data['cedula'])
-        if(user == None):
+        try:
+            estudiante = Estudiante.objects.get(usuario__cedula=user_data['cedula'])
+            return estudiante
+        except:
             user = UsuarioListSerializer.create(UsuarioListSerializer(), validated_data=user_data)
-        estudiante, created = Estudiante.objects.update_or_create(usuario=user,
+            estudiante, created = Estudiante.objects.update_or_create(usuario=user,
                                 id_tipo_postgrado=validated_data.pop('id_tipo_postgrado'),id_estado_estudiante=validated_data.pop('id_estado_estudiante'),
                                 direccion=validated_data.pop('direccion') )
-        return estudiante
+            return estudiante
+            
 
     
 

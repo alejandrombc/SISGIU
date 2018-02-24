@@ -46,6 +46,7 @@ export default function (state=initialState, action) {
 		case "EDIT_USER_INFO_ERROR":
 			return {
 				bad_input: true,
+				lista_usuarios: action.payload['lista_usuarios'],
 			};
 
 

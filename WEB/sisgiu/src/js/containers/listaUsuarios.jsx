@@ -1,7 +1,7 @@
 // Dependencies
 import React, {Component} from 'react';
 import { connect } from 'react-redux';
-import { Table, Row, Col } from 'reactstrap';
+import { Alert, Table, Row, Col } from 'reactstrap';
 import SearchInput, {createFilter} from 'react-search-input';
 import '../../css/moduloUsuarioAdministrador.css'; 
 import {bindActionCreators} from 'redux';
@@ -40,7 +40,7 @@ class ListaUsuarios extends Component{
 
 
       let listItems = '';
-      if(this.props.adminUser.lista_usuarios.length > 0){
+      if(this.props.adminUser.lista_usuarios && this.props.adminUser.lista_usuarios.length > 0){
         let cant_usuarios = this.props.adminUser.lista_usuarios.length;
         let usuarios = [];
 
@@ -66,6 +66,16 @@ class ListaUsuarios extends Component{
         return(
     		<div>
               <br />
+              {this.props.adminUser['edit'] &&
+                <Alert color="success" isOpen={this.state.visible} toggle={this.onDismiss}>
+                    Datos actualizados exitosamente
+                </Alert> 
+              }
+              {this.props.adminUser['bad_input'] === true &&
+                  <Alert color="danger" isOpen={this.state.visible} toggle={this.onDismiss}>
+                      Ha ocurrido un error
+                  </Alert>
+              }
               <Row>
                 <Col md='4'>
                   <ModalUsuarioNew usuario={usuarios[0]} tipo_usuario={this.props.tipo_usuario}/>
