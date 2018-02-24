@@ -9,6 +9,7 @@ import {bindActionCreators} from 'redux';
 
 // Components
 import ModalUsuarioEdit from './modalUsuarioEdit';
+import ModalUsuarioDelete from './modalUsuarioDelete';
 import ModalUsuarioNew from './modalUsuarioNew';
 import {get_usuarios} from '../actions/moduloUsuarioAdministrador';
 
@@ -60,7 +61,12 @@ class ListaUsuarios extends Component{
             <td>{usuario['cedula']}</td>
             <td>{usuario['first_name']} {usuario['last_name']}</td>
             <td>  
-              <ModalUsuarioEdit usuario={usuario} tipo_usuario={this.props.tipo_usuario}/>
+              <Row >
+                <Col md={{ size: 'auto', offset: 3 }} className='botones'>
+                  <ModalUsuarioEdit usuario={usuario} tipo_usuario={this.props.tipo_usuario} />
+                  <ModalUsuarioDelete usuario={usuario} tipo_usuario={this.props.tipo_usuario}/>
+                </Col>
+              </Row>
             </td>
           </tr>
         );

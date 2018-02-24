@@ -24,3 +24,17 @@
    display: block;
    border-radius: 0.25rem;
 }
+
+.botones > div {
+  display: inline-block;
+  margin-right: 10px;
+}
+
+@media (max-width: 600px) {
+  .botones > div {
+    margin-right: 2px;
+  }
+
+
+
+}

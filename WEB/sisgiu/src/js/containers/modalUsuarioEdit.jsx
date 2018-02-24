@@ -4,9 +4,10 @@ import FontAwesomeIcon from 'react-fontawesome';
 import '../../css/moduloUsuarioAdministrador.css';
 import {bindActionCreators} from 'redux';
 import { connect } from 'react-redux';
+import { PulseLoader } from 'halogenium';
 
 // Components
-import { editarUsuario, eliminarUsuario, editarDocumento } from '../actions/moduloUsuarioAdministrador';
+import { editarUsuario, editarDocumento } from '../actions/moduloUsuarioAdministrador';
 
 class ModalUsuarioEdit extends React.Component {
 
@@ -89,15 +90,6 @@ class ModalUsuarioEdit extends React.Component {
     this.setState({ [name] :e.target.files[0]})
   }
 
-  handleChangeCurriculum(e){
-    console.log(e.target.files);
-    this.setState({curriculum_file:e.target.files[0]})
-  }
-
-  handleChangePermisoIngresos(e){
-    this.setState({permiso_ingresos_file:e.target.files[0]})
-  }
-
   handleChangeExtraData(e) {
     const { name, value } = e.target;
     this.setState({ [name]: value });  
@@ -107,10 +99,6 @@ class ModalUsuarioEdit extends React.Component {
     e.preventDefault();
     this.props.editarUsuario(this.state, this.props.usuario, this.props.tipo_usuario);
     this.toggle();
-  }
-
-  handleDelete() {
-    this.props.eliminarUsuario(this.state.usuario.cedula, this.props.tipo_usuario);
   }
 
   subirDocumento(tipo_documento){
@@ -344,15 +332,13 @@ class ModalUsuarioEdit extends React.Component {
             </ModalFooter>
           </Form>
         </Modal>
-        &nbsp;&nbsp; {/*Dummy Spaces*/}
-
-
-        {/*Eliminar un usuario*/}
-        <Button color="danger" size='sm' onClick={() => { this.handleDelete() }} data-toggle="tooltip" title="Eliminar"><FontAwesomeIcon name="trash-alt"/></Button>
+        
       </div>
     );
   }else{
-    return(<div>"Cargando..."</div>);
+    return(
+      <center><PulseLoader color="#b3b1b0" size="16px" margin="4px"/></center>
+    );
   }
 }
 }
@@ -368,7 +354,6 @@ const mapDispatchToProps = (dispatch) => {
   return bindActionCreators({
     editarUsuario: editarUsuario,
     editarDocumento: editarDocumento,
-    eliminarUsuario: eliminarUsuario,
     }, 
     dispatch 
   )
