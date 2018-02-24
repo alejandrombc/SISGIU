@@ -177,15 +177,17 @@ class DocenteSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         user_data = validated_data.pop('usuario')
-        user = Usuario.objects.get(cedula=user_data['cedula'])
-        if(user == None):
+        try:
+            docente = PersonalDocente.objects.get(usuario__cedula=user_data['cedula'])
+            return docente
+        except:
             user = UsuarioListSerializer.create(UsuarioListSerializer(), validated_data=user_data)
         
-        docente, created = PersonalDocente.objects.update_or_create(usuario=user,
+            docente, created = PersonalDocente.objects.update_or_create(usuario=user,
                                 curriculum=validated_data.get('curriculum'),rif=validated_data.get('rif'),
                                 direccion=validated_data.pop('direccion'), permiso_ingresos=validated_data.get('permiso_ingresos'),
                                 coordinador=validated_data.pop('coordinador') )
-        return docente
+            return docente
 
     
 
@@ -253,12 +255,13 @@ class AdministrativoSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         user_data = validated_data.pop('usuario')
-        user = Usuario.objects.get(cedula=user_data['cedula'])
-        if(user == None):
+        try:
+            personal_admin = PersonalAdministrativo.objects.get(usuario__cedula=user_data['cedula'])
+            return personal_admin
+        except:
             user = UsuarioListSerializer.create(UsuarioListSerializer(), validated_data=user_data)
-        
-        personal_admin, created = PersonalAdministrativo.objects.update_or_create(usuario=user)
-        return personal_admin
+            personal_admin, created = PersonalAdministrativo.objects.update_or_create(usuario=user)
+            return personal_admin
 
     
 
