@@ -4,9 +4,7 @@ import { connect } from 'react-redux';
 import { Alert, Form, FormGroup, Label, Input, Button, Row, Col} from 'reactstrap';
 import { editarUsuario } from '../actions/perfilUsuario';
 import {bindActionCreators} from 'redux';
-
-//Spinner
-import { PulseLoader } from 'halogenium';
+import { PulseLoader } from 'halogenium'; //Spinner
 
 class SeccionGeneral extends Component{
 	 
@@ -14,35 +12,42 @@ class SeccionGeneral extends Component{
       super(props);
       this.state = {
       		"usuario":{
-      			"email":this.props.token['user']['usuario']['email'],
-	      		"celular":this.props.token['user']['usuario']['celular'],
-	      		"telefono_casa":this.props.token['user']['usuario']['telefono_casa'],
-	      		"telefono_trabajo":this.props.token['user']['usuario']['telefono_trabajo'],
-	      		"fecha_nacimiento":this.props.token['user']['usuario']['fecha_nacimiento']
+      			email:this.props.token['user']['usuario']['email'],
+	      		celular:this.props.token['user']['usuario']['celular'],
+	      		telefono_casa:this.props.token['user']['usuario']['telefono_casa'],
+	      		telefono_trabajo:this.props.token['user']['usuario']['telefono_trabajo'],
+	      		fecha_nacimiento:this.props.token['user']['usuario']['fecha_nacimiento']
 	      	},
-      		"direccion":this.props.token['user']['direccion'],
-      		"loading":false,
-      		"modulo": localStorage.getItem('modulo')
+      		direccion:this.props.token['user']['direccion'],
+      		loading:false,
+      		modulo: localStorage.getItem('modulo'),
+      		visible: true,
+      		typing: true
           };
 
       this.handleChangeUsuario = this.handleChangeUsuario.bind(this);
       this.handleChangeExtraData = this.handleChangeExtraData.bind(this);
       this.handleSubmit = this.handleSubmit.bind(this);
+      this.onDismiss = this.onDismiss.bind(this);
 
       
 
   	}
 
+	onDismiss() {
+		this.setState({ visible: false });
+	}
+
   	handleChangeUsuario(e) {
         const { name, value } = e.target;
 		var usuario = this.state.usuario;
 		usuario[name] = value;
-		this.setState({usuario})
+		this.setState({usuario, typing: true })
 	}
 
 	handleChangeExtraData(e) {
         const { name, value } = e.target;
-        this.setState({ [name]: value });
+        this.setState({ [name]: value, typing: true });
         
 	}
 
@@ -50,7 +55,9 @@ class SeccionGeneral extends Component{
         e.preventDefault();
 
         if (this.state.usuario.email) {
-        	this.setState({ loading: true });
+        	this.setState({ loading: true, visible: true, typing: false });
+        	this.props.edit['edit'] = false;
+        	this.props.edit['bad_input'] = false;
             this.props.editarUsuario(this.state, this.props.token['user']);
         }
     }
@@ -72,13 +79,13 @@ class SeccionGeneral extends Component{
 				  	<br />
 	              	<Row>
 		                <Col sm="12">
-		                    {this.props.edit['bad_input'] &&
-                		      <Alert color="danger">
+		                    {this.props.edit['bad_input'] && !this.state.typing &&
+                		      <Alert color="danger" isOpen={this.state.visible} toggle={this.onDismiss}>
 						        Hubo un error al actualizar sus datos
 						      </Alert>
                     		}
-                    		{this.props.edit['edit'] &&
-                		      <Alert color="success">
+                    		{this.props.edit['edit'] && !this.state.typing &&
+                		      <Alert color="success" isOpen={this.state.visible} toggle={this.onDismiss}>
 						        Datos actualizados exitosamente
 						      </Alert>
                     		}
@@ -171,7 +178,9 @@ class SeccionGeneral extends Component{
 							}
 
 
-
+							{ this.state.loading && !this.props.edit['edit'] && !this.props.edit['bad_input'] &&
+								<center><PulseLoader color="#b3b1b0" size="16px" margin="4px"/></center>
+							}
 
 
 		                    <center><Button color="primary">Guardar</Button></center>

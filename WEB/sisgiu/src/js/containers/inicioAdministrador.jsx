@@ -13,7 +13,16 @@ class InicioAdministrador extends Component{
 
   constructor(props) {
       super(props);
+      this.state = {
+        visible: true,
+      }
+
       this.props.get_periodos_actuales();
+      this.onDismiss = this.onDismiss.bind(this);
+  }
+
+  onDismiss() {
+    this.setState({ visible: false });
   }
 
   terminarPeriodo(periodo){
@@ -57,9 +66,11 @@ class InicioAdministrador extends Component{
             <br/>
             <Row>
             {this.props.adminUser['periodo_terminado_error'] &&
-              <Alert color="danger">
-                No se pudo terminar el periodo
-              </Alert>
+              <Col md='12' className="text-center">
+                <Alert color="danger" isOpen={this.state.visible} toggle={this.onDismiss}>
+                  No se pudo terminar el periodo
+                </Alert>
+              </Col>
             }
             { this.props.adminUser['tiene_periodos_activos'] &&
               <Col md='12' className="text-center">

@@ -18,14 +18,19 @@ class Login extends Component{
             	cedula: '',
             	password: '',
             	modulo: 'estudiantes',
-            	loading: false
+            	loading: false,
+            	visible: true,
         	};
         }
 
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+        this.onDismiss = this.onDismiss.bind(this);
     }
 
+    onDismiss() {
+		this.setState({ visible: false });
+	}
 
     handleChange(e) {
         const { name, value } = e.target;
@@ -42,6 +47,7 @@ class Login extends Component{
         	this.props.token['bad_input'] = false;
         	this.props.token['bad_module'] = false;
         	this.setState({ loading: true });
+            this.setState({ visible: true });
             this.props.login(cedula, password, modulo);
         }
     }
@@ -70,17 +76,17 @@ class Login extends Component{
 	                    		      	<center><PulseLoader color="#b3b1b0" size="16px" margin="4px"/></center>
                     				}
                     				{this.props.token['bad_input'] &&
-	                    		      <Alert color="danger">
+	                    		      <Alert color="danger" isOpen={this.state.visible} toggle={this.onDismiss}>
 								        Credenciales erróneas
 								      </Alert>
                     				}
                     				{this.props.recuperacion['recuperacion'] &&
-	                    		      <Alert color="success">
+	                    		      <Alert color="success" isOpen={this.state.visible} toggle={this.onDismiss}>
 								        Contraseña actualizada correctamente
 								      </Alert>
                     				}
                     				{this.props.token['bad_module'] &&
-	                    		      <Alert color="danger">
+	                    		      <Alert color="danger" isOpen={this.state.visible} toggle={this.onDismiss}>
 								        Usted no pertenece a ese módulo
 								      </Alert>
                     				}

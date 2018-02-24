@@ -42,6 +42,8 @@ class ListaUsuarios extends Component{
     this.setState({searchTerm: term})
   }
 
+
+
   render(){
 
 
@@ -89,7 +91,7 @@ class ListaUsuarios extends Component{
               }
               <Row>
                 <Col md='4'>
-                  <ModalUsuarioNew tipo_usuario={this.props.tipo_usuario}/>
+                  <ModalUsuarioNew tipo_usuario={this.props.tipo_usuario} visible={this.state.visible}/>
                 </Col>
                 <Col md='8'>
                   <SearchInput className="searchBox" placeholder="Buscar usuario..." onChange={this.searchUpdated} />

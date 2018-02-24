@@ -15,10 +15,8 @@ class ModalUsuarioEdit extends React.Component {
     super(props);
     this.state = {
       modal: false,
-      visible: true
     };
     this.toggle = this.toggle.bind(this);
-    this.onDismiss = this.onDismiss.bind(this);
     this.handleDelete = this.handleDelete.bind(this);
     
   }
@@ -29,9 +27,6 @@ class ModalUsuarioEdit extends React.Component {
     });
   }
 
-  onDismiss() {
-    this.setState({ visible: false });
-  }
 
   handleDelete() {
     this.props.eliminarUsuario(this.props.usuario.cedula, this.props.tipo_usuario);

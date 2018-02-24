@@ -4,8 +4,8 @@ import {Alert, Form, FormGroup, Label, Input, Button, Row, Col} from 'reactstrap
 import FontAwesomeIcon from 'react-fontawesome'
 import {bindActionCreators} from 'redux';
 import { connect } from 'react-redux';
+import { PulseLoader } from 'halogenium'; //Spinner
 
-// Aqui falta que una vez que se haya actualizado la contrasena de forma exitosa se borren los inputs y el mensaje de exito desaparezca luego de unos segundos
 
 // Components
 import { cambiarContrasena } from '../actions/perfilUsuario';
@@ -18,20 +18,27 @@ class SeccionContrasena extends Component{
               showPassword: true,
               showSecondPassword: true,
               password: "",
-              secondPassword: ""
-
+              secondPassword: "",
+              visible: true,
+              loading: false,
+              typing: true,
           };
 
       this.showTextPassword = this.showTextPassword.bind(this);
       this.showTextSecondPassword = this.showTextSecondPassword.bind(this);
       this.handleChange = this.handleChange.bind(this);
       this.changePasswordSubmit = this.changePasswordSubmit.bind(this);
+      this.onDismiss = this.onDismiss.bind(this);
 
+  	}
+
+  	onDismiss() {
+    	this.setState({ visible: false });
   	}
 
   	handleChange(e) {
         const { name, value } = e.target;
-        this.setState({ [name]: value });
+        this.setState({ [name]: value, visible: true, typing: true  });
         
 	}
 
@@ -47,10 +54,17 @@ class SeccionContrasena extends Component{
 
 
 	changePasswordSubmit(){
-      // if (this.state.password) {
-        	// this.setState({ loading: true });
-            this.props.cambiarContrasena(this.state.password, this.props.token['user']);
-        // }
+		this.setState({ 
+			loading: true, 
+			visible: true,
+      		typing: false,
+			password: '',
+      		secondPassword: '',
+	 	});
+	 	this.props.edit['edit_password'] = false;
+    	this.props.edit['bad_input_password'] = false;
+        this.props.cambiarContrasena(this.state.password, this.props.token['user']);
+
   	}
 
 	render(){
@@ -59,13 +73,13 @@ class SeccionContrasena extends Component{
 	 			<br />
 	              <Row>
 	                <Col sm="12">
-		                {this.props.edit['bad_input_password'] &&
-	        		      <Alert color="danger">
+		                {this.props.edit['bad_input_password'] && !this.state.typing &&
+	        		      <Alert color="danger" isOpen={this.state.visible} toggle={this.onDismiss}>
 					        Hubo un error al intentar cambiar su contraseña
 					      </Alert>
 	            		}
-	            		{this.props.edit['edit_password'] &&
-	        		      <Alert color="success">
+	            		{this.props.edit['edit_password'] && !this.state.typing &&
+	        		      <Alert color="success" isOpen={this.state.visible} toggle={this.onDismiss}>
 					        Contraseña actualizada exitosamente
 					      </Alert>
 	            		}
@@ -73,7 +87,7 @@ class SeccionContrasena extends Component{
 	                  <Form>
 	                  <br />
 	                    {this.state.password !== this.state.secondPassword &&
-	                      <Alert color="warning">
+	                      <Alert color="warning" isOpen={this.state.visible} toggle={this.onDismiss}>
 	                        Las contraseñas no coinciden
 	                      </Alert>
 	                    }
@@ -125,6 +139,11 @@ class SeccionContrasena extends Component{
 	                          </Col>
 	                      </FormGroup>
 	                      }
+
+	                      { this.state.loading && !this.props.edit['edit_password'] && !this.props.edit['bad_input_password'] &&
+	                      	<center><PulseLoader color="#b3b1b0" size="16px" margin="4px"/></center>
+	                      }
+
 
 	                      {this.state.password !== this.state.secondPassword &&
 	                        <center><Button disabled color="primary">Guardar</Button></center>

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Input, Form, FormGroup, Label, Row, Col, Button, Modal, ModalHeader, ModalBody, ModalFooter, Alert } from 'reactstrap';
+import { Input, Form, FormGroup, Label, Row, Col, Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import FontAwesomeIcon from 'react-fontawesome';
 import '../../css/moduloUsuarioAdministrador.css';
 import {bindActionCreators} from 'redux';
@@ -67,6 +67,30 @@ class ModalUsuarioNew extends React.Component {
     console.log(this.state.usuario['cedula']);
     this.props.crearUsuario(this.state, this.props.tipo_usuario);
     this.toggle();
+    this.setState({
+      usuario: {
+        cedula: '',
+        first_name: '',
+        segundo_nombre: null,
+        last_name: '',
+        segundo_apellido: null,
+        email: '',
+        celular: '',
+        fecha_nacimiento:'',
+        telefono_casa:'',
+        telefono_trabajo: '',
+        nacionalidad: '',
+        sexo: 'M',
+        estado_civil: 'Soltero',
+        password: '',
+        username: '',
+      },
+      direccion: '',
+      coordinador: false,
+      id_tipo_postgrado: '1',
+      id_estado_estudiante: '1',
+    });
+
   }
 
 
@@ -225,12 +249,6 @@ class ModalUsuarioNew extends React.Component {
                         
                       </Col>
                     </Row>
-
-                    {this.props.adminUser['edit'] &&
-                      <Alert color="success">
-                          Datos actualizados exitosamente
-                      </Alert> 
-                    }
 
                 </div>
 

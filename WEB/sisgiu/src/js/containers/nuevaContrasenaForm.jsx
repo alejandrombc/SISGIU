@@ -21,12 +21,14 @@ class NuevaContrasenaForm extends Component{
 	        confirmation_password : '',
 	        url_pass: '',
 	        url_cedula:'',
-	        loading: false
+	        loading: false,
+	        visible: true,
         }
 
 
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+        this.onDismiss = this.onDismiss.bind(this);
 
     	let ruta = this.props.pathname.split('/');
     	let len_password = Object.keys(ruta).length;
@@ -42,8 +44,12 @@ class NuevaContrasenaForm extends Component{
         this.state.url_cedula = this.props.cedula;
     }
 
+    onDismiss() {
+    	this.setState({ visible: false });
+  	}
 
     handleChange(e) {
+    	this.setState({ visible: true });
         const { name, value } = e.target;
         this.setState({ [name]: value });
     }
@@ -90,13 +96,13 @@ class NuevaContrasenaForm extends Component{
 							      	}
 
 							      	{!this.props.status['recuperacion'] && !this.props.status['is_init'] &&
-	                    		      <Alert color="danger">
+	                    		      <Alert color="danger" isOpen={this.state.visible} toggle={this.onDismiss} >
 								        No es posible restablecer su contraseña
 								      </Alert>
                     				}
 
                     				{this.state.password !== this.state.confirmation_password &&
-	                    		      <Alert color="warning">
+	                    		      <Alert color="warning" isOpen={this.state.visible} toggle={this.onDismiss} >
 								        Las contraseñas no coinciden
 								      </Alert>
                     				}

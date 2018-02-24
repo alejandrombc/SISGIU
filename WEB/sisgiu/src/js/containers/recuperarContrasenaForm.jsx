@@ -15,12 +15,17 @@ class RecuperarContrasenaForm extends Component{
     	this.state = {
         	cedula: '',
         	loading: false,
+        	visible: true,
     	};
 
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+        this.onDismiss = this.onDismiss.bind(this);
     }
 
+    onDismiss() {
+	    this.setState({ visible: false });
+  	}
 
     handleChange(e) {
         const { name, value } = e.target;
@@ -32,7 +37,7 @@ class RecuperarContrasenaForm extends Component{
 
         const { cedula } = this.state;
         if (cedula) {
-        	this.setState({loading: true})
+        	this.setState({loading: true, visible: true})
         	this.props.status['bad_input'] = false;
         	this.props.status['correo_enviado'] = false;
             this.props.recuperarContrasenaMail(cedula);
@@ -65,12 +70,12 @@ class RecuperarContrasenaForm extends Component{
 							      	}
 
 							      	{this.props.status['bad_input'] &&
-	                    		      <Alert color="danger">
+	                    		      <Alert color="danger" isOpen={this.state.visible} toggle={this.onDismiss}>
 								        Cédula errónea
 								      </Alert>
                     				}
                     				{this.props.status['correo_enviado'] &&
-	                    		      <Alert color="success">
+	                    		      <Alert color="success" isOpen={this.state.visible} toggle={this.onDismiss}>
 								        Correo enviado satisfactoriamente
 								      </Alert>
                     				}

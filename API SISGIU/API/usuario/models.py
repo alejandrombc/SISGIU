@@ -66,7 +66,7 @@ class PersonalDocente(models.Model):
 			Usuario,
 			on_delete=models.CASCADE,
 			primary_key=True)
-	direccion = models.TextField()
+	direccion = models.TextField(blank=True)
 	rif = models.FileField(upload_to=user_directory_path_subuser)
 	curriculum = models.FileField(upload_to=user_directory_path_subuser)
 	permiso_ingresos = models.FileField(upload_to=user_directory_path_subuser)
