@@ -112,11 +112,17 @@ export const editarDocumento = (tipo_documento, documento, cedula) => {
 
 export const crearUsuario = (user, tipo_usuario) => {
 	let token = localStorage.getItem('user_token');
+	let modulo = tipo_usuario 
 	user['usuario']['password'] = user['usuario']['cedula'];
 	user['usuario']['username'] = user['usuario']['cedula'];
+	if(tipo_usuario === "administradores") { 
+		modulo = "usuarios"; 
+		user = user['usuario'];
+		user['is_superuser'] = true;
+	}
  	console.log(user);
 	return request
-	   .post(host+'api/'+tipo_usuario+'/')
+	   .post(host+'api/'+modulo+'/')
 	   .set('Authorization', 'JWT '+token)
 	   .set('Content-Type', 'application/json')
 	   .send(user)
@@ -139,6 +145,7 @@ export const crearUsuario = (user, tipo_usuario) => {
 
 export const eliminarUsuario = (cedula, tipo_usuario) => {
 	let token = localStorage.getItem('user_token');
+	if(tipo_usuario === "administradores") { tipo_usuario = "usuarios"; }
 	return request
 	   .delete(host+'api/'+tipo_usuario+'/'+cedula+'/delete/')
 	   .set('Authorization', 'JWT '+token)
