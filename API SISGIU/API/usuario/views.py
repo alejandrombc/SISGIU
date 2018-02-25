@@ -4,7 +4,7 @@ from usuario.utils import render_to_pdf, date_handler
 from django.core.mail import send_mail
 from django.views.decorators.csrf import csrf_exempt
 from django import forms
-import json
+import json, os
 
 from bson import json_util
 
@@ -235,6 +235,10 @@ class AdministradorDetailAPIView(RetrieveAPIView):
             if(username == cedula or user['is_superuser']):
                 foto = request.FILES['foto']
                 if(user):
+                    # Replace old video with new one,
+                    # and remove original unconverted video and original copy of new video.
+                    if "sisgiu" not in user.foto.path and "no_avatar" not in user.foto.path: 
+                        os.remove(user.foto.path)
                     user.foto = foto
                     user.save()
                     return HttpResponse(json.dumps({"status":"OK"}, default=date_handler), content_type="application/json", status=200)
@@ -443,11 +447,23 @@ class DocenteDetailAPIView(RetrieveAPIView):
                 if(user):
                     
                     if (tipo_documento == 'rif'):
-                        user.rif = documento
+                        try:
+                            os.remove(user.rif.path)
+                            user.rif = documento
+                        except:
+                            user.rif = documento
                     elif (tipo_documento == 'curriculum'):
-                        user.curriculum = documento
+                        try:
+                            os.remove(user.curriculum.path)
+                            user.curriculum = documento
+                        except:
+                            user.curriculum = documento
                     elif (tipo_documento == 'permiso_ingresos'):
-                        user.permiso_ingresos = documento
+                        try:
+                            os.remove(user.permiso_ingresos.path)
+                            user.permiso_ingresos = documento
+                        except:
+                            user.permiso_ingresos = documento
 
                     user.save()
                     return HttpResponse(json.dumps({"status":"OK"}, default=date_handler), content_type="application/json", status=200)

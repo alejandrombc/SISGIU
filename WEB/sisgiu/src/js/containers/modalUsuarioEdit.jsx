@@ -123,6 +123,7 @@ class ModalUsuarioEdit extends React.Component {
     }
     if (documento) {
       this.props.editarDocumento(tipo_documento, documento, this.state.usuario.cedula);
+      this.toggle();
     } else {
       alert('No ha subido ningún archivo');
     }
