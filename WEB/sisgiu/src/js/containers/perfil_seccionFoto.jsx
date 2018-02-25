@@ -15,6 +15,7 @@ class SeccionFoto extends Component{
       this.state = {
       	foto: undefined,
       	visible: true,
+      	begin: true
       };
 
       this.handleChange = this.handleChange.bind(this);
@@ -28,13 +29,15 @@ class SeccionFoto extends Component{
 	  }
 
   	handleChange(e) {
-		this.setState({foto:e.target.files[0]})
+		this.setState({foto:e.target.files[0], begin: true})
         
 	}
 
 	changePhotoSubmit(e) {
 		e.preventDefault() // Stop form submit
+		this.setState({ begin: false });
 		this.props.cambiarFoto(this.state.foto, this.props.token['user'])
+
 	}
 
 
@@ -53,6 +56,12 @@ class SeccionFoto extends Component{
 		                    {this.props.edit['bad_photo_request'] &&
 		        		      <Alert color="danger" isOpen={this.state.visible} toggle={this.onDismiss}>
 						        Hubo un error al intentar actualizar su foto
+						      </Alert>
+		            		}
+
+		            		{!this.props.edit['bad_photo_request'] && !this.state.begin &&
+		        		      <Alert color="success" isOpen={this.state.visible} toggle={this.onDismiss}>
+						        Foto actualizada exitosamente
 						      </Alert>
 		            		}
 	                      <br />
