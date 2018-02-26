@@ -54,6 +54,7 @@ export default function (state=initialState, action) {
 				lista_asignaturas: action.payload['lista_asignaturas'],
 				lista_postgrados: state.lista_postgrados,
 				lista_tipoAsignaturas: state.lista_tipoAsignaturas,
+				edit: action.payload['edit'],
 			};
 
 		case "GET_TIPO_POSTGRADO_EXITOSO":

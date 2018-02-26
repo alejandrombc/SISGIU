@@ -1,9 +1,8 @@
 import request from 'superagent';
 import jwt_decode from 'jwt-decode';
 import {host} from '../components/globalVariables';
-import mergeJSON from 'merge-json';
 
-export function get_asignaturas () {
+export function get_asignaturas (edit) {
 	let token = localStorage.getItem('user_token');
 
 	try{
@@ -21,7 +20,7 @@ export function get_asignaturas () {
 	   .then(function(res) {
 			return {
 				type: "GET_ASIGNATURAS_EXITOSO",
-				payload: {lista_asignaturas: res.body}
+				payload: {lista_asignaturas: res.body, edit: edit}
 			}
 	   })
 	   .catch(function(err) {
@@ -98,9 +97,10 @@ export function get_tipo_asignatura () {
 }
 
 
-export function crear_asignatura () {
+export function crear_asignatura (asignatura) {
 	let token = localStorage.getItem('user_token');
-
+	delete asignatura.modal;
+	console.log(asignatura);
 	try{
 		jwt_decode(token);
 	}catch(e){
@@ -113,16 +113,18 @@ export function crear_asignatura () {
 	return request
 	   .post(host+'api/asignaturas/')
 	   .set('Authorization', 'JWT '+token)
+	   .send(asignatura)
 	   .then(function(res) {
 			return function (dispatch) {
-			    dispatch(get_asignaturas());
+			    dispatch(get_asignaturas(true));
 			}
 	   })
 	   .catch(function(err) {
 	   		localStorage.removeItem('user_token');
 	   		localStorage.removeItem('modulo');
-	      	return {
-				type: "ERROR"
+	   		console.log(err);
+	      	return function (dispatch) {
+			    dispatch(get_asignaturas(false));
 			}
 	   });
 

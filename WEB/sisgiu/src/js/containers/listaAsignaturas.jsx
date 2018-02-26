@@ -30,7 +30,7 @@ class ListaAsignaturas extends Component{
       }
       
       this.props.get_usuarios(this.props.tipo_usuario, false);
-      this.props.get_asignaturas();
+      this.props.get_asignaturas(false);
 
       this.onDismiss = this.onDismiss.bind(this);
       this.searchUpdated = this.searchUpdated.bind(this)
@@ -48,7 +48,7 @@ class ListaAsignaturas extends Component{
 
   render(){
 
-      console.log(this.props.adminUser);
+      // console.log(this.props.adminUser);
 
       let listItems = '';
       if(this.props.adminUser.lista_asignaturas && this.props.adminUser.lista_asignaturas.length > 0)

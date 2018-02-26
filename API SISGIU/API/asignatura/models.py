@@ -12,7 +12,7 @@ class TipoAsignatura(models.Model):
 #Tabla de asignatura
 class Asignatura(models.Model):
 	codigo = models.CharField(max_length=6)
-	nombre = models.CharField(max_length=40)
+	nombre = models.CharField(max_length=80)
 	tipo_asignatura = models.ForeignKey(TipoAsignatura, on_delete=models.SET_NULL, null=True)
 	tipo_postgrado = models.ForeignKey(TipoPostgrado, on_delete=models.SET_NULL, null=True)
 	unidad_credito = models.IntegerField()

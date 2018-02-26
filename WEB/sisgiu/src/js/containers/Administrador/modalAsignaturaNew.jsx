@@ -8,6 +8,7 @@ import { connect } from 'react-redux';
 // Components
 import { get_tipo_postgrado } from '../../actions/moduloAsignaturas';
 import { get_tipo_asignatura } from '../../actions/moduloAsignaturas';
+import { crear_asignatura } from '../../actions/moduloAsignaturas';
 
 class ModalAsignaturaNew extends React.Component {
   constructor(props) {
@@ -17,8 +18,8 @@ class ModalAsignaturaNew extends React.Component {
       codigo: null,
       nombre: null,
       unidad_credito: null,
-      id_tipo_asignatura: null,
-      id_tipo_postgrado: null
+      tipo_asignatura: null,
+      tipo_postgrado: null
     };
 
     this.toggle = this.toggle.bind(this);
@@ -32,6 +33,7 @@ class ModalAsignaturaNew extends React.Component {
   }
 
   toggle() {
+    this.props.adminUser['edit'] = false;
     this.setState({
       modal: !this.state.modal
     });
@@ -44,16 +46,16 @@ class ModalAsignaturaNew extends React.Component {
 
   handleSubmit(e) {
     e.preventDefault();
-    console.log(this.state);
-    // this.props.crearUsuario(this.state, this.props.tipo_usuario);
+    
     this.toggle();
+    this.props.crear_asignatura(this.state);
+    
     this.setState({
       codigo: null,
       nombre: null,
       unidad_credito: null,
-      id_tipo_asignatura: null,
-      id_tipo_postgrado: null,
-
+      tipo_asignatura: null,
+      tipo_postgrado: null,
     });
 
   }
@@ -114,21 +116,21 @@ class ModalAsignaturaNew extends React.Component {
                           </FormGroup>
 
                           <FormGroup row>
-                            <Label for="id_tipo_asignatura" sm={4}>Tipo</Label>
+                            <Label for="tipo_asignatura" sm={4}>Tipo</Label>
                             <Col sm={8}>
-                              <Input bsSize="sm" value={this.state.value} defaultValue={this.state['id_tipo_asignatura']} onChange={this.handleChange} type="select" name="id_tipo_asignatura" id="id_tipo_asignatura" required>
+                              <Input bsSize="sm" value={this.state.value} defaultValue={this.state['tipo_asignatura']} onChange={this.handleChange} type="select" name="tipo_asignatura" id="tipo_asignatura" required>
                                 <option value={null} name={-1}> {' '} </option>
-                                {listPostgrados}
+                                {listTipoAsignaturas}
                               </Input>
                             </Col>
                           </FormGroup>
 
                           <FormGroup row>
-                            <Label for="id_tipo_postgrado" sm={4}>Postgrado</Label>
+                            <Label for="tipo_postgrado" sm={4}>Postgrado</Label>
                             <Col sm={8}>
-                              <Input bsSize="sm" value={this.state.value} defaultValue={this.state['id_tipo_postgrado']} onChange={this.handleChange} type="select" name="id_tipo_postgrado" id="id_tipo_postgrado" required>
+                              <Input bsSize="sm" value={this.state.value} defaultValue={this.state['tipo_postgrado']} onChange={this.handleChange} type="select" name="tipo_postgrado" id="tipo_postgrado" required>
                                 <option value={null} name={-1}> {' '} </option>
-                                {listTipoAsignaturas}
+                                {listPostgrados}
                               </Input>
                             </Col>
                           </FormGroup>
@@ -166,6 +168,7 @@ const mapDispatchToProps = (dispatch) => {
   return bindActionCreators({
     get_tipo_postgrado: get_tipo_postgrado,
     get_tipo_asignatura: get_tipo_asignatura,
+    crear_asignatura: crear_asignatura,
 
     }, 
     dispatch 
