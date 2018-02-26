@@ -1,14 +1,12 @@
 //Dependencies
 import React,{Component} from 'react';
-import {check_login} from '../actions/inicio.jsx';
 import {bindActionCreators} from 'redux';
 import { connect } from 'react-redux';
+import { PulseLoader } from 'halogenium'; 
+
 import Usuario from './usuario';
 import Content from './content'; 
-
-//Spinner
-import { PulseLoader } from 'halogenium';
-
+import {check_login} from '../actions/inicio.jsx';
 
 class Inicio extends Component{
 
@@ -20,7 +18,7 @@ class Inicio extends Component{
 
 	render(){
 
-		if ( this.props.token['user'].usuario ) {
+		if ( this.props.token['user'] && this.props.token['user'].usuario ) {
 			return (
 		        <div>
 		          <div className="container">

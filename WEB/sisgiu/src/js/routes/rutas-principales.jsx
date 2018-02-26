@@ -73,6 +73,14 @@ class RutasPrincipales extends React.Component {
 							  )
 						)}/>
 
+						<Route path="/moduloAsignaturas" render={(props) => (
+							  this.props.token['loggedIn'] ? (
+							    <Inicio pestana="moduloAsignaturas" />
+							  ) : (
+							  	<Redirect to="/login"/>
+							  )
+						)}/>
+
 					   	<Route component={Page404} ></Route>
 					</Switch>
 			</BrowserRouter>

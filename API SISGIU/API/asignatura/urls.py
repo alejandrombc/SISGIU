@@ -21,6 +21,7 @@ urlpatterns = format_suffix_patterns([
 
     # Asignatura
     url(r'^api/asignaturas/$', AsignaturaListCreateAPIView.as_view(), name='Asignatura-list-create'),
+    url(r'^api/asignaturas/all/$', AsignaturaListCreateAPIView.get_asignaturas, name='Asignatura-list'),
     url(r'^api/asignaturas/(?P<codigo>[0-9]{4})/$', AsignaturaDetailAPIView.as_view(), name='Asignatura-detail'),
     url(r'^api/asignaturas/(?P<codigo>[0-9]{4})/edit/$', AsignaturaUpdateAPIView.as_view(), name='Asignatura-update'),
     url(r'^api/asignaturas/(?P<codigo>[0-9]{4})/delete/$', AsignaturaDeleteAPIView.as_view(), name='Asignatura-delete'),

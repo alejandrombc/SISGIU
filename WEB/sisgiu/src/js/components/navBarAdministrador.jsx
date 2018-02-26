@@ -19,7 +19,7 @@ const NavBarAdministrador = () => (
     </NavItem>
 
     <NavItem>
-      <NavLink href="/#">Asignaturas</NavLink>
+      <NavLink href="/moduloAsignaturas">Asignaturas</NavLink>
     </NavItem>
 
     <NavItem>

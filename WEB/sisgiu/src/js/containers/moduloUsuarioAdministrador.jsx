@@ -1,13 +1,9 @@
 // Dependencies
 import React, {Component} from 'react';
 import { connect } from 'react-redux';
-// import {bindActionCreators} from 'redux';
 import { Row, Col, TabContent, TabPane, Nav, NavItem, NavLink} from 'reactstrap';
 import '../../css/moduloUsuarioAdministrador.css'; 
 import classnames from 'classnames';
-
-//Spinner
-// import { PulseLoader } from 'halogenium';
 
 // Components
 import ListaUsuarios from './listaUsuarios';
@@ -116,9 +112,6 @@ const mapStateToProps = (state)=> {
     token: state.activeUser,
   };
 }
-
-// const mapDispatchToProps = (dispatch) => {
-// }
 
 
 export default connect(mapStateToProps)(ModuloUsuarioAdministrador);

@@ -35,8 +35,9 @@ class SeccionFoto extends Component{
 
 	changePhotoSubmit(e) {
 		e.preventDefault() // Stop form submit
-		this.setState({ begin: false });
-		this.props.cambiarFoto(this.state.foto, this.props.token['user'])
+		this.setState({ begin: false, visible: true });
+		this.props.edit['bad_photo_request'] = false;
+		this.props.cambiarFoto(this.state.foto, this.props.token['user']);
 
 	}
 

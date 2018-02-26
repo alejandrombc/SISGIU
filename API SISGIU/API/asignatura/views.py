@@ -158,6 +158,30 @@ class AsignaturaListCreateAPIView(ListCreateAPIView):
         response_data['error'] = 'No tiene privilegios para realizar esta accion'      
         return HttpResponse(json.dumps(response_data), content_type="application/json", status=401)
 
+    def get_asignaturas(request):
+        if (request.user.is_authenticated == True):
+            member = Asignatura.objects.all().values()
+
+            lista_asignaturas = [entry for entry in member]
+
+            response_asignaturas = []
+
+            for asignatura in lista_asignaturas:
+
+                tipo_asignatura = TipoAsignatura.objects.filter(id=asignatura['tipo_asignatura_id']).values()[0]
+                tipo_postgrado = TipoPostgrado.objects.filter(id=asignatura['tipo_postgrado_id']).values()[0]
+                asignatura['tipo_asignatura'] = tipo_asignatura['nombre']
+                asignatura['tipo_postgrado'] = tipo_postgrado['tipo']
+
+                response_asignaturas.append(asignatura)
+
+            return HttpResponse(json.dumps(response_asignaturas), content_type="application/json")
+        response_data = {}
+        response_data['error'] = 'No tiene privilegios para realizar esta acción'      
+        return HttpResponse(json.dumps(response_data), content_type="application/json", status=401)
+
+
+
 
 class AsignaturaDetailAPIView(RetrieveAPIView):
     queryset = Asignatura.objects.all()
