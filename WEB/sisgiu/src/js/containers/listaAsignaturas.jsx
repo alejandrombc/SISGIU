@@ -8,14 +8,12 @@ import {bindActionCreators} from 'redux';
 // import { PulseLoader } from 'halogenium'; //Spinner
 
 // Components
-// import ModalUsuarioEdit from './modalUsuarioEdit';
-// import ModalUsuarioDelete from './modalUsuarioDelete';
-// import ModalUsuarioNew from './modalUsuarioNew';
 import ModalAsignaturaNew from './Administrador/modalAsignaturaNew';
+import ModalAsignaturaEdit from './Administrador/modalAsignaturaEdit';
+import ModalAsignaturaDelete from './Administrador/modalAsignaturaDelete';
 import {get_usuarios} from '../actions/moduloUsuarioAdministrador';
 import {get_asignaturas} from '../actions/moduloAsignaturas';
 
-// const KEYS_TO_FILTERS = ['user', 'subject', 'dest', 'otro'];
 const KEYS_TO_FILTERS = ['codigo', 'nombre'];
 
 
@@ -70,10 +68,9 @@ class ListaAsignaturas extends Component{
               <Row >
                 <Col md={{ size: 'auto', offset: 3 }} className='botones'>
                   
-                  {/*
-                  <ModalUsuarioEdit usuario={asignatura} />
-                  <ModalUsuarioDelete usuario={asignatura} />
-                  */}
+                  <ModalAsignaturaEdit asignatura={asignatura} />
+                  <ModalAsignaturaDelete asignatura={asignatura} />
+
                 </Col>
               </Row>
             </td>

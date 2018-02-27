@@ -25,7 +25,7 @@ class AsignaturaListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Asignatura
         fields = ('__all__')
-
+        
 
 class AsignaturaDetailSerializer(serializers.ModelSerializer):
     class Meta:

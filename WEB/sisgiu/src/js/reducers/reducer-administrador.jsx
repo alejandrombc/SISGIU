@@ -54,7 +54,7 @@ export default function (state=initialState, action) {
 				lista_asignaturas: action.payload['lista_asignaturas'],
 				lista_postgrados: state.lista_postgrados,
 				lista_tipoAsignaturas: state.lista_tipoAsignaturas,
-				edit: action.payload['edit'],
+				edit: false,
 			};
 
 		case "GET_TIPO_POSTGRADO_EXITOSO":
@@ -68,6 +68,22 @@ export default function (state=initialState, action) {
 				lista_postgrados: state.lista_postgrados,
 				lista_asignaturas: state.lista_asignaturas,
 				lista_tipoAsignaturas: action.payload['lista_tipoAsignaturas']
+			};
+
+		case "EDIT_ASIGNATURA_EXITOSO":
+			return {
+				lista_asignaturas: action.payload['lista_asignaturas'],
+				lista_postgrados: state.lista_postgrados,
+				lista_tipoAsignaturas: state.lista_tipoAsignaturas,
+				edit: true,
+			};
+
+		case "ASIGNATURAS_ERROR":
+			return {
+				lista_asignaturas: action.payload['lista_asignaturas'],
+				lista_postgrados: state.lista_postgrados,
+				lista_tipoAsignaturas: state.lista_tipoAsignaturas,
+				bad_input: true,
 			};
 
 
