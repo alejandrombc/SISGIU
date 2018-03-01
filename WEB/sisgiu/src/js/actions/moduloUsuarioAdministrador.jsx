@@ -162,3 +162,35 @@ export const eliminarUsuario = (cedula, tipo_usuario) => {
 			}
 	   });
 }
+
+
+export function get_estado_estudiante () {
+	let token = localStorage.getItem('user_token');
+
+	try{
+		jwt_decode(token);
+	}catch(e){
+		localStorage.removeItem('user_token');
+		localStorage.removeItem('modulo');
+		return {
+			type: "ERROR"
+		}
+	}
+	return request
+	   .get(host+'api/estadoEstudiante/')
+	   .set('Authorization', 'JWT '+token)
+	   .then(function(res) {
+			return {
+				type: "GET_ESTADO_ESTUDIANTE_EXITOSO",
+				payload: {lista_estadoEstudiante: res.body}
+			}
+	   })
+	   .catch(function(err) {
+	   		localStorage.removeItem('user_token');
+	   		localStorage.removeItem('modulo');
+	      	return {
+				type: "ERROR"
+			}
+	   });
+
+}

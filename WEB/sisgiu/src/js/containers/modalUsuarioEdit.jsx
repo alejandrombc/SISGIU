@@ -130,6 +130,22 @@ class ModalUsuarioEdit extends React.Component {
   }
 
   render() {
+
+    let listPostgrados = '';
+    let lista_estadoEstudiante = '';
+    
+    if (this.props.adminUser.lista_postgrados && this.props.adminUser.lista_postgrados.length > 0) {
+      listPostgrados = this.props.adminUser.lista_postgrados.map((tipo_postgrado) =>
+        <option key={tipo_postgrado['id']} value={tipo_postgrado['id']} name={tipo_postgrado['tipo']}> {tipo_postgrado['tipo']} </option>
+      ); 
+    }
+
+   if (this.props.adminUser.lista_estadoEstudiante && this.props.adminUser.lista_estadoEstudiante.length > 0) {
+      lista_estadoEstudiante = this.props.adminUser.lista_estadoEstudiante.map((estado_estudiante) =>
+        <option key={estado_estudiante['id']} value={estado_estudiante['id']} name={estado_estudiante['estado']}> {estado_estudiante['estado']} </option>
+      ); 
+    }
+
     if (!this.state.loading) {
     return (
       <div>
@@ -243,12 +259,10 @@ class ModalUsuarioEdit extends React.Component {
                               </FormGroup>
 
                               <FormGroup row>
-                                <Label for="tipo_postgrado" sm={4}>Tipo de Postgrado</Label>
+                                <Label for="id_tipo_postgrado" sm={4}>Postgrado</Label>
                                 <Col sm={8}>
-                                  <Input  bsSize="sm" value={this.state.value} defaultValue={this.state['id_tipo_postgrado']} onChange={this.handleChangeRIF} type="select" name="id_tipo_postgrado" id="id_tipo_postgrado">
-                                    <option value="1" name="doctorado">Doctorado</option>
-                                    <option value="2" name="especializacion">Especialización</option>
-                                    <option value="3" name="maestria">Maestría</option>
+                                  <Input bsSize="sm" value={this.state.value} defaultValue={this.state['id_tipo_postgrado']} onChange={this.handleChangeExtraData} type="select" name="id_tipo_postgrado" id="id_tipo_postgrado" required>
+                                    {listPostgrados}
                                   </Input>
                                 </Col>
                               </FormGroup>
@@ -256,12 +270,12 @@ class ModalUsuarioEdit extends React.Component {
                               <FormGroup row>
                                 <Label for="estado_estudiante" sm={4}>Estado</Label>
                                 <Col sm={8}>
-                                  <Input   bsSize="sm" value={this.state.value} defaultValue={this.state['id_estado_estudiante']} onChange={this.handleChangeExtraData} type="select" name="id_estado_estudiante" id="id_tipo_postgrado">
-                                    <option value="1" name="activo">Activo</option>
-                                    <option value="2" name="retirado">Retirado</option>
+                                  <Input bsSize="sm" value={this.state.value} defaultValue={this.state['id_estado_estudiante']} onChange={this.handleChangeExtraData} type="select" name="id_estado_estudiante" id="id_estado_estudiante">
+                                    {lista_estadoEstudiante}
                                   </Input>
                                 </Col>
                               </FormGroup>
+
                             </div>
                           }
 

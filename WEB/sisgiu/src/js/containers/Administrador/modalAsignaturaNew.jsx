@@ -119,7 +119,6 @@ class ModalAsignaturaNew extends React.Component {
                             <Label for="tipo_asignatura" sm={4}>Tipo</Label>
                             <Col sm={8}>
                               <Input bsSize="sm" value={this.state.value} defaultValue={this.state['tipo_asignatura']} onChange={this.handleChange} type="select" name="tipo_asignatura" id="tipo_asignatura" required>
-                                <option value={null} name={-1}> {' '} </option>
                                 {listTipoAsignaturas}
                               </Input>
                             </Col>
@@ -129,7 +128,6 @@ class ModalAsignaturaNew extends React.Component {
                             <Label for="tipo_postgrado" sm={4}>Postgrado</Label>
                             <Col sm={8}>
                               <Input bsSize="sm" value={this.state.value} defaultValue={this.state['tipo_postgrado']} onChange={this.handleChange} type="select" name="tipo_postgrado" id="tipo_postgrado" required>
-                                <option value={null} name={-1}> {' '} </option>
                                 {listPostgrados}
                               </Input>
                             </Col>

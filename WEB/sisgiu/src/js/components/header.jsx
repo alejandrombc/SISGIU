@@ -4,9 +4,9 @@ import React,{Component} from 'react';
 import { Jumbotron, Media, Row, Col} from 'reactstrap';
 import '../../css/header.css'; 
 import NavigationBar from '../containers/navbar';
+import {logo_fau_negro} from '../../media/logo_fau_negro.png';
 
 class Header extends Component{
-
 	render(){
 		return (
 				<div>
@@ -17,7 +17,7 @@ class Header extends Component{
 				        			<Col sm="3" xs="12">
 					        			<Media left href="#">
 						        		  <center>
-						        		  	<img width="100px" height="100px" src="https://cdch-ucv.net/wp-content/uploads/2011/10/logo_fau_ucv.jpg" className="img-thumbnail logo-header" alt='instituto-urbanismo-logo'/>
+						        		  	<img width="100px" height="100px" src={logo_fau_negro} className="img-thumbnail logo-header" alt='instituto-urbanismo-logo'/>
 						        		  </center>
 								        </Media>
 				        			</Col>

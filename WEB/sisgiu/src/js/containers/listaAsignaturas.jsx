@@ -36,17 +36,20 @@ class ListaAsignaturas extends Component{
 
   onDismiss() {
     this.setState({ visible: false });
+    this.props.adminUser['edit'] = false;
   }
 
   searchUpdated (term) {
     this.setState({searchTerm: term})
   }
 
+  componentWillReceiveProps(props) { 
+    this.setState({"visible":true});
+  }
+
 
 
   render(){
-
-      // console.log(this.props.adminUser);
 
       let listItems = '';
       if(this.props.adminUser.lista_asignaturas && this.props.adminUser.lista_asignaturas.length > 0)
@@ -83,6 +86,11 @@ class ListaAsignaturas extends Component{
         return(
     		<div>
               <br />
+
+              {
+                console.log(this.state.visible)
+              }
+
               {this.props.adminUser['edit'] &&
                 <Alert color="success" isOpen={this.state.visible} toggle={this.onDismiss}>
                     Datos actualizados exitosamente

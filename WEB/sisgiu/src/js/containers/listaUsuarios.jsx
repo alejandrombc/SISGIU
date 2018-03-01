@@ -36,10 +36,15 @@ class ListaUsuarios extends Component{
 
   onDismiss() {
     this.setState({ visible: false });
+    this.props.adminUser['edit'] = false;
   }
 
   searchUpdated (term) {
     this.setState({searchTerm: term})
+  }
+
+  componentWillReceiveProps(props) { 
+    this.setState({"visible":true});
   }
 
 
@@ -72,8 +77,6 @@ class ListaUsuarios extends Component{
             </td>
           </tr>
         );
-
-
 
 
         return(

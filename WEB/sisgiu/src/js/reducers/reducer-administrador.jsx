@@ -1,92 +1,86 @@
-const initialState = {periodos: [], edit:false, tiene_periodos_activos: true, periodo_terminado_error: false, lista_usuarios: [], bad_input: false, lista_asignaturas: [], lista_postgrados: [], lista_tipoAsignaturas: []};
+const initialState = {
+	periodos: [], 
+	edit:false, 
+	tiene_periodos_activos: true, 
+	periodo_terminado_error: false, 
+	lista_usuarios: [], 
+	bad_input: false, 
+	lista_asignaturas: [], 
+	lista_postgrados: [], 
+	lista_tipoAsignaturas: [],
+	lista_estadoEstudiante: [],
+};
 
 export default function (state=initialState, action) {
+	var nuevo_estado = Object.assign({}, state);
 
 	switch (action.type){
 
 		case "GET_PERIODOS_SUCCESS":
-			return {
-				periodos:action.payload['periodos'],
-				tiene_periodos_activos: true,
-				edit:false 
-			};
+			nuevo_estado['periodos'] = action.payload['periodos'];
+			nuevo_estado['tiene_periodos_activos'] = true;
+			nuevo_estado['edit'] = false;
+			return nuevo_estado;
+
 		case "SIN_PERIODOS_ACTIVOS":
-			return {
-				tiene_periodos_activos: false,
-			};
+			nuevo_estado['tiene_periodos_activos'] = false;
+			return nuevo_estado;
+			
 		case "ERROR":
-			return {
-				loggedIn: false, 
-			};
+			nuevo_estado['loggedIn'] = false;
+			return nuevo_estado;
 
 		case "PERIODO_TERMINADO_SUCCESS":
-			return {
-				periodo_terminado_error: false, 
-				tiene_periodos_activos: true,
-			};
+			nuevo_estado['periodo_terminado_error'] = false;
+			nuevo_estado['tiene_periodos_activos'] = true;
+			return nuevo_estado;
 
 		case "PERIODO_TERMINADO_ERROR":
-			return {
-				periodo_terminado_error: true, 
-			};
+			nuevo_estado['periodo_terminado_error'] = true;
+			return nuevo_estado;
 
 		case "GET_USUARIOS_EXITOSO":
-			return {
-				lista_usuarios: action.payload['lista_usuarios'],
-			};
+			nuevo_estado['lista_usuarios'] = action.payload['lista_usuarios'];
+			return nuevo_estado;
+
+		case "GET_ESTADO_ESTUDIANTE_EXITOSO":
+			nuevo_estado['lista_estadoEstudiante'] = action.payload['lista_estadoEstudiante'];
+			return nuevo_estado;
 
 		case "EDIT_USER_INFO_SUCCESS":
-			return {
-				bad_input: false,
-				edit: true,
-				user:action.payload['user'],
-				lista_usuarios: action.payload['lista_usuarios'],
-			};
+			nuevo_estado['bad_input'] = false;
+			nuevo_estado['edit'] = true;
+			nuevo_estado['lista_usuarios'] = action.payload['lista_usuarios'];
+			return nuevo_estado;
+
 
 		case "EDIT_USER_INFO_ERROR":
-			return {
-				bad_input: true,
-				lista_usuarios: action.payload['lista_usuarios'],
-			};
+			nuevo_estado['bad_input'] = true;
+			nuevo_estado['lista_usuarios'] = action.payload['lista_usuarios'];
+			return nuevo_estado;
 
 		case "GET_ASIGNATURAS_EXITOSO":
-			return {
-				lista_asignaturas: action.payload['lista_asignaturas'],
-				lista_postgrados: state.lista_postgrados,
-				lista_tipoAsignaturas: state.lista_tipoAsignaturas,
-				edit: false,
-			};
+			nuevo_estado['lista_asignaturas'] = action.payload['lista_asignaturas'];
+			nuevo_estado['edit'] = false;
+			return nuevo_estado;
 
 		case "GET_TIPO_POSTGRADO_EXITOSO":
-			return {
-				lista_postgrados: action.payload['lista_postgrados'],
-				lista_asignaturas: state.lista_asignaturas
-			};
+			nuevo_estado['lista_postgrados'] = action.payload['lista_postgrados'];
+			return nuevo_estado;
 
 		case "GET_TIPO_ASIGNATURA_EXITOSO":
-			return {
-				lista_postgrados: state.lista_postgrados,
-				lista_asignaturas: state.lista_asignaturas,
-				lista_tipoAsignaturas: action.payload['lista_tipoAsignaturas']
-			};
+			nuevo_estado['lista_tipoAsignaturas'] = action.payload['lista_tipoAsignaturas'];
+			return nuevo_estado;
 
 		case "EDIT_ASIGNATURA_EXITOSO":
-			return {
-				lista_asignaturas: action.payload['lista_asignaturas'],
-				lista_postgrados: state.lista_postgrados,
-				lista_tipoAsignaturas: state.lista_tipoAsignaturas,
-				edit: true,
-			};
+			nuevo_estado['edit'] = true;
+			nuevo_estado['lista_asignaturas'] = action.payload['lista_asignaturas'];
+			return nuevo_estado;
 
 		case "ASIGNATURAS_ERROR":
-			return {
-				lista_asignaturas: action.payload['lista_asignaturas'],
-				lista_postgrados: state.lista_postgrados,
-				lista_tipoAsignaturas: state.lista_tipoAsignaturas,
-				bad_input: true,
-			};
-
-
+			nuevo_estado['lista_asignaturas'] = action.payload['lista_asignaturas'];
+			nuevo_estado['bad_input'] = true;
+			return nuevo_estado;
 
 		default:
 			return state;
