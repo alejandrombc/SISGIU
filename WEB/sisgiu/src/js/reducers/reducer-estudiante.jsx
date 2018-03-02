@@ -2,8 +2,8 @@ const initialState = {materias: [], tiene_asignaturas: true};
 
 export default function (state=initialState, action) {
 
+	var nuevo_estado = Object.assign({}, state);
 	switch (action.type){
-		var nuevo_estado = Object.assign({}, state);
 
 		case "GET_INFORMATION_SUCCESS":
 			nuevo_estado['materias'] = action.payload['materias'];
