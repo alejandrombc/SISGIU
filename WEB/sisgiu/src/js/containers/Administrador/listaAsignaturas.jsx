@@ -3,16 +3,16 @@ import React, {Component} from 'react';
 import { connect } from 'react-redux';
 import { Alert, Table, Row, Col } from 'reactstrap';
 import SearchInput, {createFilter} from 'react-search-input';
-import '../../css/moduloUsuarioAdministrador.css'; 
+import '../../../css/moduloUsuarioAdministrador.css'; 
 import {bindActionCreators} from 'redux';
 // import { PulseLoader } from 'halogenium'; //Spinner
 
 // Components
-import ModalAsignaturaNew from './Administrador/modalAsignaturaNew';
-import ModalAsignaturaEdit from './Administrador/modalAsignaturaEdit';
-import ModalAsignaturaDelete from './Administrador/modalAsignaturaDelete';
-import {get_usuarios} from '../actions/moduloUsuarioAdministrador';
-import {get_asignaturas} from '../actions/moduloAsignaturas';
+import ModalAsignaturaNew from './modalAsignaturaNew';
+import ModalAsignaturaEdit from './modalAsignaturaEdit';
+import ModalAsignaturaDelete from './modalAsignaturaDelete';
+import {get_usuarios} from '../../actions/moduloUsuarioAdministrador';
+import {get_asignaturas} from '../../actions/moduloAsignaturas';
 
 const KEYS_TO_FILTERS = ['codigo', 'nombre'];
 
@@ -160,7 +160,6 @@ class ListaAsignaturas extends Component{
 
 const mapStateToProps = (state)=> {
   return{
-    token: state.activeUser,
     adminUser: state.adminUser,
   };
 }

@@ -103,7 +103,7 @@ export const get_periodos_actuales = () => {
 }
 
 
-export const terminarPeriodo = (periodo, ) =>{
+export const terminarPeriodo = (periodo) =>{
 	let token = localStorage.getItem('user_token');
 	var result ={
 		"estado_periodo":3,

@@ -3,11 +3,11 @@ import React,{Component} from 'react';
 import { connect } from 'react-redux';
 
 //Components
-import InicioEstudiante from './inicioEstudiante';
-import InicioAdministrador from './inicioAdministrador';
+import InicioEstudiante from './Estudiante/inicioEstudiante';
+import InicioAdministrador from './Administrador/inicioAdministrador';
 import PerfilUsuario from '../components/perfilUsuario';
-import ModuloUsuarioAdministrador from '../containers/moduloUsuarioAdministrador';
-import ModuloAsignaturas from '../containers/moduloAsignaturas';
+import ModuloUsuarioAdministrador from './Administrador/moduloUsuarioAdministrador';
+import ModuloAsignaturas from './Administrador/moduloAsignaturas';
 
 
 class Content extends Component{

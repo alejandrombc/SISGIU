@@ -7,19 +7,20 @@ import { connect } from 'react-redux';
 import { PulseLoader } from 'halogenium';
 
 // Components
-import { eliminar_asignatura } from '../../actions/moduloAsignaturas';
+import { terminarPeriodo } from '../../actions/inicio';
 
 
-class ModalAsignaturaDelete extends React.Component {
+class ModalTerminarPeriodo extends React.Component {
 
   constructor(props) {
     super(props);
     this.state = {
       modal: false,
+      
     };
 
     this.toggle = this.toggle.bind(this);
-    this.handleDelete = this.handleDelete.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
 
   }
 
@@ -30,55 +31,48 @@ class ModalAsignaturaDelete extends React.Component {
   }
 
 
-  handleDelete() {
-    this.props.eliminar_asignatura(this.state);
+  handleSubmit() {
+    this.props.terminarPeriodo(this.props.periodo);
   }
 
   render() {
-      if (!this.state.loading) {
       return (
         <div>
-          
-          <Button color="danger" size='sm' onClick={this.toggle} data-toggle="tooltip" title="Eliminar"><FontAwesomeIcon name="trash-alt"/></Button>
+          <Button color="danger" size='sm' onClick={this.toggle} data-toggle="tooltip" title="Terminar Periodo">Terminar Periodo</Button>
           
           <Modal isOpen={this.state.modal} toggle={this.toggle} className={this.props.className}>
             <ModalHeader toggle={this.toggle}> 
-                  Eliminar asignatura 
+                  Terminar Periodo 
             </ModalHeader>
               <ModalBody>
-                  ¿Está seguro de que desea eliminar la asignatura "{this.props.asignatura['codigo']}-{this.props.asignatura['nombre']}"?
+                  ¿Está seguro de que desea terminar el periodo actual de {this.props.periodo.tipo_postgrado}?
 
               </ModalBody>
               <ModalFooter>
-                <Button color="danger" onClick={() => { this.handleDelete() }}>Eliminar</Button>{' '}      
+                <Button color="danger" onClick={() => { this.handleSubmit() }}>Terminar Periodo</Button>{' '}      
                 <Button color="secondary" onClick={this.toggle}>Salir</Button>
               </ModalFooter>
           </Modal>
 
         </div>
       );
-    }else{
-      return(
-        <center><PulseLoader color="#b3b1b0" size="16px" margin="4px"/></center>
-      );
-    }
+
   }
 
 }
 
 const mapStateToProps = (state)=> {
   return{
-    adminUser: state.adminUser,
   };
 }
 
 const mapDispatchToProps = (dispatch) => {
   return bindActionCreators({
-    eliminar_asignatura: eliminar_asignatura,
+    terminarPeriodo: terminarPeriodo,
     }, 
     dispatch 
   )
 }
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(ModalAsignaturaDelete);
+export default connect(mapStateToProps, mapDispatchToProps)(ModalTerminarPeriodo);

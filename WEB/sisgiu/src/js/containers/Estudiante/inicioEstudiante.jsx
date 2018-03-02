@@ -3,10 +3,11 @@ import React, {Component} from 'react';
 import { connect } from 'react-redux';
 import {bindActionCreators} from 'redux';
 import { Button, Row, Col, ListGroup, ListGroupItem, ListGroupItemHeading, ListGroupItemText} from 'reactstrap';
-import { get_information } from '../actions/inicio';
-
-//Spinner
 import { PulseLoader } from 'halogenium';
+
+// Components
+import { get_information } from '../../actions/inicio';
+
 
 class InicioEstudiante extends Component{
 

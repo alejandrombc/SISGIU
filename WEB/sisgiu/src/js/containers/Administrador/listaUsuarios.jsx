@@ -3,7 +3,7 @@ import React, {Component} from 'react';
 import { connect } from 'react-redux';
 import { Alert, Table, Row, Col } from 'reactstrap';
 import SearchInput, {createFilter} from 'react-search-input';
-import '../../css/moduloUsuarioAdministrador.css'; 
+import '../../../css/moduloUsuarioAdministrador.css'; 
 import {bindActionCreators} from 'redux';
 // import { PulseLoader } from 'halogenium'; //Spinner
 
@@ -11,7 +11,7 @@ import {bindActionCreators} from 'redux';
 import ModalUsuarioEdit from './modalUsuarioEdit';
 import ModalUsuarioDelete from './modalUsuarioDelete';
 import ModalUsuarioNew from './modalUsuarioNew';
-import {get_usuarios} from '../actions/moduloUsuarioAdministrador';
+import {get_usuarios} from '../../actions/moduloUsuarioAdministrador';
 
 // const KEYS_TO_FILTERS = ['user', 'subject', 'dest', 'otro'];
 const KEYS_TO_FILTERS = ['first_name', 'last_name', 'cedula'];
@@ -149,7 +149,6 @@ class ListaUsuarios extends Component{
 
 const mapStateToProps = (state)=> {
   return{
-    token: state.activeUser,
     adminUser: state.adminUser,
   };
 }

@@ -1,8 +1,7 @@
 // Dependencies
 import React, {Component} from 'react';
-import { connect } from 'react-redux';
 import { Row, Col, TabContent, TabPane, Nav, NavItem, NavLink} from 'reactstrap';
-import '../../css/moduloUsuarioAdministrador.css'; 
+import '../../../css/moduloUsuarioAdministrador.css'; 
 import classnames from 'classnames';
 
 // Components
@@ -107,13 +106,6 @@ class ModuloUsuarioAdministrador extends Component{
 }
 
 
-const mapStateToProps = (state)=> {
-  return{
-    token: state.activeUser,
-  };
-}
-
-
-export default connect(mapStateToProps)(ModuloUsuarioAdministrador);
+export default ModuloUsuarioAdministrador;
 
 

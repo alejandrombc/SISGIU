@@ -3,11 +3,13 @@ import React, {Component} from 'react';
 import { connect } from 'react-redux';
 import {bindActionCreators} from 'redux';
 import { Alert, Button, Row, Col, ListGroup, ListGroupItem, ListGroupItemHeading, ListGroupItemText} from 'reactstrap';
-import { get_periodos_actuales } from '../actions/inicio';
-import { terminarPeriodo } from '../actions/inicio';
+import { PulseLoader } from 'halogenium'; //Spinner
 
-//Spinner
-import { PulseLoader } from 'halogenium';
+
+// Components
+import { get_periodos_actuales } from '../../actions/inicio';
+import  ModalTerminarPeriodo  from './modalTerminarPeriodo';
+
 
 class InicioAdministrador extends Component{
 
@@ -25,10 +27,6 @@ class InicioAdministrador extends Component{
     this.setState({ visible: false });
   }
 
-  terminarPeriodo(periodo){
-    this.props.terminarPeriodo(periodo);
-  }
-
   render(){
 
       let listItems = '';
@@ -44,7 +42,7 @@ class InicioAdministrador extends Component{
                   </Col>
                   <Col md='3'>
                     <ListGroupItemText key={index}>
-                        <Button color="danger" size='sm' onClick={() => { this.props.terminarPeriodo(valor) }} key={valor['tipo_postgrado_id']}>Terminar Periodo</Button>
+                        <ModalTerminarPeriodo  periodo={valor}/>
                     </ListGroupItemText>
                   </Col>
                 </Row>
@@ -102,7 +100,6 @@ class InicioAdministrador extends Component{
 
 const mapStateToProps = (state)=> {
   return{
-    token: state.activeUser,
     adminUser: state.adminUser
   };
 }
@@ -110,7 +107,6 @@ const mapStateToProps = (state)=> {
 const mapDispatchToProps = (dispatch) => {
   return bindActionCreators({
     get_periodos_actuales: get_periodos_actuales, 
-    terminarPeriodo:terminarPeriodo,
     }
     , dispatch )
 }

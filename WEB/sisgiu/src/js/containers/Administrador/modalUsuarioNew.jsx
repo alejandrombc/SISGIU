@@ -1,14 +1,14 @@
 import React from 'react';
 import { Input, Form, FormGroup, Label, Row, Col, Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import FontAwesomeIcon from 'react-fontawesome';
-import '../../css/moduloUsuarioAdministrador.css';
+import '../../../css/moduloUsuarioAdministrador.css';
 import {bindActionCreators} from 'redux';
 import { connect } from 'react-redux';
 
 // Components
-import { crearUsuario } from '../actions/moduloUsuarioAdministrador';
-import { get_tipo_postgrado } from '../actions/moduloAsignaturas';  // Esto deberia ser de un action mas generico (se repite en modalAsignaturaNew)
-import { get_estado_estudiante } from '../actions/moduloUsuarioAdministrador';  
+import { crearUsuario } from '../../actions/moduloUsuarioAdministrador';
+import { get_tipo_postgrado } from '../../actions/moduloAsignaturas';  // Esto deberia ser de un action mas generico (se repite en modalAsignaturaNew)
+import { get_estado_estudiante } from '../../actions/moduloUsuarioAdministrador';  
 
 class ModalUsuarioNew extends React.Component {
   constructor(props) {
@@ -291,7 +291,6 @@ class ModalUsuarioNew extends React.Component {
 
 const mapStateToProps = (state)=> {
   return{
-    token: state.activeUser,
     adminUser: state.adminUser,
 
   };

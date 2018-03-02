@@ -141,7 +141,6 @@ class ModalAsignaturaEdit extends React.Component {
 
 const mapStateToProps = (state)=> {
   return{
-    token: state.activeUser,
     adminUser: state.adminUser,
   };
 }

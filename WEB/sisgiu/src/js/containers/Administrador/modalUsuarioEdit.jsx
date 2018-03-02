@@ -1,13 +1,13 @@
 import React from 'react';
 import { Input, Form, FormGroup, Label, Row, Col, Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import FontAwesomeIcon from 'react-fontawesome';
-import '../../css/moduloUsuarioAdministrador.css';
+import '../../../css/moduloUsuarioAdministrador.css';
 import {bindActionCreators} from 'redux';
 import { connect } from 'react-redux';
 import { PulseLoader } from 'halogenium';
 
 // Components
-import { editarUsuario, editarDocumento } from '../actions/moduloUsuarioAdministrador';
+import { editarUsuario, editarDocumento } from '../../actions/moduloUsuarioAdministrador';
 
 class ModalUsuarioEdit extends React.Component {
 
@@ -146,7 +146,7 @@ class ModalUsuarioEdit extends React.Component {
       ); 
     }
 
-    if (!this.state.loading) {
+
     return (
       <div>
         <Button color="success" size='sm' onClick={this.toggle} data-toggle="tooltip" title="Editar"><FontAwesomeIcon name="edit"/></Button>
@@ -350,17 +350,12 @@ class ModalUsuarioEdit extends React.Component {
         
       </div>
     );
-  }else{
-    return(
-      <center><PulseLoader color="#b3b1b0" size="16px" margin="4px"/></center>
-    );
-  }
+
 }
 }
 
 const mapStateToProps = (state)=> {
   return{
-    token: state.activeUser,
     adminUser: state.adminUser,
   };
 }
