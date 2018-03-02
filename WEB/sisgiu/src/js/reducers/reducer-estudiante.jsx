@@ -2,26 +2,24 @@ const initialState = {materias: [], tiene_asignaturas: true};
 
 export default function (state=initialState, action) {
 
-switch (action.type){
+	switch (action.type){
+		var nuevo_estado = Object.assign({}, state);
 
-	case "GET_INFORMATION_SUCCESS":
-		return {
-			materias:action.payload['materias'],
-			tiene_asignaturas: true 
-		};
+		case "GET_INFORMATION_SUCCESS":
+			nuevo_estado['materias'] = action.payload['materias'];
+			nuevo_estado['tiene_asignaturas'] = true;
+			return nuevo_estado;
 
-	case "GET_INFORMATION_ERROR":
-		return {
-			loggedIn: false, 
-		};
+		case "GET_INFORMATION_ERROR":
+			nuevo_estado['loggedIn'] = false;
+			return nuevo_estado;
 
-	case "ESTUDIANTE_SIN_ASIGNATURA":
-		return {
-			tiene_asignaturas: false,
-			materias:[]
-		};
+		case "ESTUDIANTE_SIN_ASIGNATURA":
+			nuevo_estado['tiene_asignaturas'] = false;
+			nuevo_estado['materias'] = [];
+			return nuevo_estado;
 
-	default:
-		return state;
-}
+		default:
+			return state;
+	}
 }

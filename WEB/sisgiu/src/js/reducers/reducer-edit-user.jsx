@@ -8,40 +8,36 @@ const initialState = {
 	};
 
 export default function (state=initialState, action) {
+	var nuevo_estado = Object.assign({}, state);
+	
+	switch (action.type){
 
-switch (action.type){
+		case "EDIT_USER_INFO_SUCCESS":
+			nuevo_estado['user'] = action.payload['user'];
+			nuevo_estado['bad_input'] = false;
+			nuevo_estado['edit'] = true;
+			return nuevo_estado;
 
-	case "EDIT_USER_INFO_SUCCESS":
-		return {
-			user:action.payload['user'],
-			bad_input: false,
-			edit: true, 
-		};
+		case "EDIT_USER_INFO_ERROR":
+			nuevo_estado['bad_input'] = true;
+			return nuevo_estado;
 
-	case "EDIT_USER_INFO_ERROR":
-		return {
-			bad_input: true 
-		};
+		case "EDIT_USER_PASSWORD_SUCCESS":
+			nuevo_estado['user'] = action.payload['user'];
+			nuevo_estado['bad_input_password'] = false;
+			nuevo_estado['edit_password'] = true;
+			return nuevo_estado;
 
-	case "EDIT_USER_PASSWORD_SUCCESS":
-		return {
-			user:action.payload['user'],
-			bad_input_password: false,
-			edit_password: true, 
-		};
+		case "EDIT_USER_PASSWORD_ERROR":
+			nuevo_estado['bad_input_password'] = true;
+			return nuevo_estado;
 
-	case "EDIT_USER_PASSWORD_ERROR":
-		return {
-			bad_input_password: true 
-		};
-
-	case "EDIT_USER_PHOTO_ERROR":
-		return {
-			bad_photo_request: true 
-		};
+		case "EDIT_USER_PHOTO_ERROR":
+			nuevo_estado['bad_photo_request'] = true;
+			return nuevo_estado;
 
 
-	default:
-		return state;
-}
+		default:
+			return state;
+	}
 }

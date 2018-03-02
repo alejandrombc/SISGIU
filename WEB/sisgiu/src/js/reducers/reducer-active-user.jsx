@@ -4,47 +4,42 @@ let modulo = localStorage.getItem('modulo');
 const initialState = (user && modulo) ? { loggedIn: true, user, modulo} : {loggedIn: false};
 
 export default function (state=initialState, action) {
+	var nuevo_estado = Object.assign({}, state);
 
 switch (action.type){
+
 	case "LOGIN_EXITOSO":
-		return {
-			loggedIn: true,
-			bad_input: false,
-			bad_module: false,
-			user: action.payload['user'],
-			modulo: action.payload['modulo']
-		};
+		nuevo_estado['loggedIn'] = true;
+		nuevo_estado['bad_input'] = false;
+		nuevo_estado['bad_module'] = false;
+		nuevo_estado['user'] = action.payload['user'];
+		nuevo_estado['modulo'] = action.payload['modulo'];
+
+		return nuevo_estado;
 
 	case "LOGIN_ERROR":
-		return {
-			loggedIn: false, 
-			bad_input: true,
-			bad_module: false
-		}; 
+		nuevo_estado['loggedIn'] = false;
+		nuevo_estado['bad_input'] = true;
+		nuevo_estado['bad_module'] = false;
+		return nuevo_estado;
 
 	case "LOGIN_ERROR_MODULE":
-		return {
-			loggedIn: false, 
-			bad_input: false,
-			bad_module: true,
-
-		}; 
+		nuevo_estado['loggedIn'] = false;
+		nuevo_estado['bad_input'] = false;
+		nuevo_estado['bad_module'] = true;
+		return nuevo_estado;
 		
 	case "INIT_LOGIN_ERROR":
-		return {
-			loggedIn: false, 
-
-		}; 
+		nuevo_estado['loggedIn'] = false;
+		return nuevo_estado;
 
 	case "LOGOUT_SUCCESS":
-		return {
-			loggedIn: false, 
-		}; 
+		nuevo_estado['loggedIn'] = false;
+		return nuevo_estado;
 
 	case "LOGOUT_ERROR":
-		return {
-			loggedIn: true, 
-		};
+		nuevo_estado['loggedIn'] = true;
+		return nuevo_estado;
 
 	default:
 		return state;

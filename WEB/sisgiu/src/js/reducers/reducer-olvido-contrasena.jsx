@@ -1,47 +1,43 @@
 const initialState = {correo_enviado: false, bad_input: false};
 
 export default function (state=initialState, action) {
+	var nuevo_estado = Object.assign({}, state);
 
-switch (action.type){
-	case "CORREO_ENVIADO":
-		return {
-			correo_enviado: true, 
-			bad_input: false, 
-		};
+	switch (action.type){
 
-	case "CEDULA_ERROR":
-		return {
-			correo_enviado: false, 
-			bad_input: true, 
-		}; 
+		case "CORREO_ENVIADO":
+			nuevo_estado['correo_enviado'] = true;
+			nuevo_estado['bad_input'] = false;
+			return nuevo_estado;
 
-	case "URL_CORRECTO":
-		return {
-			check_url: true,
-			is_init: true
-		}
+		case "CEDULA_ERROR":
+			nuevo_estado['correo_enviado'] = false;
+			nuevo_estado['bad_input'] = true;
+			return nuevo_estado; 
 
-	case "URL_INCORRECTO":
-		return {
-			check_url: false,
-			is_init: true
-		}
+		case "URL_CORRECTO":
+			nuevo_estado['check_url'] = true;
+			nuevo_estado['is_init'] = true;
+			return nuevo_estado;
 
-	case "RECUPERACION_EXITOSA":
-		return {
-			recuperacion: true,
-			is_init: false,
-			check_url: true
-		}
+		case "URL_INCORRECTO":
+			nuevo_estado['check_url'] = false;
+			nuevo_estado['is_init'] = true;
+			return nuevo_estado;
 
-	case "RECUPERACION_ERRONEA":
-		return {
-			recuperacion: false,
-			is_init: false,
-			check_url: true
-		}
+		case "RECUPERACION_EXITOSA":
+			nuevo_estado['recuperacion'] = true;
+			nuevo_estado['is_init'] = false;
+			nuevo_estado['check_url'] = true;
+			return nuevo_estado;
 
-	default:
-		return state;
-}
+		case "RECUPERACION_ERRONEA":
+			nuevo_estado['recuperacion'] = false;
+			nuevo_estado['is_init'] = false;
+			nuevo_estado['check_url'] = true;
+			return nuevo_estado;
+
+		default:
+			return state;
+	}
 }
