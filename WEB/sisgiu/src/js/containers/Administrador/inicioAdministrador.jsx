@@ -2,7 +2,7 @@
 import React, {Component} from 'react';
 import { connect } from 'react-redux';
 import {bindActionCreators} from 'redux';
-import { Alert, Button, Row, Col, ListGroup, ListGroupItem, ListGroupItemHeading, ListGroupItemText} from 'reactstrap';
+import { Alert, Row, Col, ListGroup, ListGroupItem, ListGroupItemHeading} from 'reactstrap';
 import { PulseLoader } from 'halogenium'; //Spinner
 
 
@@ -41,9 +41,7 @@ class InicioAdministrador extends Component{
                     <ListGroupItemHeading>{valor['tipo_postgrado']}</ListGroupItemHeading>
                   </Col>
                   <Col md='3'>
-                    <ListGroupItemText key={index}>
-                        <ModalTerminarPeriodo  periodo={valor}/>
-                    </ListGroupItemText>
+                    <ModalTerminarPeriodo index={index} periodo={valor}/>
                   </Col>
                 </Row>
             </ListGroupItem>

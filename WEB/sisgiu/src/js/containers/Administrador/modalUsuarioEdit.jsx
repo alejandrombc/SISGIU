@@ -4,7 +4,6 @@ import FontAwesomeIcon from 'react-fontawesome';
 import '../../../css/moduloUsuarioAdministrador.css';
 import {bindActionCreators} from 'redux';
 import { connect } from 'react-redux';
-import { PulseLoader } from 'halogenium';
 
 // Components
 import { editarUsuario, editarDocumento } from '../../actions/moduloUsuarioAdministrador';

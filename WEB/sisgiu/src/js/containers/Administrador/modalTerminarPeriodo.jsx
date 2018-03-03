@@ -1,10 +1,8 @@
 import React from 'react';
-import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
-import FontAwesomeIcon from 'react-fontawesome';
+import { Button, Modal, ModalHeader, ModalBody, ModalFooter, ListGroupItemText } from 'reactstrap';
 import '../../../css/moduloUsuarioAdministrador.css';
 import {bindActionCreators} from 'redux';
 import { connect } from 'react-redux';
-import { PulseLoader } from 'halogenium';
 
 // Components
 import { terminarPeriodo } from '../../actions/inicio';
@@ -37,7 +35,7 @@ class ModalTerminarPeriodo extends React.Component {
 
   render() {
       return (
-        <div>
+        <ListGroupItemText index={this.props.index}>
           <Button color="danger" size='sm' onClick={this.toggle} data-toggle="tooltip" title="Terminar Periodo">Terminar Periodo</Button>
           
           <Modal isOpen={this.state.modal} toggle={this.toggle} className={this.props.className}>
@@ -54,7 +52,7 @@ class ModalTerminarPeriodo extends React.Component {
               </ModalFooter>
           </Modal>
 
-        </div>
+        </ListGroupItemText>
       );
 
   }
