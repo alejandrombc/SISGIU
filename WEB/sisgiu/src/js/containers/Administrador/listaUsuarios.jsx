@@ -1,7 +1,7 @@
 // Dependencies
 import React, {Component} from 'react';
 import { connect } from 'react-redux';
-import { Alert, Table, Row, Col } from 'reactstrap';
+import { Alert, Table, Row, Col, PaginationLink ,PaginationItem,Pagination } from 'reactstrap';
 import SearchInput, {createFilter} from 'react-search-input';
 import '../../../css/moduloUsuarioAdministrador.css'; 
 import {bindActionCreators} from 'redux';
@@ -24,13 +24,17 @@ class ListaUsuarios extends Component{
       this.state = {
         visible: true,
         searchTerm: '',
-        loading: false
+        loading: false,
+        activePage: 1,
+        firstPage: true,
+        lastPage: false
       }
       
       this.updateLoading = this.updateLoading.bind(this);
       this.props.get_usuarios(this.props.tipo_usuario, false);
       this.onDismiss = this.onDismiss.bind(this);
       this.searchUpdated = this.searchUpdated.bind(this);
+      this.handlePage = this.handlePage.bind(this);
   }
 
   onDismiss() {
@@ -50,7 +54,13 @@ class ListaUsuarios extends Component{
     this.setState({"loading":!this.state.loading});
   }
 
-
+  //Manejo de pagina
+  handlePage(page, total){
+    this.setState({activePage: page, firstPage: false, lastPage: false});
+    if(page === 1){ this.setState({firstPage: true}); }
+    if(page === total){ this.setState({lastPage: true}); }
+    
+  }
 
   render(){
 
@@ -58,13 +68,34 @@ class ListaUsuarios extends Component{
       let listItems = '';
       if(this.props.adminUser.lista_usuarios && this.props.adminUser.lista_usuarios.length > 0){
         let cant_usuarios = this.props.adminUser.lista_usuarios.length;
-        let usuarios = [];
+        let usuarios = []; let usuarios_by_page = [];
+        let pages = []; let count_pages = 0;
+        let user_per_page = 2;
+        let list_init = (this.state.activePage-1)*user_per_page;
+        let list_end = ((this.state.activePage-1)*user_per_page)+user_per_page;
+        let filteredUsuarios;
 
+        //Colocar todos los usuarios en el arreglo
         for (var i = 0; i < cant_usuarios; i++) {
           usuarios.push(this.props.adminUser.lista_usuarios[i]);
         }
 
-        const filteredUsuarios = usuarios.filter(createFilter(this.state.searchTerm, KEYS_TO_FILTERS));
+        //"Cortar" segun la pagina actual y el total por pagina
+        usuarios_by_page = usuarios.slice(list_init,list_end);
+
+        //Si se esta realizando una busqueda uso toda la lista de usuario, sino no
+        if(this.state.searchTerm === ''){
+          for(i = 0; i < (cant_usuarios/user_per_page); i++){
+            count_pages++; 
+            pages.push(count_pages); 
+          }
+          filteredUsuarios = usuarios_by_page.filter(createFilter(this.state.searchTerm, KEYS_TO_FILTERS));
+        }else{
+          //Solo una pagina para la busqueda
+          count_pages++; 
+          pages.push(count_pages);
+          filteredUsuarios = usuarios.filter(createFilter(this.state.searchTerm, KEYS_TO_FILTERS));
+        }
 
         listItems = filteredUsuarios.map((usuario) =>
           <tr key={usuario['cedula']}>
@@ -80,7 +111,6 @@ class ListaUsuarios extends Component{
             </td>
           </tr>
         );
-
 
         return(
     		<div>
@@ -123,12 +153,40 @@ class ListaUsuarios extends Component{
                 </thead>
                 <tbody className="tabla_usuarios">
                   {listItems}
-
-
-                  
                 </tbody>
               </Table>
-
+              <br />
+              <Row>
+                <Col sm="4"></Col>
+                <Col sm="4">
+                  {/*Recorrido por cada pagina que se tenga en el arreglo (primera y ultima son las flechas)*/}
+                  <Pagination className="list-inline text-center">
+                    <PaginationItem onClick={() => this.handlePage(1,count_pages)} disabled={this.state.firstPage}>
+                      <PaginationLink previous href="#" />
+                    </PaginationItem>
+                    {pages
+                        .map((page,key) => {
+                            return this.state.activePage === page ?
+                                <PaginationItem key={key} active>
+                                  <PaginationLink onClick={() => this.handlePage(page, count_pages)} href="#">
+                                      {page}
+                                  </PaginationLink>
+                                </PaginationItem>
+                            :
+                                <PaginationItem key={key}>
+                                  <PaginationLink onClick={() => this.handlePage(page, count_pages)} href="#">
+                                      {page}
+                                  </PaginationLink>
+                                </PaginationItem>
+                        }
+                      )}
+                    <PaginationItem onClick={() => this.handlePage(count_pages, count_pages)} disabled={this.state.lastPage}>
+                      <PaginationLink next href="#" />
+                    </PaginationItem>
+                  </Pagination>
+              </Col>
+              <Col sm="4"></Col>
+            </Row>
       	</div>
         )
     }else{
