@@ -61,21 +61,19 @@ export const editarUsuario = (cambios, user, tipo_usuario) => {
 	delete result.rif;
 	delete result.curriculum;
 	delete result.permiso_ingresos;
-	console.log(result);
+
 	return request
 	   .put(host+'api/'+tipo_usuario+'/'+usuario['usuario']['cedula']+'/edit/')
 	   .set('Authorization', 'JWT '+token)
 	   .set('Content-Type', 'application/json')
 	   .send(result)
 	   .then(function(res) {
-	   	console.log(res.body);
 		   	  	return function (dispatch) {
 				    dispatch(get_usuarios(tipo_usuario ,1));
 				}
 
 	   })
 	   .catch(function(err) {
-	   	console.log(err)
 	   	  	return function (dispatch) {
 			    dispatch(get_usuarios(tipo_usuario ,2));
 			}
@@ -86,7 +84,6 @@ export const editarUsuario = (cambios, user, tipo_usuario) => {
 export const editarDocumento = (tipo_documento, documento, cedula) => {
     const formData = new FormData();
     formData.append(tipo_documento ,documento);
-    console.log(formData.values());
 	// let modulo = localStorage.getItem('modulo');
 	let token = localStorage.getItem('user_token');
 	// alert(cedula);
@@ -101,7 +98,6 @@ export const editarDocumento = (tipo_documento, documento, cedula) => {
 				}
 	   })
 	   .catch(function(err) {
-	   	console.log(err);
 	   	  	return function (dispatch) {
 			    dispatch(get_usuarios("docentes" ,2));
 			}
@@ -120,7 +116,6 @@ export const crearUsuario = (user, tipo_usuario) => {
 		user = user['usuario'];
 		user['is_superuser'] = true;
 	}
- 	console.log(user);
 	return request
 	   .post(host+'api/'+modulo+'/')
 	   .set('Authorization', 'JWT '+token)
@@ -133,7 +128,6 @@ export const crearUsuario = (user, tipo_usuario) => {
 
 	   })
 	   .catch(function(err) {
-	   	console.log(err)
 	   	  	return function (dispatch) {
 			    dispatch(get_usuarios(tipo_usuario ,2));
 			}
@@ -147,7 +141,7 @@ export const eliminarUsuario = (cedula, tipo_usuario) => {
 	let token = localStorage.getItem('user_token');
 	if(tipo_usuario === "administradores") { tipo_usuario = "usuarios"; }
 	return request
-	   .delete(host+'api/'+tipo_usuario+'/'+cedula+'/delete/')
+	   .delete(host+'api/usuarios/'+cedula+'/delete/')
 	   .set('Authorization', 'JWT '+token)
 	   .then(function(res) {
 		   	  	return function (dispatch) {
@@ -156,7 +150,7 @@ export const eliminarUsuario = (cedula, tipo_usuario) => {
 
 	   })
 	   .catch(function(err) {
-	   	console.log(err)
+
 	   	  	return function (dispatch) {
 			    dispatch(get_usuarios(tipo_usuario ,2));
 			}

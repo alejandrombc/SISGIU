@@ -74,6 +74,7 @@ export default function (state=initialState, action) {
 
 		case "EDIT_ASIGNATURA_EXITOSO":
 			nuevo_estado['edit'] = true;
+			nuevo_estado['bad_input'] = false;
 			nuevo_estado['lista_asignaturas'] = action.payload['lista_asignaturas'];
 			return nuevo_estado;
 

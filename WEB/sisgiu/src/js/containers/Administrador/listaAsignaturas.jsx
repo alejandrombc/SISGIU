@@ -5,7 +5,7 @@ import { Alert, Table, Row, Col } from 'reactstrap';
 import SearchInput, {createFilter} from 'react-search-input';
 import '../../../css/moduloUsuarioAdministrador.css'; 
 import {bindActionCreators} from 'redux';
-// import { PulseLoader } from 'halogenium'; //Spinner
+import { PulseLoader } from 'halogenium'; //Spinner
 
 // Components
 import ModalAsignaturaNew from './modalAsignaturaNew';
@@ -25,17 +25,18 @@ class ListaAsignaturas extends Component{
       this.state = {
         visible: true,
         searchTerm: '',
+        loading: false,
       }
       
       this.props.get_usuarios(this.props.tipo_usuario, false);
       this.props.get_asignaturas(false);
-
+      this.updateLoading = this.updateLoading.bind(this);
       this.onDismiss = this.onDismiss.bind(this);
       this.searchUpdated = this.searchUpdated.bind(this)
   }
 
   onDismiss() {
-    this.setState({ visible: false });
+    this.setState({ visible: false, loading: false});
     this.props.adminUser['edit'] = false;
   }
 
@@ -45,6 +46,10 @@ class ListaAsignaturas extends Component{
 
   componentWillReceiveProps(props) { 
     this.setState({"visible":true});
+  }
+
+  updateLoading(){
+    this.setState({"loading":!this.state.loading});
   }
 
 
@@ -71,8 +76,8 @@ class ListaAsignaturas extends Component{
               <Row >
                 <Col md={{ size: 'auto', offset: 3 }} className='botones'>
                   
-                  <ModalAsignaturaEdit asignatura={asignatura} />
-                  <ModalAsignaturaDelete asignatura={asignatura} />
+                  <ModalAsignaturaEdit onDismiss={this.onDismiss} triggerParentUpdate={this.updateLoading} asignatura={asignatura} />
+                  <ModalAsignaturaDelete onDismiss={this.onDismiss} triggerParentUpdate={this.updateLoading} asignatura={asignatura} />
 
                 </Col>
               </Row>
@@ -87,8 +92,10 @@ class ListaAsignaturas extends Component{
     		<div>
               <br />
 
-              {
-                console.log(this.state.visible)
+              {this.state.loading && !this.props.adminUser['edit'] && !this.props.adminUser['bad_input'] &&
+
+                <center><PulseLoader color="#b3b1b0" size="16px" margin="4px"/></center>
+
               }
 
               {this.props.adminUser['edit'] &&
@@ -103,7 +110,7 @@ class ListaAsignaturas extends Component{
               }
               <Row>
                 <Col md='4'>
-                  <ModalAsignaturaNew />
+                  <ModalAsignaturaNew onDismiss={this.onDismiss} triggerParentUpdate={this.updateLoading}  />
                 </Col>
                 <Col md='8'>
                   <SearchInput className="searchBox" placeholder="Buscar asignatura..." onChange={this.searchUpdated} />

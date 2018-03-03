@@ -32,18 +32,20 @@ class ModalAsignaturaEdit extends React.Component {
     this.setState({
       modal: !this.state.modal
     });
+    if(!this.state.modal) { this.props.onDismiss(); };
   }
 
   handleChange(e) {
     const { name, value } = e.target;
-    this.setState({ [name]: value })
+    this.setState({ [name]: value });
   }
 
   handleSubmit(e) {
     e.preventDefault();
-    
-    this.toggle();
+    this.props.triggerParentUpdate();
     this.props.editar_asignatura(this.state);
+    this.props.triggerParentUpdate();
+    this.toggle();
 
   }
 

@@ -4,7 +4,6 @@ import FontAwesomeIcon from 'react-fontawesome';
 import '../../../css/moduloUsuarioAdministrador.css';
 import {bindActionCreators} from 'redux';
 import { connect } from 'react-redux';
-import { PulseLoader } from 'halogenium';
 
 // Components
 import { eliminar_asignatura } from '../../actions/moduloAsignaturas';
@@ -27,15 +26,18 @@ class ModalAsignaturaDelete extends React.Component {
     this.setState({
       modal: !this.state.modal
     });
+    if(!this.state.modal) { this.props.onDismiss(); };
   }
 
 
   handleDelete() {
-    this.props.eliminar_asignatura(this.state);
+    this.props.triggerParentUpdate();
+    this.props.eliminar_asignatura(this.props.asignatura);
+    this.props.triggerParentUpdate();
+    this.toggle();
   }
 
   render() {
-      if (!this.state.loading) {
       return (
         <div>
           
@@ -57,11 +59,6 @@ class ModalAsignaturaDelete extends React.Component {
 
         </div>
       );
-    }else{
-      return(
-        <center><PulseLoader color="#b3b1b0" size="16px" margin="4px"/></center>
-      );
-    }
   }
 
 }

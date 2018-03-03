@@ -24,11 +24,14 @@ class ModalUsuarioDelete extends React.Component {
     this.setState({
       modal: !this.state.modal
     });
+    if(!this.state.modal) { this.props.onDismiss(); };
   }
 
 
   handleDelete() {
+    this.props.triggerParentUpdate();
     this.props.eliminarUsuario(this.props.usuario.cedula, this.props.tipo_usuario);
+    this.props.triggerParentUpdate();
   }
 
   render() {

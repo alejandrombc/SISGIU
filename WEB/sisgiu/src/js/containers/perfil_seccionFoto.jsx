@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import {bindActionCreators} from 'redux';
 import { Alert, Form, FormGroup, Input, Button, Row, Col} from 'reactstrap';
 import '../../css/perfil.css';
+import { PulseLoader } from 'halogenium'; //Spinner
 
 // Components
 import { cambiarFoto } from '../actions/perfilUsuario';
@@ -15,7 +16,8 @@ class SeccionFoto extends Component{
       this.state = {
       	foto: undefined,
       	visible: true,
-      	begin: true
+      	begin: true,
+      	loading: false
       };
 
       this.handleChange = this.handleChange.bind(this);
@@ -35,9 +37,10 @@ class SeccionFoto extends Component{
 
 	changePhotoSubmit(e) {
 		e.preventDefault() // Stop form submit
-		this.setState({ begin: false, visible: true });
+		this.setState({ begin: false, visible: true , loading: true});
 		this.props.edit['bad_photo_request'] = false;
 		this.props.cambiarFoto(this.state.foto, this.props.token['user']);
+		this.setState({ loading: false});
 
 	}
 
@@ -109,6 +112,9 @@ class SeccionFoto extends Component{
 	                      </Col>
 	                    </FormGroup>
 	                    <center><Button type="submit" color="primary" >Guardar</Button></center>
+	                      { this.state.loading &&
+	                      	<center><PulseLoader color="#b3b1b0" size="16px" margin="4px"/></center>
+	                      }
 	                  </Form>
 	                </Col>
               	</Row>

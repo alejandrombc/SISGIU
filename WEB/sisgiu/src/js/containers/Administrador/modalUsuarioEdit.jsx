@@ -51,7 +51,6 @@ class ModalUsuarioEdit extends React.Component {
     this.handleSubmit = this.handleSubmit.bind(this);
     this.subirDocumento = this.subirDocumento.bind(this);
     this.handleChangeDocumento = this.handleChangeDocumento.bind(this);
-    this.onDismiss = this.onDismiss.bind(this);
     
   }
 
@@ -59,10 +58,7 @@ class ModalUsuarioEdit extends React.Component {
     this.setState({
       modal: !this.state.modal
     });
-  }
-
-  onDismiss() {
-    this.setState({ visible: false });
+    if(!this.state.modal) { this.props.onDismiss(); };
   }
 
   componentWillReceiveProps(props) { 
@@ -80,8 +76,9 @@ class ModalUsuarioEdit extends React.Component {
   handleChangeUsuario(e) {
     const { name, value } = e.target;
     var usuario = this.state.usuario;
-    usuario[name] = value;
+    usuario[name] = value;    
     this.setState({usuario})
+
   }
 
   handleChangeDocumento(e){
@@ -96,8 +93,12 @@ class ModalUsuarioEdit extends React.Component {
 
   handleSubmit(e) {
     e.preventDefault();
+    this.props.triggerParentUpdate();
     this.props.editarUsuario(this.state, this.props.usuario, this.props.tipo_usuario);
+    this.props.triggerParentUpdate();
+    console.log(this.state.modal);
     this.toggle();
+    console.log(this.state.modal);
   }
 
   subirDocumento(tipo_documento){
@@ -121,7 +122,9 @@ class ModalUsuarioEdit extends React.Component {
         break;
     }
     if (documento) {
+      this.props.triggerParentUpdate();
       this.props.editarDocumento(tipo_documento, documento, this.state.usuario.cedula);
+      this.props.triggerParentUpdate();
       this.toggle();
     } else {
       alert('No ha subido ningún archivo');

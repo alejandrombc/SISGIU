@@ -113,7 +113,6 @@ export function get_tipo_asignatura () {
 
 export function crear_asignatura (asignatura) {
 	let token = localStorage.getItem('user_token');
-	delete asignatura.modal;
 	console.log(asignatura);
 	try{
 		jwt_decode(token);
@@ -144,7 +143,6 @@ export function crear_asignatura (asignatura) {
 
 export const editar_asignatura = (asignatura) => {
 	let token = localStorage.getItem('user_token');
-	delete asignatura.modal;
 
 	try{
 		jwt_decode(token);
@@ -175,7 +173,6 @@ export const editar_asignatura = (asignatura) => {
 
 export const eliminar_asignatura = (asignatura) => {
 	let token = localStorage.getItem('user_token');
-	delete asignatura.modal;
 
 	try{
 		jwt_decode(token);

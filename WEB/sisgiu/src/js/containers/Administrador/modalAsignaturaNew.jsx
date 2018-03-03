@@ -33,10 +33,10 @@ class ModalAsignaturaNew extends React.Component {
   }
 
   toggle() {
-    this.props.adminUser['edit'] = false;
     this.setState({
       modal: !this.state.modal
     });
+    if(!this.state.modal) { this.props.onDismiss(); };
   }
 
   handleChange(e) {
@@ -47,7 +47,7 @@ class ModalAsignaturaNew extends React.Component {
   handleSubmit(e) {
     e.preventDefault();
     
-    this.toggle();
+    this.props.triggerParentUpdate();
     this.props.crear_asignatura(this.state);
     
     this.setState({
@@ -57,6 +57,9 @@ class ModalAsignaturaNew extends React.Component {
       tipo_asignatura: null,
       tipo_postgrado: null,
     });
+    this.props.triggerParentUpdate();
+    this.toggle();
+
 
   }
 

@@ -5,7 +5,7 @@ import { Alert, Table, Row, Col } from 'reactstrap';
 import SearchInput, {createFilter} from 'react-search-input';
 import '../../../css/moduloUsuarioAdministrador.css'; 
 import {bindActionCreators} from 'redux';
-// import { PulseLoader } from 'halogenium'; //Spinner
+import { PulseLoader } from 'halogenium'; //Spinner
 
 // Components
 import ModalUsuarioEdit from './modalUsuarioEdit';
@@ -13,7 +13,6 @@ import ModalUsuarioDelete from './modalUsuarioDelete';
 import ModalUsuarioNew from './modalUsuarioNew';
 import {get_usuarios} from '../../actions/moduloUsuarioAdministrador';
 
-// const KEYS_TO_FILTERS = ['user', 'subject', 'dest', 'otro'];
 const KEYS_TO_FILTERS = ['first_name', 'last_name', 'cedula'];
 
 
@@ -25,17 +24,17 @@ class ListaUsuarios extends Component{
       this.state = {
         visible: true,
         searchTerm: '',
+        loading: false
       }
       
-      console.log(this.props);
-
+      this.updateLoading = this.updateLoading.bind(this);
       this.props.get_usuarios(this.props.tipo_usuario, false);
       this.onDismiss = this.onDismiss.bind(this);
-      this.searchUpdated = this.searchUpdated.bind(this)
+      this.searchUpdated = this.searchUpdated.bind(this);
   }
 
   onDismiss() {
-    this.setState({ visible: false });
+    this.setState({ visible: false, loading: false});
     this.props.adminUser['edit'] = false;
   }
 
@@ -45,6 +44,10 @@ class ListaUsuarios extends Component{
 
   componentWillReceiveProps(props) { 
     this.setState({"visible":true});
+  }
+
+  updateLoading(){
+    this.setState({"loading":!this.state.loading});
   }
 
 
@@ -70,8 +73,8 @@ class ListaUsuarios extends Component{
             <td>  
               <Row >
                 <Col md={{ size: 'auto', offset: 3 }} className='botones'>
-                  <ModalUsuarioEdit usuario={usuario} tipo_usuario={this.props.tipo_usuario} />
-                  <ModalUsuarioDelete usuario={usuario} tipo_usuario={this.props.tipo_usuario}/>
+                  <ModalUsuarioEdit onDismiss={this.onDismiss} triggerParentUpdate={this.updateLoading} usuario={usuario} tipo_usuario={this.props.tipo_usuario} />
+                  <ModalUsuarioDelete onDismiss={this.onDismiss} triggerParentUpdate={this.updateLoading} usuario={usuario} tipo_usuario={this.props.tipo_usuario}/>
                 </Col>
               </Row>
             </td>
@@ -82,6 +85,12 @@ class ListaUsuarios extends Component{
         return(
     		<div>
               <br />
+              {this.state.loading && !this.props.adminUser['edit'] && !this.props.adminUser['bad_input'] &&
+
+                <center><PulseLoader color="#b3b1b0" size="16px" margin="4px"/></center>
+
+              }
+
               {this.props.adminUser['edit'] &&
                 <Alert color="success" isOpen={this.state.visible} toggle={this.onDismiss}>
                     Datos actualizados exitosamente
@@ -94,7 +103,7 @@ class ListaUsuarios extends Component{
               }
               <Row>
                 <Col md='4'>
-                  <ModalUsuarioNew tipo_usuario={this.props.tipo_usuario} visible={this.state.visible}/>
+                  <ModalUsuarioNew onDismiss={this.onDismiss} triggerParentUpdate={this.updateLoading} tipo_usuario={this.props.tipo_usuario} visible={this.state.visible}/>
                 </Col>
                 <Col md='8'>
                   <SearchInput className="searchBox" placeholder="Buscar usuario..." onChange={this.searchUpdated} />

@@ -54,6 +54,7 @@ class ModalUsuarioNew extends React.Component {
     this.setState({
       modal: !this.state.modal
     });
+    if(!this.state.modal) { this.props.onDismiss(); };
   }
 
   handleChangeUsuario(e) {
@@ -72,8 +73,9 @@ class ModalUsuarioNew extends React.Component {
     e.preventDefault();
 
     console.log(this.state.usuario['cedula']);
+    this.props.triggerParentUpdate();
     this.props.crearUsuario(this.state, this.props.tipo_usuario);
-    this.toggle();
+    
     this.setState({
       usuario: {
         cedula: '',
@@ -98,6 +100,8 @@ class ModalUsuarioNew extends React.Component {
       id_estado_estudiante: null,
     });
 
+    this.props.triggerParentUpdate();
+    this.toggle();
   }
 
 
