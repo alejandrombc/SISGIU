@@ -31,6 +31,7 @@ class SeccionFoto extends Component{
 	  }
 
   	handleChange(e) {
+  		this.setState({ visible: false });
 		this.setState({foto:e.target.files[0], begin: true})
         
 	}

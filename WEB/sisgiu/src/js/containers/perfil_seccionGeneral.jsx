@@ -42,12 +42,13 @@ class SeccionGeneral extends Component{
         const { name, value } = e.target;
 		var usuario = this.state.usuario;
 		usuario[name] = value;
-		this.setState({usuario, typing: true })
+		this.setState({usuario, typing: true, visible: false})
+		this.setState({  });
 	}
 
 	handleChangeExtraData(e) {
         const { name, value } = e.target;
-        this.setState({ [name]: value, typing: true });
+        this.setState({ [name]: value, typing: true, visible: false});
         
 	}
 
