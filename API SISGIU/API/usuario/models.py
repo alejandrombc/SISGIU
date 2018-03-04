@@ -27,6 +27,9 @@ class Usuario(AbstractUser):
 	estado_civil = models.CharField(max_length=20, blank=True)
 	foto = models.ImageField(upload_to=user_directory_path, default='sisgiu/no_avatar.jpg')
 
+	class Meta:
+		ordering = ['last_name', 'segundo_apellido']
+
 
 class Estudiante(models.Model):
 	usuario = models.OneToOneField(
@@ -48,6 +51,9 @@ class Estudiante(models.Model):
 	)
 
 	direccion = models.TextField(blank=True)
+
+	class Meta:
+		ordering = ['usuario__last_name', 'usuario__segundo_apellido']
 
 
 
@@ -72,10 +78,15 @@ class PersonalDocente(models.Model):
 	permiso_ingresos = models.FileField(upload_to=user_directory_path_subuser)
 	coordinador = models.BooleanField()
 
+	class Meta:
+		ordering = ['usuario__last_name', 'usuario__segundo_apellido']
+
 
 class PersonalAdministrativo(models.Model):
 	usuario = models.OneToOneField(
 			Usuario,
 			on_delete=models.CASCADE,
 			primary_key=True)
+	class Meta:
+		ordering = ['usuario__last_name', 'usuario__segundo_apellido']
 
