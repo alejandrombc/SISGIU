@@ -18,30 +18,29 @@ class Paginacion extends Component {
       let items_por_pagina = this.props.item_por_pagina;
       
       var total = Math.ceil(this.props.cant_usuarios/items_por_pagina);
-      // var total = 60
+
       var init = 1;
-      var end = 10;
+      var end = 5;
 
-
-      if (total <= 10) {
+      if (total <= 5) {
         end = total;
-      } else if ( total > 10) {
+      } else if ( total > 5) {
         // Final
-        if (this.props.pagination.pagina >= total-4){
-          init = total-9;
+        if (this.props.pagination.pagina >= total-2){
+          init = total-4;
           end = total;
         }
 
         // Inicio
-        else if (this.props.pagination.pagina - 4 <= 0) {
+        else if (this.props.pagination.pagina - 2 <= 0) {
           init = 1;
-          end = 10;
+          end = 5;
         }
 
         // Todo lo demas
         else {
-          init = this.props.pagination.pagina - 4;
-          end = this.props.pagination.pagina + 5;
+          init = this.props.pagination.pagina - 2;
+          end = this.props.pagination.pagina + 2;
         }
 
       } 
