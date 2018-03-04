@@ -13,9 +13,10 @@ import ModalAsignaturaEdit from './modalAsignaturaEdit';
 import ModalAsignaturaDelete from './modalAsignaturaDelete';
 import {get_usuarios} from '../../actions/moduloUsuarioAdministrador';
 import {get_asignaturas} from '../../actions/moduloAsignaturas';
+import Paginacion from '../../components/pagination';
 
 const KEYS_TO_FILTERS = ['codigo', 'nombre'];
-
+const asignaturas_por_pagina = 10;
 
 
 class ListaAsignaturas extends Component{
@@ -62,9 +63,26 @@ class ListaAsignaturas extends Component{
         let cant_asignaturas = this.props.adminUser.lista_asignaturas.length;
         let asignaturas = [];
 
-        for (var i = 0; i < cant_asignaturas; i++) {
-          asignaturas.push(this.props.adminUser.lista_asignaturas[i]);
+        var init = this.props.pagination.pagina*asignaturas_por_pagina-asignaturas_por_pagina;
+        var end = this.props.pagination.pagina*asignaturas_por_pagina;
+
+
+        //Si se esta realizando una busqueda uso toda la lista de asignaturas, sino no
+        if(this.state.searchTerm === ''){
+          
+          for (var i = init; i < end; i++) {
+            if (this.props.adminUser.lista_asignaturas[i]) {
+              asignaturas.push(this.props.adminUser.lista_asignaturas[i]);
+            }
+          }
+
+        } else {
+          for (i = 0; i < cant_asignaturas; i++) {
+            asignaturas.push(this.props.adminUser.lista_asignaturas[i]);
+          }
         }
+
+        
 
         const filteredAsignaturas = asignaturas.filter(createFilter(this.state.searchTerm, KEYS_TO_FILTERS));
 
@@ -136,6 +154,12 @@ class ListaAsignaturas extends Component{
                 </tbody>
               </Table>
 
+              <Row >
+                <Col md='12' sm='12' xs='12'>
+                  <Paginacion cant_usuarios={cant_asignaturas} item_por_pagina={asignaturas_por_pagina}/>
+                </Col>
+              </Row>
+
       	</div>
         )
       } else {
@@ -168,6 +192,7 @@ class ListaAsignaturas extends Component{
 const mapStateToProps = (state)=> {
   return{
     adminUser: state.adminUser,
+    pagination: state.paginacion,
   };
 }
 

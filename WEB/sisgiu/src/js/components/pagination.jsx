@@ -17,8 +17,8 @@ class Paginacion extends Component {
 
       let items_por_pagina = this.props.item_por_pagina;
       
-      // var total = Math.ceil(this.props.cant_usuarios/items_por_pagina);
-      var total = 60
+      var total = Math.ceil(this.props.cant_usuarios/items_por_pagina);
+      // var total = 60
       var init = 1;
       var end = 10;
 
