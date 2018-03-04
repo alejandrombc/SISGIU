@@ -4,6 +4,7 @@ import RecuperarContrasena from './reducer-olvido-contrasena';
 import EstudianteReducer from './reducer-estudiante';
 import EditUserReducer from './reducer-edit-user';
 import AdminReducer from './reducer-administrador';
+import PaginacionReducer from './reducer-paginacion';
 
 /*
  * Combinamos todos los reducers en un solo objeto para enviar al store
@@ -17,6 +18,7 @@ const allReducers = combineReducers({
 	recuperarContrasena : RecuperarContrasena,
 	editUser: EditUserReducer,
 	adminUser: AdminReducer,
+	paginacion: PaginacionReducer,
 });
 
 

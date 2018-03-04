@@ -1,0 +1,34 @@
+https://www.json-generator.com/
+
+Random Generator Estudiantes
+
+
+[
+  '{{repeat(5, 7)}}',
+  {
+    usuario: {
+      cedula: '{{integer(5000000, 32000000)}}',
+      first_name: '{{firstName()}}',
+      segundo_nombre: '{{firstName()}}',
+      last_name: '{{surname()}}', 
+      segundo_apellido: '{{surname()}}',
+      email: '{{email()}}',
+      correo_alternativo: '{{email()}}',
+      celular: '{{phone()}}',
+      telefono_casa: '{{phone()}}',
+      telefono_trabajo: '{{phone()}}',
+      fecha_nacimiento: '{{date(new Date(1960, 0, 1), new Date(), "YYYY-MM-dd")}}',
+      sexo: function (tags) {
+        var sexos = ['M', 'F'];
+        return sexos[tags.integer(0, sexos.length - 1)];
+      },
+      nacionalidad: 'Venezolana',
+      estado_civil: "Soltero",
+      username: function (tags) {return this.cedula;},
+      password: '123456'
+    },
+    id_tipo_postgrado: '{{integer(1, 3)}}',
+    id_estado_estudiante: 1,
+    direccion: '{{integer(100, 999)}} {{street()}}, {{city()}}, {{state()}}, {{integer(100, 10000)}}'
+  }
+]
