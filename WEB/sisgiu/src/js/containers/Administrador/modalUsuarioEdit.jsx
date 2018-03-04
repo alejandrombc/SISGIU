@@ -96,9 +96,7 @@ class ModalUsuarioEdit extends React.Component {
     this.props.triggerParentUpdate();
     this.props.editarUsuario(this.state, this.props.usuario, this.props.tipo_usuario);
     this.props.triggerParentUpdate();
-    console.log(this.state.modal);
     this.toggle();
-    console.log(this.state.modal);
   }
 
   subirDocumento(tipo_documento){

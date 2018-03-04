@@ -113,7 +113,6 @@ export function get_tipo_asignatura () {
 
 export function crear_asignatura (asignatura) {
 	let token = localStorage.getItem('user_token');
-	console.log(asignatura);
 	try{
 		jwt_decode(token);
 	}catch(e){
