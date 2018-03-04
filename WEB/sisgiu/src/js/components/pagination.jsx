@@ -9,16 +9,6 @@ import { setCurrentPage } from '../actions/pagination';
 
 class Paginacion extends Component {
 
-  constructor(props) {
-      super(props);
-      this.state = {
-      }
-
-      console.log(this.props);
-
-      
-  }
-
   render() {
 
     var lista = [];
@@ -27,8 +17,8 @@ class Paginacion extends Component {
 
       let items_por_pagina = this.props.item_por_pagina;
       
-      var total = Math.ceil(this.props.cant_usuarios/items_por_pagina);
-      // var total = 60;
+      // var total = Math.ceil(this.props.cant_usuarios/items_por_pagina);
+      var total = 60
       var init = 1;
       var end = 10;
 
@@ -62,7 +52,7 @@ class Paginacion extends Component {
           if ({i} === 1) {
             lista = lista.concat(
               <PaginationItem active key={i} onClick={(e)=>(
-                console.log(e.target.innerHTML)
+                this.props.setCurrentPage( parseInt(e.target.innerHTML, 10) )
                 )}>
                 <PaginationLink>
                   {i}
@@ -91,7 +81,7 @@ class Paginacion extends Component {
 
 
     return (
-      <Pagination>
+      <Pagination size='sm'>
         <PaginationItem disabled>
           <PaginationLink previous href="#" />
         </PaginationItem>
