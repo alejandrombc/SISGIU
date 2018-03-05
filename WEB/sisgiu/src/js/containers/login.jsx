@@ -118,7 +118,7 @@ class Login extends Component{
 								<Col lg='4' md='4' sm='3' xs='2' ></Col>
 								<Col md='4' xs='8' sm='6' className="border border-info border-bottom-0 border-top-0">
 							        <FormGroup>
-							          <Label for="password">Password</Label>
+							          <Label for="password">Contraseña</Label>
 							          <Input type="password" name="password" id="password" value={password} required onChange={this.handleChange} placeholder="Contraseña"/>
 							        </FormGroup>
 						      	</Col>
