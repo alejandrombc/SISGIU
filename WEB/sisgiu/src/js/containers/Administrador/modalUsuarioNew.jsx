@@ -7,8 +7,7 @@ import { connect } from 'react-redux';
 
 // Components
 import { crearUsuario } from '../../actions/moduloUsuarioAdministrador';
-import { get_tipo_postgrado } from '../../actions/moduloAsignaturas';  // Esto deberia ser de un action mas generico (se repite en modalAsignaturaNew)
-import { get_estado_estudiante } from '../../actions/moduloUsuarioAdministrador';  
+  
 
 class ModalUsuarioNew extends React.Component {
   constructor(props) {
@@ -44,8 +43,7 @@ class ModalUsuarioNew extends React.Component {
     this.handleChangeExtraData = this.handleChangeExtraData.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
 
-    this.props.get_tipo_postgrado();
-    this.props.get_estado_estudiante();
+    
 
     
   }
@@ -303,8 +301,6 @@ const mapStateToProps = (state)=> {
 const mapDispatchToProps = (dispatch) => {
   return bindActionCreators({
     crearUsuario: crearUsuario,
-    get_tipo_postgrado: get_tipo_postgrado,
-    get_estado_estudiante: get_estado_estudiante,
     }, 
     dispatch 
   )

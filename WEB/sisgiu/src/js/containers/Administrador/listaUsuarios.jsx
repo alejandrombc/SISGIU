@@ -16,6 +16,9 @@ import ModalUsuarioNew from './modalUsuarioNew';
 import {get_usuarios} from '../../actions/moduloUsuarioAdministrador';
 import Paginacion from '../../components/pagination';
 
+import { get_tipo_postgrado } from '../../actions/moduloAsignaturas';  
+import { get_estado_estudiante } from '../../actions/moduloUsuarioAdministrador';
+
 
 const KEYS_TO_FILTERS = ['first_name', 'last_name', 'cedula'];
 const usuarios_por_pagina = 10;
@@ -24,19 +27,20 @@ const usuarios_por_pagina = 10;
 class ListaUsuarios extends Component{
 
   constructor(props) {
-      super(props);
-      this.state = {
-        visible: true,
-        searchTerm: '',
-        loading: false
-      }
-      
-      this.updateLoading = this.updateLoading.bind(this);
-      this.props.get_usuarios(this.props.tipo_usuario, false);
-      this.onDismiss = this.onDismiss.bind(this);
-      this.searchUpdated = this.searchUpdated.bind(this);
+    super(props);
+    this.state = {
+      visible: true,
+      searchTerm: '',
+      loading: false
+    }
+    
+    this.updateLoading = this.updateLoading.bind(this);
+    this.props.get_usuarios(this.props.tipo_usuario, false);
+    this.onDismiss = this.onDismiss.bind(this);
+    this.searchUpdated = this.searchUpdated.bind(this);
 
-
+    this.props.get_tipo_postgrado();
+    this.props.get_estado_estudiante();
   }
 
   onDismiss() {
@@ -196,7 +200,11 @@ const mapStateToProps = (state)=> {
 
 
 const mapDispatchToProps = (dispatch) => {
-  return bindActionCreators({get_usuarios: get_usuarios}, dispatch )
+  return bindActionCreators({
+    get_usuarios: get_usuarios,
+    get_tipo_postgrado: get_tipo_postgrado,
+    get_estado_estudiante: get_estado_estudiante,
+  }, dispatch )
 }
 
 
