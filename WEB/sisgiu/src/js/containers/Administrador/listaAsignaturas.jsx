@@ -155,9 +155,14 @@ class ListaAsignaturas extends Component{
               </Table>
 
               <Row >
-                <Col md='12' sm='12' xs='12'>
-                  <Paginacion cant_usuarios={cant_asignaturas} item_por_pagina={asignaturas_por_pagina}/>
+                <Col lg='4' md='4' sm='3' xs='1'> </Col>
+                <Col lg='4' md='4' sm='6' xs='10'>
+                  <br />
+                  {this.state.searchTerm === '' &&
+                    <Paginacion cant_usuarios={cant_asignaturas} item_por_pagina={asignaturas_por_pagina}/>
+                  }
                 </Col>
+                <Col lg='4' md='4' sm='3' xs='1'> </Col>
               </Row>
 
       	</div>

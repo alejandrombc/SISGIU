@@ -21,7 +21,7 @@ import { get_estado_estudiante } from '../../actions/moduloUsuarioAdministrador'
 
 
 const KEYS_TO_FILTERS = ['first_name', 'last_name', 'cedula'];
-const usuarios_por_pagina = 1;
+const usuarios_por_pagina = 10;
 
 
 class ListaUsuarios extends Component{
