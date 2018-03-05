@@ -21,7 +21,7 @@ import { get_estado_estudiante } from '../../actions/moduloUsuarioAdministrador'
 
 
 const KEYS_TO_FILTERS = ['first_name', 'last_name', 'cedula'];
-const usuarios_por_pagina = 10;
+const usuarios_por_pagina = 1;
 
 
 class ListaUsuarios extends Component{
@@ -160,7 +160,10 @@ class ListaUsuarios extends Component{
               <Row >
                 <Col lg='4' md='4' sm='3' xs='1'> </Col>
                 <Col lg='4' md='4' sm='6' xs='10'>
-                  <Paginacion cant_usuarios={cant_usuarios} item_por_pagina={usuarios_por_pagina}/>
+                  <br />
+                  {this.state.searchTerm === '' &&
+                    <Paginacion cant_usuarios={cant_usuarios} item_por_pagina={usuarios_por_pagina}/>
+                  }
                 </Col>
                 <Col lg='4' md='4' sm='3' xs='1'> </Col>
               </Row>

@@ -3,6 +3,7 @@ import React, {Component} from 'react';
 import { Row, Col, TabContent, TabPane, Nav, NavItem, NavLink} from 'reactstrap';
 import '../../../css/moduloUsuarioAdministrador.css'; 
 import classnames from 'classnames';
+import { connect } from 'react-redux';
 
 // Components
 import ListaUsuarios from './listaUsuarios';
@@ -21,6 +22,7 @@ class ModuloUsuarioAdministrador extends Component{
 
   toggle(tab) {
     if (this.state.activeTab !== tab) {
+      this.props.pagination['pagina'] = 1; //Poner la pagina en 1 al cambiar de tab
       this.setState({
         activeTab: tab
       });
@@ -105,7 +107,13 @@ class ModuloUsuarioAdministrador extends Component{
   }
 }
 
+const mapStateToProps = (state)=> {
+  return{
+    pagination: state.paginacion,
+  };
+}
 
-export default ModuloUsuarioAdministrador;
+
+export default connect(mapStateToProps)(ModuloUsuarioAdministrador);
 
 

@@ -12,7 +12,8 @@ class Paginacion extends Component {
   render() {
 
     var lista = [];
-
+    let lastArrow = false;
+    let firstArrow = false; 
     if (this.props.cant_usuarios ) {
 
       let items_por_pagina = this.props.item_por_pagina;
@@ -48,7 +49,7 @@ class Paginacion extends Component {
       var paginas = () => {
         for (var i = init; i <= end; i++) {
           
-          if ({i} === 1) {
+          if (i === this.props.pagination['pagina']) {
             lista = lista.concat(
               <PaginationItem active key={i} onClick={(e)=>(
                 this.props.setCurrentPage( parseInt(e.target.innerHTML, 10) )
@@ -75,17 +76,24 @@ class Paginacion extends Component {
         return lista;
       }
 
+    if(this.props.pagination['pagina'] === total){ lastArrow = true;}
+    if(this.props.pagination['pagina'] === 1){ firstArrow = true;}
+
     }
 
 
 
     return (
       <Pagination size='sm'>
-        <PaginationItem disabled>
+        <PaginationItem disabled={firstArrow} onClick={(e)=>(
+                this.props.setCurrentPage( 1 )
+                )}>
           <PaginationLink previous href="#" />
         </PaginationItem>
         {paginas()}
-        <PaginationItem>
+        <PaginationItem disabled={lastArrow} onClick={(e)=>(
+                this.props.setCurrentPage( total )
+                )}>
           <PaginationLink next href="#" />
         </PaginationItem>
       </Pagination>
