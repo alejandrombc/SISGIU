@@ -8,8 +8,6 @@ import { connect } from 'react-redux';
 class NavBarAdministrador extends Component{
 
   render() {
-    console.log(this.props.adminUser);
-
     if (this.props.adminUser.cargado || (this.props.adminUser.cargado_estado_estudiante && this.props.adminUser.cargado_tipo_postgrado) ) {
       return (
         <Nav navbar >                
@@ -30,7 +28,7 @@ class NavBarAdministrador extends Component{
           </NavItem>
 
           <NavItem>
-            <NavLink href="/#">Periodos</NavLink>
+            <NavLink href="/moduloPeriodos">Periodos</NavLink>
           </NavItem>
 
         </Nav>

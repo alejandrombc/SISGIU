@@ -8,6 +8,8 @@ import InicioAdministrador from './Administrador/inicioAdministrador';
 import PerfilUsuario from '../components/perfilUsuario';
 import ModuloUsuarioAdministrador from './Administrador/moduloUsuarioAdministrador';
 import ModuloAsignaturas from './Administrador/moduloAsignaturas';
+import ModuloPeriodos from './Administrador/moduloPeriodos';
+
 
 
 class Content extends Component{
@@ -48,6 +50,10 @@ class Content extends Component{
 		            	{this.props.pestana === "moduloAsignaturas" &&
 		                	<ModuloAsignaturas/>
 		            	}
+
+		            	{this.props.pestana === "moduloPeriodos" &&
+		                	<ModuloPeriodos/>
+		            	} 
 
 
 

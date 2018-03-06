@@ -8,17 +8,20 @@ import {bindActionCreators} from 'redux';
 import { PulseLoader } from 'halogenium'; //Spinner
 
 // Components
-import ModalAsignaturaNew from './modalAsignaturaNew';
-import ModalAsignaturaEdit from './modalAsignaturaEdit';
-import ModalAsignaturaDelete from './modalAsignaturaDelete';
-import {get_asignaturas} from '../../actions/moduloAsignaturas';
+// import ModalPeriodoNew from './modalPeriodoNew';
+// import ModalPeriodoEdit from './modalPeriodoEdit';
+// import ModalPeriodoDelete from './modalPeriodoDelete';
+// import ModalPeriodoLaunch from './modalPeriodoLaunch';
+import {get_periodos} from '../../actions/moduloPeriodos';
+import {get_tipo_postgrado} from '../../actions/moduloPeriodos';
+
 import Paginacion from '../../components/pagination';
 
-const KEYS_TO_FILTERS = ['codigo', 'nombre'];
-const asignaturas_por_pagina = 10;
+const KEYS_TO_FILTERS = ['id', 'tipo_postgrado'];
+const periodos_por_pagina = 10;
 
 
-class ListaAsignaturas extends Component{
+class ListaPeriodos extends Component{
 
   constructor(props) {
       super(props);
@@ -28,7 +31,8 @@ class ListaAsignaturas extends Component{
         loading: false,
       }
       
-      this.props.get_asignaturas(false);
+      this.props.get_periodos(false);
+      this.props.get_tipo_postgrado();
       this.updateLoading = this.updateLoading.bind(this);
       this.onDismiss = this.onDismiss.bind(this);
       this.searchUpdated = this.searchUpdated.bind(this)
@@ -56,45 +60,50 @@ class ListaAsignaturas extends Component{
   render(){
 
       let listItems = '';
-      if(this.props.adminUser.lista_asignaturas && this.props.adminUser.lista_asignaturas.length > 0)
+      if(this.props.adminUser.lista_periodos && this.props.adminUser.lista_periodos.length > 0)
       {
-        let cant_asignaturas = this.props.adminUser.lista_asignaturas.length;
-        let asignaturas = [];
+        let cant_periodos = this.props.adminUser.lista_periodos.length;
+        let periodos = [];
 
-        var init = this.props.pagination.pagina*asignaturas_por_pagina-asignaturas_por_pagina;
-        var end = this.props.pagination.pagina*asignaturas_por_pagina;
+        var init = this.props.pagination.pagina*periodos_por_pagina-periodos_por_pagina;
+        var end = this.props.pagination.pagina*periodos_por_pagina;
 
 
-        //Si se esta realizando una busqueda uso toda la lista de asignaturas, sino no
+        //Si se esta realizando una busqueda uso toda la lista de periodos, sino no
         if(this.state.searchTerm === ''){
           
           for (var i = init; i < end; i++) {
-            if (this.props.adminUser.lista_asignaturas[i]) {
-              asignaturas.push(this.props.adminUser.lista_asignaturas[i]);
+            if (this.props.adminUser.lista_periodos[i]) {
+              periodos.push(this.props.adminUser.lista_periodos[i]);
             }
           }
 
         } else {
-          for (i = 0; i < cant_asignaturas; i++) {
-            asignaturas.push(this.props.adminUser.lista_asignaturas[i]);
+          for (i = 0; i < cant_periodos; i++) {
+            periodos.push(this.props.adminUser.lista_periodos[i]);
           }
         }
 
         
 
-        const filteredAsignaturas = asignaturas.filter(createFilter(this.state.searchTerm, KEYS_TO_FILTERS));
+        const filteredPeriodos = periodos.filter(createFilter(this.state.searchTerm, KEYS_TO_FILTERS));
 
-        listItems = filteredAsignaturas.map((asignatura) =>
-          <tr key={asignatura['codigo']}>
-            <td>{asignatura['codigo']}</td>
-            <td>{asignatura['nombre']}</td>
+        listItems = filteredPeriodos.map((periodo) =>
+          <tr key={periodo['id']}>
+            <td>No iniciado</td>
+            <td>{periodo['tipo_postgrado']}</td>
             <td>  
               <Row >
                 <Col md={{ size: 'auto', offset: 3 }} className='botones'>
                   
-                  <ModalAsignaturaEdit onDismiss={this.onDismiss} triggerParentUpdate={this.updateLoading} asignatura={asignatura} />
-                  <ModalAsignaturaDelete onDismiss={this.onDismiss} triggerParentUpdate={this.updateLoading} asignatura={asignatura} />
+                  {
+                  /*
+                  <ModalPeriodoEdit onDismiss={this.onDismiss} triggerParentUpdate={this.updateLoading} periodo={periodo} />
+                  <ModalPeriodoDelete onDismiss={this.onDismiss} triggerParentUpdate={this.updateLoading} periodo={periodo} />
+                  <ModalPeriodoLaunch onDismiss={this.onDismiss} triggerParentUpdate={this.updateLoading} periodo={periodo} />
 
+                   */
+                 } 
                 </Col>
               </Row>
             </td>
@@ -126,10 +135,10 @@ class ListaAsignaturas extends Component{
               }
               <Row>
                 <Col md='4'>
-                  <ModalAsignaturaNew onDismiss={this.onDismiss} triggerParentUpdate={this.updateLoading}  />
+                  {/* <ModalPeriodoNew onDismiss={this.onDismiss} triggerParentUpdate={this.updateLoading}   /> */}
                 </Col>
                 <Col md='8'>
-                  <SearchInput className="searchBox" placeholder="Buscar asignatura..." onChange={this.searchUpdated} />
+                  <SearchInput className="searchBox" placeholder="Buscar periodo..." onChange={this.searchUpdated} />
                 </Col>
               </Row>
               <br />
@@ -139,8 +148,8 @@ class ListaAsignaturas extends Component{
               <Table bordered hover responsive striped size="sm">
                 <thead>
                   <tr>
-                    <th>Código</th>
-                    <th>Nombre</th>
+                    <th>Periodo</th>
+                    <th>Postgrado</th>
                     <th>Acción</th>
                   </tr>
                 </thead>
@@ -157,7 +166,7 @@ class ListaAsignaturas extends Component{
                 <Col lg='4' md='4' sm='6' xs='10'>
                   <br />
                   {this.state.searchTerm === '' &&
-                    <Paginacion cant_usuarios={cant_asignaturas} item_por_pagina={asignaturas_por_pagina}/>
+                    <Paginacion cant_usuarios={cant_periodos} item_por_pagina={periodos_por_pagina}/>
                   }
                 </Col>
                 <Col lg='4' md='4' sm='3' xs='1'> </Col>
@@ -172,17 +181,13 @@ class ListaAsignaturas extends Component{
             <Row>
               <Col md='12'>
                 <center>
-                <h4>No existe ninguna asignatura creada</h4>
+                <h4>No existe ningún periodo guardado</h4>
                 </center>
               </Col>
             </Row>
 
             <Row>
-              <Col md='12'>
-              {/*
-                <ModalUsuarioNew tipo_usuario={this.props.tipo_usuario}/>
-              */}
-              </Col>
+              <Col md='12'></Col>
             </Row>
 
           </div>
@@ -201,10 +206,10 @@ const mapStateToProps = (state)=> {
 
 
 const mapDispatchToProps = (dispatch) => {
-  return bindActionCreators({get_asignaturas: get_asignaturas}, dispatch )
+  return bindActionCreators({get_tipo_postgrado: get_tipo_postgrado, get_periodos: get_periodos}, dispatch )
 }
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(ListaAsignaturas);
+export default connect(mapStateToProps, mapDispatchToProps)(ListaPeriodos);
 
 

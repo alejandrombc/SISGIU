@@ -7,6 +7,7 @@ const initialState = {
 	bad_input: false, 
 	lista_asignaturas: [], 
 	lista_postgrados: [], 
+	lista_periodos : [],
 	lista_tipoAsignaturas: [],
 	lista_estadoEstudiante: [],
 	cargado: false,
@@ -90,6 +91,25 @@ export default function (state=initialState, action) {
 		case "ASIGNATURAS_ERROR":
 			nuevo_estado['lista_asignaturas'] = action.payload['lista_asignaturas'];
 			nuevo_estado['bad_input'] = true;
+			return nuevo_estado;
+
+		case "GET_PERIODOS_EXITOSO":
+			nuevo_estado['lista_periodos'] = action.payload['lista_periodos'];
+			nuevo_estado['edit'] = false;
+			nuevo_estado['cargado'] = true;
+			return nuevo_estado;
+
+		case "EDIT_PERIODO_EXITOSO":
+			nuevo_estado['edit'] = true;
+			nuevo_estado['bad_input'] = false;
+			nuevo_estado['cargado'] = true;
+			nuevo_estado['lista_periodos'] = action.payload['lista_periodos'];
+			return nuevo_estado;
+
+		case "PERIODO_ERROR":
+			nuevo_estado['lista_periodos'] = action.payload['lista_periodos'];
+			nuevo_estado['bad_input'] = true;
+			nuevo_estado['cargado'] = true;
 			return nuevo_estado;
 
 		default:
