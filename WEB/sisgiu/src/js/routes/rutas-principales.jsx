@@ -9,7 +9,9 @@ import Login from '../containers/login';
 import RecuperarContrasenaForm from '../containers/recuperarContrasenaForm';
 import NuevaContrasenaForm from '../containers/nuevaContrasenaForm';
 import Inicio from '../containers/inicio';
+import DualList from '../containers/Administrador/dualList';
 import Page404 from '../components/page404';
+
 
 
 
@@ -88,6 +90,16 @@ class RutasPrincipales extends React.Component {
 							  	<Redirect to="/login"/>
 							  )
 						)}/>
+
+						<Route path="/dualList" render={(props) => (
+							  this.props.token['loggedIn'] ? (
+							    <DualList />
+							  ) : (
+							  	<Redirect to="/login"/>
+							  )
+						)}/>
+
+
 
 					   	<Route component={Page404} ></Route>
 					</Switch>
