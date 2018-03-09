@@ -179,9 +179,7 @@ class ListaAsignaturas extends Component{
 
             <Row>
               <Col md='12'>
-              {/*
-                <ModalUsuarioNew tipo_usuario={this.props.tipo_usuario}/>
-              */}
+                <ModalAsignaturaNew onDismiss={this.onDismiss} triggerParentUpdate={this.updateLoading}  />
               </Col>
             </Row>
 

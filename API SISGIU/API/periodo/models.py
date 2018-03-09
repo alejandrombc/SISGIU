@@ -15,8 +15,11 @@ class EstadoPeriodo(models.Model):
 class Periodo(models.Model):
 	estado_periodo = models.ForeignKey(EstadoPeriodo, on_delete=models.SET_NULL, null=True)
 	tipo_postgrado = models.ForeignKey(TipoPostgrado, on_delete=models.SET_NULL, null=True)
-	nombre = models.CharField(max_length=50, default='')
+	descripcion = models.CharField(max_length=50, default='')
 	class Meta:
 		db_table = 'periodo'
+
+	def __str__(self):
+		return self.descripcion
 
 	

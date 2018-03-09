@@ -8,12 +8,13 @@ import {bindActionCreators} from 'redux';
 import { PulseLoader } from 'halogenium'; //Spinner
 
 // Components
-// import ModalPeriodoNew from './modalPeriodoNew';
+import ModalPeriodoNew from './modalPeriodoNew';
 // import ModalPeriodoEdit from './modalPeriodoEdit';
 // import ModalPeriodoDelete from './modalPeriodoDelete';
 // import ModalPeriodoLaunch from './modalPeriodoLaunch';
 import {get_periodos} from '../../actions/moduloPeriodos';
 import {get_tipo_postgrado} from '../../actions/moduloPeriodos';
+import { get_estado_periodo} from '../../actions/moduloPeriodos';
 
 import Paginacion from '../../components/pagination';
 
@@ -33,6 +34,7 @@ class ListaPeriodos extends Component{
       
       this.props.get_periodos(false);
       this.props.get_tipo_postgrado();
+      this.props.get_estado_periodo();
       this.updateLoading = this.updateLoading.bind(this);
       this.onDismiss = this.onDismiss.bind(this);
       this.searchUpdated = this.searchUpdated.bind(this)
@@ -135,7 +137,7 @@ class ListaPeriodos extends Component{
               }
               <Row>
                 <Col md='4'>
-                  {/* <ModalPeriodoNew onDismiss={this.onDismiss} triggerParentUpdate={this.updateLoading}   /> */}
+                  <ModalPeriodoNew onDismiss={this.onDismiss} triggerParentUpdate={this.updateLoading}   /> 
                 </Col>
                 <Col md='8'>
                   <SearchInput className="searchBox" placeholder="Buscar periodo..." onChange={this.searchUpdated} />
@@ -187,7 +189,9 @@ class ListaPeriodos extends Component{
             </Row>
 
             <Row>
-              <Col md='12'></Col>
+              <Col md='12'>
+                <ModalPeriodoNew onDismiss={this.onDismiss} triggerParentUpdate={this.updateLoading}/>
+              </Col>
             </Row>
 
           </div>
@@ -206,7 +210,11 @@ const mapStateToProps = (state)=> {
 
 
 const mapDispatchToProps = (dispatch) => {
-  return bindActionCreators({get_tipo_postgrado: get_tipo_postgrado, get_periodos: get_periodos}, dispatch )
+  return bindActionCreators({
+    get_tipo_postgrado: get_tipo_postgrado, 
+    get_periodos: get_periodos,
+    get_estado_periodo: get_estado_periodo,
+  }, dispatch )
 }
 
 

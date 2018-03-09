@@ -13,6 +13,7 @@ const initialState = {
 	cargado: false,
 	cargado_estado_estudiante: false,
 	cargado_tipo_postgrado: false,
+	lista_estadoPeriodo: [],
 
 };
 
@@ -110,6 +111,10 @@ export default function (state=initialState, action) {
 			nuevo_estado['lista_periodos'] = action.payload['lista_periodos'];
 			nuevo_estado['bad_input'] = true;
 			nuevo_estado['cargado'] = true;
+			return nuevo_estado;
+
+		case "GET_ESTADO_PERIODO_EXITOSO":
+			nuevo_estado['lista_estadoPeriodo'] = action.payload['lista_estadoPeriodo'];
 			return nuevo_estado;
 
 		default:

@@ -183,7 +183,7 @@ class ListaUsuarios extends Component{
 
             <Row>
               <Col md='12'>
-                <ModalUsuarioNew tipo_usuario={this.props.tipo_usuario}/>
+                <ModalUsuarioNew onDismiss={this.onDismiss} triggerParentUpdate={this.updateLoading} tipo_usuario={this.props.tipo_usuario} visible={this.state.visible}/>
               </Col>
             </Row>
 
