@@ -29,6 +29,7 @@ class Usuario(AbstractUser):
 
 	class Meta:
 		ordering = ['last_name', 'segundo_apellido']
+		db_table = 'usuario'
 
 
 class Estudiante(models.Model):
@@ -54,6 +55,7 @@ class Estudiante(models.Model):
 
 	class Meta:
 		ordering = ['usuario__last_name', 'usuario__segundo_apellido']
+		db_table = 'estudiante'
 
 
 
@@ -62,9 +64,13 @@ class TipoPostgrado(models.Model):
 
 	def __str__(self):
 		return self.tipo
+	class Meta:
+		db_table = 'tipo_postgrado'
 
 class EstadoEstudiante(models.Model):
 	estado = models.CharField(max_length=20)
+	class Meta:
+		db_table = 'estado_estudiante'
 
 
 class PersonalDocente(models.Model):
@@ -80,6 +86,7 @@ class PersonalDocente(models.Model):
 
 	class Meta:
 		ordering = ['usuario__last_name', 'usuario__segundo_apellido']
+		db_table = 'personal_docente'
 
 
 class PersonalAdministrativo(models.Model):
@@ -89,4 +96,5 @@ class PersonalAdministrativo(models.Model):
 			primary_key=True)
 	class Meta:
 		ordering = ['usuario__last_name', 'usuario__segundo_apellido']
+		db_table = 'personal_administrativo'
 

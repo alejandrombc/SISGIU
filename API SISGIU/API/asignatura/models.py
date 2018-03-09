@@ -8,6 +8,8 @@ class TipoAsignatura(models.Model):
 
 	def __str__(self):
 		return self.nombre
+	class Meta:
+		db_table = 'tipo_asignatura'
 
 #Tabla de asignatura
 class Asignatura(models.Model):
@@ -16,3 +18,5 @@ class Asignatura(models.Model):
 	tipo_asignatura = models.ForeignKey(TipoAsignatura, on_delete=models.SET_NULL, null=True)
 	tipo_postgrado = models.ForeignKey(TipoPostgrado, on_delete=models.SET_NULL, null=True)
 	unidad_credito = models.IntegerField()
+	class Meta:
+		db_table = 'asignatura'

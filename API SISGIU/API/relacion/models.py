@@ -12,6 +12,8 @@ class PeriodoEstudiante(models.Model):
 	periodo = models.ForeignKey(Periodo, on_delete=models.CASCADE)
 	estudiante = models.ForeignKey(Estudiante, on_delete=models.CASCADE)
 	pagado = models.BooleanField()
+	class Meta:
+		db_table = 'periodo_estudiante'
 
 
 DIAS_DE_LA_SEMANA = (
@@ -32,6 +34,8 @@ class DocenteAsignatura(models.Model):
 	aula = models.IntegerField()
 	horario_dia = models.CharField(max_length=1, choices=DIAS_DE_LA_SEMANA)
 	horario_hora = models.CharField(max_length=15)
+	class Meta:
+		db_table = 'docente_asignatura'
 
 
 # Tabla intermedia entre Estudiante y Asignatura
@@ -39,6 +43,8 @@ class EstudianteAsignatura(models.Model):
 	periodo_estudiante = models.ForeignKey(PeriodoEstudiante, on_delete=models.CASCADE)
 	asignatura = models.ForeignKey(Asignatura, on_delete=models.CASCADE)
 	nota_definitiva = models.IntegerField()
+	class Meta:
+		db_table = 'estudiante_asignatura'
 
 
 # Tabla intermedia entre Estudiante y Tramite
@@ -49,8 +55,12 @@ class EstudianteTramite(models.Model):
 	fecha_tope = models.DateField()
 	estado_tramite = models.ForeignKey(EstadoTramite, on_delete=models.CASCADE)
 	mensaje = models.TextField()
+	class Meta:
+		db_table = 'estudiante_tramite'
 
 # Tabla intermedia entre Asignatura y TipoPostgrado
 class AsignaturaTipoPostgrado(models.Model):
 	asignatura = models.ForeignKey(Asignatura, on_delete=models.CASCADE)
 	tipo_postgrado = models.ForeignKey(TipoPostgrado, on_delete=models.CASCADE)
+	class Meta:
+		db_table = 'asignatura_tipoPostgrado'

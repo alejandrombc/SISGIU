@@ -26,6 +26,7 @@ class DualList extends React.Component {
  
 
   setCreditos(value){
+    console.log(value);
     var j = 0;
     var values = [];
     while(j < value.length){
