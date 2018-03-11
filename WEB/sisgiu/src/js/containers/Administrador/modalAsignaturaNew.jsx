@@ -2,8 +2,10 @@ import React from 'react';
 import { Input, Form, FormGroup, Label, Row, Col, Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import FontAwesomeIcon from 'react-fontawesome';
 import '../../../css/moduloUsuarioAdministrador.css';
+import '../../../css/select.css';
 import {bindActionCreators} from 'redux';
 import { connect } from 'react-redux';
+import Select from 'react-select';
 
 // Components
 import { get_tipo_postgrado } from '../../actions/moduloAsignaturas';
@@ -19,17 +21,24 @@ class ModalAsignaturaNew extends React.Component {
       nombre: null,
       unidad_credito: null,
       tipo_asignatura: null,
-      tipo_postgrado: null
+      tipo_postgrado: null,
+      value: [],
     };
 
     this.toggle = this.toggle.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleSelectChange = this.handleSelectChange.bind(this);
 
     this.props.get_tipo_postgrado();
     this.props.get_tipo_asignatura();
 
 
+  }
+
+
+  handleSelectChange (value) {
+    this.setState({ value });
   }
 
   toggle() {
@@ -57,6 +66,7 @@ class ModalAsignaturaNew extends React.Component {
       unidad_credito: null,
       tipo_asignatura: null,
       tipo_postgrado: null,
+      value:[]
     });
     this.props.triggerParentUpdate();
     this.toggle();
@@ -66,7 +76,9 @@ class ModalAsignaturaNew extends React.Component {
 
 
   render() {
-
+    const { value } = this.state;
+    var options = JSON.parse(JSON.stringify(this.props.adminUser['lista_asignaturas']).split('"codigo":').join('"value":')); //Rename key 
+    options = JSON.parse(JSON.stringify(options).split('"nombre":').join('"label":')); //Rename key 
     
     let listPostgrados = '';
     let listTipoAsignaturas = '';
@@ -120,8 +132,8 @@ class ModalAsignaturaNew extends React.Component {
                           </FormGroup>
 
                           <FormGroup row>
-                            <Label for="tipo_asignatura" sm={4}>Tipo</Label>
-                            <Col sm={8}>
+                            <Label for="tipo_asignatura" sm={5}>Tipo</Label>
+                            <Col sm={7}>
                               <Input bsSize="sm" value={this.state.value} defaultValue={this.state['tipo_asignatura']} onChange={this.handleChange} type="select" name="tipo_asignatura" id="tipo_asignatura" required>
                                 <option value={null} name={-1}> {' '} </option>
                                 {listTipoAsignaturas}
@@ -130,12 +142,31 @@ class ModalAsignaturaNew extends React.Component {
                           </FormGroup>
 
                           <FormGroup row>
-                            <Label for="tipo_postgrado" sm={4}>Postgrado</Label>
-                            <Col sm={8}>
+                            <Label for="tipo_postgrado" sm={5}>Postgrado</Label>
+                            <Col sm={7}>
                               <Input bsSize="sm" value={this.state.value} defaultValue={this.state['tipo_postgrado']} onChange={this.handleChange} type="select" name="tipo_postgrado" id="tipo_postgrado" required>
                                 <option value={null} name={-1}> {' '} </option>
                                 {listPostgrados}
                               </Input>
+                            </Col>
+                          </FormGroup>
+
+
+                          <FormGroup row>
+                            <Label for="tipo_postgrado" sm={5}>Prelaciones</Label>
+                            <Col sm={7}>
+                                  <Select
+                                    closeOnSelect={true}
+                                    disabled={false}
+                                    multi
+                                    onChange={this.handleSelectChange}
+                                    options={options}
+                                    placeholder="Seleccione alguna materia"
+                                    removeSelected={true}
+                                    rtl={false}
+                                    simpleValue
+                                    value={value}
+                                  />
                             </Col>
                           </FormGroup>
 
