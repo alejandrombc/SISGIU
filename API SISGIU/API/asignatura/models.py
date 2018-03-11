@@ -20,3 +20,10 @@ class Asignatura(models.Model):
 	unidad_credito = models.IntegerField()
 	class Meta:
 		db_table = 'asignatura'
+
+
+class PrelacionAsignatura(models.Model):
+	asignatura_objetivo = models.ForeignKey(Asignatura, on_delete=models.CASCADE, null=True, related_name='%(class)s_asignatura_objetivo')
+	asignatura_prela = models.ForeignKey(Asignatura, on_delete=models.CASCADE, null=True, related_name='%(class)s_asignatura_prela')
+	class Meta:
+		db_table = 'prelacion_asignatura'

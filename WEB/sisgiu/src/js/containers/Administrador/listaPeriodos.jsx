@@ -9,7 +9,7 @@ import { PulseLoader } from 'halogenium'; //Spinner
 
 // Components
 import ModalPeriodoNew from './modalPeriodoNew';
-// import ModalPeriodoEdit from './modalPeriodoEdit';
+import ModalPeriodoEdit from './modalPeriodoEdit';
 // import ModalPeriodoDelete from './modalPeriodoDelete';
 // import ModalPeriodoLaunch from './modalPeriodoLaunch';
 import {get_periodos} from '../../actions/moduloPeriodos';
@@ -98,9 +98,9 @@ class ListaPeriodos extends Component{
               <Row >
                 <Col md={{ size: 'auto', offset: 3 }} className='botones'>
                   
+                  <ModalPeriodoEdit onDismiss={this.onDismiss} triggerParentUpdate={this.updateLoading} periodo={periodo} />
                   {
                   /*
-                  <ModalPeriodoEdit onDismiss={this.onDismiss} triggerParentUpdate={this.updateLoading} periodo={periodo} />
                   <ModalPeriodoDelete onDismiss={this.onDismiss} triggerParentUpdate={this.updateLoading} periodo={periodo} />
                   <ModalPeriodoLaunch onDismiss={this.onDismiss} triggerParentUpdate={this.updateLoading} periodo={periodo} />
 
