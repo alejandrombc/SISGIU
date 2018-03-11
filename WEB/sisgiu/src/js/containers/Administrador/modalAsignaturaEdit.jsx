@@ -4,6 +4,7 @@ import FontAwesomeIcon from 'react-fontawesome';
 import '../../../css/moduloUsuarioAdministrador.css';
 import {bindActionCreators} from 'redux';
 import { connect } from 'react-redux';
+import Select from 'react-select';
 
 // Components
 import { editar_asignatura } from '../../actions/moduloAsignaturas';
@@ -19,6 +20,7 @@ class ModalAsignaturaEdit extends React.Component {
       unidad_credito: this.props.asignatura['unidad_credito'],
       tipo_asignatura: this.props.asignatura['tipo_asignatura'],
       tipo_postgrado: this.props.asignatura['tipo_postgrado'],
+      value: [],
     };
 
     this.toggle = this.toggle.bind(this);
@@ -50,6 +52,11 @@ class ModalAsignaturaEdit extends React.Component {
   }
 
   render() {
+
+    const { value } = this.state;
+    var options = JSON.parse(JSON.stringify(this.props.adminUser['lista_asignaturas']).split('"codigo":').join('"value":')); //Rename key 
+    options = JSON.parse(JSON.stringify(options).split('"nombre":').join('"label":')); //Rename key 
+    
     let listPostgrados = '';
     let listTipoAsignaturas = '';
     
@@ -102,8 +109,8 @@ class ModalAsignaturaEdit extends React.Component {
                           </FormGroup>
 
                           <FormGroup row>
-                            <Label for="tipo_asignatura" sm={4}>Tipo</Label>
-                            <Col sm={8}>
+                            <Label for="tipo_asignatura" sm={5}>Tipo</Label>
+                            <Col sm={7}>
                               <Input bsSize="sm" value={this.state.value} defaultValue={this.state['tipo_asignatura']} onChange={this.handleChange} type="select" name="tipo_asignatura" id="tipo_asignatura" required>
                                 {listTipoAsignaturas}
                               </Input>
@@ -111,8 +118,8 @@ class ModalAsignaturaEdit extends React.Component {
                           </FormGroup>
 
                           <FormGroup row>
-                            <Label for="tipo_postgrado" sm={4}>Postgrado</Label>
-                            <Col sm={8}>
+                            <Label for="tipo_postgrado" sm={5}>Postgrado</Label>
+                            <Col sm={7}>
                               <Input bsSize="sm" value={this.state.value} defaultValue={this.state['tipo_postgrado']} onChange={this.handleChange} type="select" name="tipo_postgrado" id="tipo_postgrado" required>
                                 {listPostgrados}
                               </Input>
@@ -120,6 +127,23 @@ class ModalAsignaturaEdit extends React.Component {
                           </FormGroup>
 
 
+                          <FormGroup row>
+                            <Label for="tipo_postgrado" sm={5}>Prelaciones</Label>
+                            <Col sm={7}>
+                                  <Select
+                                    closeOnSelect={true}
+                                    disabled={false}
+                                    multi
+                                    onChange={this.handleSelectChange}
+                                    options={options}
+                                    placeholder="Seleccione alguna materia"
+                                    removeSelected={true}
+                                    rtl={false}
+                                    simpleValue
+                                    value={value}
+                                  />
+                            </Col>
+                          </FormGroup>
                           
                           
                       </Col>
