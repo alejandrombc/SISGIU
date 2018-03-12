@@ -9,6 +9,7 @@ from asignatura.views import (
 	AsignaturaDetailAPIView,
 	AsignaturaUpdateAPIView,
 	AsignaturaDeleteAPIView,
+    PrelacionAsignaturaListCreateAPIView,
 	)
 
 urlpatterns = format_suffix_patterns([
@@ -31,6 +32,21 @@ urlpatterns = format_suffix_patterns([
 
     # Asignaturas cursadas por un estudiante
     url(r'^api/asignaturas/estudiante/(?P<cedula>[0-9]{8})/$', AsignaturaListCreateAPIView.get_asignaturas_por_estudiante, name='asignaturas-por-estudiante'),
+
+    # Asignaturas cursadas por un estudiante
+    url(r'^api/asignaturas/estudiante/(?P<cedula>[0-9]{8})/$', AsignaturaListCreateAPIView.get_asignaturas_por_estudiante, name='asignaturas-por-estudiante'),
+
+
+    url(r'^api/asignaturas_necesarias/all/$', PrelacionAsignaturaListCreateAPIView.get_all_asignaturas_necesarias, name='PrelacionAsignatura-all'),
+
+    #Asignaturas preladas
+    url(r'^api/asignaturas_necesarias/codigo/(?P<codigo>[0-9]{4})/$', PrelacionAsignaturaListCreateAPIView.get_asignaturas_necesarias, name='PrelacionAsignatura-detail'),
+
+    url(r'^api/asignaturas_necesarias/$', PrelacionAsignaturaListCreateAPIView.post_prelacion, name='PrelacionAsignatura-create'),
+
+    url(r'^api/asignaturas_necesarias/delete/codigo/(?P<codigo>[0-9]{4})/$', PrelacionAsignaturaListCreateAPIView.delete_asignaturas_necesarias, name='PrelacionAsignatura-delete-detail'),
+
+    url(r'^api/asignaturas_necesarias/delete/all/$', PrelacionAsignaturaListCreateAPIView.delete_all_asignaturas_necesarias, name='PrelacionAsignatura-delete-all'),
 
 
 ])

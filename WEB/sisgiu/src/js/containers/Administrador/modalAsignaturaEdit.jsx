@@ -20,11 +20,12 @@ class ModalAsignaturaEdit extends React.Component {
       unidad_credito: this.props.asignatura['unidad_credito'],
       tipo_asignatura: this.props.asignatura['tipo_asignatura'],
       tipo_postgrado: this.props.asignatura['tipo_postgrado'],
-      value: [],
+      value: this.props.prelacion,
     };
 
     this.toggle = this.toggle.bind(this);
     this.handleChange = this.handleChange.bind(this);
+    this.handleSelectChange = this.handleSelectChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
 
   }
@@ -35,6 +36,10 @@ class ModalAsignaturaEdit extends React.Component {
       modal: !this.state.modal
     });
     if(!this.state.modal) { this.props.onDismiss(); };
+  }
+
+  handleSelectChange (value) {
+    this.setState({ value });
   }
 
   handleChange(e) {
@@ -52,11 +57,10 @@ class ModalAsignaturaEdit extends React.Component {
   }
 
   render() {
-
     const { value } = this.state;
     var options = JSON.parse(JSON.stringify(this.props.adminUser['lista_asignaturas']).split('"codigo":').join('"value":')); //Rename key 
     options = JSON.parse(JSON.stringify(options).split('"nombre":').join('"label":')); //Rename key 
-    
+
     let listPostgrados = '';
     let listTipoAsignaturas = '';
     
@@ -128,20 +132,17 @@ class ModalAsignaturaEdit extends React.Component {
 
 
                           <FormGroup row>
-                            <Label for="tipo_postgrado" sm={5}>Prelaciones</Label>
+                            <Label for="tipo_postgrado" sm={5}>Asignaturas necesarias</Label>
                             <Col sm={7}>
-                                  <Select
-                                    closeOnSelect={true}
-                                    disabled={false}
-                                    multi
-                                    onChange={this.handleSelectChange}
-                                    options={options}
-                                    placeholder="Seleccione alguna materia"
-                                    removeSelected={true}
-                                    rtl={false}
-                                    simpleValue
-                                    value={value}
-                                  />
+                                <Select
+                                  closeOnSelect={true}
+                                  multi
+                                  onChange={this.handleSelectChange}
+                                  options={options}
+                                  placeholder="Seleccione alguna materia"
+                                  removeSelected={true}
+                                  value={value}
+                                />
                             </Col>
                           </FormGroup>
                           

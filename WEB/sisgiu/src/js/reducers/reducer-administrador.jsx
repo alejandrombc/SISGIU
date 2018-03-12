@@ -14,6 +14,7 @@ const initialState = {
 	cargado_estado_estudiante: false,
 	cargado_tipo_postgrado: false,
 	lista_estadoPeriodo: [],
+	lista_prelacion: [],
 
 };
 
@@ -115,6 +116,21 @@ export default function (state=initialState, action) {
 
 		case "GET_ESTADO_PERIODO_EXITOSO":
 			nuevo_estado['lista_estadoPeriodo'] = action.payload['lista_estadoPeriodo'];
+			return nuevo_estado;
+
+		case "GET_ASIGNATURAS_PRELACION_EXITOSO":
+			nuevo_estado['lista_prelacion'] = action.payload['lista_prelacion'];
+			return nuevo_estado;
+
+		case "EDIT_ASIGNATURA__PRELACION_EXITOSO":
+			nuevo_estado['edit'] = true;
+			nuevo_estado['bad_input'] = false;
+			nuevo_estado['lista_prelacion'] = action.payload['lista_asignaturas'];
+			return nuevo_estado;
+
+		case "ASIGNATURAS_PRELACION_ERROR":
+			nuevo_estado['lista_prelacion'] = action.payload['lista_asignaturas'];
+			nuevo_estado['bad_input'] = true;
 			return nuevo_estado;
 
 		default:

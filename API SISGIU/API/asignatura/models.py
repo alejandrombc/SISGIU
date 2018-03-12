@@ -23,7 +23,7 @@ class Asignatura(models.Model):
 
 
 class PrelacionAsignatura(models.Model):
-	asignatura_objetivo = models.ForeignKey(Asignatura, on_delete=models.CASCADE, null=True, related_name='%(class)s_asignatura_objetivo')
-	asignatura_prela = models.ForeignKey(Asignatura, on_delete=models.CASCADE, null=True, related_name='%(class)s_asignatura_prela')
+	asignatura_objetivo = models.ForeignKey(Asignatura, on_delete=models.CASCADE, null=True, related_name='%(class)s_asignatura_objetivo', to_field='codigo')
+	asignatura_prela = models.ForeignKey(Asignatura, on_delete=models.CASCADE, null=True, related_name='%(class)s_asignatura_prela', to_field='codigo')
 	class Meta:
 		db_table = 'prelacion_asignatura'

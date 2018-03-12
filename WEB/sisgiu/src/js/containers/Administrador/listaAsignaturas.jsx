@@ -12,6 +12,9 @@ import ModalAsignaturaNew from './modalAsignaturaNew';
 import ModalAsignaturaEdit from './modalAsignaturaEdit';
 import ModalAsignaturaDelete from './modalAsignaturaDelete';
 import {get_asignaturas} from '../../actions/moduloAsignaturas';
+import {get_prelacion} from '../../actions/moduloAsignaturas';
+import { get_tipo_postgrado } from '../../actions/moduloAsignaturas';
+import { get_tipo_asignatura } from '../../actions/moduloAsignaturas';
 import Paginacion from '../../components/pagination';
 
 const KEYS_TO_FILTERS = ['codigo', 'nombre'];
@@ -28,7 +31,11 @@ class ListaAsignaturas extends Component{
         loading: false,
       }
       
+      this.props.get_prelacion(false);
       this.props.get_asignaturas(false);
+      this.props.get_tipo_postgrado();
+      this.props.get_tipo_asignatura();
+
       this.updateLoading = this.updateLoading.bind(this);
       this.onDismiss = this.onDismiss.bind(this);
       this.searchUpdated = this.searchUpdated.bind(this)
@@ -56,6 +63,7 @@ class ListaAsignaturas extends Component{
   render(){
 
       let listItems = '';
+      let prelacion = {};
       if(this.props.adminUser.lista_asignaturas && this.props.adminUser.lista_asignaturas.length > 0)
       {
         let cant_asignaturas = this.props.adminUser.lista_asignaturas.length;
@@ -84,6 +92,16 @@ class ListaAsignaturas extends Component{
 
         const filteredAsignaturas = asignaturas.filter(createFilter(this.state.searchTerm, KEYS_TO_FILTERS));
 
+        for (var code_asig in filteredAsignaturas) {
+            for (var code_pre in this.props.adminUser['lista_prelacion']) {
+               if (this.props.adminUser['lista_prelacion'][code_pre]['asignatura_objetivo_id'] === filteredAsignaturas[code_asig]['codigo']) {
+                  if(prelacion[filteredAsignaturas[code_asig]['codigo']] == null){ prelacion[filteredAsignaturas[code_asig]['codigo']] = []; }
+                  prelacion[filteredAsignaturas[code_asig]['codigo']].push(this.props.adminUser['lista_prelacion'][code_pre]['asignatura_prela_id']);
+               }
+            }
+        }
+
+
         listItems = filteredAsignaturas.map((asignatura) =>
           <tr key={asignatura['codigo']}>
             <td>{asignatura['codigo']}</td>
@@ -92,17 +110,14 @@ class ListaAsignaturas extends Component{
               <Row >
                 <Col md={{ size: 'auto', offset: 3 }} className='botones'>
                   
-                  <ModalAsignaturaEdit onDismiss={this.onDismiss} triggerParentUpdate={this.updateLoading} asignatura={asignatura} />
-                  <ModalAsignaturaDelete onDismiss={this.onDismiss} triggerParentUpdate={this.updateLoading} asignatura={asignatura} />
+                  <ModalAsignaturaEdit onDismiss={this.onDismiss} triggerParentUpdate={this.updateLoading} asignatura={asignatura} prelacion={prelacion[asignatura['codigo']]} />
+                  <ModalAsignaturaDelete onDismiss={this.onDismiss} triggerParentUpdate={this.updateLoading} asignatura={asignatura} prelacion={prelacion[asignatura['codigo']]} />
 
                 </Col>
               </Row>
             </td>
           </tr>
         );
-
-
-
 
         return(
     		<div>
@@ -199,7 +214,7 @@ const mapStateToProps = (state)=> {
 
 
 const mapDispatchToProps = (dispatch) => {
-  return bindActionCreators({get_asignaturas: get_asignaturas}, dispatch )
+  return bindActionCreators({get_tipo_asignatura: get_tipo_asignatura, get_tipo_postgrado:get_tipo_postgrado, get_prelacion: get_prelacion, get_asignaturas: get_asignaturas}, dispatch )
 }
 
 

@@ -8,8 +8,6 @@ import { connect } from 'react-redux';
 import Select from 'react-select';
 
 // Components
-import { get_tipo_postgrado } from '../../actions/moduloAsignaturas';
-import { get_tipo_asignatura } from '../../actions/moduloAsignaturas';
 import { crear_asignatura } from '../../actions/moduloAsignaturas';
 
 class ModalAsignaturaNew extends React.Component {
@@ -29,10 +27,6 @@ class ModalAsignaturaNew extends React.Component {
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleSelectChange = this.handleSelectChange.bind(this);
-
-    this.props.get_tipo_postgrado();
-    this.props.get_tipo_asignatura();
-
 
   }
 
@@ -153,7 +147,7 @@ class ModalAsignaturaNew extends React.Component {
 
 
                           <FormGroup row>
-                            <Label for="tipo_postgrado" sm={5}>Prelaciones</Label>
+                            <Label for="tipo_postgrado" sm={5}>Asignaturas necesarias</Label>
                             <Col sm={7}>
                                   <Select
                                     closeOnSelect={true}
@@ -200,8 +194,6 @@ const mapStateToProps = (state)=> {
 
 const mapDispatchToProps = (dispatch) => {
   return bindActionCreators({
-    get_tipo_postgrado: get_tipo_postgrado,
-    get_tipo_asignatura: get_tipo_asignatura,
     crear_asignatura: crear_asignatura,
 
     }, 

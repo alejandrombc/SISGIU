@@ -79,6 +79,52 @@ export function get_tipo_postgrado () {
 }
 
 
+export function get_prelacion (edit) {
+	let token = localStorage.getItem('user_token');
+
+	try{
+		jwt_decode(token);
+	}catch(e){
+		localStorage.removeItem('user_token');
+		localStorage.removeItem('modulo');
+		return {
+			type: "ERROR"
+		}
+	}
+	return request
+	   .get(host+'api/asignaturas_necesarias/all/')
+	   .set('Authorization', 'JWT '+token)
+	   .then(function(res) {
+	   		if(edit === 1){
+	   			return {
+					type: "EDIT_ASIGNATURA__PRELACION_EXITOSO",
+					payload: {lista_prelacion: res.body}
+				}
+	   		}else if(edit === 2){
+	   			return {
+					type: "ASIGNATURAS_PRELACION_ERROR",
+					payload: {lista_prelacion: res.body}
+				}
+	   		}
+	   		else{
+	   			return {
+					type: "GET_ASIGNATURAS_PRELACION_EXITOSO",
+					payload: {lista_prelacion: res.body}
+				}
+	   		}
+
+	   })
+	   .catch(function(err) {
+	   		localStorage.removeItem('user_token');
+	   		localStorage.removeItem('modulo');
+	      	return {
+				type: "ERROR"
+			}
+	   });
+
+}
+
+
 export function get_tipo_asignatura () {
 	let token = localStorage.getItem('user_token');
 

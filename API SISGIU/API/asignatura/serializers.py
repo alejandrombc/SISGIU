@@ -2,6 +2,7 @@ from rest_framework import serializers
 from asignatura.models import (
 	TipoAsignatura,
 	Asignatura,
+    PrelacionAsignatura,
 	)
 
 """
@@ -31,3 +32,13 @@ class AsignaturaDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = Asignatura
         fields = ('codigo', 'nombre', 'tipo_asignatura', 'tipo_postgrado', 'unidad_credito' )
+
+
+"""
+Serializer de PrelacionAsignatura
+"""
+class PrelacionAsignaturaListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PrelacionAsignatura
+        fields = ('__all__')
+        

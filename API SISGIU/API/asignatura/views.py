@@ -1,9 +1,11 @@
 from django.shortcuts import render
 from django.http import HttpResponse
+from django.views.decorators.csrf import csrf_exempt
 import json
 from asignatura.models import (
 	TipoAsignatura,
 	Asignatura,
+    PrelacionAsignatura,
 	)
 
 from usuario.models import(
@@ -21,7 +23,7 @@ from asignatura.serializers import (
 	TipoAsignaturaDetailSerializer,
 	AsignaturaListSerializer,
 	AsignaturaDetailSerializer,
-
+    PrelacionAsignaturaListSerializer
 	)
 from rest_framework.generics import (
 	ListCreateAPIView,
@@ -200,3 +202,111 @@ class AsignaturaDeleteAPIView(DestroyAPIView):
     serializer_class = AsignaturaDetailSerializer
     permission_classes = [IsAdminUser]
     lookup_field = 'codigo'
+
+
+
+"""
+PrelacionAsignatura
+                Esto solo debe ser tratado por el administrador
+"""
+class PrelacionAsignaturaListCreateAPIView(ListCreateAPIView):
+    queryset = PrelacionAsignatura.objects.all()
+    serializer_class = PrelacionAsignaturaListSerializer
+
+    @csrf_exempt
+    def post_prelacion(request):
+        if (request.method == 'POST'):
+            codigos=json.loads(request.body.decode("utf-8"))
+
+            PrelacionAsignatura.objects.filter(asignatura_objetivo=codigos['codigo']).delete()
+            prelacion = []
+            for code in codigos['values']:
+                print(code)
+                prelacion = PrelacionAsignatura.objects.create(
+                    asignatura_objetivo=Asignatura.objects.get(codigo = codigos['codigo']), 
+                    asignatura_prela=Asignatura.objects.get(codigo = code))
+
+            response_data = {}
+            response_data['status'] = 'Creacion exitosa'      
+            return HttpResponse(json.dumps(response_data), content_type="application/json")
+        response_data = {}
+        response_data['error'] = 'No tiene privilegios para realizar esta acción'      
+        return HttpResponse(json.dumps(response_data), content_type="application/json", status=401)
+
+
+    def get_asignaturas_necesarias(request, codigo):
+        if (request.method == 'GET'):
+            
+            asignaturas = PrelacionAsignatura.objects.filter(asignatura_objetivo=codigo).values()
+
+            lista_prelaciones = [entry for entry in asignaturas]
+
+            lista_asignaturas = []
+
+            for prelacion in lista_prelaciones:
+                asignatura = Asignatura.objects.filter(codigo=prelacion['asignatura_objetivo_id']).values()[0]
+                prelacion['nombre_asignatura_objetivo'] = asignatura['nombre']
+                
+                asignatura = Asignatura.objects.filter(codigo=prelacion['asignatura_prela_id']).values()[0]
+                prelacion['nombre_asignatura_prela'] = asignatura['nombre']
+
+                lista_asignaturas.append(prelacion)
+
+            return HttpResponse(json.dumps(lista_asignaturas), content_type="application/json")
+
+        response_data = {}
+        response_data['error'] = 'No tiene privilegios para realizar esta acción'      
+        return HttpResponse(json.dumps(response_data), content_type="application/json", status=401)
+
+    def get_all_asignaturas_necesarias(request):
+        if (request.method == 'GET'):
+            
+            asignaturas = PrelacionAsignatura.objects.all().values()
+
+            lista_prelaciones = [entry for entry in asignaturas]
+
+            
+            lista_asignaturas = []
+
+            for prelacion in lista_prelaciones:
+                asignatura = Asignatura.objects.filter(codigo=prelacion['asignatura_objetivo_id']).values()[0]
+                prelacion['nombre_asignatura_objetivo'] = asignatura['nombre']
+                
+                asignatura = Asignatura.objects.filter(codigo=prelacion['asignatura_prela_id']).values()[0]
+                prelacion['nombre_asignatura_prela'] = asignatura['nombre']
+
+                lista_asignaturas.append(prelacion)
+     
+            return HttpResponse(json.dumps(lista_asignaturas), content_type="application/json")
+
+        response_data = {}
+        response_data['error'] = 'No tiene privilegios para realizar esta acción'      
+        return HttpResponse(json.dumps(response_data), content_type="application/json", status=401)
+
+    @csrf_exempt
+    def delete_asignaturas_necesarias(request, codigo):
+        if (request.method == "DELETE"):
+            
+            asignaturas = PrelacionAsignatura.objects.filter(asignatura_objetivo=codigo).delete()
+
+            response_data = {}
+            response_data['status'] = 'Eliminacion exitosa'  
+            return HttpResponse(json.dumps(response_data), content_type="application/json")
+
+        response_data = {}
+        response_data['error'] = 'No tiene privilegios para realizar esta acción'      
+        return HttpResponse(json.dumps(response_data), content_type="application/json", status=401)
+
+    @csrf_exempt
+    def delete_all_asignaturas_necesarias(request):
+        if (request.method == "DELETE"):
+            
+            asignaturas = PrelacionAsignatura.objects.all().delete()
+
+            response_data = {}
+            response_data['status'] = 'Eliminacion exitosa'  
+            return HttpResponse(json.dumps(response_data), content_type="application/json")
+
+        response_data = {}
+        response_data['error'] = 'No tiene privilegios para realizar esta acción'      
+        return HttpResponse(json.dumps(response_data), content_type="application/json", status=401)
