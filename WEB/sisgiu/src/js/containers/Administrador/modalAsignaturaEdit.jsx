@@ -20,7 +20,7 @@ class ModalAsignaturaEdit extends React.Component {
       unidad_credito: this.props.asignatura['unidad_credito'],
       tipo_asignatura: this.props.asignatura['tipo_asignatura'],
       tipo_postgrado: this.props.asignatura['tipo_postgrado'],
-      value: this.props.prelacion,
+      prelaciones: this.props.prelacion,
     };
 
     this.toggle = this.toggle.bind(this);
@@ -38,8 +38,8 @@ class ModalAsignaturaEdit extends React.Component {
     if(!this.state.modal) { this.props.onDismiss(); };
   }
 
-  handleSelectChange (value) {
-    this.setState({ value });
+  handleSelectChange (prelaciones) {
+    this.setState({ prelaciones });
   }
 
   handleChange(e) {
@@ -57,7 +57,7 @@ class ModalAsignaturaEdit extends React.Component {
   }
 
   render() {
-    const { value } = this.state;
+    const { prelaciones } = this.state;
     var options = JSON.parse(JSON.stringify(this.props.adminUser['lista_asignaturas']).split('"codigo":').join('"value":')); //Rename key 
     options = JSON.parse(JSON.stringify(options).split('"nombre":').join('"label":')); //Rename key 
 
@@ -141,7 +141,7 @@ class ModalAsignaturaEdit extends React.Component {
                                   options={options}
                                   placeholder="Seleccione alguna materia"
                                   removeSelected={true}
-                                  value={value}
+                                  value={prelaciones}
                                 />
                             </Col>
                           </FormGroup>

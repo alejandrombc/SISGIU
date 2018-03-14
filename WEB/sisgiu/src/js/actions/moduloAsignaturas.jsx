@@ -18,23 +18,37 @@ export function get_asignaturas (edit) {
 	   .get(host+'api/asignaturas/')
 	   .set('Authorization', 'JWT '+token)
 	   .then(function(res) {
-	   		if(edit === 1){
-	   			return {
-					type: "EDIT_ASIGNATURA_EXITOSO",
-					payload: {lista_asignaturas: res.body}
-				}
-	   		}else if(edit === 2){
-	   			return {
-					type: "ASIGNATURAS_ERROR",
-					payload: {lista_asignaturas: res.body}
-				}
-	   		}
-	   		else{
-	   			return {
-					type: "GET_ASIGNATURAS_EXITOSO",
-					payload: {lista_asignaturas: res.body}
-				}
-	   		}
+	   		let lista_asignaturas = res.body;
+	   			return request
+				   .get(host+'api/asignaturas_necesarias/all/')
+				   .set('Authorization', 'JWT '+token)
+				   .then(function(res) {
+				   		if(edit === 1){
+				   			return {
+								type: "EDIT_ASIGNATURA_EXITOSO",
+								payload: {lista_prelacion: res.body, lista_asignaturas:lista_asignaturas}
+							}
+				   		}else if(edit === 2){
+				   			return {
+								type: "ASIGNATURAS_ERROR",
+								payload: {lista_prelacion: res.body, lista_asignaturas:lista_asignaturas}
+							}
+				   		}
+				   		else{
+				   			return {
+								type: "GET_ASIGNATURAS_EXITOSO",
+								payload: {lista_prelacion: res.body, lista_asignaturas:lista_asignaturas}
+							}
+				   		}
+
+				   })
+				   .catch(function(err) {
+				   		localStorage.removeItem('user_token');
+				   		localStorage.removeItem('modulo');
+				      	return {
+							type: "ERROR"
+						}
+				   });
 
 	   })
 	   .catch(function(err) {
@@ -67,52 +81,6 @@ export function get_tipo_postgrado () {
 				type: "GET_TIPO_POSTGRADO_EXITOSO",
 				payload: {lista_postgrados: res.body}
 			}
-	   })
-	   .catch(function(err) {
-	   		localStorage.removeItem('user_token');
-	   		localStorage.removeItem('modulo');
-	      	return {
-				type: "ERROR"
-			}
-	   });
-
-}
-
-
-export function get_prelacion (edit) {
-	let token = localStorage.getItem('user_token');
-
-	try{
-		jwt_decode(token);
-	}catch(e){
-		localStorage.removeItem('user_token');
-		localStorage.removeItem('modulo');
-		return {
-			type: "ERROR"
-		}
-	}
-	return request
-	   .get(host+'api/asignaturas_necesarias/all/')
-	   .set('Authorization', 'JWT '+token)
-	   .then(function(res) {
-	   		if(edit === 1){
-	   			return {
-					type: "EDIT_ASIGNATURA__PRELACION_EXITOSO",
-					payload: {lista_prelacion: res.body}
-				}
-	   		}else if(edit === 2){
-	   			return {
-					type: "ASIGNATURAS_PRELACION_ERROR",
-					payload: {lista_prelacion: res.body}
-				}
-	   		}
-	   		else{
-	   			return {
-					type: "GET_ASIGNATURAS_PRELACION_EXITOSO",
-					payload: {lista_prelacion: res.body}
-				}
-	   		}
-
 	   })
 	   .catch(function(err) {
 	   		localStorage.removeItem('user_token');

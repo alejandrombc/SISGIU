@@ -12,7 +12,7 @@ import ModalAsignaturaNew from './modalAsignaturaNew';
 import ModalAsignaturaEdit from './modalAsignaturaEdit';
 import ModalAsignaturaDelete from './modalAsignaturaDelete';
 import {get_asignaturas} from '../../actions/moduloAsignaturas';
-import {get_prelacion} from '../../actions/moduloAsignaturas';
+// import {get_prelacion} from '../../actions/moduloAsignaturas';
 import { get_tipo_postgrado } from '../../actions/moduloAsignaturas';
 import { get_tipo_asignatura } from '../../actions/moduloAsignaturas';
 import Paginacion from '../../components/pagination';
@@ -31,7 +31,7 @@ class ListaAsignaturas extends Component{
         loading: false,
       }
       
-      this.props.get_prelacion(false);
+      // this.props.get_prelacion(false);
       this.props.get_asignaturas(false);
       this.props.get_tipo_postgrado();
       this.props.get_tipo_asignatura();
@@ -214,7 +214,7 @@ const mapStateToProps = (state)=> {
 
 
 const mapDispatchToProps = (dispatch) => {
-  return bindActionCreators({get_tipo_asignatura: get_tipo_asignatura, get_tipo_postgrado:get_tipo_postgrado, get_prelacion: get_prelacion, get_asignaturas: get_asignaturas}, dispatch )
+  return bindActionCreators({get_tipo_asignatura: get_tipo_asignatura, get_tipo_postgrado:get_tipo_postgrado, get_asignaturas: get_asignaturas}, dispatch )
 }
 
 

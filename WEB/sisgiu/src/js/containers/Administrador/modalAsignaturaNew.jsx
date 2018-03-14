@@ -20,7 +20,7 @@ class ModalAsignaturaNew extends React.Component {
       unidad_credito: null,
       tipo_asignatura: null,
       tipo_postgrado: null,
-      value: [],
+      prelaciones: [],
     };
 
     this.toggle = this.toggle.bind(this);
@@ -31,8 +31,8 @@ class ModalAsignaturaNew extends React.Component {
   }
 
 
-  handleSelectChange (value) {
-    this.setState({ value });
+  handleSelectChange (prelaciones) {
+    this.setState({ prelaciones });
   }
 
   toggle() {
@@ -60,7 +60,7 @@ class ModalAsignaturaNew extends React.Component {
       unidad_credito: null,
       tipo_asignatura: null,
       tipo_postgrado: null,
-      value:[]
+      prelaciones:[]
     });
     this.props.triggerParentUpdate();
     this.toggle();
@@ -70,7 +70,7 @@ class ModalAsignaturaNew extends React.Component {
 
 
   render() {
-    const { value } = this.state;
+    const { prelaciones } = this.state;
     var options = JSON.parse(JSON.stringify(this.props.adminUser['lista_asignaturas']).split('"codigo":').join('"value":')); //Rename key 
     options = JSON.parse(JSON.stringify(options).split('"nombre":').join('"label":')); //Rename key 
     
@@ -159,7 +159,7 @@ class ModalAsignaturaNew extends React.Component {
                                     removeSelected={true}
                                     rtl={false}
                                     simpleValue
-                                    value={value}
+                                    value={prelaciones}
                                   />
                             </Col>
                           </FormGroup>
