@@ -141,6 +141,7 @@ class ModalAsignaturaEdit extends React.Component {
                                   options={options}
                                   placeholder="Seleccione alguna materia"
                                   removeSelected={true}
+                                  simpleValue
                                   value={prelaciones}
                                 />
                             </Col>
@@ -159,7 +160,6 @@ class ModalAsignaturaEdit extends React.Component {
             </ModalFooter>
           </Form>
         </Modal>
-        &nbsp;&nbsp; {/*Dummy Spaces*/}
 
       </div>
     );

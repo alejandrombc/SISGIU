@@ -179,7 +179,6 @@ class ModalAsignaturaNew extends React.Component {
             </ModalFooter>
           </Form>
         </Modal>
-        &nbsp;&nbsp; {/*Dummy Spaces*/}
 
       </div>
     );

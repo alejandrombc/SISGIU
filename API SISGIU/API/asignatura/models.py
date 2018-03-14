@@ -20,6 +20,10 @@ class Asignatura(models.Model):
 	unidad_credito = models.IntegerField()
 	class Meta:
 		db_table = 'asignatura'
+		ordering = ['nombre', 'codigo']
+
+	def __str__(self):
+		return self.codigo
 
 
 class PrelacionAsignatura(models.Model):

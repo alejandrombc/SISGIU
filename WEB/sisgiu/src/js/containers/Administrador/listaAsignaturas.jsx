@@ -101,7 +101,6 @@ class ListaAsignaturas extends Component{
             }
         }
 
-
         listItems = filteredAsignaturas.map((asignatura) =>
           <tr key={asignatura['codigo']}>
             <td>{asignatura['codigo']}</td>

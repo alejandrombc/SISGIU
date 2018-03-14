@@ -5,15 +5,7 @@ import {host} from '../components/globalVariables';
 export function get_asignaturas (edit) {
 	let token = localStorage.getItem('user_token');
 
-	try{
-		jwt_decode(token);
-	}catch(e){
-		localStorage.removeItem('user_token');
-		localStorage.removeItem('modulo');
-		return {
-			type: "ERROR"
-		}
-	}
+
 	return request
 	   .get(host+'api/asignaturas/')
 	   .set('Authorization', 'JWT '+token)
@@ -64,15 +56,7 @@ export function get_asignaturas (edit) {
 export function get_tipo_postgrado () {
 	let token = localStorage.getItem('user_token');
 
-	try{
-		jwt_decode(token);
-	}catch(e){
-		localStorage.removeItem('user_token');
-		localStorage.removeItem('modulo');
-		return {
-			type: "ERROR"
-		}
-	}
+
 	return request
 	   .get(host+'api/tipoPostgrado/')
 	   .set('Authorization', 'JWT '+token)
@@ -96,15 +80,6 @@ export function get_tipo_postgrado () {
 export function get_tipo_asignatura () {
 	let token = localStorage.getItem('user_token');
 
-	try{
-		jwt_decode(token);
-	}catch(e){
-		localStorage.removeItem('user_token');
-		localStorage.removeItem('modulo');
-		return {
-			type: "ERROR"
-		}
-	}
 	return request
 	   .get(host+'api/tipoAsignatura/')
 	   .set('Authorization', 'JWT '+token)
@@ -127,23 +102,34 @@ export function get_tipo_asignatura () {
 
 export function crear_asignatura (asignatura) {
 	let token = localStorage.getItem('user_token');
-	try{
-		jwt_decode(token);
-	}catch(e){
-		localStorage.removeItem('user_token');
-		localStorage.removeItem('modulo');
-		return {
-			type: "ERROR"
-		}
+
+	if (asignatura.prelaciones.length > 0) {
+		asignatura.prelaciones = asignatura.prelaciones.split(',');
+	} else {
+		asignatura.prelaciones = [];
 	}
+
 	return request
 	   .post(host+'api/asignaturas/')
 	   .set('Authorization', 'JWT '+token)
 	   .send(asignatura)
 	   .then(function(res) {
-			return function (dispatch) {
-			    dispatch(get_asignaturas(1));
-			}
+
+	   		return request
+			   .post(host+'api/asignaturas_necesarias/')
+			   .set('Authorization', 'JWT '+token)
+			   .send(asignatura)
+			   .then(function(res) {
+
+					return function (dispatch) {
+					    dispatch(get_asignaturas(1));
+					}
+			   })
+			   .catch(function(err) {
+			      	return function (dispatch) {
+					    dispatch(get_asignaturas(2));
+					}
+			   });
 	   })
 	   .catch(function(err) {
 	      	return function (dispatch) {
@@ -156,24 +142,33 @@ export function crear_asignatura (asignatura) {
 
 export const editar_asignatura = (asignatura) => {
 	let token = localStorage.getItem('user_token');
-
-	try{
-		jwt_decode(token);
-	}catch(e){
-		localStorage.removeItem('user_token');
-		localStorage.removeItem('modulo');
-		return {
-			type: "ERROR"
-		}
+	console.log(asignatura);
+	if (asignatura.prelaciones.length > 0) {
+		asignatura.prelaciones = asignatura.prelaciones.split(',');
+	} else {
+		asignatura.prelaciones = [];
 	}
+
 	return request
 	   .put(host+'api/asignaturas/'+asignatura['codigo']+"/edit/")
 	   .set('Authorization', 'JWT '+token)
 	   .send(asignatura)
 	   .then(function(res) {
-			return function (dispatch) {
-			    dispatch(get_asignaturas(1));
-			}
+			return request
+				.post(host+'api/asignaturas_necesarias/')
+				.set('Authorization', 'JWT '+token)
+				.send(asignatura)
+				.then(function(res) {
+
+					return function (dispatch) {
+					    dispatch(get_asignaturas(1));
+					}
+				})
+				.catch(function(err) {
+				  	return function (dispatch) {
+					    dispatch(get_asignaturas(2));
+					}
+				});
 	   })
 	   .catch(function(err) {
 	      	return function (dispatch) {
@@ -187,15 +182,6 @@ export const editar_asignatura = (asignatura) => {
 export const eliminar_asignatura = (asignatura) => {
 	let token = localStorage.getItem('user_token');
 
-	try{
-		jwt_decode(token);
-	}catch(e){
-		localStorage.removeItem('user_token');
-		localStorage.removeItem('modulo');
-		return {
-			type: "ERROR"
-		}
-	}
 	return request
 	   .delete(host+'api/asignaturas/'+asignatura['codigo']+"/delete/")
 	   .set('Authorization', 'JWT '+token)

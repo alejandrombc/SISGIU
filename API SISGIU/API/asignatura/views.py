@@ -217,11 +217,13 @@ class PrelacionAsignaturaListCreateAPIView(ListCreateAPIView):
     def post_prelacion(request):
         if (request.method == 'POST'):
             codigos=json.loads(request.body.decode("utf-8"))
-
             PrelacionAsignatura.objects.filter(asignatura_objetivo=codigos['codigo']).delete()
             prelacion = []
-            for code in codigos['values']:
+            print('\n#########################.\n')
+            print(codigos)
+            for code in codigos['prelaciones']:
                 print(code)
+                print('\n#########################.\n')
                 prelacion = PrelacionAsignatura.objects.create(
                     asignatura_objetivo=Asignatura.objects.get(codigo = codigos['codigo']), 
                     asignatura_prela=Asignatura.objects.get(codigo = code))
