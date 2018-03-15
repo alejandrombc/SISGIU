@@ -74,7 +74,7 @@ class ModalPeriodoEdit extends React.Component {
             <ModalBody>
               <h6>Paso {this.state.paso}: Seleccionar Asignaturas</h6>
               <hr/>
-              <DualList />
+              <DualList asignaturas={this.props.asignaturas}/>
 
 
             </ModalBody>

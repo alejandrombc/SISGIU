@@ -15,6 +15,7 @@ const initialState = {
 	cargado_tipo_postgrado: false,
 	lista_estadoPeriodo: [],
 	lista_prelacion: [],
+	lista_docente_asignatura: []
 
 };
 
@@ -120,6 +121,11 @@ export default function (state=initialState, action) {
 		case "GET_ESTADO_PERIODO_EXITOSO":
 			nuevo_estado['lista_estadoPeriodo'] = action.payload['lista_estadoPeriodo'];
 			return nuevo_estado;
+
+		case "GET_DOCENTE_ASIGNATURA_EXITOSO":
+			nuevo_estado['lista_docente_asignatura'] = action.payload['lista_docente_asignatura'];
+			return nuevo_estado;	
+
 
 		default:
 			return state;

@@ -6,18 +6,10 @@ import '../../../css/dualList.css';
 class DualList extends React.Component {
   constructor(props) {
     super(props);
- 
+
     this.state = {
-      options: [
-        {name: 'Matematicas I', value: 1, creditos:5},
-        {name: 'Matematicas II', value: 2, creditos:6},
-        {name: 'Sistemas Operativos', value: 3, creditos:5},
-        {name: 'Matematicas Discretas III', value: 4, creditos:4},
-        {name: 'Probabilidad y Estadisticas', value: 5, creditos:4},
-        {name: 'Organizacion y Estructura del Computador 2', value: 6, creditos:6},
-      ],
-      value: [],
-      creditos: []
+      options: this.props.asignaturas.options,
+      value: this.props.asignaturas.values,
     }
     this.setCreditos = this.setCreditos.bind(this);
     this.handleChange = this.handleChange.bind(this);
@@ -26,7 +18,6 @@ class DualList extends React.Component {
  
 
   setCreditos(value){
-    console.log(value);
     var j = 0;
     var values = [];
     while(j < value.length){
@@ -41,18 +32,12 @@ class DualList extends React.Component {
     this.setState({creditos: values});
   }
 
-  handleChange = (value) => {
-    this.setCreditos(value);
-    this.setState({value});
+  handleChange (value) {
+    this.setState({ value: value }) //another array
   }
  
   render() {
-    const {creditos} = this.state;
-    var selectedCount = 0;
-    for (var i = 0; i < creditos.length; i++) {
-      selectedCount += creditos[i];
-    }
-    // const availableCount = asignaturas.length - selectedCount;
+    var total = this.state.value.length;
  
     return (
       <MultiselectTwoSides
@@ -62,7 +47,7 @@ class DualList extends React.Component {
         availableHeader="Asignaturas Disponibles"
         // availableFooter={`Available: ${availableCount}`}
         selectedHeader="Asignaturas Seleccionadas"
-        selectedFooter={`Creditos inscritos: ${selectedCount}`}
+        selectedFooter={`Asignaturas seleccionadas: ${total}`}
         labelKey="name"
         showControls
         searchable

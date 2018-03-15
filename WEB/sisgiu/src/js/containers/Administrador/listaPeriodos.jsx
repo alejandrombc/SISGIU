@@ -15,6 +15,8 @@ import ModalPeriodoEdit from './modalPeriodoEdit';
 import {get_periodos} from '../../actions/moduloPeriodos';
 import {get_tipo_postgrado} from '../../actions/moduloPeriodos';
 import { get_estado_periodo} from '../../actions/moduloPeriodos';
+import { get_docente_asignatura } from '../../actions/moduloPeriodos';
+import { get_asignaturas } from '../../actions/moduloAsignaturas';
 
 import Paginacion from '../../components/pagination';
 
@@ -32,9 +34,11 @@ class ListaPeriodos extends Component{
         loading: false,
       }
       
+      this.props.get_asignaturas();
       this.props.get_periodos(false);
       this.props.get_tipo_postgrado();
       this.props.get_estado_periodo();
+      this.props.get_docente_asignatura("all");
       this.updateLoading = this.updateLoading.bind(this);
       this.onDismiss = this.onDismiss.bind(this);
       this.searchUpdated = this.searchUpdated.bind(this)
@@ -62,6 +66,11 @@ class ListaPeriodos extends Component{
   render(){
 
       let listItems = '';
+      let item = [];
+      // For asignaturas in dualList
+      let asignaturas = []; //All asignaturas for all the tipos_postgrados
+      let asignatura = {}; //Single asignatura
+      let mid_options = []; //Asignaturas for specific tipo_postgrado
       if(this.props.adminUser.lista_periodos && this.props.adminUser.lista_periodos.length > 0)
       {
         let cant_periodos = this.props.adminUser.lista_periodos.length;
@@ -86,20 +95,47 @@ class ListaPeriodos extends Component{
           }
         }
 
-        
 
         const filteredPeriodos = periodos.filter(createFilter(this.state.searchTerm, KEYS_TO_FILTERS));
+        let filtered_length = filteredPeriodos.length;
+        let lista_asignaturas_length = this.props.adminUser.lista_asignaturas.length;
 
-        listItems = filteredPeriodos.map((periodo) =>
+        if(this.props.adminUser.lista_asignaturas.length > 0){
+          //Loop all tipos_postgrado
+          for(let index = 0; index < filtered_length; index++){
+            //Initialization
+            mid_options = [];
+            mid_options['options'] = [];
+            mid_options['values'] = [];
+            asignaturas[index] = [];
+
+            //Get all saved asignaturas
+            item[index] = this.props.adminUser.lista_docente_asignatura.filter(item=>item.tipo_postgrado === filteredPeriodos[index].tipo_postgrado);
+            
+            // Loop all asignaturas (name and id)
+            for(let j = 0; j < lista_asignaturas_length; j++){
+                asignatura = {"name":this.props.adminUser.lista_asignaturas[j].nombre,"value":this.props.adminUser.lista_asignaturas[j].id};
+                mid_options['options'].push(asignatura);
+            }
+
+            //Loop saved asignaturas for the specified period (getting just the id)
+            if(item[index].length > 0){
+              for(let i = 0; i < item[index].length; i++){
+                mid_options['values'].push(item[index][i]['asignatura']['id']);
+              }
+            }
+            asignaturas[index] = mid_options;
+          }
+        }
+
+        listItems = filteredPeriodos.map((periodo, index) =>
           <tr key={periodo['id']}>
             <td>No iniciado</td>
             <td>{periodo['tipo_postgrado']}</td>
             <td>  
               <Row >
                 <Col md={{ size: 'auto', offset: 3 }} className='botones'>
-                  
-                  <ModalPeriodoEdit onDismiss={this.onDismiss} triggerParentUpdate={this.updateLoading} periodo={periodo} />
-                  
+                  <ModalPeriodoEdit onDismiss={this.onDismiss} triggerParentUpdate={this.updateLoading} periodo={periodo} docente_asignatura={item[index]} asignaturas={asignaturas[index]}/>
                   {/*
                   <ModalPeriodoDelete onDismiss={this.onDismiss} triggerParentUpdate={this.updateLoading} periodo={periodo} />
                   <ModalPeriodoLaunch onDismiss={this.onDismiss} triggerParentUpdate={this.updateLoading} periodo={periodo} />
@@ -212,6 +248,8 @@ const mapDispatchToProps = (dispatch) => {
     get_tipo_postgrado: get_tipo_postgrado, 
     get_periodos: get_periodos,
     get_estado_periodo: get_estado_periodo,
+    get_docente_asignatura: get_docente_asignatura,
+    get_asignaturas: get_asignaturas
   }, dispatch )
 }
 

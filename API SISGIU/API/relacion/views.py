@@ -226,39 +226,41 @@ class DocenteAsignaturaDetailAPIView():
         response_data['error'] = 'No tiene privilegios para realizar esta accion'      
         return HttpResponse(json.dumps(response_data), content_type="application/json", status=401)
 
-    def get_all_docentes(request, periodo):
-        if(request.user.is_anonymous == False):
+    def get_all_docentes(request, periodo, tipo_postgrado):
+        if(tipo_postgrado != "all"):
+            member = DocenteAsignatura.objects.filter(periodo__estado_periodo__estado=periodo, periodo__tipo_postgrado__tipo=tipo_postgrado)
+        else:
             member = DocenteAsignatura.objects.filter(periodo__estado_periodo__estado=periodo)
-            list_result = [entry for entry in member.values()]
-            
-            lista_docentes = [] 
+        list_result = [entry for entry in member.values()]
+        
+        lista_docentes = [] 
 
-            for docente_periodo in list_result:
-                docente = Usuario.objects.filter(id=docente_periodo['docente_id']).values()[0]
-                asignatura = Asignatura.objects.filter(id=docente_periodo['asignatura_id']).values()[0]
-                tipo_asignatura = TipoAsignatura.objects.filter(id=asignatura['tipo_asignatura_id']).values()[0]
-                periodo = Periodo.objects.filter(id=docente_periodo['periodo_id']).values()[0]
-                tipo_postgrado = TipoPostgrado.objects.filter(id=periodo['tipo_postgrado_id']).values()[0]
+        for docente_periodo in list_result:
+            docente = Usuario.objects.filter(id=docente_periodo['docente_id']).values()[0]
+            asignatura = Asignatura.objects.filter(id=docente_periodo['asignatura_id']).values()[0]
+            tipo_asignatura = TipoAsignatura.objects.filter(id=asignatura['tipo_asignatura_id']).values()[0]
+            periodo = Periodo.objects.filter(id=docente_periodo['periodo_id']).values()[0]
+            tipo_postgrado = TipoPostgrado.objects.filter(id=periodo['tipo_postgrado_id']).values()[0]
 
-                docente_periodo['usuario'] = {}
-                docente_periodo['asignatura'] = {}
-                docente_periodo['tipo_postgrado'] = tipo_postgrado['tipo']
-                docente_periodo['usuario']['first_name'] = docente['first_name']
-                docente_periodo['usuario']['last_name'] = docente['last_name']
-                docente_periodo['usuario']['cedula'] = docente['cedula']
-                docente_periodo['asignatura']['codigo'] = asignatura['codigo']
-                docente_periodo['asignatura']['nombre'] = asignatura['nombre']
-                docente_periodo['asignatura']['unidad_credito'] = asignatura['unidad_credito']
-                docente_periodo['asignatura']['tipo_asignatura'] = tipo_asignatura['nombre']
+            docente_periodo['usuario'] = {}
+            docente_periodo['asignatura'] = {}
+            docente_periodo['tipo_postgrado'] = tipo_postgrado['tipo']
+            docente_periodo['usuario']['first_name'] = docente['first_name']
+            docente_periodo['usuario']['last_name'] = docente['last_name']
+            docente_periodo['usuario']['cedula'] = docente['cedula']
+            docente_periodo['asignatura']['codigo'] = asignatura['codigo']
+            docente_periodo['asignatura']['nombre'] = asignatura['nombre']
+            docente_periodo['asignatura']['unidad_credito'] = asignatura['unidad_credito']
+            docente_periodo['asignatura']['tipo_asignatura'] = tipo_asignatura['nombre']
+            docente_periodo['asignatura']['id'] = docente_periodo['asignatura_id']
 
+            del docente_periodo['docente_id']
+            # del docente_periodo['periodo_id']
+            del docente_periodo['asignatura_id']
 
-                del docente_periodo['docente_id']
-                del docente_periodo['periodo_id']
-                del docente_periodo['asignatura_id']
+            lista_docentes.append(docente_periodo)
 
-                lista_docentes.append(docente_periodo)
-
-            return HttpResponse(json.dumps(lista_docentes), content_type="application/json")
+        return HttpResponse(json.dumps(lista_docentes), content_type="application/json")
         response_data = {}
         response_data['error'] = 'No tiene privilegios para realizar esta accion'      
         return HttpResponse(json.dumps(response_data), content_type="application/json", status=401)
