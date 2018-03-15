@@ -101,30 +101,33 @@ class ListaPeriodos extends Component{
         let lista_asignaturas_length = this.props.adminUser.lista_asignaturas.length;
 
         if(this.props.adminUser.lista_asignaturas.length > 0){
+          // Loop all asignaturas (name and id)
+          mid_options['options'] = [];
+          for(let j = 0; j < lista_asignaturas_length; j++){
+              asignatura = {"name":this.props.adminUser.lista_asignaturas[j].nombre,"value":this.props.adminUser.lista_asignaturas[j].id};
+              mid_options['options'].push(asignatura);
+          }
+
           //Loop all tipos_postgrado
           for(let index = 0; index < filtered_length; index++){
             //Initialization
-            mid_options = [];
-            mid_options['options'] = [];
-            mid_options['values'] = [];
+            mid_options[index] = [];
             asignaturas[index] = [];
+            mid_options[index]['values'] = [];
+            mid_options[index]['options'] = mid_options['options'];
+            
 
             //Get all saved asignaturas
             item[index] = this.props.adminUser.lista_docente_asignatura.filter(item=>item.tipo_postgrado === filteredPeriodos[index].tipo_postgrado);
-            
-            // Loop all asignaturas (name and id)
-            for(let j = 0; j < lista_asignaturas_length; j++){
-                asignatura = {"name":this.props.adminUser.lista_asignaturas[j].nombre,"value":this.props.adminUser.lista_asignaturas[j].id};
-                mid_options['options'].push(asignatura);
-            }
 
             //Loop saved asignaturas for the specified period (getting just the id)
             if(item[index].length > 0){
               for(let i = 0; i < item[index].length; i++){
-                mid_options['values'].push(item[index][i]['asignatura']['id']);
+                mid_options[index]['values'].push(item[index][i]['asignatura']['id']);
               }
             }
-            asignaturas[index] = mid_options;
+            asignaturas[index] = mid_options[index]; 
+
           }
         }
 
