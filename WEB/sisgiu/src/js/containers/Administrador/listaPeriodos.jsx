@@ -99,13 +99,11 @@ class ListaPeriodos extends Component{
                 <Col md={{ size: 'auto', offset: 3 }} className='botones'>
                   
                   <ModalPeriodoEdit onDismiss={this.onDismiss} triggerParentUpdate={this.updateLoading} periodo={periodo} />
-                  {
-                  /*
+                  
+                  {/*
                   <ModalPeriodoDelete onDismiss={this.onDismiss} triggerParentUpdate={this.updateLoading} periodo={periodo} />
                   <ModalPeriodoLaunch onDismiss={this.onDismiss} triggerParentUpdate={this.updateLoading} periodo={periodo} />
-
-                   */
-                 } 
+                   */ }
                 </Col>
               </Row>
             </td>

@@ -79,7 +79,7 @@ class ModalAsignaturaEdit extends React.Component {
     
     return (
       <div>
-        <Button color="success" size='sm' onClick={this.toggle} data-toggle="tooltip" title="Editar Asignatura"><FontAwesomeIcon name="edit"/></Button>
+        <Button color="success" size='sm' onClick={this.toggle} data-toggle="tooltip" title="Editar"><FontAwesomeIcon name="edit"/></Button>
         <Modal isOpen={this.state.modal} toggle={this.toggle} className={this.props.className}>
           <ModalHeader toggle={this.toggle}> 
                 Editar materia
