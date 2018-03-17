@@ -34,6 +34,7 @@ export default function (state=initialState, action) {
 
 		case "SIN_PERIODOS_ACTIVOS":
 			nuevo_estado['tiene_periodos_activos'] = false;
+			nuevo_estado['cargado'] = true;
 			return nuevo_estado;
 			
 		case "ERROR":

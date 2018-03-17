@@ -34,11 +34,11 @@ class ListaPeriodos extends Component{
         loading: false,
       }
       
+      this.props.get_docente_asignatura("all");
       this.props.get_asignaturas();
       this.props.get_periodos(false);
       this.props.get_tipo_postgrado();
       this.props.get_estado_periodo();
-      this.props.get_docente_asignatura("all");
       this.updateLoading = this.updateLoading.bind(this);
       this.onDismiss = this.onDismiss.bind(this);
       this.searchUpdated = this.searchUpdated.bind(this)

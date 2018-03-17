@@ -34,6 +34,7 @@ class DualList extends React.Component {
 
   handleChange (value) {
     this.setState({ value: value }) //another array
+    this.props.triggerDocenteAsignatura(value);
   }
  
   render() {
