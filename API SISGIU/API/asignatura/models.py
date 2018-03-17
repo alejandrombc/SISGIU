@@ -23,7 +23,7 @@ class Asignatura(models.Model):
 		ordering = ['nombre', 'codigo']
 
 	def __str__(self):
-		return self.codigo
+		return '(' + self.codigo + ') ' + self.nombre 
 
 
 class PrelacionAsignatura(models.Model):

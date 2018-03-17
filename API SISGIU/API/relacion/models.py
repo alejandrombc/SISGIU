@@ -37,6 +37,9 @@ class DocenteAsignatura(models.Model):
 	class Meta:
 		db_table = 'docente_asignatura'
 
+	def __str__(self):
+		return str(self.asignatura) + ', ' + str(self.docente) + ', ' + str(self.periodo) + ', ' + str(self.horario_dia) + ', ' + str(self.horario_hora)
+
 
 # Tabla intermedia entre Estudiante y Asignatura
 class EstudianteAsignatura(models.Model):

@@ -88,6 +88,9 @@ class PersonalDocente(models.Model):
 		ordering = ['usuario__last_name', 'usuario__segundo_apellido']
 		db_table = 'personal_docente'
 
+	def __str__(self):
+		return str(self.usuario) + ' ' + str(self.usuario.first_name) + ' ' + str(self.usuario.last_name)
+
 
 class PersonalAdministrativo(models.Model):
 	usuario = models.OneToOneField(

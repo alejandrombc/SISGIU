@@ -20,6 +20,6 @@ class Periodo(models.Model):
 		db_table = 'periodo'
 
 	def __str__(self):
-		return self.descripcion
+		return self.descripcion + ' ' + str(self.tipo_postgrado)
 
 	

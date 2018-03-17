@@ -1,5 +1,5 @@
 import React from 'react';
-import { Input, Form, FormGroup, Label, Row, Col, Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
+import { Form, Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import FontAwesomeIcon from 'react-fontawesome';
 import '../../../css/moduloUsuarioAdministrador.css';
 import {bindActionCreators} from 'redux';
@@ -47,20 +47,7 @@ class ModalPeriodoEdit extends React.Component {
   }
 
   render() {
-    let listPostgrados = '';
-    let listTipoAsignaturas = '';
-    
-    if (this.props.adminUser.lista_postgrados && this.props.adminUser.lista_postgrados.length > 0) {
-      listPostgrados = this.props.adminUser.lista_postgrados.map((tipo_postgrado) =>
-        <option key={tipo_postgrado['id']} value={tipo_postgrado['id']} name={tipo_postgrado['tipo']}> {tipo_postgrado['tipo']} </option>
-      ); 
-    }
 
-    if (this.props.adminUser.lista_tipoAsignaturas && this.props.adminUser.lista_tipoAsignaturas.length > 0) {
-      listTipoAsignaturas = this.props.adminUser.lista_tipoAsignaturas.map((tipo_asignatura) =>
-        <option key={tipo_asignatura['id']} value={tipo_asignatura['id']} name={tipo_asignatura['nombre']}> {tipo_asignatura['nombre']} </option>
-      ); 
-    }
 
     
     return (

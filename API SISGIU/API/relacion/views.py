@@ -241,7 +241,13 @@ class DocenteAsignaturaDetailAPIView():
             tipo_asignatura = TipoAsignatura.objects.filter(id=asignatura['tipo_asignatura_id']).values()[0]
             periodo = Periodo.objects.filter(id=docente_periodo['periodo_id']).values()[0]
             tipo_postgrado = TipoPostgrado.objects.filter(id=periodo['tipo_postgrado_id']).values()[0]
-
+            """
+            docente = Usuario.objects.get(id=docente_periodo['docente_id']).values()[0]
+            asignatura = Asignatura.objects.get(id=docente_periodo['asignatura_id']).values()[0]
+            tipo_asignatura = TipoAsignatura.objects.get(id=asignatura['tipo_asignatura_id']).values()[0]
+            periodo = Periodo.objects.get(id=docente_periodo['periodo_id']).values()[0]
+            tipo_postgrado = TipoPostgrado.objects.get(id=periodo['tipo_postgrado_id']).values()[0]
+            """
             docente_periodo['usuario'] = {}
             docente_periodo['asignatura'] = {}
             docente_periodo['tipo_postgrado'] = tipo_postgrado['tipo']
