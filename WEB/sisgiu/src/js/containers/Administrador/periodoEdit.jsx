@@ -1,37 +1,32 @@
 import React from 'react';
-import { Table, Form, Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
+import { Table, Form,  FormGroup, Input, Label, Button } from 'reactstrap';
 import FontAwesomeIcon from 'react-fontawesome';
 import '../../../css/moduloUsuarioAdministrador.css';
 import {bindActionCreators} from 'redux';
 import { connect } from 'react-redux';
+import {Link} from 'react-router-dom'; 
+
 
 // Components
 import { editar_asignatura } from '../../actions/moduloAsignaturas';
 import DualList from './dualList';
 
-class ModalPeriodoEdit extends React.Component {
+class PeriodoEdit extends React.Component {
 
   constructor(props) {
     super(props);
     this.state = {
-      modal: false,
-      paso: 1,
-      docente_asignatura: props.docente_asignatura
+      docente_asignatura: props.docente_asignatura,
     };
 
-    this.toggle = this.toggle.bind(this);
     this.handleChange = this.handleChange.bind(this);
+    this.handleChangeExtraData = this.handleChangeExtraData.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.updateDocenteAsignatura = this.updateDocenteAsignatura.bind(this);
 
   }
 
-  toggle() {
-    this.setState({
-      modal: !this.state.modal
-    });
-    if(!this.state.modal) { this.props.onDismiss(); };
-  }
+
 
   handleChange(e) {
     const { name, value } = e.target;
@@ -43,7 +38,6 @@ class ModalPeriodoEdit extends React.Component {
     this.props.triggerParentUpdate();
     this.props.editar_asignatura(this.state);
     this.props.triggerParentUpdate();
-    this.toggle();
   }
 
   componentWillReceiveProps(){
@@ -123,30 +117,76 @@ class ModalPeriodoEdit extends React.Component {
             this.setState({docente_asignatura:docente_asignatura});
             break;
           }
-
           exist = false;
       }
     }
 
-    
+  }
 
-    
-
+  handleChangeExtraData(){
 
   }
 
 
   render() {
     let listItems = '';
+    let lista_docentes = '';
+
+    if (this.props.adminUser.lista_usuarios && this.props.adminUser.lista_usuarios.length > 0) {
+      lista_docentes = this.props.adminUser.lista_usuarios.map((docente) =>
+        <option key={docente['cedula']} value={docente['cedula']} name={docente['cedula']}> {docente.first_name}{' '}{docente.last_name} </option>
+      ); 
+    }
+
+    const days = ['Lunes', 'Martes', 'Miercoles','Jueves', 'Viernes', 'Sabado', 'Domingo'];
     if(this.state.docente_asignatura !== undefined){
         listItems = this.state.docente_asignatura.map((docente, index) =>
             <tr key={index}>
               <td>{index+1}</td>
-              <td>{docente.usuario.first_name} {docente.usuario.last_name}</td>
+              <td> 
+                <FormGroup>
+                  <Input bsSize="sm" value={this.state.value} defaultValue={docente.usuario.cedula} onChange={this.handleChangeExtraData} required type="select" name="id_docente" id="id_docente">
+                    {lista_docentes}
+                  </Input>
+                </FormGroup>
+              </td>
               <td>{docente.asignatura.nombre}</td>
-              <td>{docente.horario_dia}</td>
-              <td>{docente.horario_hora}</td>
-              <td>{docente.aula}</td>
+              <td>        
+                <FormGroup>
+                  <Input bsSize="sm" value={this.state.value} defaultValue={[docente.horario_dia]} onChange={this.handleChangeExtraData} required type="select" name="horario_dia" id="horario_dia" multiple>
+                    <option key="0" value="0" name="Lunes"> Lunes </option>
+                    <option key="1" value="1" name="Martes"> Martes </option>
+                    <option key="2" value="2" name="Miercoles"> Miercoles </option>
+                    <option key="3" value="3" name="Jueves"> Jueves </option>
+                    <option key="4" value="4" name="Viernes"> Viernes </option>
+                    <option key="5" value="5" name="Sabado"> Sabado </option>
+                    <option key="6" value="6" name="Domingo"> Domingo </option>
+                  </Input>
+                </FormGroup>
+              </td>
+              <td>        
+                <FormGroup>
+                  <Input type="text" name="horario_hora" id="horario_hora" required defaultValue={docente.horario_hora} />
+                </FormGroup>
+                <FormGroup>
+                  <Input type="text" name="horario_hora" id="horario_hora" required defaultValue={docente.horario_hora} />
+                </FormGroup>
+                <FormGroup>
+                  <Input type="text" name="horario_hora" id="horario_hora" required defaultValue={docente.horario_hora} />
+                </FormGroup>
+                <FormGroup>
+                  <Input type="text" name="horario_hora" id="horario_hora" required defaultValue={docente.horario_hora} />
+                </FormGroup>
+                <FormGroup>
+                  <Input type="text" name="horario_hora" id="horario_hora" required defaultValue={docente.horario_hora} />
+                </FormGroup>
+              </td>
+              <td>        
+                <FormGroup>
+                  <Input type="number" name="aula" id="aula" required defaultValue={docente.aula} />
+                </FormGroup>
+              </td>
+
             </tr>
           );
     }
@@ -154,44 +194,34 @@ class ModalPeriodoEdit extends React.Component {
     return (
 
       <div>
-        <Button color="success" size='sm' onClick={this.toggle} data-toggle="tooltip" title="Editar"><FontAwesomeIcon name="edit"/></Button>
-        <Modal isOpen={this.state.modal} toggle={this.toggle} className={this.props.className}>
-          <ModalHeader toggle={this.toggle}> 
-                Editar Periodo
-          </ModalHeader>
+          <br />
           <Form onSubmit={this.handleSubmit}>
-            <ModalBody>
-              <h6>Paso {this.state.paso}: Seleccionar Asignaturas</h6>
+              <h6>Paso 1: Seleccionar Asignaturas</h6>
               <hr/>
               <DualList triggerDocenteAsignatura={this.updateDocenteAsignatura} asignaturas={this.props.asignaturas}/>
               <br />
               <hr/>
               <h6>Paso 2: Seleccione docente y hora</h6>
               <hr/>
-              <Table bordered hover responsive striped size="sm">
-                <thead>
-                  <tr>
-                    <th>N</th>
-                    <th>Docente</th>
-                    <th>Asignatura</th>
-                    <th>Dia</th>
-                    <th>Hora</th>
-                    <th>Aula</th>
-                  </tr>
-                </thead>
-                <tbody className="tabla_usuarios">
-                 {listItems}
-                </tbody>
-              </Table>
+                <Table bordered hover responsive striped size="sm">
+                  <thead>
+                    <tr>
+                      <th>N</th>
+                      <th>Docente</th>
+                      <th>Asignatura</th>
+                      <th>Dia</th>
+                      <th>Hora</th>
+                      <th>Aula</th>
+                    </tr>
+                  </thead>
+                  <tbody className="tabla_usuarios">
+                    
+                     {listItems}
+                    
+                  </tbody>
+                </Table>
 
-            </ModalBody>
-            <ModalFooter>
-              <Button color="success" type="submit">Guardar</Button>{' '}              
-              <Button color="secondary" onClick={this.toggle}>Salir</Button>
-            </ModalFooter>
           </Form>
-        </Modal>
-
       </div>
     );
   }
@@ -211,4 +241,4 @@ const mapDispatchToProps = (dispatch) => {
   )
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(ModalPeriodoEdit);
+export default connect(mapStateToProps, mapDispatchToProps)(PeriodoEdit);

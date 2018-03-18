@@ -1,15 +1,17 @@
 // Dependencies
 import React, {Component} from 'react';
 import { connect } from 'react-redux';
-import { Alert, Table, Row, Col } from 'reactstrap';
+import { Alert, Table, Row, Col, Button } from 'reactstrap';
+import FontAwesomeIcon from 'react-fontawesome';
 import SearchInput, {createFilter} from 'react-search-input';
 import '../../../css/moduloUsuarioAdministrador.css'; 
 import {bindActionCreators} from 'redux';
 import { PulseLoader } from 'halogenium'; //Spinner
+import {Link} from 'react-router-dom'; 
 
 // Components
 import ModalPeriodoNew from './modalPeriodoNew';
-import ModalPeriodoEdit from './modalPeriodoEdit';
+import PeriodoEdit from './periodoEdit';
 // import ModalPeriodoDelete from './modalPeriodoDelete';
 // import ModalPeriodoLaunch from './modalPeriodoLaunch';
 import {get_periodos} from '../../actions/moduloPeriodos';
@@ -17,6 +19,8 @@ import {get_tipo_postgrado} from '../../actions/moduloPeriodos';
 import { get_estado_periodo} from '../../actions/moduloPeriodos';
 import { get_docente_asignatura } from '../../actions/moduloPeriodos';
 import { get_asignaturas } from '../../actions/moduloAsignaturas';
+import {get_usuarios} from '../../actions/moduloUsuarioAdministrador';
+
 
 import Paginacion from '../../components/pagination';
 
@@ -32,16 +36,22 @@ class ListaPeriodos extends Component{
         visible: true,
         searchTerm: '',
         loading: false,
+        editando_periodo: false,
+        periodo: "",
+        docente_asignatura: "",
+        asignaturas: "",
       }
       
       this.props.get_docente_asignatura("all");
-      this.props.get_asignaturas();
       this.props.get_periodos(false);
+      this.props.get_usuarios("docentes", false);
       this.props.get_tipo_postgrado();
       this.props.get_estado_periodo();
+      this.props.get_asignaturas();
       this.updateLoading = this.updateLoading.bind(this);
       this.onDismiss = this.onDismiss.bind(this);
-      this.searchUpdated = this.searchUpdated.bind(this)
+      this.searchUpdated = this.searchUpdated.bind(this);
+      this.handleChange = this.handleChange.bind(this);
   }
 
   onDismiss() {
@@ -61,6 +71,14 @@ class ListaPeriodos extends Component{
     this.setState({"loading":!this.state.loading});
   }
 
+  handleChange(periodo, docente_asignatura, asignaturas){
+    this.setState({
+      periodo: periodo,
+      docente_asignatura: docente_asignatura,
+      asignaturas: asignaturas,
+      editando_periodo: 2
+    });
+  }
 
 
   render(){
@@ -138,7 +156,7 @@ class ListaPeriodos extends Component{
             <td>  
               <Row >
                 <Col md={{ size: 'auto', offset: 3 }} className='botones'>
-                  <ModalPeriodoEdit onDismiss={this.onDismiss} triggerParentUpdate={this.updateLoading} periodo={periodo} docente_asignatura={item[index]} asignaturas={asignaturas[index]}/>
+                  <Button onClick={() => this.handleChange(periodo, item[index], asignaturas[index])} color="success" size='sm' data-toggle="tooltip" title="Editar"><FontAwesomeIcon name="edit"/></Button>
                   {/*
                   <ModalPeriodoDelete onDismiss={this.onDismiss} triggerParentUpdate={this.updateLoading} periodo={periodo} />
                   <ModalPeriodoLaunch onDismiss={this.onDismiss} triggerParentUpdate={this.updateLoading} periodo={periodo} />
@@ -151,89 +169,100 @@ class ListaPeriodos extends Component{
 
 
 
+        if(!this.state.editando_periodo)
+        {
+          return(
+      		<div>
+                <br />
 
-        return(
-    		<div>
-              <br />
+                {this.state.loading && !this.props.adminUser['edit'] && !this.props.adminUser['bad_input'] &&
 
-              {this.state.loading && !this.props.adminUser['edit'] && !this.props.adminUser['bad_input'] &&
+                  <center><PulseLoader color="#b3b1b0" size="16px" margin="4px"/></center>
 
-                <center><PulseLoader color="#b3b1b0" size="16px" margin="4px"/></center>
+                }
 
-              }
-
-              {this.props.adminUser['edit'] &&
-                <Alert color="success" isOpen={this.state.visible} toggle={this.onDismiss}>
-                    Datos actualizados exitosamente
-                </Alert> 
-              }
-              {this.props.adminUser['bad_input'] === true &&
-                  <Alert color="danger" isOpen={this.state.visible} toggle={this.onDismiss}>
-                      Ha ocurrido un error
-                  </Alert>
-              }
-              <Row>
-                <Col md='4'>
-                  <ModalPeriodoNew onDismiss={this.onDismiss} triggerParentUpdate={this.updateLoading}   /> 
-                </Col>
-                <Col md='8'>
-                  <SearchInput className="searchBox" placeholder="Buscar periodo..." onChange={this.searchUpdated} />
-                </Col>
-              </Row>
-              <br />
-              <Col md='12' className='text-right'>
-                
-              </Col>
-              <Table bordered hover responsive striped size="sm">
-                <thead>
-                  <tr>
-                    <th>Periodo</th>
-                    <th>Postgrado</th>
-                    <th>Acción</th>
-                  </tr>
-                </thead>
-                <tbody className="tabla_usuarios">
-                  {listItems}
-
-
+                {this.props.adminUser['edit'] &&
+                  <Alert color="success" isOpen={this.state.visible} toggle={this.onDismiss}>
+                      Datos actualizados exitosamente
+                  </Alert> 
+                }
+                {this.props.adminUser['bad_input'] === true &&
+                    <Alert color="danger" isOpen={this.state.visible} toggle={this.onDismiss}>
+                        Ha ocurrido un error
+                    </Alert>
+                }
+                <Row>
+                  <Col md='4'>
+                    <ModalPeriodoNew onDismiss={this.onDismiss} triggerParentUpdate={this.updateLoading}   /> 
+                  </Col>
+                  <Col md='8'>
+                    <SearchInput className="searchBox" placeholder="Buscar periodo..." onChange={this.searchUpdated} />
+                  </Col>
+                </Row>
+                <br />
+                <Col md='12' className='text-right'>
                   
-                </tbody>
-              </Table>
-
-              <Row >
-                <Col lg='4' md='4' sm='3' xs='1'> </Col>
-                <Col lg='4' md='4' sm='6' xs='10'>
-                  <br />
-                  {this.state.searchTerm === '' &&
-                    <Paginacion cant_usuarios={cant_periodos} item_por_pagina={periodos_por_pagina}/>
-                  }
                 </Col>
-                <Col lg='4' md='4' sm='3' xs='1'> </Col>
+                <Table bordered hover responsive striped size="sm">
+                  <thead>
+                    <tr>
+                      <th>Periodo</th>
+                      <th>Postgrado</th>
+                      <th>Acción</th>
+                    </tr>
+                  </thead>
+                  <tbody className="tabla_usuarios">
+                    {listItems}
+
+
+                    
+                  </tbody>
+                </Table>
+
+                <Row >
+                  <Col lg='4' md='4' sm='3' xs='1'> </Col>
+                  <Col lg='4' md='4' sm='6' xs='10'>
+                    <br />
+                    {this.state.searchTerm === '' &&
+                      <Paginacion cant_usuarios={cant_periodos} item_por_pagina={periodos_por_pagina}/>
+                    }
+                  </Col>
+                  <Col lg='4' md='4' sm='3' xs='1'> </Col>
+                </Row>
+
+        	</div>
+          )
+
+        } 
+        else if(this.state.editando_periodo)
+        {
+          return(
+            <PeriodoEdit onDismiss={this.onDismiss} triggerParentUpdate={this.updateLoading} periodo={this.state.periodo} docente_asignatura={this.state.docente_asignatura} asignaturas={this.state.asignaturas}/>
+          )
+        }
+
+    }
+    else {
+          return (
+            <div>
+              <br/>
+              <Row>
+                <Col md='12'>
+                  <center>
+                  <h4>No existe ningún periodo guardado</h4>
+                  </center>
+                </Col>
               </Row>
 
-      	</div>
-        )
-      } else {
-        return (
-          <div>
-            <br/>
-            <Row>
-              <Col md='12'>
-                <center>
-                <h4>No existe ningún periodo guardado</h4>
-                </center>
-              </Col>
-            </Row>
+              <Row>
+                <Col md='12'>
+                  <ModalPeriodoNew onDismiss={this.onDismiss} triggerParentUpdate={this.updateLoading}/>
+                </Col>
+              </Row>
 
-            <Row>
-              <Col md='12'>
-                <ModalPeriodoNew onDismiss={this.onDismiss} triggerParentUpdate={this.updateLoading}/>
-              </Col>
-            </Row>
-
-          </div>
-        )
-      }
+            </div>
+          )
+    }
   }
 }
 
@@ -252,7 +281,8 @@ const mapDispatchToProps = (dispatch) => {
     get_periodos: get_periodos,
     get_estado_periodo: get_estado_periodo,
     get_docente_asignatura: get_docente_asignatura,
-    get_asignaturas: get_asignaturas
+    get_asignaturas: get_asignaturas,
+    get_usuarios: get_usuarios
   }, dispatch )
 }
 

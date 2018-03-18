@@ -252,6 +252,7 @@ class DocenteAsignaturaDetailAPIView():
             docente_periodo['asignatura'] = {}
             docente_periodo['tipo_postgrado'] = tipo_postgrado['tipo']
             docente_periodo['usuario']['first_name'] = docente['first_name']
+            docente_periodo['usuario']['id'] = docente['id']
             docente_periodo['usuario']['last_name'] = docente['last_name']
             docente_periodo['usuario']['cedula'] = docente['cedula']
             docente_periodo['asignatura']['codigo'] = asignatura['codigo']
@@ -260,7 +261,7 @@ class DocenteAsignaturaDetailAPIView():
             docente_periodo['asignatura']['tipo_asignatura'] = tipo_asignatura['nombre']
             docente_periodo['asignatura']['id'] = docente_periodo['asignatura_id']
 
-            del docente_periodo['docente_id']
+            # del docente_periodo['docente_id']
             # del docente_periodo['periodo_id']
             del docente_periodo['asignatura_id']
 
