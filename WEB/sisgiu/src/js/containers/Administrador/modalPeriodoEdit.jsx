@@ -1,5 +1,5 @@
 import React from 'react';
-import { Form, Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
+import { Table, Form, Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import FontAwesomeIcon from 'react-fontawesome';
 import '../../../css/moduloUsuarioAdministrador.css';
 import {bindActionCreators} from 'redux';
@@ -90,7 +90,7 @@ class ModalPeriodoEdit extends React.Component {
           if(!exist){
             //Delete from docente asignatura the index
             console.log("Se eliminara: "+docente_asignatura[i].asignatura.nombre);
-            docente_asignatura.splice(i,i);
+            docente_asignatura.splice(i,1);
             this.setState({docente_asignatura: docente_asignatura}); 
             break;
           }
@@ -137,6 +137,20 @@ class ModalPeriodoEdit extends React.Component {
 
 
   render() {
+    let listItems = '';
+    if(this.state.docente_asignatura !== undefined){
+        listItems = this.state.docente_asignatura.map((docente, index) =>
+            <tr key={index}>
+              <td>{index+1}</td>
+              <td>{docente.usuario.first_name} {docente.usuario.last_name}</td>
+              <td>{docente.asignatura.nombre}</td>
+              <td>{docente.horario_dia}</td>
+              <td>{docente.horario_hora}</td>
+              <td>{docente.aula}</td>
+            </tr>
+          );
+    }
+
     return (
 
       <div>
@@ -150,7 +164,25 @@ class ModalPeriodoEdit extends React.Component {
               <h6>Paso {this.state.paso}: Seleccionar Asignaturas</h6>
               <hr/>
               <DualList triggerDocenteAsignatura={this.updateDocenteAsignatura} asignaturas={this.props.asignaturas}/>
-
+              <br />
+              <hr/>
+              <h6>Paso 2: Seleccione docente y hora</h6>
+              <hr/>
+              <Table bordered hover responsive striped size="sm">
+                <thead>
+                  <tr>
+                    <th>N</th>
+                    <th>Docente</th>
+                    <th>Asignatura</th>
+                    <th>Dia</th>
+                    <th>Hora</th>
+                    <th>Aula</th>
+                  </tr>
+                </thead>
+                <tbody className="tabla_usuarios">
+                 {listItems}
+                </tbody>
+              </Table>
 
             </ModalBody>
             <ModalFooter>
