@@ -36,7 +36,7 @@ class ListaPeriodos extends Component{
         visible: true,
         searchTerm: '',
         loading: false,
-        editando_periodo: false,
+        editando_periodo: 1,
         periodo: "",
         docente_asignatura: "",
         asignaturas: "",
@@ -52,6 +52,7 @@ class ListaPeriodos extends Component{
       this.onDismiss = this.onDismiss.bind(this);
       this.searchUpdated = this.searchUpdated.bind(this);
       this.handleChange = this.handleChange.bind(this);
+      this.volverPasoAnterior = this.volverPasoAnterior.bind(this);
   }
 
   onDismiss() {
@@ -60,7 +61,7 @@ class ListaPeriodos extends Component{
   }
 
   searchUpdated (term) {
-    this.setState({searchTerm: term})
+    this.setState({searchTerm: term});
   }
 
   componentWillReceiveProps(props) { 
@@ -69,6 +70,11 @@ class ListaPeriodos extends Component{
 
   updateLoading(){
     this.setState({"loading":!this.state.loading});
+  }
+
+  volverPasoAnterior() {
+    this.setState({editando_periodo: 1});
+
   }
 
   handleChange(periodo, docente_asignatura, asignaturas){
@@ -169,7 +175,7 @@ class ListaPeriodos extends Component{
 
 
 
-        if(!this.state.editando_periodo)
+        if(this.state.editando_periodo === 1)
         {
           return(
       		<div>
@@ -193,7 +199,7 @@ class ListaPeriodos extends Component{
                 }
                 <Row>
                   <Col md='4'>
-                    <ModalPeriodoNew onDismiss={this.onDismiss} triggerParentUpdate={this.updateLoading}   /> 
+                    <ModalPeriodoNew onDismiss={this.onDismiss} triggerParentUpdate={this.updateLoading}  /> 
                   </Col>
                   <Col md='8'>
                     <SearchInput className="searchBox" placeholder="Buscar periodo..." onChange={this.searchUpdated} />
@@ -234,10 +240,10 @@ class ListaPeriodos extends Component{
           )
 
         } 
-        else if(this.state.editando_periodo)
+        else if(this.state.editando_periodo === 2)
         {
           return(
-            <PeriodoEdit onDismiss={this.onDismiss} triggerParentUpdate={this.updateLoading} periodo={this.state.periodo} docente_asignatura={this.state.docente_asignatura} asignaturas={this.state.asignaturas}/>
+            <PeriodoEdit onDismiss={this.onDismiss} triggerParentUpdate={this.updateLoading} periodo={this.state.periodo} docente_asignatura={this.state.docente_asignatura} asignaturas={this.state.asignaturas} triggerVolverPasoAnterior={this.volverPasoAnterior}/>
           )
         }
 
