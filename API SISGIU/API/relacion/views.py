@@ -254,12 +254,12 @@ class DocenteAsignaturaDetailAPIView():
             docente_periodo['usuario']['cedula'] = docente['cedula']
             docente_periodo['asignatura']['codigo'] = asignatura['codigo']
             docente_periodo['asignatura']['nombre'] = asignatura['nombre']
-            docente_periodo['asignatura']['unidad_credito'] = asignatura['unidad_credito']
-            docente_periodo['asignatura']['tipo_asignatura'] = tipo_asignatura['nombre']
             docente_periodo['asignatura']['id'] = docente_periodo['asignatura_id']
-
-            # del docente_periodo['docente_id']
-            # del docente_periodo['periodo_id']
+            docente_periodo['docente'] = docente_periodo['docente_id']
+            docente_periodo['periodo'] = docente_periodo['periodo_id']
+            
+            del docente_periodo['docente_id']
+            del docente_periodo['periodo_id']
             del docente_periodo['asignatura_id']
 
             lista_docentes.append(docente_periodo)

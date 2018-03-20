@@ -1,4 +1,4 @@
-import { Table, Form,  FormGroup, Input, Label, Col, Button } from 'reactstrap';
+import { Table, Form,  FormGroup, Input, Label, Col, Button, Row } from 'reactstrap';
 import '../../../css/moduloUsuarioAdministrador.css';
 import FontAwesomeIcon from 'react-fontawesome';
 import {bindActionCreators} from 'redux';
@@ -157,14 +157,10 @@ class PeriodoEdit extends React.Component {
 
   handleChangeExtraData(e){
     const { name, value } = e.target;
-     this.setState({ [name] : value });
-
-     console.log(name);
-     console.log(value);
+    this.setState({ [name] : value });
   }
 
   agregarDocenteAsignatura() {
-    console.log(this.state.docente_asignatura);
     // Obtengo asignatura
     // console.log(this.state.docente_asignatura_nuevo);
     // console.log(this.state.horario_dia_nuevo);
@@ -172,17 +168,56 @@ class PeriodoEdit extends React.Component {
     // console.log(this.state.aula_nuevo);
     // console.log(this.state.asignatura.codigo);
 
-    let nuevo = {};
+    //Declaraciones
+    let nueva_asignatura = {};
+    let new_docente_asignatura = this.state.docente_asignatura;
+    let index = 0;
+    let docente_asignatura_nuevo = this.state.docente_asignatura_nuevo;
+    let docente_asignatura_tabla = [];
 
-    nuevo['asignatura'] = {'codigo': this.state.asignatura.codigo, 'nombre': this.state.asignatura.nombre};
-    nuevo['aula'] = this.state.aula_nuevo;
-    nuevo['docente_id'] = this.state.docente_asignatura_nuevo;
-    nuevo['horario_dia'] = this.state.horario_dia_nuevo;
-    nuevo['horario_hora'] = this.state.horario_hora_nuevo;
-    nuevo['periodo_id'] = this.props.periodo.id;
+    //Obtener el index del docente deseado
+    this.props.adminUser.lista_usuarios.find(function(item, j){
+      if(item.cedula === docente_asignatura_nuevo){
+        index = j;
+      }
+    });
+
+    //Crear JSON para el "push" al docente asignatura
+    nueva_asignatura['asignatura'] = {
+      'codigo': this.state.asignatura.codigo, 
+      'nombre': this.state.asignatura.nombre,
+      'id': this.state.asignatura.id
+    };
+    nueva_asignatura['aula'] = this.state.aula_nuevo;
+    nueva_asignatura['docente'] = docente_asignatura_nuevo;
+    nueva_asignatura['usuario'] = {
+        'first_name': this.props.adminUser.lista_usuarios[index].first_name,
+        'last_name': this.props.adminUser.lista_usuarios[index].last_name,
+        'cedula': this.props.adminUser.lista_usuarios[index].cedula
+      };
+
+    nueva_asignatura['horario_dia'] = this.state.horario_dia_nuevo;
+    nueva_asignatura['horario_hora'] = this.state.horario_hora_nuevo;
+    nueva_asignatura['periodo'] = this.props.periodo.id;
+    nueva_asignatura['aula'] = this.state.aula_nuevo;
+    nueva_asignatura['tipo_postgrado'] = this.props.tipo_postgrado;
 
 
-    console.log(nuevo);
+    //Push al docente asignatura (nueva entrada)
+    new_docente_asignatura.push(nueva_asignatura);
+
+    //Refresco la tabla "local" con el nuevo docente asignatura
+    new_docente_asignatura.find(function(item, j){
+      if(item.asignatura.codigo === nueva_asignatura.asignatura.codigo){
+        docente_asignatura_tabla.push(item);
+      }
+    });
+
+    //Set a los valores nuevos de los estados
+    this.setState({
+      docente_asignatura: new_docente_asignatura, 
+      docente_asignatura_tabla: docente_asignatura_tabla
+    });
 
   }
 
@@ -235,7 +270,7 @@ class PeriodoEdit extends React.Component {
           <br />
 
           <Button color="secondary" size='sm' data-toggle="tooltip" title="Regresar" onClick={() => this.props.triggerVolverPasoAnterior()}><FontAwesomeIcon name="arrow-left"/></Button>
-
+          <br /><br />
           <Form onSubmit={this.handleSubmit}>
               <h6>Paso 1: Seleccionar Asignaturas</h6>
               <hr/>
@@ -307,10 +342,19 @@ class PeriodoEdit extends React.Component {
                 </Table>
 
           </Form>
-
-          <Button color="primary" size='sm' data-toggle="tooltip" title="Guardar" onClick={() => this.agregarDocenteAsignatura()}>Guardar</Button>
-          <Button color="success" size='sm' data-toggle="tooltip" title="Siguiente" onClick={() => this.props.triggerVolverPasoAnterior()}>Siguiente</Button>
-
+          <br />
+              <Row>
+                <Col md="6" sm="6">
+                    <div className="text-left">
+                      <Button color="primary" className="pull-left" size='sm' data-toggle="tooltip" title="Guardar" onClick={() => this.agregarDocenteAsignatura()}>Guardar</Button>
+                    </div>
+                </Col>
+                <Col md="6" sm="6">
+                    <div className="text-right">
+                      <Button className="pull-right" color="success" size='sm' data-toggle="tooltip" title="Siguiente" onClick={() => this.props.triggerVolverPasoAnterior()}>Siguiente</Button>
+                    </div>
+                </Col>
+              </Row>
       </div>
     );
   }

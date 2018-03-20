@@ -40,6 +40,7 @@ class ListaPeriodos extends Component{
         periodo: "",
         docente_asignatura: "",
         asignaturas: "",
+        tipo_postgrado: ""
       }
       
       this.props.get_docente_asignatura("all");
@@ -77,11 +78,12 @@ class ListaPeriodos extends Component{
 
   }
 
-  handleChange(periodo, docente_asignatura, asignaturas){
+  handleChange(periodo, docente_asignatura, asignaturas, tipo_postgrado){
     this.setState({
       periodo: periodo,
       docente_asignatura: docente_asignatura,
       asignaturas: asignaturas,
+      tipo_postgrado: tipo_postgrado,
       editando_periodo: 2
     });
   }
@@ -162,7 +164,7 @@ class ListaPeriodos extends Component{
             <td>  
               <Row >
                 <Col md={{ size: 'auto', offset: 3 }} className='botones'>
-                  <Button onClick={() => this.handleChange(periodo, item[index], asignaturas[index])} color="success" size='sm' data-toggle="tooltip" title="Editar"><FontAwesomeIcon name="edit"/></Button>
+                  <Button onClick={() => this.handleChange(periodo, item[index], asignaturas[index], periodo['tipo_postgrado'])} color="success" size='sm' data-toggle="tooltip" title="Editar"><FontAwesomeIcon name="edit"/></Button>
                   {/*
                   <ModalPeriodoDelete onDismiss={this.onDismiss} triggerParentUpdate={this.updateLoading} periodo={periodo} />
                   <ModalPeriodoLaunch onDismiss={this.onDismiss} triggerParentUpdate={this.updateLoading} periodo={periodo} />
@@ -243,7 +245,7 @@ class ListaPeriodos extends Component{
         else if(this.state.editando_periodo === 2)
         {
           return(
-            <PeriodoEdit onDismiss={this.onDismiss} triggerParentUpdate={this.updateLoading} periodo={this.state.periodo} docente_asignatura={this.state.docente_asignatura} asignaturas={this.state.asignaturas} triggerVolverPasoAnterior={this.volverPasoAnterior}/>
+            <PeriodoEdit onDismiss={this.onDismiss} triggerParentUpdate={this.updateLoading} periodo={this.state.periodo} docente_asignatura={this.state.docente_asignatura} asignaturas={this.state.asignaturas} triggerVolverPasoAnterior={this.volverPasoAnterior} tipo_postgrado={this.state.tipo_postgrado}/>
           )
         }
 
