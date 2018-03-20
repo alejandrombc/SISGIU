@@ -54,6 +54,7 @@ class ListaPeriodos extends Component{
       this.searchUpdated = this.searchUpdated.bind(this);
       this.handleChange = this.handleChange.bind(this);
       this.volverPasoAnterior = this.volverPasoAnterior.bind(this);
+      this.siguientePaso = this.siguientePaso.bind(this);
   }
 
   onDismiss() {
@@ -74,8 +75,11 @@ class ListaPeriodos extends Component{
   }
 
   volverPasoAnterior() {
-    this.setState({editando_periodo: 1});
+    this.setState({editando_periodo: this.state.editando_periodo-1});
+  }
 
+  siguientePaso() {
+    this.setState({editando_periodo: this.state.editando_periodo+1});
   }
 
   handleChange(periodo, docente_asignatura, asignaturas, tipo_postgrado){
@@ -165,10 +169,6 @@ class ListaPeriodos extends Component{
               <Row >
                 <Col md={{ size: 'auto', offset: 3 }} className='botones'>
                   <Button onClick={() => this.handleChange(periodo, item[index], asignaturas[index], periodo['tipo_postgrado'])} color="success" size='sm' data-toggle="tooltip" title="Editar"><FontAwesomeIcon name="edit"/></Button>
-                  {/*
-                  <ModalPeriodoDelete onDismiss={this.onDismiss} triggerParentUpdate={this.updateLoading} periodo={periodo} />
-                  <ModalPeriodoLaunch onDismiss={this.onDismiss} triggerParentUpdate={this.updateLoading} periodo={periodo} />
-                   */ }
                 </Col>
               </Row>
             </td>
@@ -242,10 +242,20 @@ class ListaPeriodos extends Component{
           )
 
         } 
-        else if(this.state.editando_periodo === 2)
+        else if(this.state.editando_periodo === 2 || this.state.editando_periodo === 3 )
         {
           return(
-            <PeriodoEdit onDismiss={this.onDismiss} triggerParentUpdate={this.updateLoading} periodo={this.state.periodo} docente_asignatura={this.state.docente_asignatura} asignaturas={this.state.asignaturas} triggerVolverPasoAnterior={this.volverPasoAnterior} tipo_postgrado={this.state.tipo_postgrado}/>
+            <PeriodoEdit 
+            onDismiss={this.onDismiss} 
+            triggerParentUpdate={this.updateLoading} 
+            periodo={this.state.periodo} 
+            docente_asignatura={this.state.docente_asignatura} 
+            asignaturas={this.state.asignaturas} 
+            triggerVolverPasoAnterior={this.volverPasoAnterior} 
+            triggerSiguientePaso={this.siguientePaso} 
+            tipo_postgrado={this.state.tipo_postgrado}
+            editando_periodo={this.state.editando_periodo}
+            />
           )
         }
 

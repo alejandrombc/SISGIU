@@ -4,6 +4,7 @@ import FontAwesomeIcon from 'react-fontawesome';
 import {bindActionCreators} from 'redux';
 import { connect } from 'react-redux';
 import React from 'react';
+import ConfirmButton from 'react-confirm-button';
 
 // Components
 import { editar_asignatura } from '../../actions/moduloAsignaturas';
@@ -22,13 +23,6 @@ class PeriodoEdit extends React.Component {
       horario_dia_nuevo: 0,
       horario_hora_nuevo: null,
       aula_nuevo: null,
-      // docente_asignatura_nuevo: {
-      //   id_docente: null,
-      //   codigo_asignatura: null,
-      //   dia: 0,
-      //   hora: null,
-      //   aula: null,
-      // }
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -161,26 +155,20 @@ class PeriodoEdit extends React.Component {
   }
 
   agregarDocenteAsignatura() {
-    // Obtengo asignatura
-    // console.log(this.state.docente_asignatura_nuevo);
-    // console.log(this.state.horario_dia_nuevo);
-    // console.log(this.state.horario_hora_nuevo);
-    // console.log(this.state.aula_nuevo);
-    // console.log(this.state.asignatura.codigo);
 
     //Declaraciones
     let nueva_asignatura = {};
     let new_docente_asignatura = this.state.docente_asignatura;
-    let index = 0;
+    let index = -1;
     let docente_asignatura_nuevo = this.state.docente_asignatura_nuevo;
     let docente_asignatura_tabla = [];
 
     //Obtener el index del docente deseado
     this.props.adminUser.lista_usuarios.find(function(item, j){
-      if(item.cedula === docente_asignatura_nuevo){
+      if(parseInt(item.cedula) === parseInt(docente_asignatura_nuevo)){
         index = j;
       }
-    });
+    }); 
 
     //Crear JSON para el "push" al docente asignatura
     nueva_asignatura['asignatura'] = {
@@ -228,8 +216,6 @@ class PeriodoEdit extends React.Component {
     let lista_docentes = '';
     let listAsignaturas = '';
 
-    console.log(this.state.docente_asignatura_tabla);
-
     if (this.props.adminUser.lista_usuarios && this.props.adminUser.lista_usuarios.length > 0) {
       lista_docentes = this.props.adminUser.lista_usuarios.map((docente) =>
         <option key={docente['cedula']} value={docente['cedula']} name={docente['cedula']}> {docente.first_name}{' '}{docente.last_name} </option>
@@ -264,99 +250,157 @@ class PeriodoEdit extends React.Component {
       ); 
     }
 
-    return (
+    if ( this.props.editando_periodo === 2 ) {
+      return (
+        <div>
+            <br />
 
-      <div>
-          <br />
+            <ConfirmButton
+              onConfirm={() => this.props.triggerVolverPasoAnterior() }
+              text= {<FontAwesomeIcon name="arrow-left"/>}
+              className="btn btn-secondary btn-sm"
+              confirming={{
+                text: '¿Ésta seguro? Se perderan todos los cambios',
+                className: 'btn btn-danger btn-sm',
+              }}
+            />
 
-          <Button color="secondary" size='sm' data-toggle="tooltip" title="Regresar" onClick={() => this.props.triggerVolverPasoAnterior()}><FontAwesomeIcon name="arrow-left"/></Button>
-          <br /><br />
-          <Form onSubmit={this.handleSubmit}>
-              <h6>Paso 1: Seleccionar Asignaturas</h6>
-              <hr/>
-              <FormGroup row>
-                <Label for="asignatura_codigo" sm={5}>Seleccione una asignatura</Label>
-                <Col sm={7}>
-                  <Input bsSize="sm" value={this.state.value} defaultValue={this.state['asignatura_codigo']} onChange={this.handleChange} type="select" name="asignatura_codigo" id="asignatura_codigo" required>
-                    <option value={null} name={-1}> {' '} </option>
-                    {listAsignaturas}
-                  </Input>
-                </Col>
-              </FormGroup>
-              <br />
-              <hr/>
-              <h6>Paso 2: Seleccione docente y hora</h6>
-              <hr/>
-                <Table bordered hover responsive striped size="sm">
-                  <thead>
-                    <tr>
-                      <th>Docente</th>
-                      <th>Asignatura</th>
-                      <th>Dia</th>
-                      <th>Hora</th>
-                      <th>Aula</th>
-                    </tr>
-                  </thead>
-                  <tbody className="tabla_usuarios">
+          {/*
+            <Button 
+            color="secondary" 
+            size='sm' 
+            data-toggle="tooltip" 
+            title="Regresar" 
+            onClick={() => this.props.triggerVolverPasoAnterior()}>
+              <FontAwesomeIcon name="arrow-left"/>
+            </Button>
+          */}
+
+            <br /><br />
+            <Form onSubmit={this.handleSubmit}>
+                <h6>Paso 1: Seleccionar Asignaturas</h6>
+                <hr/>
+                <FormGroup row>
+                  <Label for="asignatura_codigo" sm={5}>Seleccione una asignatura</Label>
+                  <Col sm={7}>
+                    <Input 
+                    bsSize="sm" 
+                    value={this.state.value} 
+                    defaultValue={this.state['asignatura_codigo']} 
+                    onChange={this.handleChange} 
+                    type="select" 
+                    name="asignatura_codigo" 
+                    id="asignatura_codigo" 
+                    required>
+                      <option value={null} name={-1}> {' '} </option>
+                      {listAsignaturas}
+                    </Input>
+                  </Col>
+                </FormGroup>
+                <br />
+                <hr/>
+                <h6>Paso 2: Seleccione docente y hora</h6>
+                <hr/>
+                  <Table bordered hover responsive striped size="sm">
+                    <thead>
+                      <tr>
+                        <th>Docente</th>
+                        <th>Asignatura</th>
+                        <th>Dia</th>
+                        <th>Hora</th>
+                        <th>Aula</th>
+                      </tr>
+                    </thead>
+                    <tbody className="tabla_usuarios">
+                        
+                        {listItems}
+                        
+                        { this.state.asignatura_codigo !== '' &&
+                          <tr>
+                            <td id='docente_asignatura_nuevo'> 
+                              <FormGroup>
+                                <Input bsSize="sm" value={this.state.value} onChange={this.handleChangeExtraData} required type="select" name="docente_asignatura_nuevo" id="docente_asignatura_nuevo">
+                                  <option value={null} name={-1}> {' '} </option>
+                                  {lista_docentes}
+                                </Input>
+                              </FormGroup>
+                            </td>
+                            <td> {this.state.asignatura.nombre}</td>
+                            <td> 
+                              <FormGroup>
+                                <Input bsSize="sm" value={this.state.value} onChange={this.handleChangeExtraData} required type="select" name="horario_dia_nuevo" id="horario_dia_nuevo">
+                                  <option key="0" value="0" name="Lunes"> Lunes </option>
+                                  <option key="1" value="1" name="Martes"> Martes </option>
+                                  <option key="2" value="2" name="Miercoles"> Miercoles </option>
+                                  <option key="3" value="3" name="Jueves"> Jueves </option>
+                                  <option key="4" value="4" name="Viernes"> Viernes </option>
+                                  <option key="5" value="5" name="Sabado"> Sabado </option>
+                                  <option key="6" value="6" name="Domingo"> Domingo </option>
+                                </Input>
+                              </FormGroup>
+                            </td>
+                            <td> 
+                              <FormGroup>
+                                <Input type="text" name="horario_hora_nuevo" id="horario_hora_nuevo" onChange={this.handleChangeExtraData} required />
+                              </FormGroup>
+                            </td>
+                            <td>
+                              <FormGroup>
+                                <Input type="number" name="aula_nuevo" id="aula_nuevo" onChange={this.handleChangeExtraData} required />
+                              </FormGroup>
+                            </td>
+                          </tr> 
+                        }
                       
-                      {listItems}
-                      
-                      { this.state.asignatura_codigo !== '' &&
-                        <tr>
-                          <td id='docente_asignatura_nuevo'> 
-                            <FormGroup>
-                              <Input bsSize="sm" value={this.state.value} onChange={this.handleChangeExtraData} required type="select" name="docente_asignatura_nuevo" id="docente_asignatura_nuevo">
-                                <option value={null} name={-1}> {' '} </option>
-                                {lista_docentes}
-                              </Input>
-                            </FormGroup>
-                          </td>
-                          <td> {this.state.asignatura.nombre}</td>
-                          <td> 
-                            <FormGroup>
-                              <Input bsSize="sm" value={this.state.value} onChange={this.handleChangeExtraData} required type="select" name="horario_dia_nuevo" id="horario_dia_nuevo">
-                                <option key="0" value="0" name="Lunes"> Lunes </option>
-                                <option key="1" value="1" name="Martes"> Martes </option>
-                                <option key="2" value="2" name="Miercoles"> Miercoles </option>
-                                <option key="3" value="3" name="Jueves"> Jueves </option>
-                                <option key="4" value="4" name="Viernes"> Viernes </option>
-                                <option key="5" value="5" name="Sabado"> Sabado </option>
-                                <option key="6" value="6" name="Domingo"> Domingo </option>
-                              </Input>
-                            </FormGroup>
-                          </td>
-                          <td> 
-                            <FormGroup>
-                              <Input type="text" name="horario_hora_nuevo" id="horario_hora_nuevo" onChange={this.handleChangeExtraData} required />
-                            </FormGroup>
-                          </td>
-                          <td>
-                            <FormGroup>
-                              <Input type="number" name="aula_nuevo" id="aula_nuevo" onChange={this.handleChangeExtraData} required />
-                            </FormGroup>
-                          </td>
-                        </tr> 
-                      }
-                    
-                  </tbody>
-                </Table>
+                    </tbody>
+                  </Table>
 
-          </Form>
-          <br />
-              <Row>
-                <Col md="6" sm="6">
-                    <div className="text-left">
-                      <Button color="primary" className="pull-left" size='sm' data-toggle="tooltip" title="Guardar" onClick={() => this.agregarDocenteAsignatura()}>Guardar</Button>
-                    </div>
-                </Col>
-                <Col md="6" sm="6">
-                    <div className="text-right">
-                      <Button className="pull-right" color="success" size='sm' data-toggle="tooltip" title="Siguiente" onClick={() => this.props.triggerVolverPasoAnterior()}>Siguiente</Button>
-                    </div>
-                </Col>
-              </Row>
-      </div>
-    );
+            </Form>
+            <br />
+            <Row>
+              <Col md="6" sm="6">
+                  <div className="text-left">
+                    <Button color="primary" className="pull-left" size='sm' data-toggle="tooltip" title="Guardar" onClick={() => this.agregarDocenteAsignatura()}>Guardar</Button>
+                  </div>
+              </Col>
+              <Col md="6" sm="6">
+                  <div className="text-right">
+                    <Button color="success" size='sm' data-toggle="tooltip" title="Siguiente" onClick={() => this.props.triggerSiguientePaso()}><FontAwesomeIcon name="arrow-right"/></Button>
+                  </div>
+              </Col>
+            </Row>
+        </div>
+      );
+
+    } else { // this.props.editando_periodo === 3 PASO FINAL
+      return (
+        <div>
+
+          <br/>
+          <Row>
+            <Col md='12'>
+              <Button color="secondary" size='sm' data-toggle="tooltip" title="Regresar" onClick={() => this.props.triggerVolverPasoAnterior()}><FontAwesomeIcon name="arrow-left"/></Button>
+            </Col>
+          </Row>
+          <br/>
+
+          <Row>
+            <Col md='12'>
+              <h6>Paso 3: Confirmar Cambios</h6>
+              <hr/>
+            </Col>
+          </Row>
+
+
+          
+
+
+        </div>
+
+      );
+    }
+
+    
   }
 }
 
