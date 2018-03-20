@@ -30,6 +30,7 @@ class PeriodoEdit extends React.Component {
     this.handleSubmit = this.handleSubmit.bind(this);
     this.updateDocenteAsignatura = this.updateDocenteAsignatura.bind(this);
     this.agregarDocenteAsignatura = this.agregarDocenteAsignatura.bind(this);
+    this.ordenarLista = this.ordenarLista.bind(this);
 
 
   }
@@ -210,11 +211,45 @@ class PeriodoEdit extends React.Component {
   }
 
 
+  ordenarLista() {
+
+
+    let lista_codigos_asignaturas = [];
+    let N = this.state.docente_asignatura.length;
+
+    // Busco todos los codigos de asignaturas de docente_asignatura
+    for (var i = 0; i < N; i++) {
+      // si el codigo existe ya en lista_codigos_asignaturas no lo vuelvo a agregar
+      if ( !lista_codigos_asignaturas.includes(this.state.docente_asignatura[i]['asignatura']['codigo']) ) {
+        lista_codigos_asignaturas.push( this.state.docente_asignatura[i]['asignatura']['codigo'] );
+      }
+
+    }
+
+    N = lista_codigos_asignaturas.length;
+    let docente_asignatura_ordenado = [];
+
+    // Voy buscando en todo el arreglo de docente_asignatura y voy agregando los campos en otro arreglo pero CODIGO POR CODIGO para que este ordenado
+    for (i = 0; i < N; i++) {
+      this.state.docente_asignatura.find(function(item, j){
+        if(item.asignatura.codigo === lista_codigos_asignaturas[i]){
+          docente_asignatura_ordenado.push(item);
+        }
+      });
+    }
+
+    // console.log(docente_asignatura_ordenado);
+
+    return docente_asignatura_ordenado;
+  }
+
+
   render() {
 
     let listItems = '';
     let lista_docentes = '';
     let listAsignaturas = '';
+    let listItemsFinales = '';  
 
     if (this.props.adminUser.lista_usuarios && this.props.adminUser.lista_usuarios.length > 0) {
       lista_docentes = this.props.adminUser.lista_usuarios.map((docente) =>
@@ -223,26 +258,58 @@ class PeriodoEdit extends React.Component {
     }
 
     const days = ['Lunes', 'Martes', 'Miercoles','Jueves', 'Viernes', 'Sabado', 'Domingo'];
+    // Creo que este if no hace falta
     if(this.state.docente_asignatura !== undefined){
-        listItems = this.state.docente_asignatura_tabla.map((docente, index) =>
-            <tr key={index}>
-              <td> 
-                {docente.usuario.first_name}{' '}{docente.usuario.last_name}
-              </td>
-              <td>{docente.asignatura.nombre}</td>
-              <td>        
-                {days[docente.horario_dia]}
-              </td>
-              <td>        
-                {docente.horario_hora}
-              </td>
-              <td>        
-                {docente.aula}
-              </td>
-
-            </tr>
-          );
+      // Esta es la lista de todos los horarios que posee una asignatura en especifico.
+      listItems = this.state.docente_asignatura_tabla.map((docente, index) =>
+          <tr key={index}>
+            <td> 
+              {docente.usuario.first_name}{' '}{docente.usuario.last_name}
+            </td>
+            <td>{docente.asignatura.nombre}</td>
+            <td>        
+              {days[docente.horario_dia]}
+            </td>
+            <td>        
+              {docente.horario_hora}
+            </td>
+            <td>        
+              {docente.aula}
+            </td>
+          </tr>
+        );
     }
+
+
+    // Esta es la lista de todas las asignaturas con horarios, aulas, etc que se mostrara en el paso final al editar un periodo. 
+    listItemsFinales = this.ordenarLista().map((docente, index) =>
+      <tr key={index}>
+        <td> 
+          {docente.usuario.first_name}{' '}{docente.usuario.last_name}
+        </td>
+        <td>{docente.asignatura.nombre}</td>
+        <td>        
+          {days[docente.horario_dia]}
+        </td>
+        <td>        
+          {docente.horario_hora}
+        </td>
+        <td>        
+          {docente.aula}
+        </td>
+        <td>
+          <ConfirmButton
+              onConfirm={() => this.props.triggerVolverPasoAnterior() }
+              text= {<FontAwesomeIcon name="trash-alt"/>}
+              className="btn btn-danger btn-sm"
+              confirming={{
+                text: '¿Ésta seguro? Se eliminará este horario.',
+                className: 'btn btn-danger btn-sm',
+              }}
+            />
+        </td>
+      </tr>
+    );
 
     if (this.props.adminUser.lista_asignaturas && this.props.adminUser.lista_asignaturas.length > 0) {
       listAsignaturas = this.props.adminUser.lista_asignaturas.map((tipo_asignatura) =>
@@ -264,17 +331,6 @@ class PeriodoEdit extends React.Component {
                 className: 'btn btn-danger btn-sm',
               }}
             />
-
-          {/*
-            <Button 
-            color="secondary" 
-            size='sm' 
-            data-toggle="tooltip" 
-            title="Regresar" 
-            onClick={() => this.props.triggerVolverPasoAnterior()}>
-              <FontAwesomeIcon name="arrow-left"/>
-            </Button>
-          */}
 
             <br /><br />
             <Form onSubmit={this.handleSubmit}>
@@ -390,6 +446,26 @@ class PeriodoEdit extends React.Component {
               <hr/>
             </Col>
           </Row>
+
+
+          <Table bordered hover responsive striped size="sm">
+            <thead>
+              <tr>
+                <th>Docente</th>
+                <th>Asignatura</th>
+                <th>Dia</th>
+                <th>Hora</th>
+                <th>Aula</th>
+                <th>Acción</th>
+              </tr>
+            </thead>
+            <tbody className="tabla_usuarios">
+                
+                {listItemsFinales}
+              
+              
+            </tbody>
+          </Table>
 
 
           
