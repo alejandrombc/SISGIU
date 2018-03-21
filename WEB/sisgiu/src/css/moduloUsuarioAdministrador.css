@@ -35,6 +35,9 @@
     margin-right: 2px;
   }
 
+}
 
-
+.Pagination > ul {
+  margin: 0 auto;
+  width: 50%;
 }

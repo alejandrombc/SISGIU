@@ -95,16 +95,13 @@ class AsignaturaListCreateAPIView(ListCreateAPIView):
                 asignatura = Asignatura.objects.filter(id=docente_asignatura['asignatura_id']).values()[0]
                 tipo_asignatura = TipoAsignatura.objects.filter(id=asignatura['tipo_asignatura_id']).values()[0]
                 asig_tipo = AsignaturaTipoPostgrado.objects.filter(asignatura_id=asignatura['id']).values()[0]
-                tipo_postgrado = TipoPostgrado.objects.filter(id=asig_tipo['tipo_postgrado_id']).values()[0]
 
 
                 asignatura['tipo_asignatura'] = tipo_asignatura['nombre']
-                asignatura['tipo_postgrado'] = tipo_postgrado['tipo']
                 asignatura['horario_dia'] = docente_asignatura['horario_dia']
                 asignatura['horario_hora'] = docente_asignatura['horario_hora']
 
                 del asignatura['tipo_asignatura_id']
-                del asignatura['tipo_postgrado_id']
                 lista_asignaturas.append(asignatura)
 
             return HttpResponse(json.dumps(lista_asignaturas), content_type="application/json")
@@ -125,7 +122,6 @@ class AsignaturaListCreateAPIView(ListCreateAPIView):
                 asignatura = Asignatura.objects.filter(id=estudiante_asignatura['asignatura_id']).values()[0]
                 tipo_asignatura = TipoAsignatura.objects.filter(id=asignatura['tipo_asignatura_id']).values()[0]
                 asig_tipo = AsignaturaTipoPostgrado.objects.filter(asignatura_id=asignatura['id']).values()[0]
-                tipo_postgrado = TipoPostgrado.objects.filter(id=asig_tipo['tipo_postgrado_id']).values()[0]
 
                 docente_asignatura = DocenteAsignatura.objects.filter(asignatura_id=asignatura['id']).values()
                 horarios_dia = []
@@ -148,10 +144,8 @@ class AsignaturaListCreateAPIView(ListCreateAPIView):
                 asignatura['docente']['horario_hora'] = horarios_hora
 
                 asignatura['tipo_asignatura'] = tipo_asignatura['nombre']
-                asignatura['tipo_postgrado'] = tipo_postgrado['tipo']
 
                 del asignatura['tipo_asignatura_id']
-                del asignatura['tipo_postgrado_id']
 
                 lista_asignaturas.append(asignatura)
 
@@ -171,9 +165,7 @@ class AsignaturaListCreateAPIView(ListCreateAPIView):
             for asignatura in lista_asignaturas:
 
                 tipo_asignatura = TipoAsignatura.objects.filter(id=asignatura['tipo_asignatura_id']).values()[0]
-                tipo_postgrado = TipoPostgrado.objects.filter(id=asignatura['tipo_postgrado_id']).values()[0]
                 asignatura['tipo_asignatura'] = tipo_asignatura['nombre']
-                asignatura['tipo_postgrado'] = tipo_postgrado['tipo']
 
                 response_asignaturas.append(asignatura)
 
@@ -219,11 +211,7 @@ class PrelacionAsignaturaListCreateAPIView(ListCreateAPIView):
             codigos=json.loads(request.body.decode("utf-8"))
             PrelacionAsignatura.objects.filter(asignatura_objetivo=codigos['codigo']).delete()
             prelacion = []
-            print('\n#########################.\n')
-            print(codigos)
             for code in codigos['prelaciones']:
-                print(code)
-                print('\n#########################.\n')
                 prelacion = PrelacionAsignatura.objects.create(
                     asignatura_objetivo=Asignatura.objects.get(codigo = codigos['codigo']), 
                     asignatura_prela=Asignatura.objects.get(codigo = code))

@@ -19,7 +19,6 @@ class ModalAsignaturaEdit extends React.Component {
       nombre: this.props.asignatura['nombre'],
       unidad_credito: this.props.asignatura['unidad_credito'],
       tipo_asignatura: this.props.asignatura['tipo_asignatura'],
-      tipo_postgrado: this.props.asignatura['tipo_postgrado'],
       prelaciones: this.props.prelacion,
     };
 
@@ -61,14 +60,7 @@ class ModalAsignaturaEdit extends React.Component {
     var options = JSON.parse(JSON.stringify(this.props.adminUser['lista_asignaturas']).split('"codigo":').join('"value":')); //Rename key 
     options = JSON.parse(JSON.stringify(options).split('"nombre":').join('"label":')); //Rename key 
 
-    let listPostgrados = '';
     let listTipoAsignaturas = '';
-    
-    if (this.props.adminUser.lista_postgrados && this.props.adminUser.lista_postgrados.length > 0) {
-      listPostgrados = this.props.adminUser.lista_postgrados.map((tipo_postgrado) =>
-        <option key={tipo_postgrado['id']} value={tipo_postgrado['id']} name={tipo_postgrado['tipo']}> {tipo_postgrado['tipo']} </option>
-      ); 
-    }
 
     if (this.props.adminUser.lista_tipoAsignaturas && this.props.adminUser.lista_tipoAsignaturas.length > 0) {
       listTipoAsignaturas = this.props.adminUser.lista_tipoAsignaturas.map((tipo_asignatura) =>
@@ -94,7 +86,7 @@ class ModalAsignaturaEdit extends React.Component {
                           <FormGroup row>
                             <Label for="codigo" sm={5}>Código</Label>
                             <Col sm={7}>
-                              <Input bsSize="sm" type="number" name="codigo" id="codigo" onChange={this.handleChange} readOnly defaultValue={this.state['codigo']} required/>
+                              <Input bsSize="sm" type="text" name="codigo" id="codigo" onChange={this.handleChange} readOnly defaultValue={this.state['codigo']} required/>
                             </Col>
                           </FormGroup>
 
@@ -122,17 +114,7 @@ class ModalAsignaturaEdit extends React.Component {
                           </FormGroup>
 
                           <FormGroup row>
-                            <Label for="tipo_postgrado" sm={5}>Postgrado</Label>
-                            <Col sm={7}>
-                              <Input bsSize="sm" value={this.state.value} defaultValue={this.state['tipo_postgrado']} onChange={this.handleChange} type="select" name="tipo_postgrado" id="tipo_postgrado" required>
-                                {listPostgrados}
-                              </Input>
-                            </Col>
-                          </FormGroup>
-
-
-                          <FormGroup row>
-                            <Label for="tipo_postgrado" sm={5}>Asignaturas necesarias</Label>
+                            <Label for="asignaturas_necesarias" sm={5}>Asignaturas necesarias</Label>
                             <Col sm={7}>
                                 <Select
                                   closeOnSelect={true}

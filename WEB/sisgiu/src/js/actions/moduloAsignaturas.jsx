@@ -52,30 +52,6 @@ export function get_asignaturas (edit) {
 
 }
 
-export function get_tipo_postgrado () {
-	let token = localStorage.getItem('user_token');
-
-
-	return request
-	   .get(host+'api/tipoPostgrado/')
-	   .set('Authorization', 'JWT '+token)
-	   .then(function(res) {
-			return {
-				type: "GET_TIPO_POSTGRADO_EXITOSO",
-				payload: {lista_postgrados: res.body}
-			}
-	   })
-	   .catch(function(err) {
-	   		localStorage.removeItem('user_token');
-	   		localStorage.removeItem('modulo');
-	      	return {
-				type: "ERROR"
-			}
-	   });
-
-}
-
-
 export function get_tipo_asignatura () {
 	let token = localStorage.getItem('user_token');
 
@@ -96,6 +72,26 @@ export function get_tipo_asignatura () {
 			}
 	   });
 
+}
+
+export function get_tipo_postgrado () {
+	let token = localStorage.getItem('user_token');
+	return request
+		.get(host+'api/tipoPostgrado/')
+		.set('Authorization', 'JWT '+token)
+		.then(function(res) {
+			return {
+				type: "GET_TIPO_POSTGRADO_EXITOSO",
+				payload: {lista_postgrados: res.body}
+			}
+		})
+	.catch(function(err) {
+		localStorage.removeItem('user_token');
+		localStorage.removeItem('modulo');
+			return {
+			type: "ERROR"
+		}
+	});
 }
 
 
@@ -142,7 +138,7 @@ export function crear_asignatura (asignatura) {
 export const editar_asignatura = (asignatura) => {
 	let token = localStorage.getItem('user_token');
 	console.log(asignatura);
-	if (asignatura.prelaciones.length > 0) {
+	if (asignatura.prelaciones && asignatura.prelaciones.length > 0) {
 		asignatura.prelaciones = asignatura.prelaciones.split(',');
 	} else {
 		asignatura.prelaciones = [];

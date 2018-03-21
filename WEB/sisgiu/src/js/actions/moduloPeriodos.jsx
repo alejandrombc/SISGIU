@@ -129,3 +129,27 @@ export function get_docente_asignatura (tipoPostgrado) {
 	   });
 
 }
+
+
+export function guardar_periodo (periodo_info) {
+	let token = localStorage.getItem('user_token');
+
+	return request
+	   .get(host+'api/docenteAsignatura/periodo/noIniciado/tipo/')
+	   .set('Authorization', 'JWT '+token)
+	   .then(function(res) {
+			return {
+				type: "GET_DOCENTE_ASIGNATURA_EXITOSO",
+				payload: {lista_docente_asignatura: res.body}
+			}
+	   })
+	   .catch(function(err) {
+	   		localStorage.removeItem('user_token');
+	   		localStorage.removeItem('modulo');
+	      	return {
+				type: "ERROR"
+			}
+	   });
+
+}
+

@@ -8,6 +8,7 @@
     "halogenium": "^2.2.3",
     "jwt-decode": "^2.2.0",
     "merge-json": "0.1.0-b.3",
+    "rc-time-picker": "^3.3.1",
     "react": "^16.2.0",
     "react-confirm-button": "^0.1.0",
     "react-dom": "^16.2.0",

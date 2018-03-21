@@ -7,13 +7,10 @@ import SearchInput, {createFilter} from 'react-search-input';
 import '../../../css/moduloUsuarioAdministrador.css'; 
 import {bindActionCreators} from 'redux';
 import { PulseLoader } from 'halogenium'; //Spinner
-import {Link} from 'react-router-dom'; 
 
 // Components
 import ModalPeriodoNew from './modalPeriodoNew';
 import PeriodoEdit from './periodoEdit';
-// import ModalPeriodoDelete from './modalPeriodoDelete';
-// import ModalPeriodoLaunch from './modalPeriodoLaunch';
 import {get_periodos} from '../../actions/moduloPeriodos';
 import {get_tipo_postgrado} from '../../actions/moduloPeriodos';
 import { get_estado_periodo} from '../../actions/moduloPeriodos';
@@ -55,6 +52,7 @@ class ListaPeriodos extends Component{
       this.handleChange = this.handleChange.bind(this);
       this.volverPasoAnterior = this.volverPasoAnterior.bind(this);
       this.siguientePaso = this.siguientePaso.bind(this);
+      this.ordenarLista = this.ordenarLista.bind(this);
   }
 
   onDismiss() {
@@ -90,6 +88,42 @@ class ListaPeriodos extends Component{
       tipo_postgrado: tipo_postgrado,
       editando_periodo: 2
     });
+  }
+
+  ordenarLista() {
+    if (this.state.docente_asignatura) {
+      let lista_codigos_asignaturas = [];
+      
+      let N = this.state.docente_asignatura.length;
+
+      // Busco todos los codigos de asignaturas de docente_asignatura
+      for (var i = 0; i < N; i++) {
+        // si el codigo existe ya en lista_codigos_asignaturas no lo vuelvo a agregar
+        if ( !lista_codigos_asignaturas.includes(this.state.docente_asignatura[i]['asignatura']['codigo']) ) {
+          lista_codigos_asignaturas.push( this.state.docente_asignatura[i]['asignatura']['codigo'] );
+        }
+
+      }
+
+      N = lista_codigos_asignaturas.length;
+      let docente_asignatura_ordenado = [];
+
+      let M = this.state.docente_asignatura.length;
+
+      // Voy buscando en todo el arreglo de docente_asignatura y voy agregando los campos en otro arreglo pero CODIGO POR CODIGO para que este ordenado
+      for (i = 0; i < N; i++) {
+        
+        for (var j = 0; j < M; j++) {
+          if(this.state.docente_asignatura[j].asignatura.codigo === lista_codigos_asignaturas[i]){
+            docente_asignatura_ordenado.push(this.state.docente_asignatura[j]);
+          }
+        }
+
+      }
+
+      return docente_asignatura_ordenado
+    } 
+    return '';
   }
 
 
@@ -229,7 +263,7 @@ class ListaPeriodos extends Component{
 
                 <Row >
                   <Col lg='4' md='4' sm='3' xs='1'> </Col>
-                  <Col lg='4' md='4' sm='6' xs='10'>
+                  <Col lg='4' md='4' sm='6' xs='10' className='Pagination'>
                     <br />
                     {this.state.searchTerm === '' &&
                       <Paginacion cant_usuarios={cant_periodos} item_por_pagina={periodos_por_pagina}/>
@@ -249,7 +283,7 @@ class ListaPeriodos extends Component{
             onDismiss={this.onDismiss} 
             triggerParentUpdate={this.updateLoading} 
             periodo={this.state.periodo} 
-            docente_asignatura={this.state.docente_asignatura} 
+            docente_asignatura={this.ordenarLista()} 
             asignaturas={this.state.asignaturas} 
             triggerVolverPasoAnterior={this.volverPasoAnterior} 
             triggerSiguientePaso={this.siguientePaso} 

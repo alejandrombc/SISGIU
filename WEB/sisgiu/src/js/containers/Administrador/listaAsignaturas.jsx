@@ -13,7 +13,6 @@ import ModalAsignaturaEdit from './modalAsignaturaEdit';
 import ModalAsignaturaDelete from './modalAsignaturaDelete';
 import {get_asignaturas} from '../../actions/moduloAsignaturas';
 // import {get_prelacion} from '../../actions/moduloAsignaturas';
-import { get_tipo_postgrado } from '../../actions/moduloAsignaturas';
 import { get_tipo_asignatura } from '../../actions/moduloAsignaturas';
 import Paginacion from '../../components/pagination';
 
@@ -33,7 +32,6 @@ class ListaAsignaturas extends Component{
       
       // this.props.get_prelacion(false);
       this.props.get_asignaturas(false);
-      this.props.get_tipo_postgrado();
       this.props.get_tipo_asignatura();
 
       this.updateLoading = this.updateLoading.bind(this);
@@ -168,7 +166,7 @@ class ListaAsignaturas extends Component{
 
               <Row >
                 <Col lg='4' md='4' sm='3' xs='1'> </Col>
-                <Col lg='4' md='4' sm='6' xs='10'>
+                <Col lg='4' md='4' sm='6' xs='10' className='Pagination'>
                   <br />
                   {this.state.searchTerm === '' &&
                     <Paginacion cant_usuarios={cant_asignaturas} item_por_pagina={asignaturas_por_pagina}/>
@@ -213,7 +211,7 @@ const mapStateToProps = (state)=> {
 
 
 const mapDispatchToProps = (dispatch) => {
-  return bindActionCreators({get_tipo_asignatura: get_tipo_asignatura, get_tipo_postgrado:get_tipo_postgrado, get_asignaturas: get_asignaturas}, dispatch )
+  return bindActionCreators({get_tipo_asignatura: get_tipo_asignatura, get_asignaturas: get_asignaturas}, dispatch )
 }
 
 

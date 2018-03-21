@@ -159,7 +159,7 @@ class ListaUsuarios extends Component{
 
               <Row >
                 <Col lg='4' md='4' sm='3' xs='1'> </Col>
-                <Col lg='4' md='4' sm='6' xs='10'>
+                <Col lg='4' md='4' sm='6' xs='10' className='Pagination'>
                   <br />
                   {this.state.searchTerm === '' &&
                     <Paginacion cant_usuarios={cant_usuarios} item_por_pagina={usuarios_por_pagina}/>

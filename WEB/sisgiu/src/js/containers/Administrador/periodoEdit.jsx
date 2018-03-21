@@ -8,6 +8,8 @@ import ConfirmButton from 'react-confirm-button';
 
 // Components
 import { editar_asignatura } from '../../actions/moduloAsignaturas';
+import TimePicker from 'rc-time-picker';
+import moment from 'moment';
 
 class PeriodoEdit extends React.Component {
 
@@ -18,19 +20,20 @@ class PeriodoEdit extends React.Component {
       asignatura_codigo: '',
       docente_asignatura_tabla: [],
       asignatura: '',
-      codigo_asignatura: null,
-      docente_asignatura_nuevo: null,
+      codigo_asignatura: '',
+      docente_asignatura_nuevo: '',
       horario_dia_nuevo: 0,
-      horario_hora_nuevo: null,
-      aula_nuevo: null,
+      horario_hora_nuevo: '',
+      aula_nuevo: '',
     };
 
     this.handleChange = this.handleChange.bind(this);
     this.handleChangeExtraData = this.handleChangeExtraData.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
-    this.updateDocenteAsignatura = this.updateDocenteAsignatura.bind(this);
     this.agregarDocenteAsignatura = this.agregarDocenteAsignatura.bind(this);
     this.ordenarLista = this.ordenarLista.bind(this);
+    this.eliminarDocenteAsignatura = this.eliminarDocenteAsignatura.bind(this);
+    this.guardarCambiosEdit = this.guardarCambiosEdit.bind(this);
 
 
   }
@@ -43,19 +46,29 @@ class PeriodoEdit extends React.Component {
     let docente_asignatura_tabla = [];
     let index;
 
-    this.state.docente_asignatura.find(function(item, j){
-      if(item.asignatura.codigo === value){
-        docente_asignatura_tabla.push(item);
-      }
-    });
+    let N = this.state.docente_asignatura.length;
 
-    this.props.adminUser.lista_asignaturas.find(function(item, j){
-      if(item.codigo === value){
+    for (var j = 0; j < N; j++) {
+      if(this.state.docente_asignatura[j].asignatura.codigo === value){
+        docente_asignatura_tabla.push(this.state.docente_asignatura[j]);
+      }
+    }
+
+    N = this.props.adminUser.lista_asignaturas.length;
+
+    for (j = 0; j < N; j++) {
+      if(this.props.adminUser.lista_asignaturas[j].codigo === value){
         index = j;
       }
-    });
+    }
 
-    this.setState({ [name]: value, docente_asignatura_tabla: docente_asignatura_tabla, asignatura: this.props.adminUser.lista_asignaturas[index]  });
+    this.setState({ [name]: value, 
+      docente_asignatura_tabla: docente_asignatura_tabla, 
+      asignatura: this.props.adminUser.lista_asignaturas[index], 
+      docente_asignatura_nuevo: '',
+      horario_dia_nuevo: 0,
+      horario_hora_nuevo: '',
+      aula_nuevo: '',  });
 
   }
 
@@ -67,88 +80,12 @@ class PeriodoEdit extends React.Component {
   }
 
   componentWillReceiveProps(){
-    if(this.state.docente_asignatura == undefined){
+    if(this.state.docente_asignatura === undefined){
       this.setState({docente_asignatura: this.props.docente_asignatura});
     } 
   }
 
-  updateDocenteAsignatura(value) 
-  {
-    var exist = false;
-    var filteredObj = "";
-    var asignaturas_length = value.length;
-    var docente_asignatura = this.state.docente_asignatura;
-    var docente_asignatura_length = docente_asignatura.length;
-    let new_docente_asignatura  = {
-        "aula": "",
-        "asignatura": {
-            "tipo_asignatura": "",
-            "unidad_credito": "",
-            "id": "",
-            "nombre": "",
-            "codigo": ""
-        },
-        "usuario": {
-            "first_name": "",
-            "last_name": "",
-            "cedula": ""
-        },
-        "tipo_postgrado": "",
-        "horario_hora": "",
-        "periodo_id": "",
-        "horario_dia": "",
-    };
 
-    //Delete element on docente_asignatura
-    if(asignaturas_length  < docente_asignatura_length){
-      for (var i = 0; i < docente_asignatura_length; i++) {
-          filteredObj = value.find(function(item, j){
-            if(item === docente_asignatura[i].asignatura.id){
-              exist = true;
-            }
-          });
-
-          if(!exist){
-            //Delete from docente asignatura the index
-            console.log("Se eliminara: "+docente_asignatura[i].asignatura.nombre);
-            docente_asignatura.splice(i,1);
-            this.setState({docente_asignatura: docente_asignatura}); 
-            break;
-          }
-          exist = false;
-      }
-    }
-
-    //Add element to docente_asignaturas
-    else if(asignaturas_length > docente_asignatura_length){
-      var index = 0;
-      for (var i = 0; i < asignaturas_length; i++) {
-          filteredObj = docente_asignatura.find(function(item, j){
-            if(item.asignatura.id === value[i]){
-              exist = true;
-            }
-          });
-
-          if(!exist){
-            //Get index of lista_asignaturas to fill json
-            filteredObj = this.props.adminUser.lista_asignaturas.findIndex(function(item, j){
-              if(item.id === value[i]){
-                index = j;
-                return j;
-              }
-            });
-            //Add value[i] to the json and push it to docente asignatura
-            console.log("Se agregara: "+this.props.adminUser.lista_asignaturas[index].nombre);
-            new_docente_asignatura.asignatura = this.props.adminUser.lista_asignaturas[index];
-            docente_asignatura.push(new_docente_asignatura);
-            this.setState({docente_asignatura:docente_asignatura});
-            break;
-          }
-          exist = false;
-      }
-    }
-
-  }
 
   handleChangeExtraData(e){
     const { name, value } = e.target;
@@ -164,12 +101,15 @@ class PeriodoEdit extends React.Component {
     let docente_asignatura_nuevo = this.state.docente_asignatura_nuevo;
     let docente_asignatura_tabla = [];
 
+
+    let N = this.props.adminUser.lista_usuarios.length;
+
     //Obtener el index del docente deseado
-    this.props.adminUser.lista_usuarios.find(function(item, j){
-      if(parseInt(item.cedula) === parseInt(docente_asignatura_nuevo)){
+    for (var j = 0; j < N; j++) {
+      if(parseInt(this.props.adminUser.lista_usuarios[j].cedula, 10) === parseInt(docente_asignatura_nuevo, 10) ){
         index = j;
       }
-    }); 
+    }
 
     //Crear JSON para el "push" al docente asignatura
     nueva_asignatura['asignatura'] = {
@@ -195,52 +135,74 @@ class PeriodoEdit extends React.Component {
     //Push al docente asignatura (nueva entrada)
     new_docente_asignatura.push(nueva_asignatura);
 
+    N = new_docente_asignatura.length;
     //Refresco la tabla "local" con el nuevo docente asignatura
-    new_docente_asignatura.find(function(item, j){
-      if(item.asignatura.codigo === nueva_asignatura.asignatura.codigo){
-        docente_asignatura_tabla.push(item);
+    for (j = 0; j < N; j++) {
+      if( new_docente_asignatura[j].asignatura.codigo ===  nueva_asignatura.asignatura.codigo){
+        docente_asignatura_tabla.push(new_docente_asignatura[j]);
       }
-    });
+    }
+
+    new_docente_asignatura = this.ordenarLista(new_docente_asignatura);
 
     //Set a los valores nuevos de los estados
     this.setState({
       docente_asignatura: new_docente_asignatura, 
-      docente_asignatura_tabla: docente_asignatura_tabla
+      docente_asignatura_tabla: docente_asignatura_tabla,
+      docente_asignatura_nuevo: '',
+      horario_dia_nuevo: 0,
+      horario_hora_nuevo: '',
+      aula_nuevo: '',
     });
+
+
+
 
   }
 
-
-  ordenarLista() {
-
+  ordenarLista(new_docente_asignatura) {
 
     let lista_codigos_asignaturas = [];
-    let N = this.state.docente_asignatura.length;
+    
+    let N = new_docente_asignatura.length;
 
     // Busco todos los codigos de asignaturas de docente_asignatura
     for (var i = 0; i < N; i++) {
       // si el codigo existe ya en lista_codigos_asignaturas no lo vuelvo a agregar
-      if ( !lista_codigos_asignaturas.includes(this.state.docente_asignatura[i]['asignatura']['codigo']) ) {
-        lista_codigos_asignaturas.push( this.state.docente_asignatura[i]['asignatura']['codigo'] );
+      if ( !lista_codigos_asignaturas.includes(new_docente_asignatura[i]['asignatura']['codigo']) ) {
+        lista_codigos_asignaturas.push( new_docente_asignatura[i]['asignatura']['codigo'] );
       }
 
     }
 
     N = lista_codigos_asignaturas.length;
     let docente_asignatura_ordenado = [];
+    let M = new_docente_asignatura.length;
 
     // Voy buscando en todo el arreglo de docente_asignatura y voy agregando los campos en otro arreglo pero CODIGO POR CODIGO para que este ordenado
     for (i = 0; i < N; i++) {
-      this.state.docente_asignatura.find(function(item, j){
-        if(item.asignatura.codigo === lista_codigos_asignaturas[i]){
-          docente_asignatura_ordenado.push(item);
+
+
+      for (var j = 0; j < M; j++) {
+        if(new_docente_asignatura[j].asignatura.codigo === lista_codigos_asignaturas[i]){
+          docente_asignatura_ordenado.push(new_docente_asignatura[j]);
         }
-      });
+      }
     }
 
-    // console.log(docente_asignatura_ordenado);
 
-    return docente_asignatura_ordenado;
+
+    return docente_asignatura_ordenado; 
+  }
+
+  eliminarDocenteAsignatura(index) {
+    let array = this.state.docente_asignatura;
+    array.splice(index, 1);
+    this.setState({ docente_asignatura : array });
+  }
+
+  guardarCambiosEdit() {
+    alert('YES');
   }
 
 
@@ -280,9 +242,10 @@ class PeriodoEdit extends React.Component {
         );
     }
 
+    
 
     // Esta es la lista de todas las asignaturas con horarios, aulas, etc que se mostrara en el paso final al editar un periodo. 
-    listItemsFinales = this.ordenarLista().map((docente, index) =>
+    listItemsFinales = this.state.docente_asignatura.map((docente, index) =>
       <tr key={index}>
         <td> 
           {docente.usuario.first_name}{' '}{docente.usuario.last_name}
@@ -299,11 +262,11 @@ class PeriodoEdit extends React.Component {
         </td>
         <td>
           <ConfirmButton
-              onConfirm={() => this.props.triggerVolverPasoAnterior() }
+              onConfirm={() => this.eliminarDocenteAsignatura(index) }
               text= {<FontAwesomeIcon name="trash-alt"/>}
               className="btn btn-danger btn-sm"
               confirming={{
-                text: '¿Ésta seguro? Se eliminará este horario.',
+                text: '¿Esta seguro? Se eliminará este horario.',
                 className: 'btn btn-danger btn-sm',
               }}
             />
@@ -327,7 +290,7 @@ class PeriodoEdit extends React.Component {
               text= {<FontAwesomeIcon name="arrow-left"/>}
               className="btn btn-secondary btn-sm"
               confirming={{
-                text: '¿Ésta seguro? Se perderan todos los cambios',
+                text: '¿Esta seguro? Se perderan todos los cambios',
                 className: 'btn btn-danger btn-sm',
               }}
             />
@@ -375,7 +338,7 @@ class PeriodoEdit extends React.Component {
                           <tr>
                             <td id='docente_asignatura_nuevo'> 
                               <FormGroup>
-                                <Input bsSize="sm" value={this.state.value} onChange={this.handleChangeExtraData} required type="select" name="docente_asignatura_nuevo" id="docente_asignatura_nuevo">
+                                <Input bsSize="sm" value={this.state.docente_asignatura_nuevo} onChange={this.handleChangeExtraData} required type="select" name="docente_asignatura_nuevo" id="docente_asignatura_nuevo">
                                   <option value={null} name={-1}> {' '} </option>
                                   {lista_docentes}
                                 </Input>
@@ -384,7 +347,7 @@ class PeriodoEdit extends React.Component {
                             <td> {this.state.asignatura.nombre}</td>
                             <td> 
                               <FormGroup>
-                                <Input bsSize="sm" value={this.state.value} onChange={this.handleChangeExtraData} required type="select" name="horario_dia_nuevo" id="horario_dia_nuevo">
+                                <Input bsSize="sm" value={this.state.horario_dia_nuevo} onChange={this.handleChangeExtraData} required type="select" name="horario_dia_nuevo" id="horario_dia_nuevo">
                                   <option key="0" value="0" name="Lunes"> Lunes </option>
                                   <option key="1" value="1" name="Martes"> Martes </option>
                                   <option key="2" value="2" name="Miercoles"> Miercoles </option>
@@ -397,12 +360,18 @@ class PeriodoEdit extends React.Component {
                             </td>
                             <td> 
                               <FormGroup>
-                                <Input type="text" name="horario_hora_nuevo" id="horario_hora_nuevo" onChange={this.handleChangeExtraData} required />
+                                <Input type="text" value={this.state.horario_hora_nuevo} name="horario_hora_nuevo" id="horario_hora_nuevo" onChange={this.handleChangeExtraData} required />
+                                {/*
+                                <div>
+                                  <TimePicker defaultValue={moment()} showMinute={false} />
+                                  <TimePicker defaultValue={moment()} showMinute={false} />
+                                </div>
+                                */}
                               </FormGroup>
                             </td>
                             <td>
                               <FormGroup>
-                                <Input type="number" name="aula_nuevo" id="aula_nuevo" onChange={this.handleChangeExtraData} required />
+                                <Input type="number" value={this.state.aula_nuevo} name="aula_nuevo" id="aula_nuevo" onChange={this.handleChangeExtraData} required />
                               </FormGroup>
                             </td>
                           </tr> 
@@ -466,9 +435,12 @@ class PeriodoEdit extends React.Component {
               
             </tbody>
           </Table>
-
-
-          
+          <hr/>
+          <Row>
+            <Col md='12' className='text-right'>
+              <Button color="primary" size='sm' data-toggle="tooltip" title="Guardar" onClick={() => this.guardarCambiosEdit()}>Guardar</Button>
+            </Col>
+          </Row>
 
 
         </div>

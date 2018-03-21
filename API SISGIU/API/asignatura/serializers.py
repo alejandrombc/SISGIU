@@ -31,7 +31,7 @@ class AsignaturaListSerializer(serializers.ModelSerializer):
 class AsignaturaDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = Asignatura
-        fields = ('codigo', 'nombre', 'tipo_asignatura', 'tipo_postgrado', 'unidad_credito' )
+        fields = ('codigo', 'nombre', 'tipo_asignatura', 'unidad_credito' )
 
 
 """
