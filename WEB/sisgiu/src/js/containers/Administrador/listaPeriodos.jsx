@@ -7,6 +7,7 @@ import SearchInput, {createFilter} from 'react-search-input';
 import '../../../css/moduloUsuarioAdministrador.css'; 
 import {bindActionCreators} from 'redux';
 import { PulseLoader } from 'halogenium'; //Spinner
+import ConfirmButton from 'react-confirm-button';
 
 // Components
 import ModalPeriodoNew from './modalPeriodoNew';
@@ -17,6 +18,7 @@ import { get_estado_periodo} from '../../actions/moduloPeriodos';
 import { get_docente_asignatura } from '../../actions/moduloPeriodos';
 import { get_asignaturas } from '../../actions/moduloAsignaturas';
 import {get_usuarios} from '../../actions/moduloUsuarioAdministrador';
+import { eliminar_periodo } from '../../actions/moduloPeriodos';
 
 
 import Paginacion from '../../components/pagination';
@@ -53,6 +55,7 @@ class ListaPeriodos extends Component{
       this.volverPasoAnterior = this.volverPasoAnterior.bind(this);
       this.siguientePaso = this.siguientePaso.bind(this);
       this.ordenarLista = this.ordenarLista.bind(this);
+      this.volverPrimerPaso = this.volverPrimerPaso.bind(this);
   }
 
   onDismiss() {
@@ -74,6 +77,10 @@ class ListaPeriodos extends Component{
 
   volverPasoAnterior() {
     this.setState({editando_periodo: this.state.editando_periodo-1});
+  }
+
+  volverPrimerPaso() {
+    this.setState({editando_periodo: 1});
   }
 
   siguientePaso() {
@@ -125,6 +132,8 @@ class ListaPeriodos extends Component{
     } 
     return '';
   }
+
+
 
 
   render(){
@@ -198,12 +207,37 @@ class ListaPeriodos extends Component{
         listItems = filteredPeriodos.map((periodo, index) =>
           <tr key={periodo['id']}>
             <td>No iniciado</td>
-            <td>{periodo['tipo_postgrado']}</td>
+            <td>{periodo['tipo_postgrado'] + ': ' + periodo['descripcion']}</td>
             <td>  
               <Row >
-                <Col md={{ size: 'auto', offset: 3 }} className='botones'>
+                <Col md='2' className='botones'>
                   <Button onClick={() => this.handleChange(periodo, item[index], asignaturas[index], periodo['tipo_postgrado'])} color="success" size='sm' data-toggle="tooltip" title="Editar"><FontAwesomeIcon name="edit"/></Button>
                 </Col>
+
+                <Col md='2' >
+                  <ConfirmButton
+                    onConfirm={() => this.props.eliminar_periodo( periodo['id'] ) }
+                    text= {<FontAwesomeIcon name="trash-alt"/>}
+                    className="btn btn-danger btn-sm"
+                    confirming={{
+                      text: '¿Esta seguro?',
+                      className: 'btn btn-danger btn-sm',
+                    }}
+                  />
+                </Col>
+
+                <Col md='2'>
+                  <ConfirmButton
+                      onConfirm={() => this.props.eliminar_periodo( periodo['id'] ) }
+                      text= {<FontAwesomeIcon name="rocket"/>}
+                      className="btn btn-info btn-sm"
+                      confirming={{
+                        text: '¿Esta seguro?',
+                        className: 'btn btn-info btn-sm',
+                      }}
+                    />
+                </Col>
+
               </Row>
             </td>
           </tr>
@@ -289,6 +323,8 @@ class ListaPeriodos extends Component{
             triggerSiguientePaso={this.siguientePaso} 
             tipo_postgrado={this.state.tipo_postgrado}
             editando_periodo={this.state.editando_periodo}
+            triggerUpdateLoading={this.updateLoading} 
+            triggerVolverPrimerPaso={this.volverPrimerPaso}
             />
           )
         }
@@ -308,7 +344,7 @@ class ListaPeriodos extends Component{
 
               <Row>
                 <Col md='12'>
-                  <ModalPeriodoNew onDismiss={this.onDismiss} triggerParentUpdate={this.updateLoading}/>
+                  <ModalPeriodoNew onDismiss={this.onDismiss} triggerParentUpdate={this.updateLoading} />
                 </Col>
               </Row>
 
@@ -334,7 +370,8 @@ const mapDispatchToProps = (dispatch) => {
     get_estado_periodo: get_estado_periodo,
     get_docente_asignatura: get_docente_asignatura,
     get_asignaturas: get_asignaturas,
-    get_usuarios: get_usuarios
+    get_usuarios: get_usuarios,
+    eliminar_periodo: eliminar_periodo,
   }, dispatch )
 }
 

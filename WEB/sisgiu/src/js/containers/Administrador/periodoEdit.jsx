@@ -12,6 +12,7 @@ import { editar_asignatura } from '../../actions/moduloAsignaturas';
 import TimePicker from 'rc-time-picker';
 import { guardar_docente_asignatura_periodo } from '../../actions/moduloPeriodos';
 
+
 class PeriodoEdit extends React.Component {
 
 
@@ -244,7 +245,10 @@ class PeriodoEdit extends React.Component {
   }
 
   guardarCambiosEdit() {
+    this.props.triggerUpdateLoading();
+    this.props.triggerVolverPrimerPaso();
     this.props.guardar_docente_asignatura_periodo(this.state.docente_asignatura, this.props.periodo.id);
+    this.props.triggerUpdateLoading();
   }
 
 

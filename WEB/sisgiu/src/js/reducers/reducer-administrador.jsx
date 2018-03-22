@@ -128,7 +128,8 @@ export default function (state=initialState, action) {
 			return nuevo_estado;	
 
 		case "CREAR_DOCENTE_ASIGNATURA_EXITOSO":
-			// Ver que poner aqui...
+			nuevo_estado['edit'] = true;
+			nuevo_estado['bad_input'] = false;
 			return nuevo_estado;	
 
 

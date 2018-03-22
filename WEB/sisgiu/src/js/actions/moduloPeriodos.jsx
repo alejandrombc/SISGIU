@@ -153,3 +153,23 @@ export function guardar_docente_asignatura_periodo (docente_asignatura_info, per
 
 }
 
+
+export const eliminar_periodo = (periodo_id) => {
+	let token = localStorage.getItem('user_token');
+
+	return request
+	   .delete(host+'api/periodo/'+periodo_id+"/delete/")
+	   .set('Authorization', 'JWT '+token)
+	   .then(function(res) {
+			return function (dispatch) {
+			    dispatch(get_periodos(1));
+			}
+	   })
+	   .catch(function(err) {
+	      	return function (dispatch) {
+			    dispatch(get_periodos(2));
+			}
+	   });
+}
+
+
