@@ -127,6 +127,10 @@ export default function (state=initialState, action) {
 			nuevo_estado['lista_docente_asignatura'] = action.payload['lista_docente_asignatura'];
 			return nuevo_estado;	
 
+		case "CREAR_DOCENTE_ASIGNATURA_EXITOSO":
+			// Ver que poner aqui...
+			return nuevo_estado;	
+
 
 		default:
 			return state;

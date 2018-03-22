@@ -9,6 +9,7 @@ from tramite.models import (
 from usuario.models import (
     Usuario,
     TipoPostgrado,
+    PersonalDocente,
     )
 
 from asignatura.models import (
@@ -62,6 +63,8 @@ from .permissions import (
     EsDocenteOAdministrador,
     EsAdministrativoOAdministrador,
     )
+
+from django.views.decorators.csrf import csrf_exempt
 
 """
 PeriodoEstudiante
@@ -269,6 +272,59 @@ class DocenteAsignaturaDetailAPIView():
         response_data['error'] = 'No tiene privilegios para realizar esta accion'      
         return HttpResponse(json.dumps(response_data), content_type="application/json", status=401)
 
+    @csrf_exempt
+    def crearDocenteAsignatura(request, periodo_id):
+        response_data = {}
+
+        if(request.method == "POST"):
+
+            body_unicode = request.body.decode('utf-8')
+            body = json.loads(body_unicode)
+            
+            """
+            Body contiene un array con todos los docentes_asignaturas. Como hay algunos que ya 
+            se deben encontrar en la BD se debe primero evaluar si dicho registro ya existe.
+            """
+            
+            """
+            En este arreglo se almacenaran todos los docente_asignatura que SI se deben guardar, 
+            cualquiera que no se encuentre aqui hay que eliminarlo dela BD
+            """
+            array_docente_asignatura = []
+
+            for x in body:
+                try:
+                    aux = DocenteAsignatura.objects.filter(docente__usuario__cedula=x['usuario']['cedula'], asignatura__codigo=x['asignatura']['codigo'], periodo__id=x['periodo'], aula=x['aula'], horario_dia=x['horario_dia'], horario_hora=x['horario_hora'])
+                except:
+                    response_data['error'] = 'Petición Incorrecta.'      
+                    return HttpResponse(json.dumps(response_data), content_type="application/json", status=400)
+
+                if ( len(aux) == 0): # Creo el nuevo registro en docente_asignatura
+                    docente = PersonalDocente.objects.get(usuario__cedula=x['usuario']['cedula']) # obtengo al docente
+                    asignatura = Asignatura.objects.get(codigo=x['asignatura']['codigo']) # obtengo asignatura
+                    periodo = Periodo.objects.get(id=x['periodo']) # obtengo periodo
+                    # Creo el nuevo objeto
+                    obj = DocenteAsignatura.objects.create(docente=docente, asignatura=asignatura, periodo=periodo, aula=x['aula'], horario_dia=x['horario_dia'], horario_hora=x['horario_hora'])
+                    array_docente_asignatura.append(obj)
+                else:
+                    array_docente_asignatura.append(aux.first())
+
+            """
+            Aqui se eliminan los docente_asignatura que antes se encontraban 
+            en la tabla pero fueron eliminados desde el front
+            """
+            lista_docentes_asignaturas = DocenteAsignatura.objects.filter(periodo__id=periodo_id)
+            
+            for x in lista_docentes_asignaturas:
+                if (x not in array_docente_asignatura):
+                    x.delete()
+
+           
+            return HttpResponse(json.dumps({"status":"OK"}), content_type="application/json", status=200)
+        
+        
+        response_data['error'] = 'No tiene privilegios para realizar esta accion'      
+        return HttpResponse(json.dumps(response_data), content_type="application/json", status=405)
 
 
 class DocenteAsignaturaUpdateAPIView(RetrieveUpdateAPIView):

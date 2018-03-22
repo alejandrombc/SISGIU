@@ -131,16 +131,16 @@ export function get_docente_asignatura (tipoPostgrado) {
 }
 
 
-export function guardar_periodo (periodo_info) {
+export function guardar_docente_asignatura_periodo (docente_asignatura_info, periodo_id) {
 	let token = localStorage.getItem('user_token');
 
 	return request
-	   .get(host+'api/docenteAsignatura/periodo/noIniciado/tipo/')
+	   .post(host+'api/docenteAsignatura/periodo/'+periodo_id+'/')
 	   .set('Authorization', 'JWT '+token)
+	   .send(docente_asignatura_info)
 	   .then(function(res) {
 			return {
-				type: "GET_DOCENTE_ASIGNATURA_EXITOSO",
-				payload: {lista_docente_asignatura: res.body}
+				type: "CREAR_DOCENTE_ASIGNATURA_EXITOSO",
 			}
 	   })
 	   .catch(function(err) {
