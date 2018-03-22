@@ -35,6 +35,8 @@ from .permissions import (
     IsListOrCreate,
     )
 
+from django.views.decorators.csrf import csrf_exempt
+
 """
 EstadoPeriodo
 	Esto solo debe ser tratado por el administrador
@@ -92,6 +94,37 @@ class PeriodoListCreateAPIView(ListCreateAPIView):
         response_data = {}
         response_data['error'] = 'No tiene privilegios para realizar esta accion'      
         return HttpResponse(json.dumps(response_data), content_type="application/json", status=401)
+
+
+    @csrf_exempt
+    def launch_periodo(request, periodo_id):
+        response_data = {}
+        if(request.method == "POST"):
+            periodo = Periodo.objects.filter(id=periodo_id).values()[0]
+            estado_periodo = EstadoPeriodo.objects.filter(id=periodo['estado_periodo_id']).values()[0]
+            #Validamos si el periodo seleciconado ya esta activo
+            if(estado_periodo['estado'] == "activo"):
+                response_data['error'] = 'Ya ese periodo esta activo'      
+                return HttpResponse(json.dumps(response_data), content_type="application/json", status=409)
+
+            #Validamos que no exista otro "tipo de postgrado" activo
+            periodo_postgrado = Periodo.objects.filter(tipo_postgrado_id=periodo['tipo_postgrado_id'], estado_periodo_id__estado="activo")
+            if periodo_postgrado:
+                response_data['error'] = 'Ya existe un periodo activo para este tipo de postgrado'      
+                return HttpResponse(json.dumps(response_data), content_type="application/json", status=409)
+
+            #Actualizo el periodo a "activo"
+            else:
+                estado_periodo = EstadoPeriodo.objects.filter(estado="activo").values()[0]
+                Periodo.objects.filter(id=periodo_id).update(estado_periodo=estado_periodo["id"])
+                response_data['message'] = 'Periodo iniciado correctamente'      
+                return HttpResponse(json.dumps(response_data), content_type="application/json")
+
+
+
+        response_data['error'] = 'No tiene privilegios para realizar esta accion'      
+        return HttpResponse(json.dumps(response_data), content_type="application/json", status=405)
+
 
 
 class PeriodoCreateAPIView(CreateAPIView):

@@ -18,7 +18,7 @@ import { get_estado_periodo} from '../../actions/moduloPeriodos';
 import { get_docente_asignatura } from '../../actions/moduloPeriodos';
 import { get_asignaturas } from '../../actions/moduloAsignaturas';
 import {get_usuarios} from '../../actions/moduloUsuarioAdministrador';
-import { eliminar_periodo } from '../../actions/moduloPeriodos';
+import { eliminar_periodo, lanzar_periodo } from '../../actions/moduloPeriodos';
 
 
 import Paginacion from '../../components/pagination';
@@ -81,6 +81,19 @@ class ListaPeriodos extends Component{
 
   volverPrimerPaso() {
     this.setState({editando_periodo: 1});
+  }
+
+  eliminar_periodo(periodo_id){
+    this.setState({"loading":!this.state.loading});
+    this.props.eliminar_periodo(periodo_id);
+    this.setState({"loading":!this.state.loading});
+  }
+
+
+  lanzar_periodo(periodo_id){
+    this.setState({"loading":!this.state.loading});
+    this.props.lanzar_periodo(periodo_id);
+    this.setState({"loading":!this.state.loading});
   }
 
   siguientePaso() {
@@ -216,7 +229,7 @@ class ListaPeriodos extends Component{
 
                 <Col md='2' >
                   <ConfirmButton
-                    onConfirm={() => this.props.eliminar_periodo( periodo['id'] ) }
+                    onConfirm={() => this.eliminar_periodo( periodo['id'] ) }
                     text= {<FontAwesomeIcon name="trash-alt"/>}
                     className="btn btn-danger btn-sm"
                     confirming={{
@@ -228,7 +241,7 @@ class ListaPeriodos extends Component{
 
                 <Col md='2'>
                   <ConfirmButton
-                      onConfirm={() => this.props.eliminar_periodo( periodo['id'] ) }
+                      onConfirm={() => this.lanzar_periodo( periodo['id'] ) }
                       text= {<FontAwesomeIcon name="rocket"/>}
                       className="btn btn-info btn-sm"
                       confirming={{
@@ -325,6 +338,7 @@ class ListaPeriodos extends Component{
             editando_periodo={this.state.editando_periodo}
             triggerUpdateLoading={this.updateLoading} 
             triggerVolverPrimerPaso={this.volverPrimerPaso}
+            triggetUpdateDocenteAsignatura={() => this.props.get_docente_asignatura("all")}
             />
           )
         }
@@ -372,6 +386,7 @@ const mapDispatchToProps = (dispatch) => {
     get_asignaturas: get_asignaturas,
     get_usuarios: get_usuarios,
     eliminar_periodo: eliminar_periodo,
+    lanzar_periodo: lanzar_periodo,
   }, dispatch )
 }
 

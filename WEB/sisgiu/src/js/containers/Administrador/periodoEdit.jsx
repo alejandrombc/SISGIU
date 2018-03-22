@@ -247,6 +247,7 @@ class PeriodoEdit extends React.Component {
   guardarCambiosEdit() {
     this.props.triggerUpdateLoading();
     this.props.triggerVolverPrimerPaso();
+    this.props.triggetUpdateDocenteAsignatura();
     this.props.guardar_docente_asignatura_periodo(this.state.docente_asignatura, this.props.periodo.id);
     this.props.triggerUpdateLoading();
   }
@@ -330,7 +331,7 @@ class PeriodoEdit extends React.Component {
       <option key={tipo_asignatura['codigo']} value={tipo_asignatura['codigo']} name={tipo_asignatura['nombre']}> {tipo_asignatura['nombre']} </option>
     );
 
-    {/*
+    /*
     let listHoras = '';
     let arrayHoras = [];
     
@@ -349,7 +350,7 @@ class PeriodoEdit extends React.Component {
     listHoras = arrayHoras.map((horas) =>
       <option key={horas} value={horas} > {horas} </option>
     );
-    */}
+    */
 
     if ( this.props.editando_periodo === 2 ) {
       return (

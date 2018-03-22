@@ -14,7 +14,6 @@ from usuario.models import (
 
 from asignatura.models import (
     Asignatura,
-    TipoAsignatura
     )
 
 from periodo.models import (
@@ -165,7 +164,6 @@ class DocenteAsignaturaDetailAPIView():
             for docente_periodo in list_result:
                 docente = Usuario.objects.filter(id=docente_periodo['docente_id']).values()[0]
                 asignatura = Asignatura.objects.filter(id=docente_periodo['asignatura_id']).values()[0]
-                tipo_asignatura = TipoAsignatura.objects.filter(id=asignatura['tipo_asignatura_id']).values()[0]
                 periodo = Periodo.objects.filter(id=docente_periodo['periodo_id']).values()[0]
                 tipo_postgrado = TipoPostgrado.objects.filter(id=periodo['tipo_postgrado_id']).values()[0]
 
@@ -202,7 +200,6 @@ class DocenteAsignaturaDetailAPIView():
         for docente_periodo in list_result:
             docente = Usuario.objects.filter(id=docente_periodo['docente_id']).values()[0]
             asignatura = Asignatura.objects.filter(id=docente_periodo['asignatura_id']).values()[0]
-            tipo_asignatura = TipoAsignatura.objects.filter(id=asignatura['tipo_asignatura_id']).values()[0]
             periodo = Periodo.objects.filter(id=docente_periodo['periodo_id']).values()[0]
             tipo_postgrado = TipoPostgrado.objects.filter(id=periodo['tipo_postgrado_id']).values()[0]
 
@@ -226,6 +223,7 @@ class DocenteAsignaturaDetailAPIView():
 
         return HttpResponse(json.dumps(lista_docentes), content_type="application/json")
 
+
     def get_all_docentes(request, periodo, tipo_postgrado):
         if(tipo_postgrado != "all"):
             member = DocenteAsignatura.objects.filter(periodo__estado_periodo__estado=periodo, periodo__tipo_postgrado__tipo=tipo_postgrado)
@@ -238,7 +236,6 @@ class DocenteAsignaturaDetailAPIView():
         for docente_periodo in list_result:
             docente = Usuario.objects.filter(id=docente_periodo['docente_id']).values()[0]
             asignatura = Asignatura.objects.filter(id=docente_periodo['asignatura_id']).values()[0]
-            tipo_asignatura = TipoAsignatura.objects.filter(id=asignatura['tipo_asignatura_id']).values()[0]
             periodo = Periodo.objects.filter(id=docente_periodo['periodo_id']).values()[0]
             tipo_postgrado = TipoPostgrado.objects.filter(id=periodo['tipo_postgrado_id']).values()[0]
             """
@@ -325,6 +322,7 @@ class DocenteAsignaturaDetailAPIView():
         
         response_data['error'] = 'No tiene privilegios para realizar esta accion'      
         return HttpResponse(json.dumps(response_data), content_type="application/json", status=405)
+
 
 
 class DocenteAsignaturaUpdateAPIView(RetrieveUpdateAPIView):
