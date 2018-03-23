@@ -39,7 +39,10 @@ class ListaPeriodos extends Component{
         periodo: "",
         docente_asignatura: "",
         asignaturas: "",
-        tipo_postgrado: ""
+        tipo_postgrado: "",
+        col_lg_trash_button: 2,
+        col_md_trash_button: 2,
+
       }
       
       this.props.get_docente_asignatura("all");
@@ -56,6 +59,7 @@ class ListaPeriodos extends Component{
       this.siguientePaso = this.siguientePaso.bind(this);
       this.ordenarLista = this.ordenarLista.bind(this);
       this.volverPrimerPaso = this.volverPrimerPaso.bind(this);
+      this.prueba = this.prueba.bind(this);
   }
 
   onDismiss() {
@@ -146,7 +150,9 @@ class ListaPeriodos extends Component{
     return '';
   }
 
-
+  prueba() {
+    this.setState({col_lg_trash_button: 4, col_md_trash_button: 6});
+  }
 
 
   render(){
@@ -223,12 +229,13 @@ class ListaPeriodos extends Component{
             <td>{periodo['tipo_postgrado'] + ': ' + periodo['descripcion']}</td>
             <td>  
               <Row >
-                <Col md='2' className='botones'>
+                <Col lg='2' md='2' sm='4' className='botones'>
                   <Button onClick={() => this.handleChange(periodo, item[index], asignaturas[index], periodo['tipo_postgrado'])} color="success" size='sm' data-toggle="tooltip" title="Editar"><FontAwesomeIcon name="edit"/></Button>
                 </Col>
 
-                <Col md='2' >
+                <Col lg={this.state.col_lg_trash_button} md={this.state.col_md_trash_button} sm='4' >
                   <ConfirmButton
+                    onClick={() => this.prueba()}
                     onConfirm={() => this.eliminar_periodo( periodo['id'] ) }
                     text= {<FontAwesomeIcon name="trash-alt"/>}
                     className="btn btn-danger btn-sm"
@@ -239,8 +246,9 @@ class ListaPeriodos extends Component{
                   />
                 </Col>
 
-                <Col md='2'>
-                  <ConfirmButton
+                <Col lg='2' md='2' sm='4'>
+                  <ConfirmButton 
+                      
                       onConfirm={() => this.activar_periodo( periodo['id'] ) }
                       text= {<FontAwesomeIcon name="rocket"/>}
                       className="btn btn-info btn-sm"

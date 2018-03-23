@@ -3,6 +3,8 @@ import jwt_decode from 'jwt-decode';
 import {host} from '../components/globalVariables';
 
 
+
+
 export function check_login () {
 	let token = localStorage.getItem('user_token');
 	let modulo = localStorage.getItem('modulo');
@@ -77,7 +79,7 @@ export const get_information = (user) => {
 export const get_periodos_actuales = () => {
 	let token = localStorage.getItem('user_token');
 	return request
-	   .get(host+'api/periodo/activo/')
+	   .get(host+'api/periodo/actuales/')
 	   .set('Authorization', 'JWT '+token)
 	   .then(function(res) {
 	   	  	if(res.body.length > 0){
@@ -88,6 +90,7 @@ export const get_periodos_actuales = () => {
 			}else{
 				return {
 					type: "SIN_PERIODOS_ACTIVOS",
+					payload: {periodos: [] }
 				}
 			}
 
@@ -103,41 +106,39 @@ export const get_periodos_actuales = () => {
 }
 
 
-export const terminarPeriodo = (periodo) =>{
+export const cambiarEstadoPeriodo = (periodo, lista_estadoPeriodo) =>{
 	let token = localStorage.getItem('user_token');
+		
+	var filtro;
+
+	if (periodo.estado_periodo === 'activo') {
+		filtro = 'finalizado';
+	} else {
+		filtro = 'activo';
+	}
+
+	var N = lista_estadoPeriodo.length;
+	var index;
+	for (var i = 0; i < N; i++) {
+		if ( lista_estadoPeriodo[i]['estado'] === filtro) {
+			index = parseInt(lista_estadoPeriodo[i]['id'], 10);
+		}
+	}
+
 	var result ={
-		"estado_periodo":3,
+		"estado_periodo":index,
 		"tipo_postgrado":periodo['tipo_postgrado_id']
 	}
+
 	return request
 	   .put(host+'api/periodo/'+periodo['id']+'/edit/')
 	   .set('Authorization', 'JWT '+token)
 	   .set('Content-Type', 'application/json')
 	   .send(result)
 	   .then(function(res) {
-			return request
-			   .get(host+'api/periodo/activo/')
-			   .set('Authorization', 'JWT '+token)
-			   .then(function(res) {
-			   	  	if(res.body.length > 0){
-				      return {
-							type: "GET_PERIODOS_SUCCESS",
-							payload: {periodos: res.body }
-						}
-					}else{
-						return {
-							type: "SIN_PERIODOS_ACTIVOS",
-						}
-					}
-
-			   })
-			   .catch(function(err) {
-			   		localStorage.removeItem('user_token');
-			   		localStorage.removeItem('modulo');
-			      	return {
-						type: "ERROR"
-					}
-			   });
+			return function (dispatch) {
+			    dispatch(get_periodos_actuales());
+			}
 	   })
 	   .catch(function(err) {
 	      	return {

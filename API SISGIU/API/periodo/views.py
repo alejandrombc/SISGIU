@@ -36,6 +36,7 @@ from .permissions import (
     )
 
 from django.views.decorators.csrf import csrf_exempt
+from django.db.models import Q
 
 """
 EstadoPeriodo
@@ -75,8 +76,10 @@ class PeriodoListCreateAPIView(ListCreateAPIView):
         if (request.method == "GET"):
             if (filtro == 'todos'):
                 member = Periodo.objects.all()
+            elif (filtro == 'actuales'):
+                member = Periodo.objects.filter(Q(estado_periodo_id__estado='activo') | Q(estado_periodo_id__estado='en inscripcion'))
             else:
-                member = Periodo.objects.filter(estado_periodo_id__estado = filtro)
+                member = Periodo.objects.filter(estado_periodo_id__estado = filtro )
 
             list_result = [entry for entry in member.values()]
 
@@ -104,19 +107,19 @@ class PeriodoListCreateAPIView(ListCreateAPIView):
             estado_periodo = EstadoPeriodo.objects.get(id=periodo.estado_periodo_id)
             
             # Validamos si el periodo seleccionado ya esta activo
-            if(estado_periodo.estado == "activo"):
-                response_data['error'] = 'El periodo seleccionado ya se encuentra activo.'      
+            if(estado_periodo.estado == "en inscripcion"):
+                response_data['error'] = 'El periodo seleccionado ya se encuentra en inscripción.'      
                 return HttpResponse(json.dumps(response_data), content_type="application/json", status=409)
 
-            # Validamos que no exista otro "tipo de postgrado" activo
-            periodo_postgrado = Periodo.objects.filter(tipo_postgrado_id=periodo.tipo_postgrado_id, estado_periodo_id__estado="activo")
+            # Validamos que no exista otro "tipo de postgrado" en inscripcion
+            periodo_postgrado = Periodo.objects.filter(tipo_postgrado_id=periodo.tipo_postgrado_id, estado_periodo_id__estado="en inscripcion")
             if periodo_postgrado:
-                response_data['error'] = 'Ya existe un periodo activo para este tipo de postgrado.'      
+                response_data['error'] = 'Ya existe un periodo en inscripción para este tipo de postgrado.'      
                 return HttpResponse(json.dumps(response_data), content_type="application/json", status=409)
 
-            #Actualizo el periodo a "activo"
+            #Actualizo el periodo a "en inscripcion"
             else:
-                estado_periodo = EstadoPeriodo.objects.get(estado="activo")
+                estado_periodo = EstadoPeriodo.objects.get(estado="en inscripcion")
                 Periodo.objects.filter(id=periodo_id).update(estado_periodo=estado_periodo.id)
                 response_data['message'] = 'Periodo iniciado correctamente.'      
                 return HttpResponse(json.dumps(response_data), content_type="application/json")

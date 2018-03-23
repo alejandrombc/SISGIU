@@ -9,8 +9,8 @@ import ConfirmButton from 'react-confirm-button';
 
 // Components
 import { get_periodos_actuales } from '../../actions/inicio';
-import  ModalTerminarPeriodo  from './modalTerminarPeriodo';
-import { terminarPeriodo } from '../../actions/inicio';
+import { cambiarEstadoPeriodo } from '../../actions/inicio';
+import {get_estado_periodo} from '../../actions//moduloPeriodos';
 
 
 class InicioAdministrador extends Component{
@@ -23,9 +23,12 @@ class InicioAdministrador extends Component{
       }
 
       this.props.get_periodos_actuales();
+      this.props.get_estado_periodo();
       this.onDismiss = this.onDismiss.bind(this);
-      this.terminarPeriodo = this.terminarPeriodo.bind(this);
+      this.cambiarEstadoPeriodo = this.cambiarEstadoPeriodo.bind(this);
       this.updateLoading = this.updateLoading.bind(this);
+
+
   }
 
   onDismiss() {
@@ -37,41 +40,63 @@ class InicioAdministrador extends Component{
   }
 
 
-  terminarPeriodo(periodo) {
+  cambiarEstadoPeriodo(periodo) {
 
-    this.updateLoading();
-    this.props.terminarPeriodo(periodo);
-    this.updateLoading();
-    
+    // this.updateLoading();
+    console.log(periodo);
+    this.props.cambiarEstadoPeriodo(periodo, this.props.adminUser.lista_estadoPeriodo);
+    // this.updateLoading();
+
 
   }
 
   render(){
-
       let listItems = '';
 
       if(this.props.adminUser['periodos'] && this.props.adminUser['periodos'].length > 0){
         listItems = this.props.adminUser['periodos'].map((valor, index) =>{
             return (
               <ListGroupItem key={index}>
+                
                 <Row>
                   <Col md='7' sm='7'>
                     <ListGroupItemHeading>{valor['tipo_postgrado']}</ListGroupItemHeading>
                   </Col>
+                  
+                  { valor.estado_periodo === 'activo' ?
+                    
+                    <Col md='5' sm='5'>
+                      <ConfirmButton
+                        onConfirm={() => this.cambiarEstadoPeriodo(valor) }
+                        text = 'Terminar Periodo'
+                        className="btn btn-danger btn-sm"
+                        style={{ float: 'right' }}
+                        confirming={{
+                          text: '¿Está seguro?',
+                          className: 'btn btn-danger btn-sm',
+                          style: { float: 'right' },
+                        }}
+                      />
+                    </Col>
 
-                  <Col md='5' sm='5'>
-                    <ConfirmButton
-                      onConfirm={() => this.terminarPeriodo(valor) }
-                      text = 'Terminar Periodo'
-                      className="btn btn-danger btn-sm"
-                      confirming={{
-                        text: '¿Está seguro?',
-                        className: 'btn btn-danger btn-sm',
-                      }}
-                    />
-                  </Col>
+                    : 
+                    <Col md='5' sm='5'>
+                      <ConfirmButton 
+                        onConfirm={() => this.cambiarEstadoPeriodo(valor) }
+                        text = 'Finalizar Inscripciones'
+                        className="btn btn-primary btn-sm pull-right"
+                        style={{ float: 'right' }}
+                        confirming={{
+                          text: '¿Está seguro?',
+                          className: 'btn btn-primary btn-sm',
+                          style: { float: 'right' },
+                        }}
+                      />
+                    </Col>
+                  }
 
                 </Row>
+                
             </ListGroupItem>
             )
           });
@@ -142,7 +167,8 @@ const mapStateToProps = (state)=> {
 const mapDispatchToProps = (dispatch) => {
   return bindActionCreators({
     get_periodos_actuales: get_periodos_actuales, 
-    terminarPeriodo: terminarPeriodo,
+    cambiarEstadoPeriodo: cambiarEstadoPeriodo,
+    get_estado_periodo: get_estado_periodo,
     }
     , dispatch )
 }
