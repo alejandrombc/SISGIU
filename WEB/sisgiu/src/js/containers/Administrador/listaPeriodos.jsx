@@ -18,7 +18,7 @@ import { get_estado_periodo} from '../../actions/moduloPeriodos';
 import { get_docente_asignatura } from '../../actions/moduloPeriodos';
 import { get_asignaturas } from '../../actions/moduloAsignaturas';
 import {get_usuarios} from '../../actions/moduloUsuarioAdministrador';
-import { eliminar_periodo, lanzar_periodo } from '../../actions/moduloPeriodos';
+import { eliminar_periodo, activar_periodo } from '../../actions/moduloPeriodos';
 
 
 import Paginacion from '../../components/pagination';
@@ -90,9 +90,9 @@ class ListaPeriodos extends Component{
   }
 
 
-  lanzar_periodo(periodo_id){
+  activar_periodo(periodo_id){
     this.setState({"loading":!this.state.loading});
-    this.props.lanzar_periodo(periodo_id);
+    this.props.activar_periodo(periodo_id);
     this.setState({"loading":!this.state.loading});
   }
 
@@ -241,7 +241,7 @@ class ListaPeriodos extends Component{
 
                 <Col md='2'>
                   <ConfirmButton
-                      onConfirm={() => this.lanzar_periodo( periodo['id'] ) }
+                      onConfirm={() => this.activar_periodo( periodo['id'] ) }
                       text= {<FontAwesomeIcon name="rocket"/>}
                       className="btn btn-info btn-sm"
                       confirming={{
@@ -386,7 +386,7 @@ const mapDispatchToProps = (dispatch) => {
     get_asignaturas: get_asignaturas,
     get_usuarios: get_usuarios,
     eliminar_periodo: eliminar_periodo,
-    lanzar_periodo: lanzar_periodo,
+    activar_periodo: activar_periodo,
   }, dispatch )
 }
 

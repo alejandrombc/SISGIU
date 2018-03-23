@@ -174,11 +174,11 @@ export const eliminar_periodo = (periodo_id) => {
 
 
 
-export const lanzar_periodo = (periodo_id) => {
+export const activar_periodo = (periodo_id) => {
 	let token = localStorage.getItem('user_token');
 
 	return request
-	   .post(host+'api/periodo/launch/'+periodo_id+"/")
+	   .post(host+'api/periodo/activar/'+periodo_id+"/")
 	   .set('Authorization', 'JWT '+token)
 	   .then(function(res) {
 			return function (dispatch) {

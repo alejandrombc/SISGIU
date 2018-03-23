@@ -97,32 +97,33 @@ class PeriodoListCreateAPIView(ListCreateAPIView):
 
 
     @csrf_exempt
-    def launch_periodo(request, periodo_id):
+    def activar_periodo(request, periodo_id):
         response_data = {}
         if(request.method == "POST"):
-            periodo = Periodo.objects.filter(id=periodo_id).values()[0]
-            estado_periodo = EstadoPeriodo.objects.filter(id=periodo['estado_periodo_id']).values()[0]
-            #Validamos si el periodo seleciconado ya esta activo
-            if(estado_periodo['estado'] == "activo"):
-                response_data['error'] = 'Ya ese periodo esta activo'      
+            periodo = Periodo.objects.get(id=periodo_id)
+            estado_periodo = EstadoPeriodo.objects.get(id=periodo.estado_periodo_id)
+            
+            # Validamos si el periodo seleccionado ya esta activo
+            if(estado_periodo.estado == "activo"):
+                response_data['error'] = 'El periodo seleccionado ya se encuentra activo.'      
                 return HttpResponse(json.dumps(response_data), content_type="application/json", status=409)
 
-            #Validamos que no exista otro "tipo de postgrado" activo
-            periodo_postgrado = Periodo.objects.filter(tipo_postgrado_id=periodo['tipo_postgrado_id'], estado_periodo_id__estado="activo")
+            # Validamos que no exista otro "tipo de postgrado" activo
+            periodo_postgrado = Periodo.objects.filter(tipo_postgrado_id=periodo.tipo_postgrado_id, estado_periodo_id__estado="activo")
             if periodo_postgrado:
-                response_data['error'] = 'Ya existe un periodo activo para este tipo de postgrado'      
+                response_data['error'] = 'Ya existe un periodo activo para este tipo de postgrado.'      
                 return HttpResponse(json.dumps(response_data), content_type="application/json", status=409)
 
             #Actualizo el periodo a "activo"
             else:
-                estado_periodo = EstadoPeriodo.objects.filter(estado="activo").values()[0]
-                Periodo.objects.filter(id=periodo_id).update(estado_periodo=estado_periodo["id"])
-                response_data['message'] = 'Periodo iniciado correctamente'      
+                estado_periodo = EstadoPeriodo.objects.get(estado="activo")
+                Periodo.objects.filter(id=periodo_id).update(estado_periodo=estado_periodo.id)
+                response_data['message'] = 'Periodo iniciado correctamente.'      
                 return HttpResponse(json.dumps(response_data), content_type="application/json")
 
 
 
-        response_data['error'] = 'No tiene privilegios para realizar esta accion'      
+        response_data['error'] = 'No tiene privilegios para realizar esta acción'      
         return HttpResponse(json.dumps(response_data), content_type="application/json", status=405)
 
 
