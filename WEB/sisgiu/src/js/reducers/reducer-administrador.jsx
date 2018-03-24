@@ -14,7 +14,8 @@ const initialState = {
 	cargado_tipo_postgrado: false,
 	lista_estadoPeriodo: [],
 	lista_prelacion: [],
-	lista_docente_asignatura: []
+	lista_docente_asignatura: [],
+	loading: false,
 
 };
 
@@ -28,6 +29,7 @@ export default function (state=initialState, action) {
 			nuevo_estado['tiene_periodos_activos'] = true;
 			nuevo_estado['edit'] = false;
 			nuevo_estado['cargado'] = true;
+			nuevo_estado['loading'] = false;
 
 			return nuevo_estado;
 
@@ -35,6 +37,7 @@ export default function (state=initialState, action) {
 			nuevo_estado['tiene_periodos_activos'] = false;
 			nuevo_estado['lista_periodos'] = action.payload['periodos'];
 			nuevo_estado['cargado'] = true;
+			nuevo_estado['loading'] = false;
 			return nuevo_estado;
 			
 		case "ERROR":
@@ -131,6 +134,11 @@ export default function (state=initialState, action) {
 			nuevo_estado['edit'] = true;
 			nuevo_estado['bad_input'] = false;
 			return nuevo_estado;	
+
+		case "CARGANDO":
+			nuevo_estado['loading'] = !nuevo_estado['loading'];
+
+			return nuevo_estado;
 
 
 		default:
