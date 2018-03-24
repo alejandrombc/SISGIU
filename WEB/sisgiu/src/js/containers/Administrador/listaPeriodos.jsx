@@ -22,7 +22,6 @@ import {
   get_tipo_postgrado,
   get_estado_periodo,
   get_docente_asignatura,
-  actualizar_docente_asignatura
 } from '../../actions/moduloPeriodos';
 
 
@@ -409,7 +408,6 @@ const mapDispatchToProps = (dispatch) => {
     eliminar_periodo: eliminar_periodo,
     activar_periodo: activar_periodo,
     cargando: cargando,
-    actualizar_docente_asignatura: actualizar_docente_asignatura,
   }, dispatch )
 }
 

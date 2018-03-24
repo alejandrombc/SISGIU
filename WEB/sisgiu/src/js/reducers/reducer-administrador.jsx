@@ -158,12 +158,6 @@ export default function (state=initialState, action) {
 
 			return nuevo_estado;
 
-		case "ACTUALIZAR_DOCENTE_ASIGNATURA":
-			nuevo_estado['lista_docente_asignatura'] = action.payload['lista_docente_asignatura'];
-			nuevo_estado['loading'] = false;
-
-			return nuevo_estado;
-
 
 		default:
 			return state;
