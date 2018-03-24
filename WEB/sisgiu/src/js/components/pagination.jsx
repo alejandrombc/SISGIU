@@ -14,11 +14,11 @@ class Paginacion extends Component {
     var lista = [];
     let lastArrow = false;
     let firstArrow = false; 
-    if (this.props.cant_usuarios ) {
+    if (this.props.cant_items ) {
 
       let items_por_pagina = this.props.item_por_pagina;
       
-      var total = Math.ceil(this.props.cant_usuarios/items_por_pagina);
+      var total = Math.ceil(this.props.cant_items/items_por_pagina);
 
       var init = 1;
       var end = 5;

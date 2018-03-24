@@ -169,7 +169,7 @@ class ListaAsignaturas extends Component{
                 <Col lg='4' md='4' sm='6' xs='10' className='Pagination'>
                   <br />
                   {this.state.searchTerm === '' &&
-                    <Paginacion cant_usuarios={cant_asignaturas} item_por_pagina={asignaturas_por_pagina}/>
+                    <Paginacion cant_items={cant_asignaturas} item_por_pagina={asignaturas_por_pagina}/>
                   }
                 </Col>
                 <Col lg='4' md='4' sm='3' xs='1'> </Col>

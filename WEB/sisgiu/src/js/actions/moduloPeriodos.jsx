@@ -199,3 +199,9 @@ export const cargando = () => {
 	}
 }
 
+export const actualizar_docente_asignatura = (new_docente_asignatura) => {
+	return {
+		type: "ACTUALIZAR_DOCENTE_ASIGNATURA",
+		payload: {lista_docente_asignatura: new_docente_asignatura}
+	}
+}

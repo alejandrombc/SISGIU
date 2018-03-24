@@ -12,13 +12,18 @@ import ConfirmButton from 'react-confirm-button';
 // Components
 import ModalPeriodoNew from './modalPeriodoNew';
 import PeriodoEdit from './periodoEdit';
-import {get_periodos} from '../../actions/moduloPeriodos';
-import {get_tipo_postgrado} from '../../actions/moduloPeriodos';
-import { get_estado_periodo} from '../../actions/moduloPeriodos';
-import { get_docente_asignatura } from '../../actions/moduloPeriodos';
 import { get_asignaturas } from '../../actions/moduloAsignaturas';
 import {get_usuarios} from '../../actions/moduloUsuarioAdministrador';
-import { eliminar_periodo, activar_periodo } from '../../actions/moduloPeriodos';
+import { 
+  eliminar_periodo, 
+  activar_periodo,
+  cargando,
+  get_periodos,
+  get_tipo_postgrado,
+  get_estado_periodo,
+  get_docente_asignatura,
+  actualizar_docente_asignatura
+} from '../../actions/moduloPeriodos';
 
 
 import Paginacion from '../../components/pagination';
@@ -34,7 +39,6 @@ class ListaPeriodos extends Component{
       this.state = {
         visible: true,
         searchTerm: '',
-        loading: false,
         editando_periodo: 1,
         periodo: "",
         docente_asignatura: "",
@@ -51,7 +55,6 @@ class ListaPeriodos extends Component{
       this.props.get_tipo_postgrado();
       this.props.get_estado_periodo();
       this.props.get_asignaturas();
-      this.updateLoading = this.updateLoading.bind(this);
       this.onDismiss = this.onDismiss.bind(this);
       this.searchUpdated = this.searchUpdated.bind(this);
       this.handleChange = this.handleChange.bind(this);
@@ -59,8 +62,12 @@ class ListaPeriodos extends Component{
       this.siguientePaso = this.siguientePaso.bind(this);
       this.ordenarLista = this.ordenarLista.bind(this);
       this.volverPrimerPaso = this.volverPrimerPaso.bind(this);
-      this.prueba = this.prueba.bind(this);
+      this.cambiarTamanoCol = this.cambiarTamanoCol.bind(this);
+      this.get_listItems = this.get_listItems.bind(this);
+
+      
   }
+
 
   onDismiss() {
     this.setState({ visible: false, loading: false});
@@ -75,10 +82,6 @@ class ListaPeriodos extends Component{
     this.setState({"visible":true});
   }
 
-  updateLoading(){
-    this.setState({"loading":!this.state.loading});
-  }
-
   volverPasoAnterior() {
     this.setState({editando_periodo: this.state.editando_periodo-1});
   }
@@ -88,16 +91,14 @@ class ListaPeriodos extends Component{
   }
 
   eliminar_periodo(periodo_id){
-    this.setState({"loading":!this.state.loading});
+    this.props.cargando();
     this.props.eliminar_periodo(periodo_id);
-    this.setState({"loading":!this.state.loading});
   }
 
 
   activar_periodo(periodo_id){
-    this.setState({"loading":!this.state.loading});
+    this.props.cargando();
     this.props.activar_periodo(periodo_id);
-    this.setState({"loading":!this.state.loading});
   }
 
   siguientePaso() {
@@ -145,126 +146,141 @@ class ListaPeriodos extends Component{
 
       }
 
+      // this.props.actualizardocente_asignatura(docente_asignatura_ordenado);
       return docente_asignatura_ordenado
     } 
     return '';
   }
 
-  prueba() {
+  cambiarTamanoCol() {
     this.setState({col_lg_trash_button: 4, col_md_trash_button: 6});
   }
 
+  get_listItems() {
 
-  render(){
+    let listItems = '';
+    let item = [];
+    // For asignaturas in dualList
+    let asignaturas = []; //All asignaturas for all the tipos_postgrados
+    let asignatura = {}; //Single asignatura
+    let mid_options = []; //Asignaturas for specific tipo_postgrado
+    if(this.props.adminUser.lista_periodos && this.props.adminUser.lista_periodos.length > 0)
+    {
+      let cant_periodos = this.props.adminUser.lista_periodos.length;
+      let periodos = [];
 
-      let listItems = '';
-      let item = [];
-      // For asignaturas in dualList
-      let asignaturas = []; //All asignaturas for all the tipos_postgrados
-      let asignatura = {}; //Single asignatura
-      let mid_options = []; //Asignaturas for specific tipo_postgrado
-      if(this.props.adminUser.lista_periodos && this.props.adminUser.lista_periodos.length > 0)
-      {
-        let cant_periodos = this.props.adminUser.lista_periodos.length;
-        let periodos = [];
-
-        var init = this.props.pagination.pagina*periodos_por_pagina-periodos_por_pagina;
-        var end = this.props.pagination.pagina*periodos_por_pagina;
+      var init = this.props.pagination.pagina*periodos_por_pagina-periodos_por_pagina;
+      var end = this.props.pagination.pagina*periodos_por_pagina;
 
 
-        //Si se esta realizando una busqueda uso toda la lista de periodos, sino no
-        if(this.state.searchTerm === ''){
-          
-          for (var i = init; i < end; i++) {
-            if (this.props.adminUser.lista_periodos[i]) {
-              periodos.push(this.props.adminUser.lista_periodos[i]);
-            }
-          }
-
-        } else {
-          for (i = 0; i < cant_periodos; i++) {
+      //Si se esta realizando una busqueda uso toda la lista de periodos, sino no
+      if(this.state.searchTerm === ''){
+        
+        for (var i = init; i < end; i++) {
+          if (this.props.adminUser.lista_periodos[i]) {
             periodos.push(this.props.adminUser.lista_periodos[i]);
           }
         }
 
+      } else {
+        for (i = 0; i < cant_periodos; i++) {
+          periodos.push(this.props.adminUser.lista_periodos[i]);
+        }
+      }
 
-        const filteredPeriodos = periodos.filter(createFilter(this.state.searchTerm, KEYS_TO_FILTERS));
-        let filtered_length = filteredPeriodos.length;
-        let lista_asignaturas_length = this.props.adminUser.lista_asignaturas.length;
 
-        if(this.props.adminUser.lista_asignaturas.length > 0){
-          // Loop all asignaturas (name and id)
-          mid_options['options'] = [];
-          for(let j = 0; j < lista_asignaturas_length; j++){
-              asignatura = {"name":this.props.adminUser.lista_asignaturas[j].nombre,"value":this.props.adminUser.lista_asignaturas[j].id};
-              mid_options['options'].push(asignatura);
-          }
+      const filteredPeriodos = periodos.filter(createFilter(this.state.searchTerm, KEYS_TO_FILTERS));
+      let filtered_length = filteredPeriodos.length;
+      let lista_asignaturas_length = this.props.adminUser.lista_asignaturas.length;
 
-          //Loop all tipos_postgrado
-          for(let index = 0; index < filtered_length; index++){
-            //Initialization
-            mid_options[index] = [];
-            asignaturas[index] = [];
-            mid_options[index]['values'] = [];
-            mid_options[index]['options'] = mid_options['options'];
-            
-
-            //Get all saved asignaturas
-            item[index] = this.props.adminUser.lista_docente_asignatura.filter(item=>item.tipo_postgrado === filteredPeriodos[index].tipo_postgrado);
-
-            //Loop saved asignaturas for the specified period (getting just the id)
-            if(item[index].length > 0){
-              for(let i = 0; i < item[index].length; i++){
-                mid_options[index]['values'].push(item[index][i]['asignatura']['id']);
-              }
-            }
-            asignaturas[index] = mid_options[index]; 
-
-          }
+      if(this.props.adminUser.lista_asignaturas.length > 0){
+        // Loop all asignaturas (name and id)
+        mid_options['options'] = [];
+        for(let j = 0; j < lista_asignaturas_length; j++){
+            asignatura = {"name":this.props.adminUser.lista_asignaturas[j].nombre,"value":this.props.adminUser.lista_asignaturas[j].id};
+            mid_options['options'].push(asignatura);
         }
 
-        listItems = filteredPeriodos.map((periodo, index) =>
-          <tr key={periodo['id']}>
-            <td>No iniciado</td>
-            <td>{periodo['tipo_postgrado'] + ': ' + periodo['descripcion']}</td>
-            <td>  
-              <Row >
-                <Col lg='2' md='2' sm='4' className='botones'>
-                  <Button onClick={() => this.handleChange(periodo, item[index], asignaturas[index], periodo['tipo_postgrado'])} color="success" size='sm' data-toggle="tooltip" title="Editar"><FontAwesomeIcon name="edit"/></Button>
-                </Col>
+        //Loop all tipos_postgrado
+        for(let index = 0; index < filtered_length; index++){
+          //Initialization
+          mid_options[index] = [];
+          asignaturas[index] = [];
+          mid_options[index]['values'] = [];
+          mid_options[index]['options'] = mid_options['options'];
+          
 
-                <Col lg={this.state.col_lg_trash_button} md={this.state.col_md_trash_button} sm='4' >
-                  <ConfirmButton
-                    onClick={() => this.prueba()}
-                    onConfirm={() => this.eliminar_periodo( periodo['id'] ) }
-                    text= {<FontAwesomeIcon name="trash-alt"/>}
-                    className="btn btn-danger btn-sm"
+          //Get all saved asignaturas
+          item[index] = this.props.adminUser.lista_docente_asignatura.filter(item=>item.tipo_postgrado === filteredPeriodos[index].tipo_postgrado);
+
+          //Loop saved asignaturas for the specified period (getting just the id)
+          if(item[index].length > 0){
+            for(let i = 0; i < item[index].length; i++){
+              mid_options[index]['values'].push(item[index][i]['asignatura']['id']);
+            }
+          }
+          asignaturas[index] = mid_options[index]; 
+
+        }
+
+      }
+
+      listItems = filteredPeriodos.map((periodo, index) =>
+        <tr key={periodo['id']}>
+          <td>No iniciado</td>
+          <td>{periodo['tipo_postgrado'] + ': ' + periodo['descripcion']}</td>
+          <td>  
+            <Row >
+              <Col lg='2' md='2' sm='4' className='botones'>
+
+                <Button onClick={() => this.handleChange(periodo, item[index], asignaturas[index], periodo['tipo_postgrado'])} color="success" size='sm' data-toggle="tooltip" title="Editar"><FontAwesomeIcon name="edit"/></Button>
+              </Col>
+
+              <Col lg={this.state.col_lg_trash_button} md={this.state.col_md_trash_button} sm='4' >
+                <ConfirmButton
+                  onClick={() => this.cambiarTamanoCol()}
+                  onConfirm={() => this.eliminar_periodo( periodo['id'] ) }
+                  text= {<FontAwesomeIcon name="trash-alt"/>}
+                  className="btn btn-danger btn-sm"
+                  confirming={{
+                    text: '¿Está Seguro?',
+                    className: 'btn btn-danger btn-sm',
+                  }}
+                />
+              </Col>
+
+              <Col lg='2' md='2' sm='4'>
+                <ConfirmButton 
+                    
+                    onConfirm={() => this.activar_periodo( periodo['id'] ) }
+                    text= {<FontAwesomeIcon name="rocket"/>}
+                    className="btn btn-info btn-sm"
                     confirming={{
-                      text: '¿Esta seguro?',
-                      className: 'btn btn-danger btn-sm',
+                      text: '¿Está Seguro?',
+                      className: 'btn btn-info btn-sm',
                     }}
                   />
-                </Col>
+              </Col>
 
-                <Col lg='2' md='2' sm='4'>
-                  <ConfirmButton 
-                      
-                      onConfirm={() => this.activar_periodo( periodo['id'] ) }
-                      text= {<FontAwesomeIcon name="rocket"/>}
-                      className="btn btn-info btn-sm"
-                      confirming={{
-                        text: '¿Esta seguro?',
-                        className: 'btn btn-info btn-sm',
-                      }}
-                    />
-                </Col>
+            </Row>
+          </td>
+        </tr>
+      );
 
-              </Row>
-            </td>
-          </tr>
-        );
+      
 
+      return listItems;
+  }
 
+}
+
+  render()
+  {
+
+    if(this.props.adminUser.lista_periodos && this.props.adminUser.lista_periodos.length > 0)
+    {
+      let listItems = '';
+      listItems = this.get_listItems();
 
         if(this.state.editando_periodo === 1)
         {
@@ -272,25 +288,27 @@ class ListaPeriodos extends Component{
       		<div>
                 <br />
 
-                {this.state.loading && !this.props.adminUser['edit'] && !this.props.adminUser['bad_input'] &&
-
+                {/*SPINNER*/}
+                {this.props.adminUser.loading &&
                   <center><PulseLoader color="#b3b1b0" size="16px" margin="4px"/></center>
-
                 }
 
-                {this.props.adminUser['edit'] &&
+                {/*ALERT DE EXITO*/}
+                {this.props.adminUser['edit'] && !this.props.adminUser.loading &&
                   <Alert color="success" isOpen={this.state.visible} toggle={this.onDismiss}>
                       Datos actualizados exitosamente
                   </Alert> 
                 }
-                {this.props.adminUser['bad_input'] === true &&
+                {/*ALERT DE ERROR*/}
+                {this.props.adminUser['bad_input'] === true && !this.props.adminUser.loading &&
                     <Alert color="danger" isOpen={this.state.visible} toggle={this.onDismiss}>
                         Ha ocurrido un error
                     </Alert>
                 }
+
                 <Row>
                   <Col md='4'>
-                    <ModalPeriodoNew onDismiss={this.onDismiss} triggerParentUpdate={this.updateLoading}  /> 
+                    <ModalPeriodoNew onDismiss={this.onDismiss}  /> 
                   </Col>
                   <Col md='8'>
                     <SearchInput className="searchBox" placeholder="Buscar periodo..." onChange={this.searchUpdated} />
@@ -310,9 +328,6 @@ class ListaPeriodos extends Component{
                   </thead>
                   <tbody className="tabla_usuarios">
                     {listItems}
-
-
-                    
                   </tbody>
                 </Table>
 
@@ -321,7 +336,7 @@ class ListaPeriodos extends Component{
                   <Col lg='4' md='4' sm='6' xs='10' className='Pagination'>
                     <br />
                     {this.state.searchTerm === '' &&
-                      <Paginacion cant_usuarios={cant_periodos} item_por_pagina={periodos_por_pagina}/>
+                      <Paginacion cant_items={this.props.adminUser.lista_periodos.length} item_por_pagina={periodos_por_pagina}/>
                     }
                   </Col>
                   <Col lg='4' md='4' sm='3' xs='1'> </Col>
@@ -336,16 +351,14 @@ class ListaPeriodos extends Component{
           return(
             <PeriodoEdit 
             onDismiss={this.onDismiss} 
-            triggerParentUpdate={this.updateLoading} 
             periodo={this.state.periodo} 
-            docente_asignatura={this.ordenarLista()} 
             asignaturas={this.state.asignaturas} 
             triggerVolverPasoAnterior={this.volverPasoAnterior} 
             triggerSiguientePaso={this.siguientePaso} 
             tipo_postgrado={this.state.tipo_postgrado}
             editando_periodo={this.state.editando_periodo}
-            triggerUpdateLoading={this.updateLoading} 
             triggerVolverPrimerPaso={this.volverPrimerPaso}
+            docente_asignatura = {this.ordenarLista()}
             triggetUpdateDocenteAsignatura={() => this.props.get_docente_asignatura("all")}
             />
           )
@@ -366,7 +379,7 @@ class ListaPeriodos extends Component{
 
               <Row>
                 <Col md='12'>
-                  <ModalPeriodoNew onDismiss={this.onDismiss} triggerParentUpdate={this.updateLoading} />
+                  <ModalPeriodoNew onDismiss={this.onDismiss} />
                 </Col>
               </Row>
 
@@ -395,6 +408,8 @@ const mapDispatchToProps = (dispatch) => {
     get_usuarios: get_usuarios,
     eliminar_periodo: eliminar_periodo,
     activar_periodo: activar_periodo,
+    cargando: cargando,
+    actualizar_docente_asignatura: actualizar_docente_asignatura,
   }, dispatch )
 }
 

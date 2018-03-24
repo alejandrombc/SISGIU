@@ -8,13 +8,11 @@ import ConfirmButton from 'react-confirm-button';
 import 'rc-time-picker/assets/index.css';
 
 // Components
-import { editar_asignatura } from '../../actions/moduloAsignaturas';
+import { guardar_docente_asignatura_periodo, cargando } from '../../actions/moduloPeriodos';
+import AgregarDocenteAsignatura from './agregarDocenteAsignatura';
 import TimePicker from 'rc-time-picker';
-import { guardar_docente_asignatura_periodo } from '../../actions/moduloPeriodos';
-
 
 class PeriodoEdit extends React.Component {
-
 
   constructor(props) {
     super(props);
@@ -23,56 +21,39 @@ class PeriodoEdit extends React.Component {
       asignatura_codigo: '',
       docente_asignatura_tabla: [],
       asignatura: '',
-      codigo_asignatura: '',
       docente_asignatura_nuevo: '',
       horario_dia_nuevo: 0,
       horario_hora_nuevo_inicio: '',
       horario_hora_nuevo_fin: '',
       aula_nuevo: '',
-      // formulario_completo: false,
+      codigo_asignatura: '',
     };
 
-    this.handleChange = this.handleChange.bind(this);
-    this.handleChangeExtraData = this.handleChangeExtraData.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
-    this.agregarDocenteAsignatura = this.agregarDocenteAsignatura.bind(this);
-    this.ordenarLista = this.ordenarLista.bind(this);
     this.eliminarDocenteAsignatura = this.eliminarDocenteAsignatura.bind(this);
     this.guardarCambiosEdit = this.guardarCambiosEdit.bind(this);
+    this.get_listItemsFinales = this.get_listItemsFinales.bind(this);
+    this.handleChangeSelectAsignaturas = this.handleChangeSelectAsignaturas.bind(this);
+    this.get_listAsignaturas = this.get_listAsignaturas.bind(this);
+    this.get_listItems = this.get_listItems.bind(this);
+    this.handleChangeExtraData = this.handleChangeExtraData.bind(this);
+    this.get_lista_docentes = this.get_lista_docentes.bind(this);
     this.handleChangeTimePickerInicio = this.handleChangeTimePickerInicio.bind(this);
     this.handleChangeTimePickerFin = this.handleChangeTimePickerFin.bind(this);
-    // this.evaluarFormulario = this.evaluarFormulario.bind(this);
-
-    
-
-
+    this.agregarDocenteAsignatura = this.agregarDocenteAsignatura.bind(this);
+    this.ordenarLista = this.ordenarLista.bind(this);
 
   }
 
-  // Funcion que evalua si el formulario esta completo, si lo esta, entonces coloca el estado 'formulario_completo' en true, sino en false
-  // evaluarFormulario() {
-
-  //   console.log( this.state.docente_asignatura_nuevo );
-  //   console.log( this.state.horario_hora_nuevo );
-  //   console.log( this.state.aula_nuevo );
-
-  //   if ( this.state.docente_asignatura_nuevo !=='' && this.state.horario_hora_nuevo !=='' && this.state.aula_nuevo !=='') {
-  //     this.setState({formulario_completo: true});
-  //   } else {
-  //     this.setState({formulario_completo: false});
-  //   }
-  // }
-
-
-
-  // Este es cuando cambio el select de escoger asignatura
-  handleChange(e) {
+    // Este es cuando cambio el select de escoger asignatura
+  handleChangeSelectAsignaturas(e) 
+  {
     const { name, value } = e.target;
 
     let docente_asignatura_tabla = [];
     let index;
 
     let N = this.state.docente_asignatura.length;
+
 
     for (var j = 0; j < N; j++) {
       if(this.state.docente_asignatura[j].asignatura.codigo === value){
@@ -98,7 +79,6 @@ class PeriodoEdit extends React.Component {
       aula_nuevo: '',  });
   }
 
-
   handleChangeExtraData(e){
     const { name, value } = e.target;
     this.setState({ [name] : value });
@@ -115,24 +95,53 @@ class PeriodoEdit extends React.Component {
     this.setState({horario_hora_nuevo_fin: horario_hora_nuevo_fin.picker.attributes.value.value});
   }
 
+  get_listAsignaturas() {
+    let listAsignaturas;
+    if (this.props.adminUser.lista_asignaturas && this.props.adminUser.lista_asignaturas.length > 0) {
+      listAsignaturas = this.props.adminUser.lista_asignaturas.map((tipo_asignatura) =>
+        <option key={tipo_asignatura['codigo']} value={tipo_asignatura['codigo']} name={tipo_asignatura['nombre']}> {tipo_asignatura['nombre']} </option>
+      ); 
+    }
 
-  handleSubmit(e) {
-    // e.preventDefault();
-    // this.props.triggerParentUpdate();
-    // this.props.editar_asignatura(this.state);
-    // this.props.triggerParentUpdate();
+    return listAsignaturas;
   }
 
-  componentWillReceiveProps(){
-    if(this.state.docente_asignatura === undefined){
-      this.setState({docente_asignatura: this.props.docente_asignatura});
-    } 
+  get_listItems(days) {
+    // Esta es la lista de todos los horarios que posee una asignatura en especifico.
+    let listItems = this.state.docente_asignatura_tabla.map((docente, index) =>
+        <tr key={index}>
+          <td> 
+            {docente.usuario.first_name}{' '}{docente.usuario.last_name}
+          </td>
+          <td>{docente.asignatura.nombre}</td>
+          <td>        
+            {days[docente.horario_dia]}
+          </td>
+          <td>        
+            {docente.horario_hora}
+          </td>
+          <td>        
+            {docente.aula}
+          </td>
+        </tr>
+    );
+
+    return listItems;
   }
 
+  get_lista_docentes() {
+    let lista_docentes;
+    if (this.props.adminUser.lista_usuarios && this.props.adminUser.lista_usuarios.length > 0) {
+      lista_docentes = this.props.adminUser.lista_usuarios.map((docente) =>
+        <option key={docente['cedula']} value={docente['cedula']} name={docente['cedula']}> {docente.first_name}{' '}{docente.last_name} </option>
+      ); 
+    }
+
+    return lista_docentes;
+  }
 
   agregarDocenteAsignatura() {
 
-    // console.log(  this.refs.horario_hora_nuevo_inicio.picker.attributes.value.value  );
     //Declaraciones
     let nueva_asignatura = {};
     let new_docente_asignatura = this.state.docente_asignatura;
@@ -188,9 +197,10 @@ class PeriodoEdit extends React.Component {
 
       new_docente_asignatura = this.ordenarLista(new_docente_asignatura);
 
+
       //Set a los valores nuevos de los estados
       this.setState({
-        docente_asignatura: new_docente_asignatura, 
+        docente_asignatura: new_docente_asignatura,
         docente_asignatura_tabla: docente_asignatura_tabla,
         docente_asignatura_nuevo: '',
         horario_dia_nuevo: 0,
@@ -198,6 +208,8 @@ class PeriodoEdit extends React.Component {
         horario_hora_nuevo_fin: '',
         aula_nuevo: '',
       });
+
+
     } else {
       alert('Complete todos los campos');
     }
@@ -233,8 +245,6 @@ class PeriodoEdit extends React.Component {
       }
     }
 
-
-
     return docente_asignatura_ordenado; 
   }
 
@@ -245,32 +255,19 @@ class PeriodoEdit extends React.Component {
   }
 
   guardarCambiosEdit() {
-    this.props.triggerUpdateLoading();
+    this.props.cargando();
     this.props.triggerVolverPrimerPaso();
     this.props.triggetUpdateDocenteAsignatura();
     this.props.guardar_docente_asignatura_periodo(this.state.docente_asignatura, this.props.periodo.id);
-    this.props.triggerUpdateLoading();
   }
 
-
-  render() {
-
-    let listItems = '';
-    let lista_docentes = '';
-    let listAsignaturas = '';
-    let listItemsFinales = '';
+  get_listItemsFinales(days) {
+    // Esta es la lista de todas las asignaturas con horarios, aulas, etc que se mostrara en el paso final al editar un periodo. 
     
+    if (this.state.docente_asignatura) {
 
-    if (this.props.adminUser.lista_usuarios && this.props.adminUser.lista_usuarios.length > 0) {
-      lista_docentes = this.props.adminUser.lista_usuarios.map((docente) =>
-        <option key={docente['cedula']} value={docente['cedula']} name={docente['cedula']}> {docente.first_name}{' '}{docente.last_name} </option>
-      ); 
-    }
 
-    const days = ['Lunes', 'Martes', 'Miercoles','Jueves', 'Viernes', 'Sabado', 'Domingo'];
-    
-    // Esta es la lista de todos los horarios que posee una asignatura en especifico.
-    listItems = this.state.docente_asignatura_tabla.map((docente, index) =>
+      let listItemsFinales = this.state.docente_asignatura.map((docente, index) =>
         <tr key={index}>
           <td> 
             {docente.usuario.first_name}{' '}{docente.usuario.last_name}
@@ -285,212 +282,152 @@ class PeriodoEdit extends React.Component {
           <td>        
             {docente.aula}
           </td>
-        </tr>
-    );
-
-    // Esta es la lista de todas las asignaturas con horarios, aulas, etc que se mostrara en el paso final al editar un periodo. 
-    listItemsFinales = this.state.docente_asignatura.map((docente, index) =>
-      <tr key={index}>
-        <td> 
-          {docente.usuario.first_name}{' '}{docente.usuario.last_name}
-        </td>
-        <td>{docente.asignatura.nombre}</td>
-        <td>        
-          {days[docente.horario_dia]}
-        </td>
-        <td>        
-          {docente.horario_hora}
-        </td>
-        <td>        
-          {docente.aula}
-        </td>
-        <td>
-          <ConfirmButton
-              onConfirm={() => this.eliminarDocenteAsignatura(index) }
-              text= {<FontAwesomeIcon name="trash-alt"/>}
-              className="btn btn-danger btn-sm"
-              confirming={{
-                text: '¿Esta seguro? Se eliminará este horario.',
-                className: 'btn btn-danger btn-sm',
-              }}
-            />
-        </td>
-      </tr>
-    );
-
-
-    if (this.props.adminUser.lista_asignaturas && this.props.adminUser.lista_asignaturas.length > 0) {
-      listAsignaturas = this.props.adminUser.lista_asignaturas.map((tipo_asignatura) =>
-        <option key={tipo_asignatura['codigo']} value={tipo_asignatura['codigo']} name={tipo_asignatura['nombre']}> {tipo_asignatura['nombre']} </option>
-      ); 
-    }
-
-
-
-    listAsignaturas = this.props.adminUser.lista_asignaturas.map((tipo_asignatura) =>
-      <option key={tipo_asignatura['codigo']} value={tipo_asignatura['codigo']} name={tipo_asignatura['nombre']}> {tipo_asignatura['nombre']} </option>
-    );
-
-    /*
-    let listHoras = '';
-    let arrayHoras = [];
-    
-    for (var i = 0; i < 24 ; i++) {
-        for (var j = 0; j < 60; j+=15) {
-        if (i<10 && j===0){
-          arrayHoras.push('0'+i.toString()+' - 0'+j.toString());
-        } else if (i<10 && j>0) {
-          arrayHoras.push('0'+i.toString()+' - '+j.toString());
-        } else {
-          arrayHoras.push(i.toString()+' - '+j.toString());
-        }
-      }
-    }
-
-    listHoras = arrayHoras.map((horas) =>
-      <option key={horas} value={horas} > {horas} </option>
-    );
-    */
-
-    if ( this.props.editando_periodo === 2 ) {
-      return (
-        <div>
-            <br />
+          <td>
             <ConfirmButton
-              onConfirm={() => this.props.triggerVolverPasoAnterior() }
-              text= {<FontAwesomeIcon name="arrow-left"/>}
-              className="btn btn-secondary btn-sm"
-              confirming={{
-                text: '¿Esta seguro? Se perderan todos los cambios',
-                className: 'btn btn-danger btn-sm',
-              }}
-            />
-
-            <br /><br />
-            {/*
-            <Form onSubmit={this.handleSubmit}>
-            */}
-            <Form >
-              <h6>Paso 1: Seleccionar Asignaturas</h6>
-              <hr/>
-              <FormGroup row>
-                <Label for="asignatura_codigo" sm={5}>Seleccione una asignatura</Label>
-                <Col sm={7}>
-                  <Input 
-                  bsSize="sm" 
-                  value={this.state.value} 
-                  defaultValue={this.state['asignatura_codigo']} 
-                  onChange={this.handleChange} 
-                  type="select" 
-                  name="asignatura_codigo" 
-                  id="asignatura_codigo" 
-                  required>
-                    <option value={null} name={-1}> {' '} </option>
-                    {listAsignaturas}
-                  </Input>
-                </Col>
-              </FormGroup>
-              <br />
-              <hr/>
-              <h6>Paso 2: Seleccione docente y hora</h6>
-              <hr/>
-              <Table bordered hover responsive striped size="sm">
-                <thead>
-                  <tr>
-                    <th>Docente</th>
-                    <th>Asignatura</th>
-                    <th>Dia</th>
-                    <th>Hora</th>
-                    <th>Aula</th>
-                  </tr>
-                </thead>
-                <tbody className="tabla_usuarios">
-                    
-                    {listItems}
-                    
-                    { this.state.asignatura_codigo !== '' &&
-                      <tr>
-                        <td id='docente_asignatura_nuevo'> 
-                          <FormGroup>
-                            <Input bsSize="sm" value={this.state.docente_asignatura_nuevo} onChange={this.handleChangeExtraData}  type="select" name="docente_asignatura_nuevo" id="docente_asignatura_nuevo" required>
-                              <option value={null} name={-1}> {' '} </option>
-                              {lista_docentes}
-                            </Input>
-                          </FormGroup>
-                        </td>
-                        <td> {this.state.asignatura.nombre}</td>
-                        <td> 
-                          <FormGroup>
-                            <Input bsSize="sm" value={this.state.horario_dia_nuevo} onChange={this.handleChangeExtraData} required type="select" name="horario_dia_nuevo" id="horario_dia_nuevo">
-                              <option key="0" value="0" name="Lunes"> Lunes </option>
-                              <option key="1" value="1" name="Martes"> Martes </option>
-                              <option key="2" value="2" name="Miercoles"> Miercoles </option>
-                              <option key="3" value="3" name="Jueves"> Jueves </option>
-                              <option key="4" value="4" name="Viernes"> Viernes </option>
-                              <option key="5" value="5" name="Sabado"> Sabado </option>
-                              <option key="6" value="6" name="Domingo"> Domingo </option>
-                            </Input>
-                          </FormGroup>
-                        </td>
-                        <td> 
-                          
-
-                          <FormGroup>
-                            <TimePicker placeholder="Inicio" showMinute={false} name="horario_hora_nuevo_inicio" ref="horario_hora_nuevo_inicio" onChange={this.handleChangeTimePickerInicio}/>
-                            <TimePicker placeholder="Fin" showMinute={false} name="horario_hora_nuevo_fin" ref="horario_hora_nuevo_fin" onChange={this.handleChangeTimePickerFin} />
-                          </FormGroup>
-                                          
-                          
-
-                        {/*
-                          <FormGroup>
-                              <Input 
-                              bsSize="sm" 
-                              value={this.state.value} 
-                              defaultValue={''} 
-                              onChange={this.handleChange} 
-                              type="select" 
-                              name="horario_hora_nuevo" 
-                              required>
-                                <option value={null} name={-1}> {' '} </option>
-                                {this.listHoras}
-                              </Input>
-                          </FormGroup>
-                        */}
+                onConfirm={() => this.eliminarDocenteAsignatura(index) }
+                text= {<FontAwesomeIcon name="trash-alt"/>}
+                className="btn btn-danger btn-sm"
+                confirming={{
+                  text: '¿Está seguro? Se eliminará este horario.',
+                  className: 'btn btn-danger btn-sm',
+                }}
+              />
+          </td>
+        </tr>
+      );
+      return listItemsFinales;
+    }
+    return '';
+  }
 
 
-                        </td>
-                        <td>
-                          <FormGroup>
-                            <Input type="number" value={this.state.aula_nuevo} name="aula_nuevo" onChange={this.handleChangeExtraData} required />
-                          </FormGroup>
-                        </td>
-                      </tr> 
-                    }
-                  
-                </tbody>
-              </Table>
+  render() {
 
-              <Row>
-                <Col md="6" sm="6">
-                    <div className="text-left">
-                      <Button color="primary" className="pull-left" size='sm' data-toggle="tooltip" title="Guardar" onClick={() => this.agregarDocenteAsignatura()}>Guardar</Button>
-                    </div>
-                </Col>
+    const days = ['Lunes', 'Martes', 'Miercoles','Jueves', 'Viernes', 'Sabado', 'Domingo'];
+    let listAsignaturas = this.get_listAsignaturas();
+    let listItems = this.get_listItems(days);
+    let lista_docentes = this.get_lista_docentes();
+    let listItemsFinales = this.get_listItemsFinales(days);
 
-                <Col md="6" sm="6">
-                    <div className="text-right">
-                      <Button color="success" size='sm' data-toggle="tooltip" title="Siguiente" onClick={() => this.props.triggerSiguientePaso()}><FontAwesomeIcon name="arrow-right"/></Button>
-                    </div>
-                </Col>
-              </Row>
+    if ( this.props.editando_periodo === 2 ) 
+    {
+      return (  
+        <div>
+          <br />
+          <ConfirmButton
+            onConfirm={() => this.props.triggerVolverPasoAnterior() }
+            text= {<FontAwesomeIcon name="arrow-left"/>}
+            className="btn btn-secondary btn-sm"
+            confirming={{
+              text: '¿Está Seguro? Se perderan todos los cambios',
+              className: 'btn btn-danger btn-sm',
+            }}
+          />
 
-            </Form>
+          <br /><br />
+          <Form >
+            <h6>Paso 1: Seleccionar Asignaturas</h6>
+            <hr/>
+            <FormGroup row>
+              <Label for="asignatura_codigo" sm={5}>Seleccione una asignatura</Label>
+              <Col sm={7}>
+                <Input 
+                bsSize="sm" 
+                value={this.state.value} 
+                defaultValue={this.state['asignatura_codigo']} 
+                onChange={this.handleChangeSelectAsignaturas} 
+                type="select" 
+                name="asignatura_codigo" 
+                id="asignatura_codigo" 
+                required>
+                  <option value={null} name={-1}> {' '} </option>
+                  {listAsignaturas}
+                </Input>
+              </Col>
+            </FormGroup>
             <br />
+            <hr/>
+            <h6>Paso 2: Seleccione docente y hora</h6>
+            <hr/>
+            <Table bordered hover responsive striped size="sm">
+              <thead>
+                <tr>
+                  <th>Docente</th>
+                  <th>Asignatura</th>
+                  <th>Dia</th>
+                  <th>Hora</th>
+                  <th>Aula</th>
+                </tr>
+              </thead>
+              <tbody className="tabla_usuarios">
+                  
+                  {listItems}
+                  
+                  { this.state.asignatura_codigo !== '' &&
+                    <tr>
+                      <td id='docente_asignatura_nuevo'> 
+                        <FormGroup>
+                          <Input bsSize="sm" value={this.state.docente_asignatura_nuevo} onChange={this.handleChangeExtraData}  type="select" name="docente_asignatura_nuevo" id="docente_asignatura_nuevo" required>
+                            <option value={null} name={-1}> {' '} </option>
+                            {lista_docentes}
+                          </Input>
+                        </FormGroup>
+                      </td>
+                      <td> {this.state.asignatura.nombre}</td>
+                      <td> 
+                        <FormGroup>
+                          <Input bsSize="sm" value={this.state.horario_dia_nuevo} onChange={this.handleChangeExtraData} required type="select" name="horario_dia_nuevo" id="horario_dia_nuevo">
+                            <option key="0" value="0" name="Lunes"> Lunes </option>
+                            <option key="1" value="1" name="Martes"> Martes </option>
+                            <option key="2" value="2" name="Miercoles"> Miercoles </option>
+                            <option key="3" value="3" name="Jueves"> Jueves </option>
+                            <option key="4" value="4" name="Viernes"> Viernes </option>
+                            <option key="5" value="5" name="Sabado"> Sabado </option>
+                            <option key="6" value="6" name="Domingo"> Domingo </option>
+                          </Input>
+                        </FormGroup>
+                      </td>
+                      <td> 
+                        
+
+                        <FormGroup>
+                          <TimePicker placeholder="Inicio" showMinute={false} name="horario_hora_nuevo_inicio" ref="horario_hora_nuevo_inicio" onChange={this.handleChangeTimePickerInicio}/>
+                          <TimePicker placeholder="Fin" showMinute={false} name="horario_hora_nuevo_fin" ref="horario_hora_nuevo_fin" onChange={this.handleChangeTimePickerFin} />
+                        </FormGroup>
+                                        
+                      </td>
+                      <td>
+                        <FormGroup>
+                          <Input type="number" value={this.state.aula_nuevo} name="aula_nuevo" onChange={this.handleChangeExtraData} required />
+                        </FormGroup>
+                      </td>
+                    </tr> 
+                  }
+                
+              </tbody>
+            </Table>
+
+            <Row>
+              <Col md="6" sm="6">
+                  <div className="text-left">
+                    <Button color="primary" className="pull-left" size='sm' data-toggle="tooltip" title="Guardar" onClick={() => this.agregarDocenteAsignatura()}>Guardar</Button>
+                  </div>
+              </Col>
+
+              <Col md="6" sm="6">
+                  <div className="text-right">
+                    <Button color="success" size='sm' data-toggle="tooltip" title="Siguiente" onClick={() => this.props.triggerSiguientePaso()}><FontAwesomeIcon name="arrow-right"/></Button>
+                  </div>
+              </Col>
+            </Row>
+
+          </Form>
+          <br />
         </div>
       );
 
-    } else { // this.props.editando_periodo === 3 PASO FINAL
+    } else 
+    { // this.props.editando_periodo === 3 PASO FINAL
       return (
         <div>
 
@@ -535,10 +472,10 @@ class PeriodoEdit extends React.Component {
             </Col>
           </Row>
 
-
         </div>
 
       );
+    
     }
 
     
@@ -553,8 +490,8 @@ const mapStateToProps = (state)=> {
 
 const mapDispatchToProps = (dispatch) => {
   return bindActionCreators({
-    editar_asignatura: editar_asignatura,
     guardar_docente_asignatura_periodo: guardar_docente_asignatura_periodo,
+    cargando: cargando,
     }, 
     dispatch 
   )

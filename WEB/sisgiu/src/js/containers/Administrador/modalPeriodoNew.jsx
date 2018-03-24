@@ -6,7 +6,7 @@ import {bindActionCreators} from 'redux';
 import { connect } from 'react-redux';
 
 // Components
-import { crear_periodo } from '../../actions/moduloPeriodos';
+import { crear_periodo, cargando } from '../../actions/moduloPeriodos';
 
 class ModalPeriodoNew extends React.Component {
   constructor(props) {
@@ -38,6 +38,7 @@ class ModalPeriodoNew extends React.Component {
   handleSubmit(e) {
     e.preventDefault();
     
+    this.props.cargando();
 
     var n = this.props.adminUser.lista_estadoPeriodo.length ;
     var id_estado_periodo;
@@ -48,14 +49,12 @@ class ModalPeriodoNew extends React.Component {
       }
     }
 
-    this.props.triggerParentUpdate();
     this.props.crear_periodo(this.state, id_estado_periodo);
     
     this.setState({
       descripcion: null,
       tipo_postgrado: null
     });
-    this.props.triggerParentUpdate();
     this.toggle();
 
 
@@ -136,6 +135,7 @@ const mapStateToProps = (state)=> {
 const mapDispatchToProps = (dispatch) => {
   return bindActionCreators({
     crear_periodo: crear_periodo,
+    cargando: cargando,
 
     }, 
     dispatch 
