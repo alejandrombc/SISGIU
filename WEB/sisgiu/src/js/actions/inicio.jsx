@@ -84,7 +84,7 @@ export const get_periodos_actuales = () => {
 	   .then(function(res) {
 	   	  	if(res.body.length > 0){
 		      return {
-					type: "GET_PERIODOS_SUCCESS",
+					type: "GET_PERIODOS_ACTIVOS_EXITOSO",
 					payload: {periodos: res.body }
 				}
 			}else{

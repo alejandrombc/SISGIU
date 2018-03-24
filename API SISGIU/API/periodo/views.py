@@ -37,6 +37,7 @@ from .permissions import (
 
 from django.views.decorators.csrf import csrf_exempt
 from django.db.models import Q
+from collections import OrderedDict
 
 """
 EstadoPeriodo
@@ -90,6 +91,8 @@ class PeriodoListCreateAPIView(ListCreateAPIView):
                 periodo['estado_periodo'] = estado_periodo['estado']
                 periodo['tipo_postgrado'] = tipo_postgrado['tipo']
 
+            list_result = sorted(list_result, key=lambda k: k['tipo_postgrado']) 
+
             return HttpResponse(json.dumps(list_result, default=date_handler), content_type="application/json")
 
 
@@ -107,8 +110,8 @@ class PeriodoListCreateAPIView(ListCreateAPIView):
             estado_periodo = EstadoPeriodo.objects.get(id=periodo.estado_periodo_id)
             
             # Validamos si el periodo seleccionado ya esta activo
-            if(estado_periodo.estado == "en inscripcion"):
-                response_data['error'] = 'El periodo seleccionado ya se encuentra en inscripción.'      
+            if(estado_periodo.estado == "en inscripcion" or estado_periodo.estado == "activo"):
+                response_data['error'] = 'El periodo seleccionado ya se encuentra en inscripción o activo.'      
                 return HttpResponse(json.dumps(response_data), content_type="application/json", status=409)
 
             # Validamos que no exista otro "tipo de postgrado" en inscripcion
@@ -116,6 +119,13 @@ class PeriodoListCreateAPIView(ListCreateAPIView):
             if periodo_postgrado:
                 response_data['error'] = 'Ya existe un periodo en inscripción para este tipo de postgrado.'      
                 return HttpResponse(json.dumps(response_data), content_type="application/json", status=409)
+
+            # Validamos que no exista otro "tipo de postgrado" activo
+            periodo_postgrado = Periodo.objects.filter(tipo_postgrado_id=periodo.tipo_postgrado_id, estado_periodo_id__estado="activo")
+            if periodo_postgrado:
+                response_data['error'] = 'Ya existe un periodo activo para este tipo de postgrado.'      
+                return HttpResponse(json.dumps(response_data), content_type="application/json", status=409)
+
 
             #Actualizo el periodo a "en inscripcion"
             else:

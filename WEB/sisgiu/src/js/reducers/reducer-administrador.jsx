@@ -1,5 +1,4 @@
 const initialState = {
-	periodos: [], 
 	edit:false, 
 	tiene_periodos_activos: true, 
 	periodo_terminado_error: false, 
@@ -24,8 +23,8 @@ export default function (state=initialState, action) {
 
 	switch (action.type){
 
-		case "GET_PERIODOS_SUCCESS":
-			nuevo_estado['periodos'] = action.payload['periodos'];
+		case "GET_PERIODOS_ACTIVOS_EXITOSO":
+			nuevo_estado['lista_periodos'] = action.payload['periodos'];
 			nuevo_estado['tiene_periodos_activos'] = true;
 			nuevo_estado['edit'] = false;
 			nuevo_estado['cargado'] = true;
@@ -34,6 +33,7 @@ export default function (state=initialState, action) {
 
 		case "SIN_PERIODOS_ACTIVOS":
 			nuevo_estado['tiene_periodos_activos'] = false;
+			nuevo_estado['lista_periodos'] = action.payload['periodos'];
 			nuevo_estado['cargado'] = true;
 			return nuevo_estado;
 			

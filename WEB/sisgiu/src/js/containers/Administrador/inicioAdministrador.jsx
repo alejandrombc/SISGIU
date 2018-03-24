@@ -27,8 +27,6 @@ class InicioAdministrador extends Component{
       this.onDismiss = this.onDismiss.bind(this);
       this.cambiarEstadoPeriodo = this.cambiarEstadoPeriodo.bind(this);
       this.updateLoading = this.updateLoading.bind(this);
-
-
   }
 
   onDismiss() {
@@ -43,32 +41,28 @@ class InicioAdministrador extends Component{
   cambiarEstadoPeriodo(periodo) {
 
     // this.updateLoading();
-    console.log(periodo);
     this.props.cambiarEstadoPeriodo(periodo, this.props.adminUser.lista_estadoPeriodo);
     // this.updateLoading();
-
-
   }
+
 
   render(){
       let listItems = '';
-
-      if(this.props.adminUser['periodos'] && this.props.adminUser['periodos'].length > 0){
-        listItems = this.props.adminUser['periodos'].map((valor, index) =>{
+      if(this.props.adminUser['lista_periodos'] && this.props.adminUser['lista_periodos'].length > 0){
+        listItems = this.props.adminUser['lista_periodos'].map((valor, index) =>{
             return (
-              <ListGroupItem key={index}>
+              <ListGroupItem key={index*-1}>
                 
                 <Row>
                   <Col md='7' sm='7'>
                     <ListGroupItemHeading>{valor['tipo_postgrado']}</ListGroupItemHeading>
                   </Col>
-                  
                   { valor.estado_periodo === 'activo' ?
                     
-                    <Col md='5' sm='5'>
+                    <Col md='5' sm='5' key={valor.id + 0.1}>
                       <ConfirmButton
                         onConfirm={() => this.cambiarEstadoPeriodo(valor) }
-                        text = 'Terminar Periodo'
+                        text = "Terminar Periodo"
                         className="btn btn-danger btn-sm"
                         style={{ float: 'right' }}
                         confirming={{
@@ -80,10 +74,11 @@ class InicioAdministrador extends Component{
                     </Col>
 
                     : 
-                    <Col md='5' sm='5'>
+
+                    <Col md='5' sm='5' key={valor.id + 0.2}>
                       <ConfirmButton 
-                        onConfirm={() => this.cambiarEstadoPeriodo(valor) }
-                        text = 'Finalizar Inscripciones'
+                        onConfirm={() => this.cambiarEstadoPeriodo( valor) }
+                        text = "Finalizar Inscripciones"
                         className="btn btn-primary btn-sm pull-right"
                         style={{ float: 'right' }}
                         confirming={{
