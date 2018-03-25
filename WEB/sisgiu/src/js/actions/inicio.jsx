@@ -162,24 +162,10 @@ export const cambiarEstadoPeriodo = (periodo, lista_estadoPeriodo) =>{
 		filtro = 'activo';
 	}
 
-	var N = lista_estadoPeriodo.length;
-	var index;
-	for (var i = 0; i < N; i++) {
-		if ( lista_estadoPeriodo[i]['estado'] === filtro) {
-			index = parseInt(lista_estadoPeriodo[i]['id'], 10);
-		}
-	}
-
-	var result ={
-		"estado_periodo":index,
-		"tipo_postgrado":periodo['tipo_postgrado_id']
-	}
-
 	return request
-	   .put(host+'api/periodo/'+periodo['id']+'/edit/')
+	   .put(host+'api/periodo/'+periodo['id']+'/edit/filtro/'+filtro+'/')
 	   .set('Authorization', 'JWT '+token)
 	   .set('Content-Type', 'application/json')
-	   .send(result)
 	   .then(function(res) {
 			return function (dispatch) {
 			    dispatch(get_periodos_actuales());

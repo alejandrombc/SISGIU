@@ -25,6 +25,7 @@ urlpatterns = format_suffix_patterns([
     url(r'^api/periodo/(?P<filtro>[\w\s]+)/tipo_postgrado/(?P<tipo_postgrado>\d+)/$', PeriodoListCreateAPIView.get_periodos_by_tipo_postgrado, name='Periodo-list-filter'),    
     url(r'^api/periodo/activar/(?P<periodo_id>\d+)/$', PeriodoListCreateAPIView.activar_periodo, name='Periodo-launch'),
     url(r'^api/periodo/(?P<pk>\d+)/$', PeriodoDetailAPIView.as_view(), name='Periodo-detail'),
+    url(r'^api/periodo/(?P<periodo>\d+)/edit/filtro/(?P<filtro>[\w\s]+)/$', PeriodoUpdateAPIView.cambiar_estado_periodo, name='Periodo-update'),
     url(r'^api/periodo/(?P<pk>\d+)/edit/$', PeriodoUpdateAPIView.as_view(), name='Periodo-update'),
     url(r'^api/periodo/(?P<pk>\d+)/delete/$', PeriodoDeleteAPIView.as_view(), name='Periodo-delete'),
 

@@ -6,6 +6,10 @@ from periodo.models import (
     EstadoPeriodo,
     Periodo,
     )
+from relacion.models import (
+    PeriodoEstudiante,
+    EstudianteAsignatura,
+    )
 from usuario.models import (
     TipoPostgrado,
     )
@@ -57,6 +61,7 @@ class EstadoPeriodoUpdateAPIView(RetrieveUpdateAPIView):
     queryset = EstadoPeriodo.objects.all()
     serializer_class = EstadoPeriodoDetailSerializer
     permission_classes = [IsAdminUser]
+
 
 class EstadoPeriodoDeleteAPIView(DestroyAPIView):
     queryset = EstadoPeriodo.objects.all()
@@ -168,6 +173,34 @@ class PeriodoUpdateAPIView(RetrieveUpdateAPIView):
     queryset = Periodo.objects.all()
     serializer_class = PeriodoDetailSerializer
     # permission_classes = [IsAdminUser]
+
+    @csrf_exempt
+    def cambiar_estado_periodo(request, periodo, filtro):
+        if (request.method == "PUT"):
+
+            if filtro == "activo":
+                #Borro todos los alumnos con estado "no pagado" del periodo actual
+                print("Activo")
+                PeriodoEstudiante.objects.filter(periodo_id=periodo, pagado=False).delete()
+
+            elif filtro == "finalizado":
+                #Actualizo la tabla de Estudiante Asignatura con las notas cargadas 
+                print("Finalizado")
+
+            #Actualizar el estado periodo del periodo indicado
+            estado_periodo = EstadoPeriodo.objects.get(estado=filtro) 
+            Periodo.objects.filter(id=periodo).update(estado_periodo=estado_periodo.id)
+
+            response_data = {}
+            response_data['status'] = 'OK'  
+            return HttpResponse(json.dumps(response_data, default=date_handler), content_type="application/json")
+
+
+
+        response_data = {}
+        response_data['error'] = 'No tiene privilegios para realizar esta accion'      
+        return HttpResponse(json.dumps(response_data), content_type="application/json", status=401)
+
 
 class PeriodoDeleteAPIView(DestroyAPIView):
     queryset = Periodo.objects.all()
