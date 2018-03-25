@@ -4,20 +4,26 @@ import { connect } from 'react-redux';
 import {bindActionCreators} from 'redux';
 import { Button, Row, Col, ListGroup, ListGroupItem, ListGroupItemHeading, ListGroupItemText} from 'reactstrap';
 import { PulseLoader } from 'halogenium';
+import Inscripcion from './inscripcion';
 
 // Components
 import { get_information, get_periodo_estudiante, get_periodos_tipo_postgrado } from '../../actions/inicio';
-
 
 class InicioEstudiante extends Component{
 
   constructor(props) {
       super(props);
+      this.state = {
+        inscribiendo: false
+      }
       this.props.get_information(this.props.token['user']);
       this.props.get_periodos_tipo_postgrado("en inscripcion", this.props.token['user'].id_tipo_postgrado);
       this.props.get_periodo_estudiante(this.props.token['user'].usuario.cedula, "en inscripcion");
   }
 
+  enInscripcion(){
+    this.setState({inscribiendo: true});
+  }
 
   render(){
      const dias = {
@@ -54,46 +60,52 @@ class InicioEstudiante extends Component{
           listItems = <center><PulseLoader color="#b3b1b0" size="16px" margin="4px"/></center>
         }
       }
-      return(
-          <div>
-          <br />
-          {this.props.estudianteUser.first_render && this.props.estudianteUser.lista_periodo_estudiante.length === 0 && this.props.estudianteUser.lista_periodos.length > 0 &&
-            <Row>
-              <Col md='12' className="text-center">
-                <Button color="primary">
-                  Inscribirse
-                </Button>
-              </Col>
-            </Row>
-          }
+      if(!this.state.inscribiendo){
+        return(
+            <div>
             <br />
-            <br />
-            {!this.props.estudianteUser['tiene_asignaturas'] &&
+            {this.props.estudianteUser.first_render && this.props.estudianteUser.lista_periodo_estudiante.length === 0 && this.props.estudianteUser.lista_periodos.length > 0 &&
               <Row>
-                 <Col md='12' className="text-center">
-                    <h5>Usted no tiene asignaturas inscritas en el periodo actual.</h5>
+                <Col md='12' className="text-center">
+                  <Button onClick={() => this.enInscripcion()} color="primary">
+                    Inscribirse
+                  </Button>
                 </Col>
               </Row>
             }
-            {this.props.estudianteUser['tiene_asignaturas'] &&
-              <div>
+              <br />
+              <br />
+              {!this.props.estudianteUser['tiene_asignaturas'] &&
                 <Row>
-                 <Col md='12' className="text-center">
-                    <h5>Asignaturas Inscritas</h5>
-                </Col>
-                </Row>
-                <br />
-                <Row>
-                  <Col md='12'>
-                    <ListGroup>
-                      {listItems}
-                    </ListGroup>
+                   <Col md='12' className="text-center">
+                      <h5>Usted no tiene asignaturas inscritas en el periodo actual.</h5>
                   </Col>
                 </Row>
-              </div>
-            }
-          </div>
-      )
+              }
+              {this.props.estudianteUser['tiene_asignaturas'] &&
+                <div>
+                  <Row>
+                   <Col md='12' className="text-center">
+                      <h5>Asignaturas Inscritas</h5>
+                  </Col>
+                  </Row>
+                  <br />
+                  <Row>
+                    <Col md='12'>
+                      <ListGroup>
+                        {listItems}
+                      </ListGroup>
+                    </Col>
+                  </Row>
+                </div>
+              }
+            </div>
+        );
+      }else{
+        return (
+          <Inscripcion />
+        );
+      }
   }
 }
 

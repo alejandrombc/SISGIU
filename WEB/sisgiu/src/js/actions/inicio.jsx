@@ -151,7 +151,7 @@ export const get_periodos_actuales = () => {
 }
 
 
-export const cambiarEstadoPeriodo = (periodo, lista_estadoPeriodo) =>{
+export const cambiarEstadoPeriodo = (periodo) =>{
 	let token = localStorage.getItem('user_token');
 		
 	var filtro;
