@@ -12,6 +12,7 @@ import PaginacionReducer from './reducer-paginacion';
  * */
 
 
+
 const allReducers = combineReducers({
 	activeUser: ActiveUserReducer,
 	estudianteUser: EstudianteReducer,
@@ -21,5 +22,11 @@ const allReducers = combineReducers({
 	paginacion: PaginacionReducer,
 });
 
+const combineReducers_test = ( state, action ) => {
+  if ( action.type === 'LOGOUT_SUCCESS' ) {
+    state = undefined;
+  }
+  return allReducers(state, action)
+}
 
-export default allReducers
+export default combineReducers_test

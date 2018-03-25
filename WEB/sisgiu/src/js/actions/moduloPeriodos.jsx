@@ -1,11 +1,11 @@
 import request from 'superagent';
 import {host} from '../components/globalVariables';
 
-export function get_periodos (edit) {
+export function get_periodos (edit, filtro) {
 	let token = localStorage.getItem('user_token');
 
 	return request
-	   .get(host+'api/periodo/noIniciado/')
+	   .get(host+'api/periodo/'+filtro+'/')
 	   .set('Authorization', 'JWT '+token)
 	   .then(function(res) {
 	   		if(edit === 1){
@@ -94,7 +94,7 @@ export function crear_periodo (periodo, id_estado_periodo) {
 	   .send(periodo)
 	   .then(function(res) {
 	   		return function (dispatch) {
-			    dispatch(get_periodos(1));
+			    dispatch(get_periodos(1, 'noIniciado'));
 			}
 	   })
 	   .catch(function(err) {
@@ -162,12 +162,12 @@ export const eliminar_periodo = (periodo_id) => {
 	   .set('Authorization', 'JWT '+token)
 	   .then(function(res) {
 			return function (dispatch) {
-			    dispatch(get_periodos(1));
+			    dispatch(get_periodos(1, 'noIniciado'));
 			}
 	   })
 	   .catch(function(err) {
 	      	return function (dispatch) {
-			    dispatch(get_periodos(2));
+			    dispatch(get_periodos(2, 'noIniciado'));
 			}
 	   });
 }
@@ -182,12 +182,12 @@ export const activar_periodo = (periodo_id) => {
 	   .set('Authorization', 'JWT '+token)
 	   .then(function(res) {
 			return function (dispatch) {
-			    dispatch(get_periodos(1));
+			    dispatch(get_periodos(1, 'noIniciado'));
 			}
 	   })
 	   .catch(function(err) {
 	      	return function (dispatch) {
-			    dispatch(get_periodos(2));
+			    dispatch(get_periodos(2, 'noIniciado'));
 			}
 	   });
 }

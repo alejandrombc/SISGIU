@@ -6,7 +6,7 @@ import { Button, Row, Col, ListGroup, ListGroupItem, ListGroupItemHeading, ListG
 import { PulseLoader } from 'halogenium';
 
 // Components
-import { get_information } from '../../actions/inicio';
+import { get_information, get_periodo_estudiante, get_periodos_tipo_postgrado } from '../../actions/inicio';
 
 
 class InicioEstudiante extends Component{
@@ -14,6 +14,8 @@ class InicioEstudiante extends Component{
   constructor(props) {
       super(props);
       this.props.get_information(this.props.token['user']);
+      this.props.get_periodos_tipo_postgrado("en inscripcion", this.props.token['user'].id_tipo_postgrado);
+      this.props.get_periodo_estudiante(this.props.token['user'].usuario.cedula, "en inscripcion");
   }
 
 
@@ -29,8 +31,8 @@ class InicioEstudiante extends Component{
     }
 
     var listItems = "";
-      if(this.props.info_materias['materias'] && this.props.info_materias['materias'].length > 0){
-        listItems = this.props.info_materias['materias'].map((valor, index) =>{
+      if(this.props.estudianteUser['materias'] && this.props.estudianteUser['materias'].length > 0){
+        listItems = this.props.estudianteUser['materias'].map((valor, index) =>{
           var lista_docentes = [];
           for (var i = 0; i < valor['docente']['horario_dia'].length; i++) {
 
@@ -48,13 +50,14 @@ class InicioEstudiante extends Component{
           )
         });
       }else{
-        if(this.props.info_materias['tiene_asignaturas']){
+        if(this.props.estudianteUser['tiene_asignaturas']){
           listItems = <center><PulseLoader color="#b3b1b0" size="16px" margin="4px"/></center>
         }
       }
       return(
           <div>
           <br />
+          {this.props.estudianteUser.first_render && this.props.estudianteUser.lista_periodo_estudiante.length === 0 && this.props.estudianteUser.lista_periodos.length > 0 &&
             <Row>
               <Col md='12' className="text-center">
                 <Button color="primary">
@@ -62,16 +65,17 @@ class InicioEstudiante extends Component{
                 </Button>
               </Col>
             </Row>
+          }
             <br />
             <br />
-            {!this.props.info_materias['tiene_asignaturas'] &&
+            {!this.props.estudianteUser['tiene_asignaturas'] &&
               <Row>
                  <Col md='12' className="text-center">
-                    <h5>Usted no se encuentra inscrito en el periodo actual.</h5>
+                    <h5>Usted no tiene asignaturas inscritas en el periodo actual.</h5>
                 </Col>
               </Row>
             }
-            {this.props.info_materias['tiene_asignaturas'] &&
+            {this.props.estudianteUser['tiene_asignaturas'] &&
               <div>
                 <Row>
                  <Col md='12' className="text-center">
@@ -97,12 +101,16 @@ class InicioEstudiante extends Component{
 const mapStateToProps = (state)=> {
   return{
     token: state.activeUser,
-    info_materias: state.estudianteUser
+    estudianteUser: state.estudianteUser
   };
 }
 
 const mapDispatchToProps = (dispatch) => {
-  return bindActionCreators({get_information: get_information}, dispatch )
+  return bindActionCreators({
+    get_information: get_information,
+    get_periodo_estudiante: get_periodo_estudiante,
+    get_periodos_tipo_postgrado: get_periodos_tipo_postgrado
+  }, dispatch )
 }
 
 

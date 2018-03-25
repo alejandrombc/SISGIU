@@ -102,6 +102,19 @@ class PeriodoListCreateAPIView(ListCreateAPIView):
         return HttpResponse(json.dumps(response_data), content_type="application/json", status=401)
 
 
+    def get_periodos_by_tipo_postgrado(request, filtro, tipo_postgrado):
+        if (request.method == "GET"):
+            member = Periodo.objects.filter(estado_periodo_id__estado = filtro, tipo_postgrado_id = tipo_postgrado)
+
+            list_result = [entry for entry in member.values()]
+
+            return HttpResponse(json.dumps(list_result, default=date_handler), content_type="application/json")
+
+        response_data = {}
+        response_data['error'] = 'No tiene privilegios para realizar esta accion'      
+        return HttpResponse(json.dumps(response_data), content_type="application/json", status=401)
+
+
     @csrf_exempt
     def activar_periodo(request, periodo_id):
         response_data = {}

@@ -75,7 +75,7 @@ class PeriodoEstudianteListCreateAPIView(ListCreateAPIView):
     permission_classes = [EsEstudianteOAdministrador]
 
     def get_all_estudiantes(request):
-        if(request.user.is_anonymous == False):
+        if(request.method == "GET"):
             member = PeriodoEstudiante.objects.filter(periodo__estado_periodo__estado="activo")
             list_result = [entry for entry in member.values()]
 
@@ -106,7 +106,8 @@ class PeriodoEstudianteListCreateAPIView(ListCreateAPIView):
 
 class PeriodoEstudianteDetailAPIView():
     def get_periodo(request, cedula, periodo):
-        if(request.user.is_anonymous == False):
+        if(request.method == "GET"):
+            periodo = periodo.replace("%20"," ")
             member = PeriodoEstudiante.objects.filter(estudiante__usuario__cedula=cedula , periodo__estado_periodo__estado=periodo)
             list_result = [entry for entry in member.values()]
 
@@ -155,7 +156,7 @@ class DocenteAsignaturaListCreateAPIView(ListCreateAPIView):
 
 class DocenteAsignaturaDetailAPIView():
     def get_periodo(request, cedula, periodo):
-        if(request.user.is_anonymous == False):
+        if(request.method == "GET"):
             member = DocenteAsignatura.objects.filter(docente__usuario__cedula=cedula , periodo__estado_periodo__estado=periodo)
             list_result = [entry for entry in member.values()]
 
@@ -191,7 +192,6 @@ class DocenteAsignaturaDetailAPIView():
         return HttpResponse(json.dumps(response_data), content_type="application/json", status=401)
 
     def get_docente(request, asignatura, periodo):
-        print(request.user.is_anonymous)
         member = DocenteAsignatura.objects.filter(asignatura__codigo=asignatura , periodo__estado_periodo__estado=periodo)
         list_result = [entry for entry in member.values()]
 

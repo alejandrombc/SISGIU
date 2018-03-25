@@ -74,6 +74,51 @@ export const get_information = (user) => {
 	   });
 }
 
+export function get_periodo_estudiante (cedula, filtro) {
+	let token = localStorage.getItem('user_token');
+
+	return request
+	   .get(host+'api/periodoEstudiante/'+cedula+'/periodo/'+filtro+'/')
+	   .set('Authorization', 'JWT '+token)
+	   .then(function(res) {
+   			return {
+				type: "GET_PERIODO_ESTUDIANTE",
+				payload: {lista_periodo_estudiante: res.body}
+			}
+	   })
+	   .catch(function(err) {
+	   		localStorage.removeItem('user_token');
+	   		localStorage.removeItem('modulo');
+	      	return {
+				type: "ERROR"
+			}
+	   });
+
+}
+
+export function get_periodos_tipo_postgrado (filtro, tipo_postgrado) {
+	filtro = filtro.replace(" ", "%20");
+	let token = localStorage.getItem('user_token');
+
+	return request
+	   .get(host+'api/periodo/'+filtro+'/tipo_postgrado/'+tipo_postgrado+'/')
+	   .set('Authorization', 'JWT '+token)
+	   .then(function(res) {
+   			return {
+				type: "GET_PERIODOS_TIPO_POSTGRADO_EXITOSO",
+				payload: {lista_periodos: res.body}
+			}
+	   })
+	   .catch(function(err) {
+	   		localStorage.removeItem('user_token');
+	   		localStorage.removeItem('modulo');
+	      	return {
+				type: "ERROR"
+			}
+	   });
+
+}
+
 
 // InicioAdministrador
 export const get_periodos_actuales = () => {
