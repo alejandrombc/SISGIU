@@ -57,6 +57,9 @@ class Estudiante(models.Model):
 		ordering = ['usuario__last_name', 'usuario__segundo_apellido']
 		db_table = 'estudiante'
 
+	def __str__(self):
+		return str(self.usuario)
+
 
 
 class TipoPostgrado(models.Model):

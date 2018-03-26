@@ -19,6 +19,37 @@ class InicioEstudiante extends Component{
       this.props.get_information(this.props.token['user']);
       this.props.get_periodos_tipo_postgrado("en inscripcion", this.props.token['user'].id_tipo_postgrado);
       this.props.get_periodo_estudiante(this.props.token['user'].usuario.cedula, "en inscripcion");
+
+      this.get_ListItems = this.get_ListItems.bind(this);
+  }
+
+  get_ListItems(dias) {
+    var listItems = "";
+    if(this.props.estudianteUser['materias'] && this.props.estudianteUser['materias'].length > 0){
+      listItems = this.props.estudianteUser['materias'].map((valor, index) =>{
+        var lista_docentes = [];
+        for (var i = 0; i < valor['docente']['horario_dia'].length; i++) {
+
+            lista_docentes[i] = <font key={i}> {dias[valor['docente']['horario_dia'][i]]} {valor['docente']['horario_hora'][i]} <br /></font>
+        }
+        return (
+          <ListGroupItem key={index}>
+            <ListGroupItemHeading>({valor['codigo']}) {valor['nombre']}</ListGroupItemHeading>
+            <ListGroupItemText key={valor['codigo']}>
+                {lista_docentes}
+                Prof: {valor['docente']['first_name']} {valor['docente']['last_name']}
+                
+            </ListGroupItemText>
+        </ListGroupItem>
+        )
+      });
+    }else{
+      if(this.props.estudianteUser['tiene_asignaturas']){
+        listItems = <center><PulseLoader color="#b3b1b0" size="16px" margin="4px"/></center>
+      }
+    }
+
+    return listItems;
   }
 
   enInscripcion(){
@@ -26,7 +57,7 @@ class InicioEstudiante extends Component{
   }
 
   render(){
-     const dias = {
+    const dias = {
       "0":"Lunes",
       "1":"Martes",
       "2":"Miercoles",
@@ -36,30 +67,6 @@ class InicioEstudiante extends Component{
       "6":"Domingo",
     }
 
-    var listItems = "";
-      if(this.props.estudianteUser['materias'] && this.props.estudianteUser['materias'].length > 0){
-        listItems = this.props.estudianteUser['materias'].map((valor, index) =>{
-          var lista_docentes = [];
-          for (var i = 0; i < valor['docente']['horario_dia'].length; i++) {
-
-              lista_docentes[i] = <font key={i}> {dias[valor['docente']['horario_dia'][i]]} {valor['docente']['horario_hora'][i]} <br /></font>
-          }
-          return (
-            <ListGroupItem key={index}>
-              <ListGroupItemHeading>({valor['codigo']}) {valor['nombre']}</ListGroupItemHeading>
-              <ListGroupItemText key={valor['codigo']}>
-                  {lista_docentes}
-                  Prof: {valor['docente']['first_name']} {valor['docente']['last_name']}
-                  
-              </ListGroupItemText>
-          </ListGroupItem>
-          )
-        });
-      }else{
-        if(this.props.estudianteUser['tiene_asignaturas']){
-          listItems = <center><PulseLoader color="#b3b1b0" size="16px" margin="4px"/></center>
-        }
-      }
       if(!this.state.inscribiendo){
         return(
             <div>
@@ -93,7 +100,7 @@ class InicioEstudiante extends Component{
                   <Row>
                     <Col md='12'>
                       <ListGroup>
-                        {listItems}
+                        {this.get_ListItems(dias)}
                       </ListGroup>
                     </Col>
                   </Row>
@@ -101,7 +108,7 @@ class InicioEstudiante extends Component{
               }
             </div>
         );
-      }else{
+      } else{
         return (
           <Inscripcion />
         );

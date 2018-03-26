@@ -10,13 +10,15 @@ from asignatura.models import (
 
 from usuario.models import(
     TipoPostgrado,
-    Usuario
+    Usuario,
+    Estudiante
     )
 
 from relacion.models import (
     DocenteAsignatura,
     EstudianteAsignatura,
-    AsignaturaTipoPostgrado
+    AsignaturaTipoPostgrado,
+    PeriodoEstudiante,
     )
 from asignatura.serializers import (
 	TipoAsignaturaListSerializer,
@@ -300,3 +302,77 @@ class PrelacionAsignaturaListCreateAPIView(ListCreateAPIView):
         response_data = {}
         response_data['error'] = 'No tiene privilegios para realizar esta acción'      
         return HttpResponse(json.dumps(response_data), content_type="application/json", status=401)
+
+
+    def get_asignaturas_a_inscribir(request, cedula):
+
+        if (request.method == 'GET'):
+
+            # Lista de todas las asignaturas en el sistema
+            asignaturas = Asignatura.objects.all()
+
+            # Estudiante al cual se le buscan las asignaturas
+            estudiante = Estudiante.objects.get(usuario__cedula=cedula)
+
+            # Lista de todos los periodos que ha cursado el estudiante
+            periodo_estudiante = PeriodoEstudiante.objects.filter(estudiante=estudiante)
+            # print(periodo_estudiante, '\n')
+
+            # Lista de todos los codigos de las asignaturas que ya se cursaron
+            lista_asignaturas_cursadas = []
+            for x in periodo_estudiante:
+                estudiante_asignatura = EstudianteAsignatura.objects.filter(periodo_estudiante=x)
+                for y in estudiante_asignatura:
+                    lista_asignaturas_cursadas.append(y.asignatura.codigo)
+
+            print('ya se cursaron -> ', lista_asignaturas_cursadas,'\n')
+            
+            # Convierto el QuerySet de Asignaturas en un JSON
+            asignaturas = [entry for entry in asignaturas.values()]
+
+            lista_codigos_asignaturas = []
+
+            for x in asignaturas:
+                # Si la asignatura no se ha cursado, se agrega a la lista
+                if (x['codigo'] not in lista_asignaturas_cursadas):
+                    lista_codigos_asignaturas.append(x['codigo'])
+
+            # Busco en la lista las asignaturas que aun no pueden verse porque estan preladas por otras
+            lista_eliminar = []
+            lista_codigo_asignaturas_a_inscribir = []
+
+            for x in lista_codigos_asignaturas:
+                aux = PrelacionAsignatura.objects.filter(asignatura_prela__codigo=x)
+                aux = [entry for entry in aux.values()]
+
+                for y in aux:
+                    lista_eliminar.append( y['asignatura_objetivo_id'] )
+
+            print('Aun no se pueden cursar  -> ', lista_eliminar,'\n')
+            
+            # Construyo la lista final 
+            for x in lista_codigos_asignaturas:
+                if (x not in lista_eliminar):
+                    lista_codigo_asignaturas_a_inscribir.append(x)
+
+            print('lista_codigo_asignaturas_a_inscribir = ', lista_codigo_asignaturas_a_inscribir,'\n')
+
+
+            n = len(asignaturas)
+            lista_asignaturas_a_inscribir = []
+
+            for i in range(0, n):
+                if ( asignaturas[i]['codigo'] in lista_codigo_asignaturas_a_inscribir ):
+                    lista_asignaturas_a_inscribir.append(asignaturas[i])
+
+            print(lista_asignaturas_a_inscribir)
+
+            return HttpResponse(json.dumps(lista_asignaturas_a_inscribir), content_type="application/json", status=200)
+
+
+
+
+        response_data = {}
+        response_data['error'] = 'No tiene privilegios para realizar esta acción'      
+        return HttpResponse(json.dumps(response_data), content_type="application/json", status=401)
+

@@ -33,11 +33,11 @@ urlpatterns = format_suffix_patterns([
     # Asignaturas cursadas por un estudiante
     url(r'^api/asignaturas/estudiante/(?P<cedula>[0-9]{8})/$', AsignaturaListCreateAPIView.get_asignaturas_por_estudiante, name='asignaturas-por-estudiante'),
 
-    # Asignaturas cursadas por un estudiante
-    url(r'^api/asignaturas/estudiante/(?P<cedula>[0-9]{8})/$', AsignaturaListCreateAPIView.get_asignaturas_por_estudiante, name='asignaturas-por-estudiante'),
-
-
+    # Lista de todas las asignaturas que tienen prelaciones
     url(r'^api/asignaturas_necesarias/all/$', PrelacionAsignaturaListCreateAPIView.get_all_asignaturas_necesarias, name='PrelacionAsignatura-all'),
+    
+    # Asignaturas que puede inscribir un estudiante
+    url(r'^api/asignaturas_a_inscribir/estudiante/(?P<cedula>[0-9]{8})/$', PrelacionAsignaturaListCreateAPIView.get_asignaturas_a_inscribir, name='asignaturas-a-inscribir'),
 
     #Asignaturas preladas
     url(r'^api/asignaturas_necesarias/codigo/(?P<codigo>[\w\-]+)/$', PrelacionAsignaturaListCreateAPIView.get_asignaturas_necesarias, name='PrelacionAsignatura-detail'),

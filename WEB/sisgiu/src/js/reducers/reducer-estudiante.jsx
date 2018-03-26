@@ -4,6 +4,7 @@ const initialState = {
 	lista_periodo_estudiante: [],
 	lista_periodos: [],
 	first_render: false,
+	lista_asignaturas_inscripcion: [],
 };
 
 export default function (state=initialState, action) {
@@ -37,6 +38,10 @@ export default function (state=initialState, action) {
 		case "ERROR":
 			nuevo_estado['loggedIn'] = false;
 			nuevo_estado['loading'] = false;
+			return nuevo_estado;
+		
+		case "GET_ASIGNATURAS_INSCRIPCION_EXITOSO":
+			nuevo_estado['lista_asignaturas_inscripcion'] = action.payload['lista_asignaturas_inscripcion'];
 			return nuevo_estado;
 
 

@@ -17,6 +17,10 @@ class SeleccionarAsignaturas extends React.Component {
     this.handleChange = this.handleChange.bind(this);
 
   }
+
+  componentWillReceiveProps(nextProps) {
+    this.setState({options: nextProps.asignaturas});
+  }
  
 
   setCreditos(value){
@@ -41,7 +45,7 @@ class SeleccionarAsignaturas extends React.Component {
  
   render() {
     var total = this.state.creditos;
- 
+
     return (
       <div>
         <MultiselectTwoSides

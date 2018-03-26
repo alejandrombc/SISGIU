@@ -15,6 +15,9 @@ class PeriodoEstudiante(models.Model):
 	class Meta:
 		db_table = 'periodo_estudiante'
 
+	def __str__(self):
+		return str(self.periodo) + ', ' + str(self.estudiante)
+
 
 DIAS_DE_LA_SEMANA = (
     ('0', 'lunes'),
@@ -49,6 +52,8 @@ class EstudianteAsignatura(models.Model):
 	class Meta:
 		db_table = 'estudiante_asignatura'
 
+	def __str__(self):
+		return str(self.periodo_estudiante) + ', ' + str(self.asignatura)
 
 # Tabla intermedia entre Estudiante y Tramite
 class EstudianteTramite(models.Model):
