@@ -23,3 +23,28 @@ export function get_asignaturas_inscripcion (cedula) {
 	   });
 
 }
+
+
+export function inscribir_asignaturas(data, cedula) {
+	let token = localStorage.getItem('user_token');
+
+	return request
+	   .post(host+'api/estudianteAsignatura/inscribir/'+cedula+'/')
+	   .set('Authorization', 'JWT '+token)
+	   .send(data)
+	   .then(function(res) {
+	   		console.log(res.body);
+	   		return {
+	   			type: 'hola',
+	   			payload: {lista_asignaturas_inscripcion: res.body}
+	   		}
+	   })
+	   .catch(function(err) {
+	   		localStorage.removeItem('user_token');
+	   		localStorage.removeItem('modulo');
+	      	return {
+				type: "ERRORskdnfksankdnaskjdnaskd"
+			}
+	   });
+
+}

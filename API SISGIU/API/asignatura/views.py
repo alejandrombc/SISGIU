@@ -14,6 +14,8 @@ from usuario.models import(
     Estudiante
     )
 
+from periodo.models import ( Periodo, )
+
 from relacion.models import (
     DocenteAsignatura,
     EstudianteAsignatura,
@@ -113,7 +115,10 @@ class AsignaturaListCreateAPIView(ListCreateAPIView):
 
     def get_asignaturas_por_estudiante(request, cedula):
         if (request.user.is_anonymous != False):
-            member = EstudianteAsignatura.objects.filter(periodo_estudiante__estudiante__usuario__cedula=cedula , periodo_estudiante__periodo__estado_periodo__estado="activo").values()
+
+            estudiante = Estudiante.objects.get(usuario__cedula=cedula)
+
+            member = EstudianteAsignatura.objects.filter(periodo_estudiante__estudiante=estudiante , periodo_estudiante__periodo__estado_periodo__estado="activo").values()
 
             lista_estudiante_asignatura = [entry for entry in member]
 
@@ -123,15 +128,15 @@ class AsignaturaListCreateAPIView(ListCreateAPIView):
 
                 asignatura = Asignatura.objects.filter(id=estudiante_asignatura['asignatura_id']).values()[0]
                 tipo_asignatura = TipoAsignatura.objects.filter(id=asignatura['tipo_asignatura_id']).values()[0]
-                asig_tipo = AsignaturaTipoPostgrado.objects.filter(asignatura_id=asignatura['id']).values()[0]
 
-                docente_asignatura = DocenteAsignatura.objects.filter(asignatura_id=asignatura['id']).values()
+                docente_asignatura = DocenteAsignatura.objects.filter(asignatura_id=asignatura['id'], periodo__estado_periodo__estado='activo', periodo__tipo_postgrado__tipo=estudiante.id_tipo_postgrado).values()
                 horarios_dia = []
                 horarios_hora = []
 
                 lista_docente_asignatura = [entry for entry in docente_asignatura]
                 asignatura['docente'] = {}
 
+                print(lista_docente_asignatura)
                 docente_informacion = Usuario.objects.filter(id=lista_docente_asignatura[0]['docente_id']).values()[0]
                 asignatura['docente']['first_name'] = docente_informacion['first_name']
                 asignatura['docente']['last_name'] = docente_informacion['last_name']
@@ -358,11 +363,31 @@ class PrelacionAsignaturaListCreateAPIView(ListCreateAPIView):
             print('lista_codigo_asignaturas_a_inscribir = ', lista_codigo_asignaturas_a_inscribir,'\n')
 
 
+            periodo = Periodo.objects.get(estado_periodo_id__estado='en inscripcion', tipo_postgrado_id__tipo=estudiante.id_tipo_postgrado)
+            print(periodo)
+
+            asignaturas_id = DocenteAsignatura.objects.filter(periodo=periodo).values('asignatura')
+            print('##############################')
+            print(asignaturas_id)
+
+            lista_codigos_en_periodo_a_inscribir = []
+
+            for x in asignaturas_id:
+                asignatura = Asignatura.objects.get(id=x['asignatura'])
+                print(asignatura)
+                print(asignatura.codigo)
+
+                if (asignatura.codigo in lista_codigo_asignaturas_a_inscribir):
+                    lista_codigos_en_periodo_a_inscribir.append(asignatura.codigo)
+
+
+                print('##############################')
+
             n = len(asignaturas)
             lista_asignaturas_a_inscribir = []
 
             for i in range(0, n):
-                if ( asignaturas[i]['codigo'] in lista_codigo_asignaturas_a_inscribir ):
+                if ( asignaturas[i]['codigo'] in lista_codigos_en_periodo_a_inscribir ):
                     lista_asignaturas_a_inscribir.append(asignaturas[i])
 
             print(lista_asignaturas_a_inscribir)

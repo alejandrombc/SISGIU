@@ -2,7 +2,11 @@ import React from 'react';
 import MultiselectTwoSides from 'react-multiselect-two-sides';
 import '../../../css/seleccionarAsignaturas.css';
 import { Button, Row, Col } from 'reactstrap';
+import {bindActionCreators} from 'redux';
+import { connect } from 'react-redux';
 
+// Components
+import { inscribir_asignaturas } from '../../actions/inscripcion';
 
 class SeleccionarAsignaturas extends React.Component {
   constructor(props) {
@@ -15,6 +19,7 @@ class SeleccionarAsignaturas extends React.Component {
     }
     this.setCreditos = this.setCreditos.bind(this);
     this.handleChange = this.handleChange.bind(this);
+    this.inscribirse = this.inscribirse.bind(this);
 
   }
 
@@ -39,11 +44,18 @@ class SeleccionarAsignaturas extends React.Component {
   }
 
   handleChange (value) {
-    this.setState({ value: value }) //another array
+    this.setState({ value: value }); //another array
     this.setCreditos(value);
+  }
+
+  inscribirse() {
+    this.props.inscribir_asignaturas(this.state, this.props.cedula);
   }
  
   render() {
+
+    console.log(this.state);
+
     var total = this.state.creditos;
 
     return (
@@ -63,7 +75,7 @@ class SeleccionarAsignaturas extends React.Component {
         <br />
         <Row>
           <Col className="text-right" md="12">
-            <Button>
+            <Button onClick={ ()=> this.inscribirse() }>
               Inscribirse
             </Button>
           </Col>
@@ -72,5 +84,19 @@ class SeleccionarAsignaturas extends React.Component {
     );
   }
 }
- 
-export default (SeleccionarAsignaturas);
+
+const mapStateToProps = (state)=> {
+  return{
+    usuario_activo: state.activeUser,
+    estudianteUser: state.estudianteUser,
+  };
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return bindActionCreators({
+  inscribir_asignaturas: inscribir_asignaturas,
+
+  }, dispatch )
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(SeleccionarAsignaturas);

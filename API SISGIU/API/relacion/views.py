@@ -10,6 +10,7 @@ from usuario.models import (
     Usuario,
     TipoPostgrado,
     PersonalDocente,
+    Estudiante,
     )
 
 from asignatura.models import (
@@ -344,6 +345,47 @@ class EstudianteAsignaturaListCreateAPIView(ListCreateAPIView):
     queryset = EstudianteAsignatura.objects.all()
     serializer_class = EstudianteAsignaturaListSerializer
     permission_classes = [EsEstudianteOAdministrador]
+
+    @csrf_exempt
+    def crear_estudiante_asignatura(request, cedula):
+        if (request.method == 'POST'):
+            print(cedula)
+            print('ejecutando...')
+
+            body_unicode = request.body.decode('utf-8')
+            body = json.loads(body_unicode)
+
+            print(body)
+
+            # En el list 'value' se encuentran los IDs de las asignaturas a agregar
+            asignaturas_id = body['value']
+            print(asignaturas_id)
+
+
+            estudiante = Estudiante.objects.get(usuario__cedula=cedula)
+            print(estudiante.id_tipo_postgrado)
+
+            periodo = Periodo.objects.get(estado_periodo_id__estado='en inscripcion', tipo_postgrado_id__tipo=estudiante.id_tipo_postgrado)
+            print(periodo)
+
+            periodo_estudiante = PeriodoEstudiante(periodo=periodo, estudiante=estudiante, pagado=False)
+            periodo_estudiante.save()
+
+
+
+            for x in asignaturas_id:
+                asignatura = Asignatura.objects.get(id=x)
+                print(asignatura)
+                estudiante_asignatura = EstudianteAsignatura(periodo_estudiante=periodo_estudiante, asignatura=asignatura, nota_definitiva=0)
+                print(estudiante_asignatura)
+                estudiante_asignatura.save()
+
+
+
+        response_data = {}
+        response_data['error'] = 'No tiene privilegios para realizar esta acción'      
+        return HttpResponse(json.dumps(response_data), content_type="application/json", status=401)
+
 
 class EstudianteAsignaturaDetailAPIView(RetrieveAPIView):
     queryset = EstudianteAsignatura.objects.all()
