@@ -80,6 +80,7 @@ class PeriodoListCreateAPIView(ListCreateAPIView):
 
     def get_periodos_by_filter(request, filtro):
         if (request.method == "GET"):
+            filtro = filtro.replace("%20"," ")
             if (filtro == 'todos'):
                 member = Periodo.objects.all()
             elif (filtro == 'actuales'):
@@ -109,6 +110,7 @@ class PeriodoListCreateAPIView(ListCreateAPIView):
 
     def get_periodos_by_tipo_postgrado(request, filtro, tipo_postgrado):
         if (request.method == "GET"):
+            filtro = filtro.replace("%20"," ")
             member = Periodo.objects.filter(estado_periodo_id__estado = filtro, tipo_postgrado_id = tipo_postgrado)
 
             list_result = [entry for entry in member.values()]

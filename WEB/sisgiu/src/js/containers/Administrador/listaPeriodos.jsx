@@ -49,7 +49,7 @@ class ListaPeriodos extends Component{
       }
       
       this.props.get_docente_asignatura("all");
-      this.props.get_periodos(false, 'noIniciado');
+      this.props.get_periodos(false, 'no iniciado');
       this.props.get_usuarios("docentes", false);
       this.props.get_tipo_postgrado();
       this.props.get_estado_periodo();

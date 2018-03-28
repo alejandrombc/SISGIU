@@ -94,7 +94,7 @@ export function crear_periodo (periodo, id_estado_periodo) {
 	   .send(periodo)
 	   .then(function(res) {
 	   		return function (dispatch) {
-			    dispatch(get_periodos(1, 'noIniciado'));
+			    dispatch(get_periodos(1, 'no iniciado'));
 			}
 	   })
 	   .catch(function(err) {
@@ -112,7 +112,7 @@ export function get_docente_asignatura (tipoPostgrado) {
 	let token = localStorage.getItem('user_token');
 
 	return request
-	   .get(host+'api/docenteAsignatura/periodo/noIniciado/tipo/'+tipoPostgrado)
+	   .get(host+'api/docenteAsignatura/periodo/no iniciado/tipo/'+tipoPostgrado)
 	   .set('Authorization', 'JWT '+token)
 	   .then(function(res) {
 			return {
@@ -162,12 +162,12 @@ export const eliminar_periodo = (periodo_id) => {
 	   .set('Authorization', 'JWT '+token)
 	   .then(function(res) {
 			return function (dispatch) {
-			    dispatch(get_periodos(1, 'noIniciado'));
+			    dispatch(get_periodos(1, 'no iniciado'));
 			}
 	   })
 	   .catch(function(err) {
 	      	return function (dispatch) {
-			    dispatch(get_periodos(2, 'noIniciado'));
+			    dispatch(get_periodos(2, 'no iniciado'));
 			}
 	   });
 }
@@ -182,12 +182,12 @@ export const activar_periodo = (periodo_id) => {
 	   .set('Authorization', 'JWT '+token)
 	   .then(function(res) {
 			return function (dispatch) {
-			    dispatch(get_periodos(1, 'noIniciado'));
+			    dispatch(get_periodos(1, 'no iniciado'));
 			}
 	   })
 	   .catch(function(err) {
 	      	return function (dispatch) {
-			    dispatch(get_periodos(2, 'noIniciado'));
+			    dispatch(get_periodos(2, 'no iniciado'));
 			}
 	   });
 }

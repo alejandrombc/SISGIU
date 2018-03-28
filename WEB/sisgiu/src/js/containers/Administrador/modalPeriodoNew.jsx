@@ -43,7 +43,7 @@ class ModalPeriodoNew extends React.Component {
     var n = this.props.adminUser.lista_estadoPeriodo.length ;
     var id_estado_periodo;
     for (var i = 0; i<n ; i++){
-      if ( this.props.adminUser.lista_estadoPeriodo[i]['estado'] === 'noIniciado' ) {
+      if ( this.props.adminUser.lista_estadoPeriodo[i]['estado'] === 'no iniciado' ) {
         id_estado_periodo = this.props.adminUser.lista_estadoPeriodo[i]['id'];
         break;
       }

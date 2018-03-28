@@ -38,9 +38,9 @@ urlpatterns = format_suffix_patterns([
    
     # DocenteAsignatura
     url(r'^api/docenteAsignatura/$', DocenteAsignaturaListCreateAPIView.as_view(), name='DocenteAsignatura-list-create'),
-    url(r'^api/docenteAsignatura/periodo/(?P<periodo>[\w\-]+)/tipo/(?P<tipo_postgrado>[\w\-]+)/$', DocenteAsignaturaDetailAPIView.get_all_docentes, name='DocenteAsignatura-detail'),
-    url(r'^api/docenteAsignatura/(?P<cedula>[0-9]{8})/periodo/(?P<periodo>[\w\-]+)/$', DocenteAsignaturaDetailAPIView.get_periodo, name='DocenteAsignatura-detail'),
-    url(r'^api/docenteAsignatura/(?P<asignatura>[\w\-]+)/periodo/(?P<periodo>[\w\-]+)/$', DocenteAsignaturaDetailAPIView.get_docente, name='DocenteAsignatura-detail'),
+    url(r'^api/docenteAsignatura/periodo/(?P<periodo>[\w\s]+)/tipo/(?P<tipo_postgrado>[\w\-]+)/$', DocenteAsignaturaDetailAPIView.get_all_docentes, name='DocenteAsignatura-detail'),
+    url(r'^api/docenteAsignatura/(?P<cedula>[0-9]{8})/periodo/(?P<periodo>[\w\s]+)/$', DocenteAsignaturaDetailAPIView.get_periodo, name='DocenteAsignatura-detail'),
+    url(r'^api/docenteAsignatura/(?P<asignatura>[\w\-]+)/periodo/(?P<periodo>[\w\s]+)/$', DocenteAsignaturaDetailAPIView.get_docente, name='DocenteAsignatura-detail'),
     url(r'^api/docenteAsignatura/periodo/(?P<periodo_id>\d+)/$', DocenteAsignaturaDetailAPIView.crearDocenteAsignatura, name='DocenteAsignatura-crear'),
     url(r'^api/docenteAsignatura/(?P<pk>\d+)/edit/$', DocenteAsignaturaUpdateAPIView.as_view(), name='DocenteAsignatura-update'),
     url(r'^api/docenteAsignatura/(?P<pk>\d+)/delete/$', DocenteAsignaturaDeleteAPIView.as_view(), name='DocenteAsignatura-delete'),

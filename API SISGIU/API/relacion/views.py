@@ -193,6 +193,7 @@ class DocenteAsignaturaDetailAPIView():
         return HttpResponse(json.dumps(response_data), content_type="application/json", status=401)
 
     def get_docente(request, asignatura, periodo):
+        periodo = periodo.replace("%20"," ")
         member = DocenteAsignatura.objects.filter(asignatura__codigo=asignatura , periodo__estado_periodo__estado=periodo)
         list_result = [entry for entry in member.values()]
 
@@ -226,6 +227,7 @@ class DocenteAsignaturaDetailAPIView():
 
 
     def get_all_docentes(request, periodo, tipo_postgrado):
+        periodo = periodo.replace("%20"," ")
         if(tipo_postgrado != "all"):
             member = DocenteAsignatura.objects.filter(periodo__estado_periodo__estado=periodo, periodo__tipo_postgrado__tipo=tipo_postgrado)
         else:
