@@ -5,6 +5,9 @@ const initialState = {
 	lista_periodos: [],
 	first_render: false,
 	lista_asignaturas_inscripcion: [],
+	inscripcion_exitosa: false,
+	error_inscripcion: false,
+
 };
 
 export default function (state=initialState, action) {
@@ -43,6 +46,17 @@ export default function (state=initialState, action) {
 		case "GET_ASIGNATURAS_INSCRIPCION_EXITOSO":
 			nuevo_estado['lista_asignaturas_inscripcion'] = action.payload['lista_asignaturas_inscripcion'];
 			return nuevo_estado;
+
+		case "INSCRIPCION_EXITOSA":
+			nuevo_estado['inscripcion_exitosa'] = true
+			nuevo_estado['error_inscripcion'] = false
+			return nuevo_estado;
+
+		case "ERROR_INSCRIPCION":
+			nuevo_estado['error_inscripcion'] = true
+			nuevo_estado['inscripcion_exitosa'] = false
+			return nuevo_estado;
+
 
 
 		default:

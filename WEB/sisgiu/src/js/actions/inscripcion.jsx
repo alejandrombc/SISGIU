@@ -35,15 +35,12 @@ export function inscribir_asignaturas(data, cedula) {
 	   .then(function(res) {
 	   		console.log(res.body);
 	   		return {
-	   			type: 'hola',
-	   			payload: {lista_asignaturas_inscripcion: res.body}
+	   			type: 'INSCRIPCION_EXITOSA',
 	   		}
 	   })
 	   .catch(function(err) {
-	   		localStorage.removeItem('user_token');
-	   		localStorage.removeItem('modulo');
 	      	return {
-				type: "ERRORskdnfksankdnaskjdnaskd"
+				type: "ERROR_INSCRIPCION"
 			}
 	   });
 

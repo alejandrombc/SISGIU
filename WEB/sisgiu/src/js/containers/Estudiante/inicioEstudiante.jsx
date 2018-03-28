@@ -2,7 +2,7 @@
 import React, {Component} from 'react';
 import { connect } from 'react-redux';
 import {bindActionCreators} from 'redux';
-import { Button, Row, Col, ListGroup, ListGroupItem, ListGroupItemHeading, ListGroupItemText} from 'reactstrap';
+import { Alert, Button, Row, Col, ListGroup, ListGroupItem, ListGroupItemHeading, ListGroupItemText} from 'reactstrap';
 import { PulseLoader } from 'halogenium';
 import Inscripcion from './inscripcion';
 
@@ -14,13 +14,19 @@ class InicioEstudiante extends Component{
   constructor(props) {
       super(props);
       this.state = {
-        inscribiendo: false
+        inscribiendo: false,
+        visible: true,
       }
+      this.onDismiss = this.onDismiss.bind(this);
       this.props.get_information(this.props.token['user']);
       this.props.get_periodos_tipo_postgrado("en inscripcion", this.props.token['user'].id_tipo_postgrado);
       this.props.get_periodo_estudiante(this.props.token['user'].usuario.cedula, "en inscripcion");
 
       this.get_ListItems = this.get_ListItems.bind(this);
+  }
+
+  onDismiss() {
+    this.setState({ visible: false });
   }
 
   get_ListItems(dias) {
@@ -53,7 +59,7 @@ class InicioEstudiante extends Component{
   }
 
   enInscripcion(){
-    this.setState({inscribiendo: true});
+    this.setState({inscribiendo: !this.state.inscribiendo});
   }
 
   render(){
@@ -70,8 +76,24 @@ class InicioEstudiante extends Component{
       if(!this.state.inscribiendo){
         return(
             <div>
+            {/*ALERT DE ERROR*/}
+            {this.props.estudianteUser['error_inscripcion'] &&
+              <Col md='12' className="text-center">
+                <Alert color="danger" isOpen={this.state.visible} toggle={this.onDismiss}>
+                  Ha ocurrido un error en el proceso de inscripción
+                </Alert>
+              </Col>
+            }
+
+            {/*ALERT DE EXITO*/}
+            {this.props.estudianteUser['inscripcion_exitosa'] &&
+              <Alert color="success" isOpen={this.state.visible} toggle={this.onDismiss}>
+                  Inscripción realizada exitosamente.
+              </Alert> 
+            }
+
             <br />
-            {this.props.estudianteUser.first_render && this.props.estudianteUser.lista_periodo_estudiante.length === 0 && this.props.estudianteUser.lista_periodos.length > 0 &&
+            {!this.props.estudianteUser['inscripcion_exitosa'] && this.props.estudianteUser.first_render && this.props.estudianteUser.lista_periodo_estudiante.length === 0 && this.props.estudianteUser.lista_periodos.length > 0 &&
               <Row>
                 <Col md='12' className="text-center">
                   <Button onClick={() => this.enInscripcion()} color="primary">
@@ -85,7 +107,7 @@ class InicioEstudiante extends Component{
               {!this.props.estudianteUser['tiene_asignaturas'] &&
                 <Row>
                    <Col md='12' className="text-center">
-                      <h5>Usted no tiene asignaturas inscritas en el periodo actual.</h5>
+                      <h5>Usted no se encuentra inscrito en el periodo actual.</h5>
                   </Col>
                 </Row>
               }
@@ -110,7 +132,7 @@ class InicioEstudiante extends Component{
         );
       } else{
         return (
-          <Inscripcion />
+          <Inscripcion triggerInscripcion={()=> this.enInscripcion() }/>
         );
       }
   }

@@ -50,11 +50,11 @@ class SeleccionarAsignaturas extends React.Component {
 
   inscribirse() {
     this.props.inscribir_asignaturas(this.state, this.props.cedula);
+
+    this.props.triggerInscripcion();
   }
  
   render() {
-
-    console.log(this.state);
 
     var total = this.state.creditos;
 

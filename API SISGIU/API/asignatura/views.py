@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 import json
+from django.db.models import Q
 from asignatura.models import (
 	TipoAsignatura,
 	Asignatura,
@@ -118,7 +119,7 @@ class AsignaturaListCreateAPIView(ListCreateAPIView):
 
             estudiante = Estudiante.objects.get(usuario__cedula=cedula)
 
-            member = EstudianteAsignatura.objects.filter(periodo_estudiante__estudiante=estudiante , periodo_estudiante__periodo__estado_periodo__estado="activo").values()
+            member = EstudianteAsignatura.objects.filter(Q(periodo_estudiante__estudiante=estudiante) & (Q(periodo_estudiante__periodo__estado_periodo__estado='activo') | Q(periodo_estudiante__periodo__estado_periodo__estado='en inscripcion'))  ).values()
 
             lista_estudiante_asignatura = [entry for entry in member]
 
@@ -129,14 +130,14 @@ class AsignaturaListCreateAPIView(ListCreateAPIView):
                 asignatura = Asignatura.objects.filter(id=estudiante_asignatura['asignatura_id']).values()[0]
                 tipo_asignatura = TipoAsignatura.objects.filter(id=asignatura['tipo_asignatura_id']).values()[0]
 
-                docente_asignatura = DocenteAsignatura.objects.filter(asignatura_id=asignatura['id'], periodo__estado_periodo__estado='activo', periodo__tipo_postgrado__tipo=estudiante.id_tipo_postgrado).values()
+                # docente_asignatura = DocenteAsignatura.objects.filter(asignatura_id=asignatura['id'], periodo__estado_periodo__estado='activo', periodo__tipo_postgrado__tipo=estudiante.id_tipo_postgrado).values()
+                docente_asignatura = DocenteAsignatura.objects.filter(Q(asignatura_id=asignatura['id']) & (Q(periodo__estado_periodo__estado='activo') | Q(periodo__estado_periodo__estado='en inscripcion') ) & Q(periodo__tipo_postgrado__tipo=estudiante.id_tipo_postgrado)).values()
                 horarios_dia = []
                 horarios_hora = []
 
                 lista_docente_asignatura = [entry for entry in docente_asignatura]
                 asignatura['docente'] = {}
 
-                print(lista_docente_asignatura)
                 docente_informacion = Usuario.objects.filter(id=lista_docente_asignatura[0]['docente_id']).values()[0]
                 asignatura['docente']['first_name'] = docente_informacion['first_name']
                 asignatura['docente']['last_name'] = docente_informacion['last_name']

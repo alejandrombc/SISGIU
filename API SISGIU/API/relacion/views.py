@@ -348,19 +348,15 @@ class EstudianteAsignaturaListCreateAPIView(ListCreateAPIView):
 
     @csrf_exempt
     def crear_estudiante_asignatura(request, cedula):
+        response_data = {}
         if (request.method == 'POST'):
-            print(cedula)
-            print('ejecutando...')
 
             body_unicode = request.body.decode('utf-8')
             body = json.loads(body_unicode)
 
-            print(body)
-
             # En el list 'value' se encuentran los IDs de las asignaturas a agregar
             asignaturas_id = body['value']
             print(asignaturas_id)
-
 
             estudiante = Estudiante.objects.get(usuario__cedula=cedula)
             print(estudiante.id_tipo_postgrado)
@@ -371,8 +367,6 @@ class EstudianteAsignaturaListCreateAPIView(ListCreateAPIView):
             periodo_estudiante = PeriodoEstudiante(periodo=periodo, estudiante=estudiante, pagado=False)
             periodo_estudiante.save()
 
-
-
             for x in asignaturas_id:
                 asignatura = Asignatura.objects.get(id=x)
                 print(asignatura)
@@ -380,11 +374,12 @@ class EstudianteAsignaturaListCreateAPIView(ListCreateAPIView):
                 print(estudiante_asignatura)
                 estudiante_asignatura.save()
 
-
-
-        response_data = {}
+            response_data['mensaje'] = 'Inscripción realizada exitosamente.'      
+            return HttpResponse(json.dumps(response_data), content_type="application/json", status=200)
+            
         response_data['error'] = 'No tiene privilegios para realizar esta acción'      
         return HttpResponse(json.dumps(response_data), content_type="application/json", status=401)
+
 
 
 class EstudianteAsignaturaDetailAPIView(RetrieveAPIView):
