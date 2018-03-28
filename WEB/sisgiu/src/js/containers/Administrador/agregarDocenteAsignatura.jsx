@@ -158,58 +158,69 @@ class AgregarDocenteAsignatura extends React.Component {
       }
     }
 
-    // if(index !== -1 && this.state.horario_hora_nuevo_inicio !== '' && this.state.horario_hora_nuevo_fin !== '' && this.state.aula_nuevo !== '' ) {
-    if(index !== -1 && this.refs.horario_hora_nuevo_inicio.picker.attributes.value.value !== '' && this.refs.horario_hora_nuevo_fin.picker.attributes.value.value !== '' && this.state.aula_nuevo !== '' ) {
-      //Crear JSON para el "push" al docente asignatura
-      nueva_asignatura['asignatura'] = {
-        'codigo': this.state.asignatura.codigo, 
-        'nombre': this.state.asignatura.nombre,
-        'id': this.state.asignatura.id
-      };
-      nueva_asignatura['aula'] = this.state.aula_nuevo;
-      nueva_asignatura['docente'] = docente_asignatura_nuevo;
-      nueva_asignatura['usuario'] = {
-          'first_name': this.props.adminUser.lista_usuarios[index].first_name,
-          'last_name': this.props.adminUser.lista_usuarios[index].last_name,
-          'cedula': this.props.adminUser.lista_usuarios[index].cedula
+    let horario_hora_nuevo_inicio = this.refs.horario_hora_nuevo_inicio.picker.attributes.value.value;
+    let horario_hora_nuevo_fin = this.refs.horario_hora_nuevo_fin.picker.attributes.value.value;
+    
+
+
+    if( index !== -1 && this.state.aula_nuevo !== '' && horario_hora_nuevo_inicio !== '' && horario_hora_nuevo_fin!== '' ) 
+    {
+      
+      if (parseInt(horario_hora_nuevo_inicio.split(':')[0], 10) > parseInt(horario_hora_nuevo_fin.split(':')[0], 10) || 
+        ( parseInt(horario_hora_nuevo_inicio.split(':')[0], 10) === parseInt(horario_hora_nuevo_fin.split(':')[0], 10) && 
+          parseInt(horario_hora_nuevo_inicio.split(':')[1], 10) >= parseInt(horario_hora_nuevo_fin.split(':')[1], 10) )   ) 
+      {
+        alert('La hora de inicio debe ser menor que la hora fin');
+      } else {
+        
+        //Crear JSON para el "push" al docente asignatura
+        nueva_asignatura['asignatura'] = {
+          'codigo': this.state.asignatura.codigo, 
+          'nombre': this.state.asignatura.nombre,
+          'id': this.state.asignatura.id
         };
+        nueva_asignatura['aula'] = this.state.aula_nuevo;
+        nueva_asignatura['docente'] = docente_asignatura_nuevo;
+        nueva_asignatura['usuario'] = {
+            'first_name': this.props.adminUser.lista_usuarios[index].first_name,
+            'last_name': this.props.adminUser.lista_usuarios[index].last_name,
+            'cedula': this.props.adminUser.lista_usuarios[index].cedula
+          };
 
-      nueva_asignatura['horario_dia'] = this.state.horario_dia_nuevo;
-      // nueva_asignatura['horario_hora'] = this.state.horario_hora_nuevo_inicio + ' - ' + this.state.horario_hora_nuevo_fin;
-      // aqui estoy usando REF en vez del state porque el ref si me da el resultado correcto, si al final dejo esto entonces tengo q cambiar el IF 
-      nueva_asignatura['horario_hora'] = this.refs.horario_hora_nuevo_inicio.picker.attributes.value.value + ' - ' + this.refs.horario_hora_nuevo_fin.picker.attributes.value.value;
-      nueva_asignatura['periodo'] = this.props.periodo.id;
-      nueva_asignatura['aula'] = this.state.aula_nuevo;
-      nueva_asignatura['tipo_postgrado'] = this.props.tipo_postgrado;
+        nueva_asignatura['horario_dia'] = this.state.horario_dia_nuevo;
+        nueva_asignatura['horario_hora'] = horario_hora_nuevo_inicio + ' - ' + horario_hora_nuevo_fin;
+        nueva_asignatura['periodo'] = this.props.periodo.id;
+        nueva_asignatura['aula'] = this.state.aula_nuevo;
+        nueva_asignatura['tipo_postgrado'] = this.props.tipo_postgrado;
 
 
-      //Push al docente asignatura (nueva entrada)
-      new_docente_asignatura.push(nueva_asignatura);
+        //Push al docente asignatura (nueva entrada)
+        new_docente_asignatura.push(nueva_asignatura);
 
-      N = new_docente_asignatura.length;
-      //Refresco la tabla "local" con el nuevo docente asignatura
-      for (j = 0; j < N; j++) {
-        if( new_docente_asignatura[j].asignatura.codigo ===  nueva_asignatura.asignatura.codigo){
-          docente_asignatura_tabla.push(new_docente_asignatura[j]);
+        N = new_docente_asignatura.length;
+        //Refresco la tabla "local" con el nuevo docente asignatura
+        for (j = 0; j < N; j++) {
+          if( new_docente_asignatura[j].asignatura.codigo ===  nueva_asignatura.asignatura.codigo){
+            docente_asignatura_tabla.push(new_docente_asignatura[j]);
+          }
         }
+
+        new_docente_asignatura = this.ordenarLista(new_docente_asignatura);
+
+
+        //Set a los valores nuevos de los estados
+        this.setState({
+          docente_asignatura_tabla: docente_asignatura_tabla,
+          docente_asignatura_nuevo: '',
+          horario_dia_nuevo: 0,
+          horario_hora_nuevo_inicio: '',
+          horario_hora_nuevo_fin: '',
+          aula_nuevo: '',
+        });
+
+        this.props.trigger_actualizar_docente_asignatura(new_docente_asignatura);
       }
-
-      new_docente_asignatura = this.ordenarLista(new_docente_asignatura);
-
-
-      //Set a los valores nuevos de los estados
-      this.setState({
-        docente_asignatura_tabla: docente_asignatura_tabla,
-        docente_asignatura_nuevo: '',
-        horario_dia_nuevo: 0,
-        horario_hora_nuevo_inicio: '',
-        horario_hora_nuevo_fin: '',
-        aula_nuevo: '',
-      });
-
-      this.props.trigger_actualizar_docente_asignatura(new_docente_asignatura);
-
-
+      
     } else {
       alert('Complete todos los campos');
     }

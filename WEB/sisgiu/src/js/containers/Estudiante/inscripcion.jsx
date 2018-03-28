@@ -2,7 +2,6 @@
 import React,{Component} from 'react';
 import {bindActionCreators} from 'redux';
 import { connect } from 'react-redux';
-import { PulseLoader } from 'halogenium'; 
 import SeleccionarAsignaturas from './seleccionarAsignaturas';
 import { get_asignaturas_inscripcion } from '../../actions/inscripcion';
 

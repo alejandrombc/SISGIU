@@ -1,5 +1,4 @@
 import request from 'superagent';
-import jwt_decode from 'jwt-decode';
 import {host} from '../components/globalVariables';
 import mergeJSON from 'merge-json';
 
