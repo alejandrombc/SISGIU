@@ -7,15 +7,6 @@ import mergeJSON from 'merge-json';
 export function get_usuarios (tipo_usuario, edit) {
 	let token = localStorage.getItem('user_token');
 
-	try{
-		jwt_decode(token);
-	}catch(e){
-		localStorage.removeItem('user_token');
-		localStorage.removeItem('modulo');
-		return {
-			type: "ERROR"
-		}
-	}
 	return request
 	   .get(host+'api/usuarios/'+tipo_usuario+'/')
 	   .set('Authorization', 'JWT '+token)
@@ -161,15 +152,6 @@ export const eliminarUsuario = (cedula, tipo_usuario) => {
 export function get_estado_estudiante () {
 	let token = localStorage.getItem('user_token');
 
-	try{
-		jwt_decode(token);
-	}catch(e){
-		localStorage.removeItem('user_token');
-		localStorage.removeItem('modulo');
-		return {
-			type: "ERROR"
-		}
-	}
 	return request
 	   .get(host+'api/estadoEstudiante/')
 	   .set('Authorization', 'JWT '+token)
