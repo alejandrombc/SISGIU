@@ -7,7 +7,7 @@ import { PulseLoader } from 'halogenium';
 import Inscripcion from './inscripcion';
 
 // Components
-import { get_information, get_periodo_estudiante, get_periodos_tipo_postgrado } from '../../actions/inicio';
+import { get_information, get_periodo_estudiante, get_periodos_tipo_postgrado, get_estado_estudiante } from '../../actions/inicio';
 
 class InicioEstudiante extends Component{
 
@@ -21,6 +21,7 @@ class InicioEstudiante extends Component{
       this.props.get_information(this.props.token['user']);
       this.props.get_periodos_tipo_postgrado("en inscripcion", this.props.token['user'].id_tipo_postgrado);
       this.props.get_periodo_estudiante(this.props.token['user'].usuario.cedula, "en inscripcion");
+      this.props.get_estado_estudiante(this.props.token['user']['id_estado_estudiante']);
 
       this.get_ListItems = this.get_ListItems.bind(this);
   }
@@ -72,67 +73,74 @@ class InicioEstudiante extends Component{
       "5":"Sabado",
       "6":"Domingo",
     }
-
-      if(!this.state.inscribiendo){
-        return(
-            <div>
-            {/*ALERT DE ERROR*/}
-            {this.props.estudianteUser['error_inscripcion'] &&
-              <Col md='12' className="text-center">
-                <Alert color="danger" isOpen={this.state.visible} toggle={this.onDismiss}>
-                  Ha ocurrido un error en el proceso de inscripción
-                </Alert>
-              </Col>
-            }
-
-            {/*ALERT DE EXITO*/}
-            {this.props.estudianteUser['inscripcion_exitosa'] &&
-              <Alert color="success" isOpen={this.state.visible} toggle={this.onDismiss}>
-                  Inscripción realizada exitosamente.
-              </Alert> 
-            }
-
-            <br />
-            {!this.props.estudianteUser['inscripcion_exitosa'] && this.props.estudianteUser.first_render && this.props.estudianteUser.lista_periodo_estudiante.length === 0 && this.props.estudianteUser.lista_periodos.length > 0 &&
-              <Row>
+      if (this.props.estudianteUser.estado_estudiante.estado === 'activo') {
+        if(!this.state.inscribiendo) {
+          return(
+              <div>
+              {/*ALERT DE ERROR*/}
+              {this.props.estudianteUser['error_inscripcion'] &&
                 <Col md='12' className="text-center">
-                  <Button onClick={() => this.enInscripcion()} color="primary">
-                    Inscribirse
-                  </Button>
+                  <Alert color="danger" isOpen={this.state.visible} toggle={this.onDismiss}>
+                    Ha ocurrido un error en el proceso de inscripción
+                  </Alert>
                 </Col>
-              </Row>
-            }
+              }
+
+              {/*ALERT DE EXITO*/}
+              {this.props.estudianteUser['inscripcion_exitosa'] &&
+                <Alert color="success" isOpen={this.state.visible} toggle={this.onDismiss}>
+                    Inscripción realizada exitosamente.
+                </Alert> 
+              }
+
               <br />
-              <br />
-              {!this.props.estudianteUser['tiene_asignaturas'] &&
+              {!this.props.estudianteUser['inscripcion_exitosa'] && this.props.estudianteUser.first_render && this.props.estudianteUser.lista_periodo_estudiante.length === 0 && this.props.estudianteUser.lista_periodos.length > 0 &&
                 <Row>
-                   <Col md='12' className="text-center">
-                      <h5>Usted no se encuentra inscrito en el periodo actual.</h5>
+                  <Col md='12' className="text-center">
+                    <Button onClick={() => this.enInscripcion()} color="primary">
+                      Inscribirse
+                    </Button>
                   </Col>
                 </Row>
               }
-              {this.props.estudianteUser['tiene_asignaturas'] &&
-                <div>
+                <br />
+                <br />
+                {!this.props.estudianteUser['tiene_asignaturas'] &&
                   <Row>
-                   <Col md='12' className="text-center">
-                      <h5>Asignaturas Inscritas</h5>
-                  </Col>
-                  </Row>
-                  <br />
-                  <Row>
-                    <Col md='12'>
-                      <ListGroup>
-                        {this.get_ListItems(dias)}
-                      </ListGroup>
+                     <Col md='12' className="text-center">
+                        <h5>Usted no se encuentra inscrito en el periodo actual.</h5>
                     </Col>
                   </Row>
-                </div>
-              }
-            </div>
-        );
-      } else{
+                }
+                {this.props.estudianteUser['tiene_asignaturas'] &&
+                  <div>
+                    <Row>
+                     <Col md='12' className="text-center">
+                        <h5>Asignaturas Inscritas</h5>
+                    </Col>
+                    </Row>
+                    <br />
+                    <Row>
+                      <Col md='12'>
+                        <ListGroup>
+                          {this.get_ListItems(dias)}
+                        </ListGroup>
+                      </Col>
+                    </Row>
+                  </div>
+                }
+              </div>
+          );
+        } else{
+          return (
+            <Inscripcion triggerInscripcion={()=> this.enInscripcion() }/>
+          );
+        }
+      } else {
         return (
-          <Inscripcion triggerInscripcion={()=> this.enInscripcion() }/>
+          <div>
+            <center><h5>Usted no es un estudiante activo</h5></center>
+          </div>
         );
       }
   }
@@ -150,7 +158,9 @@ const mapDispatchToProps = (dispatch) => {
   return bindActionCreators({
     get_information: get_information,
     get_periodo_estudiante: get_periodo_estudiante,
-    get_periodos_tipo_postgrado: get_periodos_tipo_postgrado
+    get_periodos_tipo_postgrado: get_periodos_tipo_postgrado,
+    get_estado_estudiante: get_estado_estudiante,
+
   }, dispatch )
 }
 

@@ -11,6 +11,7 @@ from usuario.views import (
 	EstadoEstudianteListCreateAPIView,
     EstudianteListCreateAPIView,
     EstadoEstudianteDeleteAPIView,
+    EstadoEstudianteDetailAPIView,
 	EstudianteDetailAPIView,
 	EstudianteUpdateAPIView,
     EstudianteDeleteAPIView,
@@ -74,6 +75,7 @@ urlpatterns = format_suffix_patterns([
 
     #Estado Estudiante
     url(r'^api/estadoEstudiante/$', EstadoEstudianteListCreateAPIView.as_view(), name='estadoEstudiante-list-create'),
+    url(r'^api/estadoEstudiante/(?P<pk>\d+)/$', EstadoEstudianteDetailAPIView.as_view(), name='estadoEstudiante-detail'),
     url(r'^api/estadoEstudiante/(?P<pk>\d+)/delete/$', EstadoEstudianteDeleteAPIView.as_view(), name='estadoEstudiante-delete'),
 
 

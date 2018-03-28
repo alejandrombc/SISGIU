@@ -7,6 +7,7 @@ const initialState = {
 	lista_asignaturas_inscripcion: [],
 	inscripcion_exitosa: false,
 	error_inscripcion: false,
+	estado_estudiante: '',
 
 };
 
@@ -56,6 +57,12 @@ export default function (state=initialState, action) {
 			nuevo_estado['error_inscripcion'] = true
 			nuevo_estado['inscripcion_exitosa'] = false
 			return nuevo_estado;
+
+		case "GET_ESTADO_ESTUDIANTE_EXITOSO":
+			nuevo_estado['estado_estudiante'] = action.payload['estado_estudiante'];
+			return nuevo_estado;
+
+
 
 
 

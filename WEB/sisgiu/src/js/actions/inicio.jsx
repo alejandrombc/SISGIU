@@ -177,3 +177,25 @@ export const cambiarEstadoPeriodo = (periodo) =>{
 			}
 	   });
 }
+
+
+export const get_estado_estudiante = (id_estado_estudiante) =>{
+	let token = localStorage.getItem('user_token');
+		
+	return request
+	   .get(host+'api/estadoEstudiante/'+id_estado_estudiante+'/')
+	   .set('Authorization', 'JWT '+token)
+	   .set('Content-Type', 'application/json')
+	   .then(function(res) {
+			return {
+				type: "GET_ESTADO_ESTUDIANTE_EXITOSO",
+				payload: {'estado_estudiante': res.body}
+			}
+	   })
+	   .catch(function(err) {
+	      	return {
+				type: "ERROR"
+			}
+	   });
+}
+

@@ -70,10 +70,14 @@ class TipoPostgrado(models.Model):
 	class Meta:
 		db_table = 'tipo_postgrado'
 
+
 class EstadoEstudiante(models.Model):
 	estado = models.CharField(max_length=20)
 	class Meta:
 		db_table = 'estado_estudiante'
+
+	def __str__(self):
+		return self.estado
 
 
 class PersonalDocente(models.Model):

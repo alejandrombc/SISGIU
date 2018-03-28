@@ -410,6 +410,10 @@ class EstadoEstudianteListCreateAPIView(ListCreateAPIView):
     serializer_class = EstadoEstudianteSerializer
     permission_classes = [IsListOrCreate, IsAuthenticated]
 
+class EstadoEstudianteDetailAPIView(RetrieveAPIView):
+    queryset = EstadoEstudiante.objects.all()
+    serializer_class = EstadoEstudianteSerializer
+    permission_classes = [IsAuthenticated]
 
 class EstadoEstudianteDeleteAPIView(DestroyAPIView):
     queryset = EstadoEstudiante.objects.all()
