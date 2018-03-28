@@ -15,7 +15,9 @@ class SeleccionarAsignaturas extends React.Component {
     this.state = {
       options: this.props.asignaturas,
       value: [],
-      creditos: 0
+      creditos: 0,
+      cantidad_max_creditos: 24,
+
     }
     this.setCreditos = this.setCreditos.bind(this);
     this.handleChange = this.handleChange.bind(this);
@@ -46,6 +48,7 @@ class SeleccionarAsignaturas extends React.Component {
   handleChange (value) {
     this.setState({ value: value }); //another array
     this.setCreditos(value);
+
   }
 
   inscribirse() {
@@ -75,7 +78,7 @@ class SeleccionarAsignaturas extends React.Component {
         <br />
         <Row>
           <Col className="text-right" md="12">
-            <Button onClick={ ()=> this.inscribirse() }>
+            <Button onClick={ ()=> this.inscribirse() } disabled={this.state.creditos===0 || this.state.creditos>this.state.cantidad_max_creditos}>
               Inscribirse
             </Button>
           </Col>
