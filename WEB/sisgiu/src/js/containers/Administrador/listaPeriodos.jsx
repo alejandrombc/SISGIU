@@ -14,7 +14,7 @@ import ModalPeriodoNew from './modalPeriodoNew';
 import PeriodoEdit from './periodoEdit';
 import { get_asignaturas } from '../../actions/moduloAsignaturas';
 import {get_usuarios} from '../../actions/moduloUsuarioAdministrador';
-import {cargando} from '../../actions/inicio';
+import {cargando, cargado} from '../../actions/inicio';
 import { 
   eliminar_periodo, 
   activar_periodo,
@@ -48,12 +48,6 @@ class ListaPeriodos extends Component{
 
       }
       
-      this.props.get_docente_asignatura("all");
-      this.props.get_periodos(false, 'no iniciado');
-      this.props.get_usuarios("docentes", false);
-      this.props.get_tipo_postgrado();
-      this.props.get_estado_periodo();
-      this.props.get_asignaturas();
       this.onDismiss = this.onDismiss.bind(this);
       this.searchUpdated = this.searchUpdated.bind(this);
       this.handleChange = this.handleChange.bind(this);
@@ -67,6 +61,17 @@ class ListaPeriodos extends Component{
       
   }
 
+  componentDidMount() {
+    this.props.get_docente_asignatura("all")
+    .then( ()=> this.props.get_periodos(false, 'no iniciado')
+      .then( () => this.props.get_usuarios("docentes", false)
+        .then( () => this.props.get_tipo_postgrado()
+          .then( () => this.props.get_estado_periodo()
+            .then( () => this.props.get_asignaturas()
+                .then( () => this.props.cargado() )
+    )))));
+    
+  }
 
   onDismiss() {
     this.setState({ visible: false, loading: false});
@@ -275,115 +280,120 @@ class ListaPeriodos extends Component{
 
   render()
   {
+    if (!this.props.activeUser.cargado) {
+        return (<center><PulseLoader color="#b3b1b0" size="16px" margin="4px"/></center>);
+    } else {
 
-    if(this.props.adminUser.lista_periodos && this.props.adminUser.lista_periodos.length > 0)
-    {
-      let listItems = '';
-      listItems = this.get_listItems();
+      if(this.props.adminUser.lista_periodos && this.props.adminUser.lista_periodos.length > 0)
+      {
+        let listItems = '';
+        listItems = this.get_listItems();
 
-        if(this.state.editando_periodo === 1)
-        {
-          return(
-      		<div>
-                <br />
+          if(this.state.editando_periodo === 1)
+          {
+            return(
+        		<div>
+                  <br />
 
-                {/*SPINNER*/}
-                {this.props.adminUser.loading &&
-                  <center><PulseLoader color="#b3b1b0" size="16px" margin="4px"/></center>
-                }
+                  {/*SPINNER*/}
+                  {this.props.adminUser.cargando &&
+                    <center><PulseLoader color="#b3b1b0" size="16px" margin="4px"/></center>
+                  }
 
-                {/*ALERT DE EXITO*/}
-                {this.props.adminUser['edit'] && !this.props.adminUser.loading &&
-                  <Alert color="success" isOpen={this.state.visible} toggle={this.onDismiss}>
-                      Datos actualizados exitosamente
-                  </Alert> 
-                }
-                {/*ALERT DE ERROR*/}
-                {this.props.adminUser['bad_input'] === true && !this.props.adminUser.loading &&
-                    <Alert color="danger" isOpen={this.state.visible} toggle={this.onDismiss}>
-                        Ha ocurrido un error
-                    </Alert>
-                }
+                  {/*ALERT DE EXITO*/}
+                  {this.props.adminUser['edit'] && !this.props.adminUser.cargando &&
+                    <Alert color="success" isOpen={this.state.visible} toggle={this.onDismiss}>
+                        Datos actualizados exitosamente
+                    </Alert> 
+                  }
+                  {/*ALERT DE ERROR*/}
+                  {this.props.adminUser['bad_input'] === true && !this.props.adminUser.cargando &&
+                      <Alert color="danger" isOpen={this.state.visible} toggle={this.onDismiss}>
+                          Ha ocurrido un error
+                      </Alert>
+                  }
+
+                  <Row>
+                    <Col md='4'>
+                      <ModalPeriodoNew onDismiss={this.onDismiss}  /> 
+                    </Col>
+                    <Col md='8'>
+                      <SearchInput className="searchBox" placeholder="Buscar periodo..." onChange={this.searchUpdated} />
+                    </Col>
+                  </Row>
+                  <br />
+                  <Col md='12' className='text-right'>
+                    
+                  </Col>
+                  <Table bordered hover responsive striped size="sm">
+                    <thead>
+                      <tr>
+                        <th>Periodo</th>
+                        <th>Postgrado</th>
+                        <th>Acción</th>
+                      </tr>
+                    </thead>
+                    <tbody className="tabla_usuarios">
+                      {listItems}
+                    </tbody>
+                  </Table>
+
+                  <Row >
+                    <Col lg='4' md='4' sm='3' xs='1'> </Col>
+                    <Col lg='4' md='4' sm='6' xs='10' className='Pagination'>
+                      <br />
+                      {this.state.searchTerm === '' &&
+                        <Paginacion cant_items={this.props.adminUser.lista_periodos.length} item_por_pagina={periodos_por_pagina}/>
+                      }
+                    </Col>
+                    <Col lg='4' md='4' sm='3' xs='1'> </Col>
+                  </Row>
+
+          	</div>
+            )
+
+          } 
+          else if(this.state.editando_periodo === 2 || this.state.editando_periodo === 3 )
+          {
+            return(
+              <PeriodoEdit 
+              onDismiss={this.onDismiss} 
+              periodo={this.state.periodo} 
+              asignaturas={this.state.asignaturas} 
+              triggerVolverPasoAnterior={this.volverPasoAnterior} 
+              triggerSiguientePaso={this.siguientePaso} 
+              tipo_postgrado={this.state.tipo_postgrado}
+              editando_periodo={this.state.editando_periodo}
+              triggerVolverPrimerPaso={this.volverPrimerPaso}
+              docente_asignatura = {this.ordenarLista()}
+              triggetUpdateDocenteAsignatura={() => this.props.get_docente_asignatura("all")}
+              />
+            )
+          }
+
+      }
+      else {
+            return (
+              <div>
+                <br/>
+                <Row>
+                  <Col md='12'>
+                    <center>
+                    <h4>No existe ningún periodo guardado</h4>
+                    </center>
+                  </Col>
+                </Row>
 
                 <Row>
-                  <Col md='4'>
-                    <ModalPeriodoNew onDismiss={this.onDismiss}  /> 
-                  </Col>
-                  <Col md='8'>
-                    <SearchInput className="searchBox" placeholder="Buscar periodo..." onChange={this.searchUpdated} />
+                  <Col md='12'>
+                    <ModalPeriodoNew onDismiss={this.onDismiss} />
                   </Col>
                 </Row>
-                <br />
-                <Col md='12' className='text-right'>
-                  
-                </Col>
-                <Table bordered hover responsive striped size="sm">
-                  <thead>
-                    <tr>
-                      <th>Periodo</th>
-                      <th>Postgrado</th>
-                      <th>Acción</th>
-                    </tr>
-                  </thead>
-                  <tbody className="tabla_usuarios">
-                    {listItems}
-                  </tbody>
-                </Table>
 
-                <Row >
-                  <Col lg='4' md='4' sm='3' xs='1'> </Col>
-                  <Col lg='4' md='4' sm='6' xs='10' className='Pagination'>
-                    <br />
-                    {this.state.searchTerm === '' &&
-                      <Paginacion cant_items={this.props.adminUser.lista_periodos.length} item_por_pagina={periodos_por_pagina}/>
-                    }
-                  </Col>
-                  <Col lg='4' md='4' sm='3' xs='1'> </Col>
-                </Row>
+              </div>
+            )
+      }
 
-        	</div>
-          )
-
-        } 
-        else if(this.state.editando_periodo === 2 || this.state.editando_periodo === 3 )
-        {
-          return(
-            <PeriodoEdit 
-            onDismiss={this.onDismiss} 
-            periodo={this.state.periodo} 
-            asignaturas={this.state.asignaturas} 
-            triggerVolverPasoAnterior={this.volverPasoAnterior} 
-            triggerSiguientePaso={this.siguientePaso} 
-            tipo_postgrado={this.state.tipo_postgrado}
-            editando_periodo={this.state.editando_periodo}
-            triggerVolverPrimerPaso={this.volverPrimerPaso}
-            docente_asignatura = {this.ordenarLista()}
-            triggetUpdateDocenteAsignatura={() => this.props.get_docente_asignatura("all")}
-            />
-          )
-        }
-
-    }
-    else {
-          return (
-            <div>
-              <br/>
-              <Row>
-                <Col md='12'>
-                  <center>
-                  <h4>No existe ningún periodo guardado</h4>
-                  </center>
-                </Col>
-              </Row>
-
-              <Row>
-                <Col md='12'>
-                  <ModalPeriodoNew onDismiss={this.onDismiss} />
-                </Col>
-              </Row>
-
-            </div>
-          )
     }
   }
 }
@@ -393,6 +403,7 @@ const mapStateToProps = (state)=> {
   return{
     adminUser: state.adminUser,
     pagination: state.paginacion,
+    activeUser: state.activeUser,
   };
 }
 
@@ -408,6 +419,7 @@ const mapDispatchToProps = (dispatch) => {
     eliminar_periodo: eliminar_periodo,
     activar_periodo: activar_periodo,
     cargando: cargando,
+    cargado: cargado,
   }, dispatch )
 }
 

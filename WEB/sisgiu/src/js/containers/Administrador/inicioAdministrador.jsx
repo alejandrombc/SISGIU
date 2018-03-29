@@ -9,7 +9,7 @@ import ConfirmButton from 'react-confirm-button';
 // Components
 import { cambiarEstadoPeriodo, get_periodos_actuales } from '../../actions/inicio';
 import {get_estado_periodo} from '../../actions/moduloPeriodos';
-import { cargando } from '../../actions/inicio';
+import { cargando, cargado } from '../../actions/inicio';
 
 
 class InicioAdministrador extends Component{
@@ -20,8 +20,6 @@ class InicioAdministrador extends Component{
         visible: true,
       }
 
-      this.props.get_periodos_actuales();
-      this.props.get_estado_periodo();
       this.onDismiss = this.onDismiss.bind(this);
       this.cambiarEstadoPeriodo = this.cambiarEstadoPeriodo.bind(this);
       this.get_listItems = this.get_listItems.bind(this);
@@ -31,8 +29,16 @@ class InicioAdministrador extends Component{
     this.setState({ visible: false });
   }
 
+  componentDidMount() {
+    this.props.get_periodos_actuales()
+    .then( ()=> this.props.get_estado_periodo()
+      .then( () => this.props.cargado() )
+    );
+    
+  }
+
   cambiarEstadoPeriodo(periodo) {
-    this.props.cargando(); // Accion que cambia la variable 'loading' en el store
+    this.props.cargando(); // Accion que cambia la variable 'cargando' en el store
     this.props.cambiarEstadoPeriodo(periodo);
   }
 
@@ -99,58 +105,63 @@ class InicioAdministrador extends Component{
 
   render(){
 
-      let listItems = '';
-      listItems = this.get_listItems();
+      if (!this.props.activeUser.cargado) {
+        return (<center><PulseLoader color="#b3b1b0" size="16px" margin="4px"/></center>);
+      } else {
+        let listItems = '';
+        listItems = this.get_listItems();
 
-      return(
-          <div>
-            <br/>
+        return(
+            <div>
+              <br/>
 
-            <Row>
-              
-              {/*ALERT DE ERROR*/}
-              {this.props.adminUser['periodo_terminado_error'] &&
-                <Col md='12' className="text-center">
-                  <Alert color="danger" isOpen={this.state.visible} toggle={this.onDismiss}>
-                    No se pudo terminar el periodo
-                  </Alert>
-                </Col>
-              }
-              
-              <Col md='12' className="text-center">
-                { this.props.adminUser['tiene_periodos_activos'] === true ? <h5>Periodos Actuales</h5>
-                  :
-                  <h5>No hay ningun periodo activo actualmente</h5>
+              <Row>
+                
+                {/*ALERT DE ERROR*/}
+                {this.props.adminUser['periodo_terminado_error'] &&
+                  <Col md='12' className="text-center">
+                    <Alert color="danger" isOpen={this.state.visible} toggle={this.onDismiss}>
+                      No se pudo terminar el periodo
+                    </Alert>
+                  </Col>
                 }
-              </Col>
-
-              {/* SPINNER */}
-              { this.props.adminUser.loading &&
+                
                 <Col md='12' className="text-center">
-                  <center><PulseLoader color="#b3b1b0" size="16px" margin="4px"/></center>
+                  { this.props.adminUser['tiene_periodos_activos'] === true ? <h5>Periodos Actuales</h5>
+                    :
+                    <h5>No hay ningun periodo activo actualmente</h5>
+                  }
                 </Col>
-              }
 
-            </Row>
+                {/* SPINNER */}
+                { this.props.adminUser.cargando &&
+                  <Col md='12' className="text-center">
+                    <center><PulseLoader color="#b3b1b0" size="16px" margin="4px"/></center>
+                  </Col>
+                }
 
-            <br />
+              </Row>
 
-            <Row>
-              <Col md='12'>
-                <ListGroup>
-                  {listItems}
-                </ListGroup>
-              </Col>
-            </Row>
+              <br />
 
-          </div>
-      )
+              <Row>
+                <Col md='12'>
+                  <ListGroup>
+                    {listItems}
+                  </ListGroup>
+                </Col>
+              </Row>
+
+            </div>
+        )
+    }
   }
 }
 
 
 const mapStateToProps = (state)=> {
   return{
+    activeUser: state.activeUser,
     adminUser: state.adminUser
   };
 }
@@ -161,6 +172,7 @@ const mapDispatchToProps = (dispatch) => {
     cambiarEstadoPeriodo: cambiarEstadoPeriodo,
     get_estado_periodo: get_estado_periodo,
     cargando: cargando,
+    cargado: cargado
     }
     , dispatch )
 }

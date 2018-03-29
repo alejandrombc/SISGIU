@@ -18,6 +18,7 @@ import Paginacion from '../../components/pagination';
 
 import { get_tipo_postgrado } from '../../actions/moduloAsignaturas';  
 import { get_estado_estudiante } from '../../actions/moduloUsuarioAdministrador';
+import { cargado } from '../../actions/inicio';
 
 
 const KEYS_TO_FILTERS = ['first_name', 'last_name', 'cedula'];
@@ -35,17 +36,22 @@ class ListaUsuarios extends Component{
     }
     
     this.updateLoading = this.updateLoading.bind(this);
-    this.props.get_usuarios(this.props.tipo_usuario, false);
     this.onDismiss = this.onDismiss.bind(this);
     this.searchUpdated = this.searchUpdated.bind(this);
-
-    this.props.get_tipo_postgrado();
-    this.props.get_estado_estudiante();
   }
 
   onDismiss() {
     this.setState({ visible: false, loading: false});
     this.props.adminUser['edit'] = false;
+  }
+
+  componentDidMount() {
+    this.props.get_usuarios(this.props.tipo_usuario, false)
+    .then( ()=> this.props.get_tipo_postgrado()
+      .then( () => this.props.get_estado_estudiante()
+        .then( () => this.props.cargado() )
+    ));
+    
   }
 
   searchUpdated (term) {
@@ -64,7 +70,9 @@ class ListaUsuarios extends Component{
 
   render(){
 
-
+    if (!this.props.activeUser.cargado) {
+        return (<center><PulseLoader color="#b3b1b0" size="16px" margin="4px"/></center>);
+    } else {
       let listItems = '';
       if(this.props.adminUser.lista_usuarios && this.props.adminUser.lista_usuarios.length > 0){
         let cant_usuarios = this.props.adminUser.lista_usuarios.length;
@@ -169,26 +177,27 @@ class ListaUsuarios extends Component{
               </Row>
         </div>
         )
-    }else{
-      return (
-          <div>
-            <br/>
-            <Row>
-              <Col md='12'>
-                <center>
-                <h4>No existe ningún usuario perteneciente a este módulo.</h4>
-                </center>
-              </Col>
-            </Row>
+      }else{
+        return (
+            <div>
+              <br/>
+              <Row>
+                <Col md='12'>
+                  <center>
+                  <h4>No existe ningún usuario perteneciente a este módulo.</h4>
+                  </center>
+                </Col>
+              </Row>
 
-            <Row>
-              <Col md='12'>
-                <ModalUsuarioNew onDismiss={this.onDismiss} triggerParentUpdate={this.updateLoading} tipo_usuario={this.props.tipo_usuario} visible={this.state.visible}/>
-              </Col>
-            </Row>
+              <Row>
+                <Col md='12'>
+                  <ModalUsuarioNew onDismiss={this.onDismiss} triggerParentUpdate={this.updateLoading} tipo_usuario={this.props.tipo_usuario} visible={this.state.visible}/>
+                </Col>
+              </Row>
 
-          </div>
-        )
+            </div>
+          )
+      }
     }
   }
 }
@@ -198,6 +207,7 @@ const mapStateToProps = (state)=> {
   return{
     adminUser: state.adminUser,
     pagination: state.paginacion,
+    activeUser: state.activeUser
   };
 }
 
@@ -207,6 +217,7 @@ const mapDispatchToProps = (dispatch) => {
     get_usuarios: get_usuarios,
     get_tipo_postgrado: get_tipo_postgrado,
     get_estado_estudiante: get_estado_estudiante,
+    cargado: cargado,
   }, dispatch )
 }
 

@@ -11,15 +11,15 @@ class NavBarEstudiante extends Component{
       return (
         <Nav navbar >
           <NavItem>
-            <NavLink href="inicio" disabled={!this.props.estudianteUser.cargado}>Inicio</NavLink>
+            <NavLink href="inicio" disabled={!this.props.activeUser.cargado}>Inicio</NavLink>
           </NavItem>
 
           <NavItem>
-              <NavLink href="/historial" disabled={!this.props.estudianteUser.cargado}>Historial Académico</NavLink>
+              <NavLink href="/historial" disabled={!this.props.activeUser.cargado}>Historial Académico</NavLink>
           </NavItem>
 
           <NavItem>
-            <NavLink href="/#" disabled={!this.props.estudianteUser.cargado}>Constancias</NavLink>
+            <NavLink href="/#" disabled={!this.props.activeUser.cargado}>Constancias</NavLink>
           </NavItem>
 
         {/*
@@ -40,7 +40,7 @@ class NavBarEstudiante extends Component{
 
 const mapStateToProps = (state)=> {
   return{
-    estudianteUser: state.estudianteUser,
+    activeUser: state.activeUser,
   };
 }
 

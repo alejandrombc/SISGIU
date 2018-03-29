@@ -23,10 +23,10 @@ class InicioEstudiante extends Component{
   }
 
   componentDidMount() {
-    this.props.get_information(this.props.token['user'])
-    .then( ()=> this.props.get_periodos_tipo_postgrado("en inscripcion", this.props.token['user'].id_tipo_postgrado)
-      .then( () => this.props.get_periodo_estudiante(this.props.token['user'].usuario.cedula, "en inscripcion")
-        .then( () => this.props.get_estado_estudiante(this.props.token['user']['id_estado_estudiante'])
+    this.props.get_information(this.props.activeUser['user'])
+    .then( ()=> this.props.get_periodos_tipo_postgrado("en inscripcion", this.props.activeUser['user'].id_tipo_postgrado)
+      .then( () => this.props.get_periodo_estudiante(this.props.activeUser['user'].usuario.cedula, "en inscripcion")
+        .then( () => this.props.get_estado_estudiante(this.props.activeUser['user']['id_estado_estudiante'])
           .then( () => this.props.cargado() )
     )));
     
@@ -81,7 +81,7 @@ class InicioEstudiante extends Component{
       "6":"Domingo",
     }
 
-      if (!this.props.estudianteUser.cargado) {
+      if (!this.props.activeUser.cargado) {
         return (<center><PulseLoader color="#b3b1b0" size="16px" margin="4px"/></center>);
       } else {
 
@@ -166,7 +166,7 @@ class InicioEstudiante extends Component{
 
 const mapStateToProps = (state)=> {
   return{
-    token: state.activeUser,
+    activeUser: state.activeUser,
     estudianteUser: state.estudianteUser
   };
 }

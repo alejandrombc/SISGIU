@@ -1,7 +1,10 @@
 let user = localStorage.getItem('user_token');
 let modulo = localStorage.getItem('modulo');
 
-const initialState = (user && modulo) ? { loggedIn: true, user, modulo, cargado: false} : {loggedIn: false, cargado: false};
+const initialState = (user && modulo) ? 
+{ loggedIn: true, user, modulo, cargado: false} 
+: 
+{loggedIn: false, cargado: false};
 
 export default function (state=initialState, action) {
 	var nuevo_estado = Object.assign({}, state);
@@ -12,11 +15,8 @@ switch (action.type){
 		nuevo_estado['loggedIn'] = true;
 		nuevo_estado['bad_input'] = false;
 		nuevo_estado['bad_module'] = false;
-		nuevo_estado['cargado'] = true;
 		nuevo_estado['user'] = action.payload['user'];
 		nuevo_estado['modulo'] = action.payload['modulo'];
-
-
 		return nuevo_estado;
 
 	case "LOGIN_ERROR":
@@ -41,6 +41,10 @@ switch (action.type){
 
 	case "LOGOUT_ERROR":
 		nuevo_estado['loggedIn'] = true;
+		return nuevo_estado;
+
+	case "CARGADO":
+		nuevo_estado['cargado'] = true;
 		return nuevo_estado;
 
 	default:
