@@ -199,3 +199,16 @@ export const get_estado_estudiante = (id_estado_estudiante) =>{
 	   });
 }
 
+// Funciona para que el navbar este deshabilitado mientras todos los reducers estan cargando
+export const cargado = () => {
+	return {
+		type: "CARGADO"
+	}
+}
+
+// Funciona para que aparezca el SPINNER
+export const cargando = () => {
+	return {
+		type: "CARGANDO"
+	}
+}

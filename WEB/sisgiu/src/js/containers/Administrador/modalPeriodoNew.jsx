@@ -6,7 +6,8 @@ import {bindActionCreators} from 'redux';
 import { connect } from 'react-redux';
 
 // Components
-import { crear_periodo, cargando } from '../../actions/moduloPeriodos';
+import { crear_periodo } from '../../actions/moduloPeriodos';
+import { cargando } from '../../actions/inicio';
 
 class ModalPeriodoNew extends React.Component {
   constructor(props) {

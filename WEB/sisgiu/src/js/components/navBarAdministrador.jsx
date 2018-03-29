@@ -8,59 +8,33 @@ import { connect } from 'react-redux';
 class NavBarAdministrador extends Component{
 
   render() {
-    if (this.props.adminUser.cargado || (this.props.adminUser.cargado_estado_estudiante && this.props.adminUser.cargado_tipo_postgrado) ) {
+    
+    let todo_cargado = (this.props.adminUser.cargado || (this.props.adminUser.cargado_estado_estudiante && this.props.adminUser.cargado_tipo_postgrado) );
+
       return (
         <Nav navbar >                
           <NavItem>
-            <NavLink href="/inicio">Inicio</NavLink>
+            <NavLink href="/inicio" disabled={!todo_cargado}>Inicio</NavLink>
           </NavItem>
 
           <NavItem>
-              <NavLink href="/#">Trámites</NavLink>
+              <NavLink href="/#" disabled={!todo_cargado}>Trámites</NavLink>
           </NavItem>
 
           <NavItem>
-            <NavLink href="/moduloUsuarioAdministrador">Usuarios</NavLink>
+            <NavLink href="/moduloUsuarioAdministrador" disabled={!todo_cargado}>Usuarios</NavLink>
           </NavItem>
 
           <NavItem>
-            <NavLink href="/moduloAsignaturas">Asignaturas</NavLink>
+            <NavLink href="/moduloAsignaturas" disabled={!todo_cargado}>Asignaturas</NavLink>
           </NavItem>
 
           <NavItem>
-            <NavLink href="/moduloPeriodos">Periodos</NavLink>
-          </NavItem>
-
-        </Nav>
-      )
-    } else {
-      return (
-        <Nav navbar >                
-          <NavItem>
-            <NavLink href="/inicio" disabled>Inicio</NavLink>
-          </NavItem>
-
-          <NavItem>
-              <NavLink href="/#" disabled>Trámites</NavLink>
-          </NavItem>
-
-          <NavItem>
-            <NavLink href="/moduloUsuarioAdministrador" disabled>Usuarios</NavLink>
-          </NavItem>
-
-          <NavItem>
-            <NavLink href="/moduloAsignaturas" disabled>Asignaturas</NavLink>
-          </NavItem>
-
-          <NavItem>
-            <NavLink href="/#" disabled>Periodos</NavLink>
+            <NavLink href="/moduloPeriodos" disabled={!todo_cargado}>Periodos</NavLink>
           </NavItem>
         </Nav>
 
       )
-    }
-
-
 
   }
 

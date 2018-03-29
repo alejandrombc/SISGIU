@@ -7,7 +7,8 @@ import React from 'react';
 import ConfirmButton from 'react-confirm-button';
 
 // Components
-import { guardar_docente_asignatura_periodo, cargando } from '../../actions/moduloPeriodos';
+import { guardar_docente_asignatura_periodo } from '../../actions/moduloPeriodos';
+import { cargando } from '../../actions/inicio';
 import AgregarDocenteAsignatura from './agregarDocenteAsignatura';
 
 

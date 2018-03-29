@@ -118,6 +118,7 @@ export const crearUsuario = (user, tipo_usuario) => {
 
 	   })
 	   .catch(function(err) {
+	   	console.log(err);
 	   	  	return function (dispatch) {
 			    dispatch(get_usuarios(tipo_usuario ,2));
 			}

@@ -8,7 +8,7 @@ const initialState = {
 	inscripcion_exitosa: false,
 	error_inscripcion: false,
 	estado_estudiante: '',
-
+	cargado: false,
 };
 
 export default function (state=initialState, action) {
@@ -62,7 +62,9 @@ export default function (state=initialState, action) {
 			nuevo_estado['estado_estudiante'] = action.payload['estado_estudiante'];
 			return nuevo_estado;
 
-
+		case "CARGADO":
+			nuevo_estado['cargado'] = true;
+			return nuevo_estado;
 
 
 

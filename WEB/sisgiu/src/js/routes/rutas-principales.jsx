@@ -90,6 +90,14 @@ class RutasPrincipales extends React.Component {
 							  )
 						)}/>
 
+						<Route path="/historial" render={(props) => (
+							  this.props.token['loggedIn'] ? (
+							    <Inicio pestana="historial" />
+							  ) : (
+							  	<Redirect to="/login"/>
+							  )
+						)}/>
+
 
 					   	<Route component={Page404} ></Route>
 					</Switch>

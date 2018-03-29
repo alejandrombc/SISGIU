@@ -69,8 +69,6 @@ class ModalUsuarioNew extends React.Component {
 
   handleSubmit(e) {
     e.preventDefault();
-
-    console.log(this.state.usuario['cedula']);
     this.props.triggerParentUpdate();
     this.props.crearUsuario(this.state, this.props.tipo_usuario);
     

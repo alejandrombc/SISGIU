@@ -9,6 +9,7 @@ import PerfilUsuario from '../components/perfilUsuario';
 import ModuloUsuarioAdministrador from './Administrador/moduloUsuarioAdministrador';
 import ModuloAsignaturas from './Administrador/moduloAsignaturas';
 import ModuloPeriodos from './Administrador/moduloPeriodos';
+import HistorialAcademico from './Estudiante/historialAcademico';
 
 
 
@@ -53,6 +54,10 @@ class Content extends Component{
 
 		            	{this.props.pestana === "moduloPeriodos" &&
 		                	<ModuloPeriodos/>
+		            	} 
+
+		            	{this.props.pestana === "historial" &&
+		                	<HistorialAcademico/>
 		            	} 
 
 

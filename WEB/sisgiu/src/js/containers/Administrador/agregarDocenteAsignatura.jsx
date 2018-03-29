@@ -10,7 +10,7 @@ import 'rc-time-picker/assets/index.css';
 // Components
 import { editar_asignatura } from '../../actions/moduloAsignaturas';
 import TimePicker from 'rc-time-picker';
-import { cargando } from '../../actions/moduloPeriodos';
+import { cargado } from '../../actions/inicio';
 
 
 class AgregarDocenteAsignatura extends React.Component {
@@ -396,7 +396,7 @@ const mapStateToProps = (state)=> {
 const mapDispatchToProps = (dispatch) => {
   return bindActionCreators({
     editar_asignatura: editar_asignatura,
-    cargando: cargando,
+    cargado: cargado,
     }, 
     dispatch 
   )

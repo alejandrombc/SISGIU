@@ -14,10 +14,10 @@ import ModalPeriodoNew from './modalPeriodoNew';
 import PeriodoEdit from './periodoEdit';
 import { get_asignaturas } from '../../actions/moduloAsignaturas';
 import {get_usuarios} from '../../actions/moduloUsuarioAdministrador';
+import {cargando} from '../../actions/inicio';
 import { 
   eliminar_periodo, 
   activar_periodo,
-  cargando,
   get_periodos,
   get_tipo_postgrado,
   get_estado_periodo,

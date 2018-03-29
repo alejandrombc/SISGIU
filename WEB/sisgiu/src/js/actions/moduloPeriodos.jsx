@@ -191,10 +191,3 @@ export const activar_periodo = (periodo_id) => {
 			}
 	   });
 }
-
-
-export const cargando = () => {
-	return {
-		type: "CARGANDO"
-	}
-}

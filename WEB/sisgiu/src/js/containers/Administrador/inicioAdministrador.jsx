@@ -8,7 +8,8 @@ import ConfirmButton from 'react-confirm-button';
 
 // Components
 import { cambiarEstadoPeriodo, get_periodos_actuales } from '../../actions/inicio';
-import {get_estado_periodo, cargando} from '../../actions//moduloPeriodos';
+import {get_estado_periodo} from '../../actions/moduloPeriodos';
+import { cargando } from '../../actions/inicio';
 
 
 class InicioAdministrador extends Component{
