@@ -49,6 +49,8 @@ class EstudianteAsignatura(models.Model):
 	periodo_estudiante = models.ForeignKey(PeriodoEstudiante, on_delete=models.CASCADE)
 	asignatura = models.ForeignKey(Asignatura, on_delete=models.CASCADE)
 	nota_definitiva = models.IntegerField()
+	retirado = models.BooleanField(default=False)
+
 	class Meta:
 		db_table = 'estudiante_asignatura'
 

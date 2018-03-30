@@ -48,5 +48,8 @@ urlpatterns = format_suffix_patterns([
 
     url(r'^api/asignaturas_necesarias/delete/all/$', PrelacionAsignaturaListCreateAPIView.delete_all_asignaturas_necesarias, name='PrelacionAsignatura-delete-all'),
 
+    #Retirar asignatura 
+    url(r'^api/asignatura/(?P<codigo>[\w\-]+)/estudiante/(?P<cedula>[0-9]{8})/periodo/(?P<periodo>\d+)/$', AsignaturaListCreateAPIView.retirar_asignatura_estudiante, name='asignaturas-por-estudiante'),
+
 
 ])

@@ -74,6 +74,23 @@ export const get_information = (user) => {
 	   });
 }
 
+export const retirar_estudiante = (codigo,user,periodo) => {
+	let token = localStorage.getItem('user_token');
+	return request
+	   .post(host+'api/asignatura/'+codigo+'/estudiante/'+user.usuario.cedula+'/periodo/'+periodo+'/')
+	   .set('Authorization', 'JWT '+token)
+	   .then(function(res) {
+				return function (dispatch) {
+				    dispatch(get_information(user));
+				}
+	   })
+	   .catch(function(err) {
+			return function (dispatch) {
+			    dispatch(get_information(user));
+			}
+	   });
+}
+
 export function get_periodo_estudiante (cedula, filtro) {
 	let token = localStorage.getItem('user_token');
 

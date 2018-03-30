@@ -150,6 +150,8 @@ class AsignaturaListCreateAPIView(ListCreateAPIView):
 
                 asignatura['docente']['horario_dia'] = horarios_dia
                 asignatura['docente']['horario_hora'] = horarios_hora
+                print(estudiante_asignatura)
+                asignatura['retirado'] = estudiante_asignatura['retirado']
 
                 asignatura['tipo_asignatura'] = tipo_asignatura['nombre']
 
@@ -157,6 +159,7 @@ class AsignaturaListCreateAPIView(ListCreateAPIView):
 
                 lista_asignaturas.append(asignatura)
 
+            lista_asignaturas = sorted(lista_asignaturas, key=lambda k: k['codigo']) 
             return HttpResponse(json.dumps(lista_asignaturas), content_type="application/json")
         response_data = {}
         response_data['error'] = 'No tiene privilegios para realizar esta accion'      
@@ -182,7 +185,23 @@ class AsignaturaListCreateAPIView(ListCreateAPIView):
         response_data['error'] = 'No tiene privilegios para realizar esta acción'      
         return HttpResponse(json.dumps(response_data), content_type="application/json", status=401)
 
+    @csrf_exempt
+    def retirar_asignatura_estudiante(request, codigo, cedula, periodo):
+        if (request.method == 'POST'):
 
+            member = EstudianteAsignatura.objects.filter(
+                asignatura_id__codigo=codigo, 
+                periodo_estudiante__estudiante__usuario__cedula=cedula,
+                periodo_estudiante__periodo_id=periodo).update(retirado=True)
+
+            response_data = {}
+            response_data['status'] = 'Edicion exitosa'      
+            return HttpResponse(json.dumps(response_data), content_type="application/json")
+        
+        response_data = {}
+        response_data['error'] = 'No tiene privilegios para realizar esta acción'      
+        return HttpResponse(json.dumps(response_data), content_type="application/json", status=401)
+  
 
 
 class AsignaturaDetailAPIView(RetrieveAPIView):

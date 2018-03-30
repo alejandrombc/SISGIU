@@ -5,9 +5,18 @@ import {bindActionCreators} from 'redux';
 import { Alert, Button, Row, Col, ListGroup, ListGroupItem, ListGroupItemHeading, ListGroupItemText} from 'reactstrap';
 import { PulseLoader } from 'halogenium';
 import Inscripcion from './inscripcion';
+import ConfirmButton from 'react-confirm-button';
+
 
 // Components
-import { get_information, get_periodo_estudiante, get_periodos_tipo_postgrado, get_estado_estudiante, cargado } from '../../actions/inicio';
+import { 
+    get_information, 
+    get_periodo_estudiante, 
+    get_periodos_tipo_postgrado, 
+    get_estado_estudiante, 
+    cargado,
+    retirar_estudiante,
+    } from '../../actions/inicio';
 
 
 class InicioEstudiante extends Component{
@@ -37,6 +46,10 @@ class InicioEstudiante extends Component{
     this.setState({ visible: false });
   }
 
+  retirar_asignaturas(codigo, user, periodo){
+    this.props.retirar_estudiante(codigo,user,periodo);
+  }
+
   get_ListItems(dias) {
     var listItems = "";
     if(this.props.estudianteUser['materias'] && this.props.estudianteUser['materias'].length > 0){
@@ -52,8 +65,26 @@ class InicioEstudiante extends Component{
             <ListGroupItemText key={valor['codigo']}>
                 {lista_docentes}
                 Prof: {valor['docente']['first_name']} {valor['docente']['last_name']}
-                
             </ListGroupItemText>
+            {!valor['retirado'] ?
+            <ConfirmButton
+                  disableAfterConfirmed
+                  onConfirm={() => this.retirar_asignaturas(valor['codigo'], this.props.activeUser.user, this.props.estudianteUser.lista_periodos[0].id) }
+                  text= "Retirar"
+                  key={valor['codigo']}
+                  className="btn btn-danger btn-sm float-right"
+                  confirming={{
+                    text: '¿Está Seguro?',
+                    className: 'btn btn-danger btn-sm float-right',
+                  }}
+                  disabled={{
+                    text: 'Usted ya esta retirado',
+                    className: 'btn btn-danger btn-sm float-right',
+                  }}
+                />
+              :
+              <Button key={valor['codigo']} className="btn btn-danger btn-sm float-right" disabled>Usted ya esta retirado</Button>
+            }
         </ListGroupItem>
         )
       });
@@ -178,6 +209,7 @@ const mapDispatchToProps = (dispatch) => {
     get_periodos_tipo_postgrado: get_periodos_tipo_postgrado,
     get_estado_estudiante: get_estado_estudiante,
     cargado: cargado,
+    retirar_estudiante:retirar_estudiante,
 
   }, dispatch )
 }
