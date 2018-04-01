@@ -12,6 +12,7 @@ const initialState = {
 	lista_estadoPeriodo: [],
 	lista_prelacion: [],
 	lista_docente_asignatura: [],
+	error_creando_periodo: false,
 };
 
 export default function (state=initialState, action) {
@@ -98,6 +99,7 @@ export default function (state=initialState, action) {
 		case "EDIT_PERIODO_EXITOSO":
 			nuevo_estado['edit'] = true;
 			nuevo_estado['bad_input'] = false;
+			nuevo_estado['error_creando_periodo'] = false;
 			nuevo_estado['lista_periodos'] = action.payload['lista_periodos'];
 			return nuevo_estado;
 
@@ -118,7 +120,13 @@ export default function (state=initialState, action) {
 		case "CREAR_DOCENTE_ASIGNATURA_EXITOSO":
 			nuevo_estado['edit'] = true;
 			nuevo_estado['bad_input'] = false;
-			return nuevo_estado;	
+			return nuevo_estado;
+		
+		case "ERROR_CREANDO_PERIODO":
+			nuevo_estado['error_creando_periodo'] = true;
+			return nuevo_estado;
+
+
 
 
 		default:

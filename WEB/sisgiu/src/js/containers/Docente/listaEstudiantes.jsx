@@ -18,7 +18,7 @@ const KEYS_TO_FILTERS = ['first_name', 'last_name', 'cedula'];
 const usuarios_por_pagina = 10;
 
 
-class ListaUsuarios extends Component{
+class ListaEstudiantes extends Component{
 
   constructor(props) {
     super(props);
@@ -75,6 +75,7 @@ class ListaUsuarios extends Component{
 
   handleSubmit(e){
     e.preventDefault();
+
     this.setState({loading: true});
     this.props.cargar_notas(this.state.usuarios, this.props.activeUser.user.usuario.cedula, this.props.asignatura, this.props.tipo_postgrado)
     .then(()=> this.setState({loading: false}) );
@@ -253,6 +254,6 @@ const mapDispatchToProps = (dispatch) => {
 }
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(ListaUsuarios);
+export default connect(mapStateToProps, mapDispatchToProps)(ListaEstudiantes);
 
 

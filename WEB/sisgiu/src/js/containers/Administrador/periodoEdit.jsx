@@ -8,7 +8,7 @@ import ConfirmButton from 'react-confirm-button';
 
 // Components
 import { guardar_docente_asignatura_periodo } from '../../actions/moduloPeriodos';
-import { cargando } from '../../actions/inicio';
+import { cargando, cargado } from '../../actions/inicio';
 import AgregarDocenteAsignatura from './agregarDocenteAsignatura';
 
 
@@ -38,10 +38,9 @@ class PeriodoEdit extends React.Component {
   guardarCambiosEdit() {
     this.props.cargando();
     this.props.guardar_docente_asignatura_periodo(this.state.docente_asignatura, this.props.periodo.id)
-    .then( () => this.props.triggetUpdateDocenteAsignatura()
+    .then( () => this.props.triggerUpdateDocenteAsignatura()
       .then( () => this.props.triggerVolverPrimerPaso()
     ));
-    
     
 
   }
@@ -166,6 +165,7 @@ const mapDispatchToProps = (dispatch) => {
   return bindActionCreators({
     guardar_docente_asignatura_periodo: guardar_docente_asignatura_periodo,
     cargando: cargando,
+    cargado: cargado,
     }, 
     dispatch 
   )

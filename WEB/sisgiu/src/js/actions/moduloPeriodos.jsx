@@ -98,10 +98,8 @@ export function crear_periodo (periodo, id_estado_periodo) {
 			}
 	   })
 	   .catch(function(err) {
-	   		localStorage.removeItem('user_token');
-	   		localStorage.removeItem('modulo');
 	      	return {
-				type: "ERROR"
+				type: "ERROR_CREANDO_PERIODO"
 			}
 	   });
 

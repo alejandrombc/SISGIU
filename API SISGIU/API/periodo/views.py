@@ -43,6 +43,8 @@ from django.views.decorators.csrf import csrf_exempt
 from django.db.models import Q
 from collections import OrderedDict
 
+from rest_framework.exceptions import ParseError
+
 """
 EstadoPeriodo
 	Esto solo debe ser tratado por el administrador
@@ -77,6 +79,18 @@ class PeriodoListCreateAPIView(ListCreateAPIView):
     queryset = Periodo.objects.all()
     serializer_class = PeriodoListSerializer
     permission_classes = [IsAuthenticated, IsListOrCreate]
+
+    def perform_create(self, serializer):
+        print(serializer.data)
+
+        periodo = Periodo.objects.filter(estado_periodo__id=serializer.data['estado_periodo'], tipo_postgrado__id=serializer.data['tipo_postgrado'])
+        print(periodo)
+        if (len(periodo) != 0):
+            raise ParseError('Ya existe un periodo con el estatus "No Iniciado" para el tipo de postgrado seleccionado')
+
+        nuevo_periodo = PeriodoListSerializer(data=serializer.data) 
+        nuevo_periodo.is_valid()
+        nuevo_periodo.save()
 
     def get_periodos_by_filter(request, filtro):
         if (request.method == "GET"):

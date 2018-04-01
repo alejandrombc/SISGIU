@@ -7,7 +7,7 @@ import {bindActionCreators} from 'redux';
 import { connect } from 'react-redux'; 
 
 // Components
-import ListaUsuarios from '../Docente/listaUsuarios';
+import ListaEstudiantes from '../Docente/listaEstudiantes';
 import { cargado } from '../../actions/inicio';
 import { 
     get_asignaturas_docente, 
@@ -64,7 +64,7 @@ class InicioDocente extends Component{
                       <h6>{asignatura.nombre}</h6> 
                       <h6>{asignatura.tipo_postgrado}</h6> 
                     </center>
-                    <ListaUsuarios asignatura={asignatura.codigo} tipo_postgrado={asignatura.tipo_postgrado} />
+                    <ListaEstudiantes asignatura={asignatura.codigo} tipo_postgrado={asignatura.tipo_postgrado} />
                   </div>
                 }
                 </Col>

@@ -91,7 +91,7 @@ class ListaPeriodos extends Component{
   }
 
   volverPrimerPaso() {
-    this.setState({editando_periodo: 1});
+    this.setState({editando_periodo: 1}, () => this.props.cargado());
   }
 
   eliminar_periodo(periodo_id){
@@ -102,7 +102,7 @@ class ListaPeriodos extends Component{
 
   activar_periodo(periodo_id){
     this.props.cargando();
-    this.props.activar_periodo(periodo_id);
+    this.props.activar_periodo(periodo_id).then(()=>this.props.cargado());
   }
 
   siguientePaso() {
@@ -296,17 +296,24 @@ class ListaPeriodos extends Component{
                   <br />
 
                   {/*ALERT DE EXITO*/}
-                  {this.props.adminUser['edit'] && !this.props.adminUser.cargando &&
+                  {this.props.adminUser['edit'] &&
                     <Alert color="success" isOpen={this.state.visible} toggle={this.onDismiss}>
                         Datos actualizados exitosamente
                     </Alert> 
                   }
                   {/*ALERT DE ERROR*/}
-                  {this.props.adminUser['bad_input'] === true && !this.props.adminUser.cargando &&
+                  {this.props.adminUser['bad_input'] === true &&
                     <Alert color="danger" isOpen={this.state.visible} toggle={this.onDismiss}>
                         Ha ocurrido un error
                     </Alert>
                   }
+                  {/*ALERT DE ERROR*/}
+                  {this.props.adminUser['error_creando_periodo'] === true &&
+                    <Alert color="danger" isOpen={this.state.visible} toggle={this.onDismiss}>
+                        Ya existe un periodo con "No Iniciado" del tipo de postgrado seleccionado.
+                    </Alert>
+                  }
+                   
 
                   <Row>
                     <Col md='4'>
@@ -361,7 +368,7 @@ class ListaPeriodos extends Component{
               editando_periodo={this.state.editando_periodo}
               triggerVolverPrimerPaso={this.volverPrimerPaso}
               docente_asignatura = {this.ordenarLista()}
-              triggetUpdateDocenteAsignatura={() => this.props.get_docente_asignatura("all")}
+              triggerUpdateDocenteAsignatura={() => this.props.get_docente_asignatura("all")}
               />
             )
           }
