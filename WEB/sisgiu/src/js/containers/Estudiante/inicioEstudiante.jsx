@@ -29,6 +29,7 @@ class InicioEstudiante extends Component{
       }
       this.onDismiss = this.onDismiss.bind(this);
       this.get_ListItems = this.get_ListItems.bind(this);
+      this.actualizarInformacionInicio = this.actualizarInformacionInicio.bind(this);
   }
 
   componentDidMount() {
@@ -67,25 +68,31 @@ class InicioEstudiante extends Component{
                 {lista_docentes}
                 Prof: {valor['docente']['first_name']} {valor['docente']['last_name']}
             </ListGroupItemText>
-            {!valor['retirado'] ?
-            <ConfirmButton
-                  disableAfterConfirmed
-                  onConfirm={() => this.retirar_asignaturas(valor['codigo'], this.props.activeUser.user, this.props.estudianteUser.lista_periodo_activo[0].id) }
-                  text= "Retirar"
-                  key={valor['codigo']}
-                  className="btn btn-danger btn-sm float-right"
-                  confirming={{
-                    text: '¿Está Seguro?',
-                    className: 'btn btn-danger btn-sm float-right',
-                  }}
-                  disabled={{
-                    text: 'Usted ya esta retirado',
-                    className: 'btn btn-danger btn-sm float-right',
-                  }}
-                />
-              :
+
+            { this.props.estudianteUser.lista_periodos.length === 0 && !valor['retirado'] &&
+      
+              <ConfirmButton
+                    disableAfterConfirmed
+                    onConfirm={() => this.retirar_asignaturas(valor['codigo'], this.props.activeUser.user, this.props.estudianteUser.lista_periodo_activo[0].id) }
+                    text= "Retirar"
+                    key={valor['codigo']}
+                    className="btn btn-danger btn-sm float-right"
+                    confirming={{
+                      text: '¿Está Seguro?',
+                      className: 'btn btn-danger btn-sm float-right',
+                    }}
+                    disabled={{
+                      text: 'Usted ya esta retirado',
+                      className: 'btn btn-danger btn-sm float-right',
+                    }}
+                  />
+            }
+            { this.props.estudianteUser.lista_periodos.length === 0 && valor['retirado'] &&
               <Button key={valor['codigo']} className="btn btn-danger btn-sm float-right" disabled>Usted ya esta retirado</Button>
             }
+              
+
+
         </ListGroupItem>
         )
       });
@@ -98,8 +105,16 @@ class InicioEstudiante extends Component{
     return listItems;
   }
 
+
+  actualizarInformacionInicio() {
+    if (this.state.inscribiendo === false ) {
+      this.props.get_information(this.props.activeUser['user'] )
+    }
+  }
+
+
   enInscripcion(){
-    this.setState({inscribiendo: !this.state.inscribiendo});
+    this.setState({inscribiendo: !this.state.inscribiendo}, () => this.actualizarInformacionInicio() ); 
   }
 
   render(){
@@ -113,15 +128,25 @@ class InicioEstudiante extends Component{
       "6":"Domingo",
     }
 
-      if (!this.props.activeUser.cargado) {
-        return (<center><PulseLoader color="#b3b1b0" size="16px" margin="4px"/></center>);
-      } else {
+    let mensaje = '';
 
-        if (this.props.estudianteUser.estado_estudiante.estado === 'activo') 
-        {
-          if(!this.state.inscribiendo) {
-            return(
-                <div>
+    if (!this.props.estudianteUser['tiene_asignaturas'] && this.props.estudianteUser.lista_periodo_activo.length>0) {
+      mensaje = 'Usted no se encuentra inscrito en el periodo actual.';
+    } else if (this.props.estudianteUser.lista_periodo_activo.length===0 && this.props.estudianteUser.lista_periodos.length===0) {
+      mensaje = 'Actualmente no se encuentran periodos activos.';
+    }
+
+
+    if (!this.props.activeUser.cargado) {
+      return (<center><PulseLoader color="#b3b1b0" size="16px" margin="4px"/></center>);
+    } else {
+
+      if (this.props.estudianteUser.estado_estudiante.estado === 'activo') 
+      {
+        if(!this.state.inscribiendo) {
+          return(
+              <div>
+
                 {/*ALERT DE ERROR*/}
                 {this.props.estudianteUser['error_inscripcion'] &&
                   <Col md='12' className="text-center">
@@ -138,7 +163,6 @@ class InicioEstudiante extends Component{
                   </Alert> 
                 }
 
-                <br />
                 {!this.props.estudianteUser['inscripcion_exitosa'] && this.props.estudianteUser.first_render && this.props.estudianteUser.lista_periodo_estudiante.length === 0 && this.props.estudianteUser.lista_periodos.length > 0 &&
                   <Row>
                     <Col md='12' className="text-center">
@@ -148,48 +172,52 @@ class InicioEstudiante extends Component{
                     </Col>
                   </Row>
                 }
-                  <br />
-                  <br />
-                  {!this.props.estudianteUser['tiene_asignaturas'] &&
+                
+                <div>
+                  <br/>
+                  <Row>
+                     <Col md='12' className="text-center">
+                        <h5>{mensaje}</h5>
+                    </Col>
+                  </Row>
+                </div>
+                
+
+
+                { this.props.estudianteUser['tiene_asignaturas'] &&
+                  <div>
                     <Row>
-                       <Col md='12' className="text-center">
-                          <h5>Usted no se encuentra inscrito en el periodo actual.</h5>
+                     <Col md='12' className="text-center">
+                        <h5>Asignaturas Inscritas</h5>
+                    </Col>
+                    </Row>
+                    <br />
+                    <Row>
+                      <Col md='12'>
+                        <ListGroup>
+                          {this.get_ListItems(dias)}
+                        </ListGroup>
                       </Col>
                     </Row>
-                  }
-                  {this.props.estudianteUser['tiene_asignaturas'] &&
-                    <div>
-                      <Row>
-                       <Col md='12' className="text-center">
-                          <h5>Asignaturas Inscritas</h5>
-                      </Col>
-                      </Row>
-                      <br />
-                      <Row>
-                        <Col md='12'>
-                          <ListGroup>
-                            {this.get_ListItems(dias)}
-                          </ListGroup>
-                        </Col>
-                      </Row>
-                    </div>
-                  }
-                </div>
-            );
-          } else{
-            return (
-              <Inscripcion triggerInscripcion={()=> this.enInscripcion() }/>
-            );
-          }
-        } else 
-        {
+                  </div>
+                }
+
+              </div>
+          );
+        } else{
           return (
-            <div>
-              <center><h5>Usted no es un estudiante activo</h5></center>
-            </div>
+            <Inscripcion triggerInscripcion={()=> this.enInscripcion() }/>
           );
         }
+      } else 
+      {
+        return (
+          <div>
+            <center><h5>Usted no es un estudiante activo</h5></center>
+          </div>
+        );
       }
+    }
 
 
   }

@@ -31,7 +31,7 @@ urlpatterns = format_suffix_patterns([
 	# PeriodoEstudiante
     url(r'^api/periodoEstudiante/all/$', PeriodoEstudianteListCreateAPIView.as_view(), name='PeriodoEstudiante-list-create'),
     url(r'^api/periodoEstudiante/$', PeriodoEstudianteListCreateAPIView.get_all_estudiantes, name='PeriodoEstudiante-list-all'),
-    url(r'^api/periodoEstudiante/(?P<cedula>[0-9]{8})/periodo/(?P<periodo>[\w\s]+)/$', PeriodoEstudianteDetailAPIView.get_periodo, name='PeriodoEstudiante-detail'),
+    url(r'^api/periodoEstudiante/(?P<cedula>[0-9]{6,8})/periodo/(?P<periodo>[\w\s]+)/$', PeriodoEstudianteDetailAPIView.get_periodo, name='PeriodoEstudiante-detail'),
     url(r'^api/periodoEstudiante/(?P<pk>\d+)/edit/$', PeriodoEstudianteUpdateAPIView.as_view(), name='PeriodoEstudiante-update'),
     url(r'^api/periodoEstudiante/(?P<pk>\d+)/delete/$', PeriodoEstudianteDeleteAPIView.as_view(), name='PeriodoEstudiante-delete'),
 
@@ -39,7 +39,7 @@ urlpatterns = format_suffix_patterns([
     # DocenteAsignatura
     url(r'^api/docenteAsignatura/$', DocenteAsignaturaListCreateAPIView.as_view(), name='DocenteAsignatura-list-create'),
     url(r'^api/docenteAsignatura/periodo/(?P<periodo>[\w\s]+)/tipo/(?P<tipo_postgrado>[\w\-]+)/$', DocenteAsignaturaDetailAPIView.get_all_docentes, name='DocenteAsignatura-detail'),
-    url(r'^api/docenteAsignatura/(?P<cedula>[0-9]{8})/periodo/(?P<periodo>[\w\s]+)/$', DocenteAsignaturaDetailAPIView.get_periodo, name='DocenteAsignatura-detail'),
+    url(r'^api/docenteAsignatura/(?P<cedula>[0-9]{6,8})/periodo/(?P<periodo>[\w\s]+)/$', DocenteAsignaturaDetailAPIView.get_periodo, name='DocenteAsignatura-detail'),
     url(r'^api/docenteAsignatura/(?P<asignatura>[\w\-]+)/periodo/(?P<periodo>[\w\s]+)/$', DocenteAsignaturaDetailAPIView.get_docente, name='DocenteAsignatura-detail'),
     url(r'^api/docenteAsignatura/periodo/(?P<periodo_id>\d+)/$', DocenteAsignaturaDetailAPIView.crearDocenteAsignatura, name='DocenteAsignatura-crear'),
     url(r'^api/docenteAsignatura/(?P<pk>\d+)/edit/$', DocenteAsignaturaUpdateAPIView.as_view(), name='DocenteAsignatura-update'),
@@ -48,7 +48,7 @@ urlpatterns = format_suffix_patterns([
 
     # EstudianteAsignatura
     url(r'^api/estudianteAsignatura/$', EstudianteAsignaturaListCreateAPIView.as_view(), name='EstudianteAsignatura-list-create'),
-    url(r'^api/estudianteAsignatura/inscribir/(?P<cedula>[0-9]{8})/$', EstudianteAsignaturaListCreateAPIView.crear_estudiante_asignatura, name='EstudianteAsignatura-create'),
+    url(r'^api/estudianteAsignatura/inscribir/(?P<cedula>[0-9]{6,8})/$', EstudianteAsignaturaListCreateAPIView.crear_estudiante_asignatura, name='EstudianteAsignatura-create'),
     url(r'^api/estudianteAsignatura/(?P<estudiante__usuario__cedula>\d+)/$', EstudianteAsignaturaDetailAPIView.as_view(), name='EstudianteAsignatura-detail'),
     url(r'^api/estudianteAsignatura/(?P<pk>\d+)/edit/$', EstudianteAsignaturaUpdateAPIView.as_view(), name='EstudianteAsignatura-update'),
     url(r'^api/estudianteAsignatura/(?P<pk>\d+)/delete/$', EstudianteAsignaturaDeleteAPIView.as_view(), name='EstudianteAsignatura-delete'),
