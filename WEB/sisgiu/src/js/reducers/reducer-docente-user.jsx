@@ -1,7 +1,9 @@
 const initialState = {
 	asignaturas: [], 
-	cargando: false,
-	estudiantes: []
+	// cargando: false,
+	estudiantes: [],
+	edit: false,
+	error: false,
 };
 
 export default function (state=initialState, action) {
@@ -23,7 +25,17 @@ export default function (state=initialState, action) {
 
 		case "ERROR":
 			nuevo_estado['loggedIn'] = false;
-			nuevo_estado['cargando'] = false;
+			// nuevo_estado['cargando'] = false;
+			return nuevo_estado;
+		
+		case "CARGAR_NOTAS_EXITOSO":
+			nuevo_estado['edit'] = true;
+			nuevo_estado['error'] = false;
+			return nuevo_estado;
+
+		case "ERROR_CARGANDO_NOTAS":
+			nuevo_estado['edit'] = false;
+			nuevo_estado['error'] = true;
 			return nuevo_estado;
 		
 

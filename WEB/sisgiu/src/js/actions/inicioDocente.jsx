@@ -45,3 +45,30 @@ export const get_estudiantes = (asignatura, tipo_postgrado) =>{
 			}
 	   });
 }
+
+
+export const cargar_notas = (estudiantes, cedula_docente, asignatura, tipo_postgrado) =>{
+	let token = localStorage.getItem('user_token');
+
+	let data = {};
+	data['estudiantes'] = estudiantes;
+	data['cedula_docente'] = cedula_docente;
+	data['asignatura'] = asignatura;
+	data['tipo_postgrado'] = tipo_postgrado;
+
+	return request
+	   .post(host+'api/estudianteAsignatura/cargarNotas/')
+	   .set('Authorization', 'JWT '+token)
+	   .send(data)
+	   .then(function(res) {
+	      	return {
+				type: "CARGAR_NOTAS_EXITOSO",
+			}
+
+	   })
+	   .catch(function(err) {
+	      	return {
+				type: "ERROR_CARGANDO_NOTAS"
+			}
+	   });
+}

@@ -394,6 +394,30 @@ class EstudianteAsignaturaUpdateAPIView(RetrieveUpdateAPIView):
     serializer_class = EstudianteAsignaturaDetailSerializer
     permission_classes = [EsDocenteOAdministrador]
 
+    @csrf_exempt
+    def cargar_notas(request):
+        response_data = {}
+
+        if(request.method == "POST"):
+
+            body_unicode = request.body.decode('utf-8')
+            body = json.loads(body_unicode)
+            
+            """Body contiene un array con todos los estudiantes y su respectiva nota y la cedula del docente """
+
+            for estudiante in body['estudiantes']:
+                periodo_estudiante = PeriodoEstudiante.objects.get(periodo__tipo_postgrado__tipo=body['tipo_postgrado'], periodo__estado_periodo__estado='activo', estudiante__usuario__cedula=estudiante['cedula'])
+                estudiante_asignatura = EstudianteAsignatura.objects.filter(periodo_estudiante=periodo_estudiante, asignatura__codigo=body['asignatura'])
+
+                estudiante_asignatura.update(nota_definitiva=estudiante['nota_definitiva'])
+           
+            return HttpResponse(json.dumps({"status":"OK"}), content_type="application/json", status=200)
+        
+        response_data['error'] = 'No tiene privilegios para realizar esta accion'      
+        return HttpResponse(json.dumps(response_data), content_type="application/json", status=405)
+
+
+
 class EstudianteAsignaturaDeleteAPIView(DestroyAPIView):
     queryset = EstudianteAsignatura.objects.all()
     serializer_class = EstudianteAsignaturaDetailSerializer
