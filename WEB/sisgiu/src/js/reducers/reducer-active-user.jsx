@@ -47,6 +47,10 @@ switch (action.type){
 		nuevo_estado['cargado'] = true;
 		return nuevo_estado;
 
+	case "CARGANDO":
+		nuevo_estado['cargado'] = false;
+		return nuevo_estado;
+
 	default:
 		return state;
 	}

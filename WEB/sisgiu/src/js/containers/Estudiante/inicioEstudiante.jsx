@@ -15,6 +15,7 @@ import {
     get_periodos_tipo_postgrado, 
     get_estado_estudiante, 
     cargado,
+    cargando,
     retirar_estudiante,
     } from '../../actions/inicio';
 
@@ -25,7 +26,7 @@ class InicioEstudiante extends Component{
       super(props);
       this.state = {
         inscribiendo: false,
-        visible: true,
+        visible: true
       }
       this.onDismiss = this.onDismiss.bind(this);
       this.get_ListItems = this.get_ListItems.bind(this);
@@ -108,7 +109,8 @@ class InicioEstudiante extends Component{
 
   actualizarInformacionInicio() {
     if (this.state.inscribiendo === false ) {
-      this.props.get_information(this.props.activeUser['user'] )
+      this.props.cargando();
+      this.props.get_information(this.props.activeUser['user'] ).then( () => this.props.cargado() );
     }
   }
 
@@ -238,6 +240,7 @@ const mapDispatchToProps = (dispatch) => {
     get_periodos_tipo_postgrado: get_periodos_tipo_postgrado,
     get_estado_estudiante: get_estado_estudiante,
     cargado: cargado,
+    cargando: cargando,
     retirar_estudiante:retirar_estudiante,
 
   }, dispatch )
