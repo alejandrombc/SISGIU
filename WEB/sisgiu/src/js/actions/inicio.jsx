@@ -121,9 +121,16 @@ export function get_periodos_tipo_postgrado (filtro, tipo_postgrado) {
 	   .get(host+'api/periodo/'+filtro+'/tipo_postgrado/'+tipo_postgrado+'/')
 	   .set('Authorization', 'JWT '+token)
 	   .then(function(res) {
-   			return {
-				type: "GET_PERIODOS_TIPO_POSTGRADO_EXITOSO",
-				payload: {lista_periodos: res.body}
+	   		if(filtro === "activo"){
+	   			return {
+					type: "GET_PERIODO_ACTIVO_TIPO_POSTGRADO",
+					payload: {lista_periodo_activo: res.body}
+				}
+			}else{
+	   			return {
+					type: "GET_PERIODOS_TIPO_POSTGRADO_EXITOSO",
+					payload: {lista_periodos: res.body}
+				}
 			}
 	   })
 	   .catch(function(err) {

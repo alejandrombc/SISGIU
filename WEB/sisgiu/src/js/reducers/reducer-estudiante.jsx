@@ -8,6 +8,7 @@ const initialState = {
 	inscripcion_exitosa: false,
 	error_inscripcion: false,
 	estado_estudiante: '',
+	lista_periodo_activo: [],
 };
 
 export default function (state=initialState, action) {
@@ -31,6 +32,11 @@ export default function (state=initialState, action) {
 
 		case "GET_PERIODO_ESTUDIANTE":
 			nuevo_estado['lista_periodo_estudiante'] = action.payload['lista_periodo_estudiante'];
+			nuevo_estado['first_render'] = true;
+			return nuevo_estado;
+
+		case "GET_PERIODO_ACTIVO_TIPO_POSTGRADO":
+			nuevo_estado['lista_periodo_activo'] = action.payload['lista_periodo_activo'];
 			nuevo_estado['first_render'] = true;
 			return nuevo_estado;
 

@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 //Components
 import InicioEstudiante from './Estudiante/inicioEstudiante';
 import InicioAdministrador from './Administrador/inicioAdministrador';
+import InicioDocente from './Docente/inicioDocente';
 import PerfilUsuario from '../components/perfilUsuario';
 import ModuloUsuarioAdministrador from './Administrador/moduloUsuarioAdministrador';
 import ModuloAsignaturas from './Administrador/moduloAsignaturas';
@@ -31,7 +32,7 @@ class Content extends Component{
 		            	}
 
 		            	{this.props.pestana === "inicio" && modulo === "docentes" &&
-		                	<InicioEstudiante/>
+		                	<InicioDocente/>
 		            	}
 
 
@@ -44,22 +45,21 @@ class Content extends Component{
 		                	<InicioAdministrador/>
 		            	}
 
-		            	{this.props.pestana === "moduloUsuarioAdministrador" &&
+		            	{this.props.pestana === "moduloUsuarioAdministrador" && modulo === "administradores" &&
 		                	<ModuloUsuarioAdministrador/>
 		            	}
 
-		            	{this.props.pestana === "moduloAsignaturas" &&
+		            	{this.props.pestana === "moduloAsignaturas" && modulo === "administradores" &&
 		                	<ModuloAsignaturas/>
 		            	}
 
-		            	{this.props.pestana === "moduloPeriodos" &&
+		            	{this.props.pestana === "moduloPeriodos" && modulo === "administradores" &&
 		                	<ModuloPeriodos/>
 		            	} 
 
-		            	{this.props.pestana === "historial" &&
+		            	{this.props.pestana === "historial" && modulo === "estudiantes"&&
 		                	<HistorialAcademico/>
 		            	} 
-
 
 		              </div>
 		      </div>

@@ -9,9 +9,11 @@ class Inscripcion extends Component{
 
 	constructor(props) {
    		super(props);
-   		this.props.get_asignaturas_inscripcion(this.props.usuario_activo.user.usuario.cedula);
-
    		this.get_asignaturas = this.get_asignaturas.bind(this);
+    }
+
+    componentDidMount() {
+   		this.props.get_asignaturas_inscripcion(this.props.usuario_activo.user.usuario.cedula);
     }
 
     get_asignaturas() {

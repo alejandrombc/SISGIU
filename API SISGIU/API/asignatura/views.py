@@ -83,31 +83,57 @@ class AsignaturaListCreateAPIView(ListCreateAPIView):
     serializer_class = AsignaturaListSerializer
     permission_classes = [IsAuthenticatedOrReadOnly, IsListOrCreate]
 
+    def get_estudiantes_docente(request, codigo, tipo_postgrado):
+        if(request.method == "GET"):
+            member = EstudianteAsignatura.objects.filter(asignatura__codigo=codigo, periodo_estudiante__periodo__tipo_postgrado__tipo=tipo_postgrado, periodo_estudiante__periodo__estado_periodo__estado="activo").values()
+            lista_estudiante_asignatura = [entry for entry in member]  # converts ValuesQuerySet into Python list
+
+            lista_estudiantes = []
+
+            for estudiante_asignatura in lista_estudiante_asignatura:
+                periodo = PeriodoEstudiante.objects.filter(id=estudiante_asignatura['periodo_estudiante_id']).values()[0]
+
+                estudiante = Usuario.objects.filter(id=periodo['estudiante_id']).values()[0]               
+
+                estudiante_asignatura['first_name'] = estudiante['first_name']
+                estudiante_asignatura['last_name'] = estudiante['last_name']
+                estudiante_asignatura['cedula'] = estudiante['cedula'] 
+
+                lista_estudiantes.append(estudiante_asignatura);
+
+            return HttpResponse(json.dumps(lista_estudiantes), content_type="application/json")
+
+        response_data = {}
+        response_data['error'] = 'No tiene privilegios para realizar esta accion'      
+        return HttpResponse(json.dumps(response_data), content_type="application/json", status=401)
+
     def get_asignaturas_por_docente(request, cedula):
         if (request.user.is_anonymous != False):
             member = DocenteAsignatura.objects.filter(docente__usuario__cedula=cedula , periodo__estado_periodo__estado="activo")
             # member = DocenteAsignatura.objects.filter(docente__usuario__cedula=cedula)
 
+
+
             member = member.values()
+            print(member)
             lista_docente_asignatura = [entry for entry in member]  # converts ValuesQuerySet into Python list
-            
-        
-            # print(lista_docente_asignatura)
-            # print('\n')
             lista_asignaturas = []
 
             for docente_asignatura in lista_docente_asignatura:
-                asignatura = Asignatura.objects.filter(id=docente_asignatura['asignatura_id']).values()[0]
-                tipo_asignatura = TipoAsignatura.objects.filter(id=asignatura['tipo_asignatura_id']).values()[0]
-                asig_tipo = AsignaturaTipoPostgrado.objects.filter(asignatura_id=asignatura['id']).values()[0]
+                    asignatura = Asignatura.objects.filter(id=docente_asignatura['asignatura_id']).values()[0]               
+                    periodo = Periodo.objects.filter(id=docente_asignatura['periodo_id']).values()[0]
+                    tipo_postgrado = TipoPostgrado.objects.filter(id=periodo['tipo_postgrado_id']).values()[0]
 
+                    if not (any(item['codigo'] == asignatura['codigo'] for item in lista_asignaturas)) or not (any(item['tipo_postgrado'] == tipo_postgrado['tipo'] for item in lista_asignaturas)):
+                        tipo_asignatura = TipoAsignatura.objects.filter(id=asignatura['tipo_asignatura_id']).values()[0]
 
-                asignatura['tipo_asignatura'] = tipo_asignatura['nombre']
-                asignatura['horario_dia'] = docente_asignatura['horario_dia']
-                asignatura['horario_hora'] = docente_asignatura['horario_hora']
+                        asignatura['tipo_asignatura'] = tipo_asignatura['nombre']
+                        asignatura['tipo_postgrado'] = tipo_postgrado['tipo'];
+                        asignatura['horario_dia'] = docente_asignatura['horario_dia']
+                        asignatura['horario_hora'] = docente_asignatura['horario_hora']
 
-                del asignatura['tipo_asignatura_id']
-                lista_asignaturas.append(asignatura)
+                        del asignatura['tipo_asignatura_id']
+                        lista_asignaturas.append(asignatura)
 
             return HttpResponse(json.dumps(lista_asignaturas), content_type="application/json")
         response_data = {}
@@ -387,7 +413,7 @@ class PrelacionAsignaturaListCreateAPIView(ListCreateAPIView):
             print(periodo)
 
             asignaturas_id = DocenteAsignatura.objects.filter(periodo=periodo).values('asignatura')
-            print('##############################')
+            print('AAAAAAAAAA##############################')
             print(asignaturas_id)
 
             lista_codigos_en_periodo_a_inscribir = []

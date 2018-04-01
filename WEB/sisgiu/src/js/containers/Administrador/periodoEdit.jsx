@@ -37,9 +37,13 @@ class PeriodoEdit extends React.Component {
 
   guardarCambiosEdit() {
     this.props.cargando();
-    this.props.triggerVolverPrimerPaso();
-    this.props.triggetUpdateDocenteAsignatura();
-    this.props.guardar_docente_asignatura_periodo(this.state.docente_asignatura, this.props.periodo.id);
+    this.props.guardar_docente_asignatura_periodo(this.state.docente_asignatura, this.props.periodo.id)
+    .then( () => this.props.triggetUpdateDocenteAsignatura()
+      .then( () => this.props.triggerVolverPrimerPaso()
+    ));
+    
+    
+
   }
 
   get_listItemsFinales(days) {

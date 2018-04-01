@@ -1,5 +1,6 @@
 import {combineReducers} from 'redux';
 import ActiveUserReducer from './reducer-active-user';
+import DocenteReducer from './reducer-docente-user';
 import RecuperarContrasena from './reducer-olvido-contrasena';
 import EstudianteReducer from './reducer-estudiante';
 import EditUserReducer from './reducer-edit-user';
@@ -15,6 +16,7 @@ import PaginacionReducer from './reducer-paginacion';
 
 const allReducers = combineReducers({
 	activeUser: ActiveUserReducer,
+	docenteUser: DocenteReducer,
 	estudianteUser: EstudianteReducer,
 	recuperarContrasena : RecuperarContrasena,
 	editUser: EditUserReducer,

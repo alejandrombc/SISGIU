@@ -35,9 +35,10 @@ class InicioEstudiante extends Component{
     this.props.get_information(this.props.activeUser['user'])
     .then( ()=> this.props.get_periodos_tipo_postgrado("en inscripcion", this.props.activeUser['user'].id_tipo_postgrado)
       .then( () => this.props.get_periodo_estudiante(this.props.activeUser['user'].usuario.cedula, "en inscripcion")
-        .then( () => this.props.get_estado_estudiante(this.props.activeUser['user']['id_estado_estudiante'])
-          .then( () => this.props.cargado() )
-    )));
+        .then( () => this.props.get_periodos_tipo_postgrado("activo",this.props.activeUser['user'].id_tipo_postgrado)
+          .then( () => this.props.get_estado_estudiante(this.props.activeUser['user']['id_estado_estudiante'])
+           .then( () => this.props.cargado() )
+    ))));
     
     }
 
@@ -62,14 +63,14 @@ class InicioEstudiante extends Component{
         return (
           <ListGroupItem key={index}>
             <ListGroupItemHeading>({valor['codigo']}) {valor['nombre']}</ListGroupItemHeading>
-            <ListGroupItemText key={valor['codigo']}>
+            <ListGroupItemText>
                 {lista_docentes}
                 Prof: {valor['docente']['first_name']} {valor['docente']['last_name']}
             </ListGroupItemText>
             {!valor['retirado'] ?
             <ConfirmButton
                   disableAfterConfirmed
-                  onConfirm={() => this.retirar_asignaturas(valor['codigo'], this.props.activeUser.user, this.props.estudianteUser.lista_periodos[0].id) }
+                  onConfirm={() => this.retirar_asignaturas(valor['codigo'], this.props.activeUser.user, this.props.estudianteUser.lista_periodo_activo[0].id) }
                   text= "Retirar"
                   key={valor['codigo']}
                   className="btn btn-danger btn-sm float-right"
