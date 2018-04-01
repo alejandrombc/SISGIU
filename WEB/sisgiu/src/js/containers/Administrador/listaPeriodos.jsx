@@ -96,7 +96,7 @@ class ListaPeriodos extends Component{
 
   eliminar_periodo(periodo_id){
     this.props.cargando();
-    this.props.eliminar_periodo(periodo_id);
+    this.props.eliminar_periodo(periodo_id).then(()=>this.props.cargado());
   }
 
 
@@ -295,11 +295,6 @@ class ListaPeriodos extends Component{
         		<div>
                   <br />
 
-                  {/*SPINNER*/}
-                  {this.props.adminUser.cargando &&
-                    <center><PulseLoader color="#b3b1b0" size="16px" margin="4px"/></center>
-                  }
-
                   {/*ALERT DE EXITO*/}
                   {this.props.adminUser['edit'] && !this.props.adminUser.cargando &&
                     <Alert color="success" isOpen={this.state.visible} toggle={this.onDismiss}>
@@ -308,9 +303,9 @@ class ListaPeriodos extends Component{
                   }
                   {/*ALERT DE ERROR*/}
                   {this.props.adminUser['bad_input'] === true && !this.props.adminUser.cargando &&
-                      <Alert color="danger" isOpen={this.state.visible} toggle={this.onDismiss}>
-                          Ha ocurrido un error
-                      </Alert>
+                    <Alert color="danger" isOpen={this.state.visible} toggle={this.onDismiss}>
+                        Ha ocurrido un error
+                    </Alert>
                   }
 
                   <Row>

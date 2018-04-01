@@ -39,7 +39,7 @@ class InicioAdministrador extends Component{
 
   cambiarEstadoPeriodo(periodo) {
     this.props.cargando(); // Accion que cambia la variable 'cargando' en el store
-    this.props.cambiarEstadoPeriodo(periodo);
+    this.props.cambiarEstadoPeriodo(periodo).then( () => this.props.cargado() );
   }
 
 

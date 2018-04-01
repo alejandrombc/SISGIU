@@ -7,7 +7,7 @@ import { connect } from 'react-redux';
 
 // Components
 import { crear_periodo } from '../../actions/moduloPeriodos';
-import { cargando } from '../../actions/inicio';
+import { cargando, cargado } from '../../actions/inicio';
 
 class ModalPeriodoNew extends React.Component {
   constructor(props) {
@@ -50,7 +50,7 @@ class ModalPeriodoNew extends React.Component {
       }
     }
 
-    this.props.crear_periodo(this.state, id_estado_periodo);
+    this.props.crear_periodo(this.state, id_estado_periodo).then(()=> this.props.cargado());
     
     this.setState({
       descripcion: null,
@@ -137,7 +137,7 @@ const mapDispatchToProps = (dispatch) => {
   return bindActionCreators({
     crear_periodo: crear_periodo,
     cargando: cargando,
-
+    cargado: cargado,
     }, 
     dispatch 
   )
