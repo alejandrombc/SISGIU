@@ -11,6 +11,8 @@ import ModuloUsuarioAdministrador from './Administrador/moduloUsuarioAdministrad
 import ModuloAsignaturas from './Administrador/moduloAsignaturas';
 import ModuloPeriodos from './Administrador/moduloPeriodos';
 import HistorialAcademico from './Estudiante/historialAcademico';
+import CargarNotas from './Docente/cargarNotas';
+
 
 
 
@@ -59,6 +61,10 @@ class Content extends Component{
 
 		            	{this.props.pestana === "historial" && modulo === "estudiantes"&&
 		                	<HistorialAcademico/>
+		            	} 
+
+		            	{this.props.pestana === "cargarNotas" && modulo === "docentes"&&
+		                	<CargarNotas/>
 		            	} 
 
 		              </div>

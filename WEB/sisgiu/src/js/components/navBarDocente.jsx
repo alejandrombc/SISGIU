@@ -11,7 +11,7 @@ const NavBarDocente = () => (
     </NavItem>
 
     <NavItem>
-        <NavLink href="/#">Cargar Notas</NavLink>
+        <NavLink href="/cargarNotas">Cargar Notas</NavLink>
     </NavItem>
 
     <NavItem>

@@ -75,7 +75,6 @@ class ListaEstudiantes extends Component{
 
   handleSubmit(e){
     e.preventDefault();
-
     this.setState({loading: true});
     this.props.cargar_notas(this.state.usuarios, this.props.activeUser.user.usuario.cedula, this.props.asignatura, this.props.tipo_postgrado)
     .then(()=> this.setState({loading: false}) );
