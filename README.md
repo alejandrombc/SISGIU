@@ -56,7 +56,7 @@ Luego de configurarar la base de datos, corre las migraciones
 
 ```bash
 (env)$ py manage.py makemigrations
-(env)# py manage.py migrate
+(env)$ py manage.py migrate
 
 ```
 
