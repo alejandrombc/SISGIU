@@ -6,7 +6,7 @@ Sistema de Gestion Academica y Administrativa
 Crear un \[ambiente virtual\](https://virtualenv.pypa.io/en/latest/) con estos comandos
 
 ```bash
-$ cd /<tu_ruta>/wallet/API-Wallet/
+$ cd /<tu_ruta>/SISGIU/API SISGIU/
 $ virtualenv env
 $ env\Scripts\activate
 $ # Para Linux usar: source .env/bin/activate # Esto activa tu ambiente virtual
@@ -36,7 +36,7 @@ CREATE DATABASE sisgiu;
 
 ```
 
-Ir a /<tu_ruta>/wallet/API-Wallet/API/API/settings.py e incluye tu configuracion de la base de datos
+Ir a /<tu_ruta>/SISGIU/API SISGIU/API/API/settings.py e incluye tu configuracion de la base de datos
 
 ```
 DATABASES = {
