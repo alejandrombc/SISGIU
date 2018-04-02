@@ -37,7 +37,7 @@ class InicioDocente extends Component{
           <ListGroupItem key={index}>
             <ListGroupItemHeading>({valor['codigo']}) {valor['nombre']}</ListGroupItemHeading>
             <ListGroupItemText>
-                <Button color="secondary" size="sm">Descargar Planilla</Button>
+                <Button className="float-right" color="secondary" size="sm">Descargar Planilla</Button>
             </ListGroupItemText>
           </ListGroupItem>
         )

@@ -134,7 +134,7 @@ class ListaEstudiantes extends Component{
 
               <Col md={{ size: 'auto', offset: 3 }} className='botones'>
               {usuario['retirado'] ?
-               <Input bsSize="sm" type="text" max="20" min='0' name="nota_final" id="nota_final" onChange={this.handleChange} defaultValue="RET" readOnly disabled/>
+               <Input bsSize="sm" type="text" maxlength="3"  size="5" name="nota_final" id="nota_final" onChange={this.handleChange} defaultValue="RET" readOnly disabled/>
               :
                <Input bsSize="sm" type="number" max="20" min='0' name={usuario['cedula']} id="nota_final" onChange={this.handleChange} defaultValue={usuario['nota_definitiva']} required/>                      
               }
