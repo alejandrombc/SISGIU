@@ -15,6 +15,7 @@ from usuario.models import (
 
 from asignatura.models import (
     Asignatura,
+    TipoAsignatura,
     )
 
 from periodo.models import (
@@ -382,12 +383,66 @@ class EstudianteAsignaturaListCreateAPIView(ListCreateAPIView):
         response_data['error'] = 'No tiene privilegios para realizar esta acción'      
         return HttpResponse(json.dumps(response_data), content_type="application/json", status=401)
 
-
-
 class EstudianteAsignaturaDetailAPIView(RetrieveAPIView):
     queryset = EstudianteAsignatura.objects.all()
     serializer_class = EstudianteAsignaturaDetailSerializer
     lookup_field = 'estudiante__usuario__cedula'
+
+    def obtener_informacion_historial(request, cedula):
+        if(request.method == "GET"):
+            
+            print(cedula)
+
+            estudiante_asignatura = EstudianteAsignatura.objects.filter(periodo_estudiante__estudiante__usuario__cedula=cedula)
+            print(estudiante_asignatura)
+
+            lista_estudiante_asignatura = [entry for entry in estudiante_asignatura.values()]
+
+            print('\n\n')
+
+            print(lista_estudiante_asignatura)
+
+            periodos = []
+            subPeriodo = []
+
+            periodo_info = {}
+
+            periodo_info['periodos'] = []
+
+            for x in lista_estudiante_asignatura:
+                if subPeriodo == []:
+                    id_periodo_estudiante = x['periodo_estudiante_id']
+
+                if id_periodo_estudiante != x['periodo_estudiante_id']:
+                    periodos.append(subPeriodo)
+                    subPeriodo = []
+                    id_periodo_estudiante = x['periodo_estudiante_id']
+
+
+                periodo_estudiante = PeriodoEstudiante.objects.get(id=id_periodo_estudiante)
+                periodo = Periodo.objects.get(id=periodo_estudiante.periodo_id)
+                asignatura = Asignatura.objects.get(id=x['asignatura_id'])
+                tipo_asignatura = TipoAsignatura.objects.get(id=asignatura.tipo_asignatura_id)
+
+
+
+                subPeriodo.append(x)  
+
+                # print('\n', subPeriodo ,'\n')
+
+                # print(id_periodo_estudiante)
+
+            periodos.append(subPeriodo)
+            print('\n')
+            print(periodos)
+
+            
+
+            return HttpResponse(json.dumps(lista), content_type="application/json")
+
+        response_data = {}
+        response_data['error'] = 'No tiene privilegios para realizar esta acción.'      
+        return HttpResponse(json.dumps(response_data), content_type="application/json", status=401)
 
 class EstudianteAsignaturaUpdateAPIView(RetrieveUpdateAPIView):
     queryset = EstudianteAsignatura.objects.all()
@@ -415,8 +470,6 @@ class EstudianteAsignaturaUpdateAPIView(RetrieveUpdateAPIView):
         
         response_data['error'] = 'No tiene privilegios para realizar esta accion'      
         return HttpResponse(json.dumps(response_data), content_type="application/json", status=405)
-
-
 
 class EstudianteAsignaturaDeleteAPIView(DestroyAPIView):
     queryset = EstudianteAsignatura.objects.all()

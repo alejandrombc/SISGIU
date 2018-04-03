@@ -18,6 +18,7 @@ class Periodo(models.Model):
 	descripcion = models.CharField(max_length=50, default='')
 	class Meta:
 		db_table = 'periodo'
+		ordering = ['id']
 
 	def __str__(self):
 		return self.descripcion + ' ' + str(self.tipo_postgrado)

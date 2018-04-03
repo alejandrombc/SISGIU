@@ -53,6 +53,7 @@ class EstudianteAsignatura(models.Model):
 
 	class Meta:
 		db_table = 'estudiante_asignatura'
+		ordering = ['periodo_estudiante__periodo__id']
 
 	def __str__(self):
 		return str(self.periodo_estudiante) + ', ' + str(self.asignatura)

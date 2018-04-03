@@ -50,6 +50,7 @@ urlpatterns = format_suffix_patterns([
     url(r'^api/estudianteAsignatura/$', EstudianteAsignaturaListCreateAPIView.as_view(), name='EstudianteAsignatura-list-create'),
     url(r'^api/estudianteAsignatura/inscribir/(?P<cedula>[0-9]{6,8})/$', EstudianteAsignaturaListCreateAPIView.crear_estudiante_asignatura, name='EstudianteAsignatura-create'),
     url(r'^api/estudianteAsignatura/(?P<estudiante__usuario__cedula>\d+)/$', EstudianteAsignaturaDetailAPIView.as_view(), name='EstudianteAsignatura-detail'),
+    url(r'^api/estudianteAsignatura/(?P<cedula>[0-9]{6,8})/historial/$', EstudianteAsignaturaDetailAPIView.obtener_informacion_historial, name='historial-academico-info'),
     url(r'^api/estudianteAsignatura/(?P<pk>\d+)/edit/$', EstudianteAsignaturaUpdateAPIView.as_view(), name='EstudianteAsignatura-update'),
     url(r'^api/estudianteAsignatura/cargarNotas/$', EstudianteAsignaturaUpdateAPIView.cargar_notas, name='EstudianteAsignatura-cargar-notas'),
     url(r'^api/estudianteAsignatura/(?P<pk>\d+)/delete/$', EstudianteAsignaturaDeleteAPIView.as_view(), name='EstudianteAsignatura-delete'),
