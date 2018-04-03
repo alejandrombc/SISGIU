@@ -20,6 +20,7 @@ from asignatura.models import (
 
 from periodo.models import (
     Periodo,
+    EstadoPeriodo,
     )
 
 from relacion.models import (
@@ -390,24 +391,21 @@ class EstudianteAsignaturaDetailAPIView(RetrieveAPIView):
 
     def obtener_informacion_historial(request, cedula):
         if(request.method == "GET"):
-            
-            print(cedula)
 
             estudiante_asignatura = EstudianteAsignatura.objects.filter(periodo_estudiante__estudiante__usuario__cedula=cedula)
-            print(estudiante_asignatura)
 
             lista_estudiante_asignatura = [entry for entry in estudiante_asignatura.values()]
 
-            print('\n\n')
-
-            print(lista_estudiante_asignatura)
-
+            historial_estudiante =  {}
             periodos = []
             subPeriodo = []
-
             periodo_info = {}
-
-            periodo_info['periodos'] = []
+            promedio_general = 0
+            promedio_ponderado = 0
+            cantidad_materias = 0
+            cantidad_materias_ponderadas = 0
+            cantidad_materias_reprobadas = 0
+            eficiencia = 0
 
             for x in lista_estudiante_asignatura:
                 if subPeriodo == []:
@@ -421,24 +419,42 @@ class EstudianteAsignaturaDetailAPIView(RetrieveAPIView):
 
                 periodo_estudiante = PeriodoEstudiante.objects.get(id=id_periodo_estudiante)
                 periodo = Periodo.objects.get(id=periodo_estudiante.periodo_id)
+                estado_periodo = EstadoPeriodo.objects.get(id=periodo.estado_periodo_id)
                 asignatura = Asignatura.objects.get(id=x['asignatura_id'])
                 tipo_asignatura = TipoAsignatura.objects.get(id=asignatura.tipo_asignatura_id)
 
+                periodo_info['periodo'] = periodo.descripcion
+                periodo_info['asignatura_nombre'] = asignatura.nombre
+                periodo_info['asignatura_codigo'] = asignatura.codigo
+                periodo_info['unidad_credito'] = asignatura.unidad_credito
+                periodo_info['nota_definitiva'] = x['nota_definitiva']
+                if(x['retirado']):
+                    periodo_info['nota_definitiva'] = "RET"
+
+                periodo_info['tipo_asignatura'] = tipo_asignatura.nombre
+
+                if(estado_periodo.estado == "finalizado"):
+                    if(not x['retirado']):
+                        promedio_general += periodo_info['nota_definitiva']
+                        promedio_ponderado += periodo_info['nota_definitiva'] * periodo_info['unidad_credito']
+                        cantidad_materias_ponderadas+=periodo_info['unidad_credito']
+                        cantidad_materias+=1
+                        if(periodo_info['nota_definitiva'] < 10):
+                            cantidad_materias_reprobadas+=1
+
+                subPeriodo.append(periodo_info)  
+                periodo_info = {}
 
 
-                subPeriodo.append(x)  
-
-                # print('\n', subPeriodo ,'\n')
-
-                # print(id_periodo_estudiante)
+            eficiencia = (cantidad_materias-cantidad_materias_reprobadas)/cantidad_materias
 
             periodos.append(subPeriodo)
-            print('\n')
-            print(periodos)
 
-            
-
-            return HttpResponse(json.dumps(lista), content_type="application/json")
+            historial_estudiante['periodos'] = periodos
+            historial_estudiante['eficiencia'] = '{0:.2f}'.format(eficiencia)
+            historial_estudiante['promedio_general'] = '{0:.2f}'.format(promedio_general/cantidad_materias)
+            historial_estudiante['promedio_ponderado'] = '{0:.2f}'.format(promedio_ponderado/cantidad_materias_ponderadas)
+            return HttpResponse(json.dumps(historial_estudiante), content_type="application/json")
 
         response_data = {}
         response_data['error'] = 'No tiene privilegios para realizar esta acción.'      

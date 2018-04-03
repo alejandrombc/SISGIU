@@ -372,7 +372,7 @@ class PrelacionAsignaturaListCreateAPIView(ListCreateAPIView):
             # Lista de todos los codigos de las asignaturas que ya se cursaron
             lista_asignaturas_cursadas = []
             for x in periodo_estudiante:
-                estudiante_asignatura = EstudianteAsignatura.objects.filter(periodo_estudiante=x)
+                estudiante_asignatura = EstudianteAsignatura.objects.filter(periodo_estudiante=x, nota_definitiva__gte=10, retirado=False)
                 for y in estudiante_asignatura:
                     lista_asignaturas_cursadas.append(y.asignatura.codigo)
 
@@ -410,11 +410,8 @@ class PrelacionAsignaturaListCreateAPIView(ListCreateAPIView):
 
 
             periodo = Periodo.objects.get(estado_periodo_id__estado='en inscripcion', tipo_postgrado_id__tipo=estudiante.id_tipo_postgrado)
-            print(periodo)
 
             asignaturas_id = DocenteAsignatura.objects.filter(periodo=periodo).values('asignatura')
-            print('AAAAAAAAAA##############################')
-            print(asignaturas_id)
 
             lista_codigos_en_periodo_a_inscribir = []
 
