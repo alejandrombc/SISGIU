@@ -405,6 +405,7 @@ class EstudianteAsignaturaDetailAPIView(RetrieveAPIView):
             cantidad_materias = 0
             cantidad_materias_ponderadas = 0
             cantidad_materias_reprobadas = 0
+            cantidad_materias_retiradas = 0
             eficiencia = 0
 
             for x in lista_estudiante_asignatura:
@@ -430,6 +431,7 @@ class EstudianteAsignaturaDetailAPIView(RetrieveAPIView):
                 periodo_info['nota_definitiva'] = x['nota_definitiva']
                 if(x['retirado']):
                     periodo_info['nota_definitiva'] = "RET"
+                    cantidad_materias_retiradas+=1
 
                 periodo_info['tipo_asignatura'] = tipo_asignatura.nombre
 
@@ -451,7 +453,10 @@ class EstudianteAsignaturaDetailAPIView(RetrieveAPIView):
             periodos.append(subPeriodo)
 
             historial_estudiante['periodos'] = periodos
-            historial_estudiante['eficiencia'] = '{0:.2f}'.format(eficiencia)
+            historial_estudiante['total_asignaturas'] = cantidad_materias+cantidad_materias_retiradas
+            historial_estudiante['asignaturas_reprobadas'] = cantidad_materias_reprobadas
+            historial_estudiante['asignaturas_retiradas'] = cantidad_materias_retiradas
+            historial_estudiante['asignaturas_aprobadas'] = cantidad_materias-cantidad_materias_reprobadas
             historial_estudiante['promedio_general'] = '{0:.2f}'.format(promedio_general/cantidad_materias)
             historial_estudiante['promedio_ponderado'] = '{0:.2f}'.format(promedio_ponderado/cantidad_materias_ponderadas)
             return HttpResponse(json.dumps(historial_estudiante), content_type="application/json")

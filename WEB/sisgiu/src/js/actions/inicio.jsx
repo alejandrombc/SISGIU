@@ -74,6 +74,29 @@ export const get_information = (user) => {
 	   });
 }
 
+export const get_historial = () =>{
+	let token = localStorage.getItem('user_token');
+	var decoded = jwt_decode(token);
+
+	return request
+	   .get(host+'api/estudianteAsignatura/'+decoded['username']+'/historial/')
+	   .set('Authorization', 'JWT '+token)
+	   .then(function(res) {
+	      	return {
+				type: "GET_HISTORIAL_EXITOSO",
+				payload: {historial_academico: res.body}
+			}
+
+	   })
+	   .catch(function(err) {
+	      	return {
+				type: "ERROR"
+			}
+	   });
+
+}
+
+
 export const retirar_estudiante = (codigo,user,periodo) => {
 	let token = localStorage.getItem('user_token');
 	return request

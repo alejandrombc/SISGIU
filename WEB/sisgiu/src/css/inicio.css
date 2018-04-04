@@ -6,3 +6,19 @@
 .foto_estudiante {
 	margin-left: 30px;
 }
+
+.asignatura_td {
+	width: 75%;
+}
+
+.tipo_asignatura_td {
+	width: 15%;
+}
+
+.unidad_credito_td {
+	width: 5%;
+}
+
+.nota_definitiva_td {
+	width: 5%;
+}

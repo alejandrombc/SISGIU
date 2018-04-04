@@ -1,7 +1,6 @@
 import request from 'superagent';
 import {host} from '../components/globalVariables';
 
-
 export const get_asignaturas_docente = (user) => {
 	let token = localStorage.getItem('user_token');
 	return request
