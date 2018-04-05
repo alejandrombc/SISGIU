@@ -33,7 +33,7 @@ export function get_usuarios (tipo_usuario, edit) {
 	   		localStorage.removeItem('user_token');
 	   		localStorage.removeItem('modulo');
 	      	return {
-				type: "ERROR"
+				type: "ERROR_naednkAJND;kna"
 			}
 	   });
 

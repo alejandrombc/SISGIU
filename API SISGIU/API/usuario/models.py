@@ -42,7 +42,6 @@ class Estudiante(models.Model):
 		'TipoPostgrado',
 		on_delete=models.SET_NULL,
 		null=True,
-		
 	)
 
 	id_estado_estudiante = models.ForeignKey(
@@ -61,18 +60,19 @@ class Estudiante(models.Model):
 		return str(self.usuario)
 
 
-
 class TipoPostgrado(models.Model):
 	tipo = models.CharField(max_length=20)
 
 	def __str__(self):
 		return self.tipo
+
 	class Meta:
 		db_table = 'tipo_postgrado'
 
 
 class EstadoEstudiante(models.Model):
 	estado = models.CharField(max_length=20)
+
 	class Meta:
 		db_table = 'estado_estudiante'
 
@@ -104,7 +104,7 @@ class PersonalAdministrativo(models.Model):
 			Usuario,
 			on_delete=models.CASCADE,
 			primary_key=True)
+
 	class Meta:
 		ordering = ['usuario__last_name', 'usuario__segundo_apellido']
 		db_table = 'personal_administrativo'
-

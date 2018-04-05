@@ -24,42 +24,39 @@ from periodo.models import (
     )
 
 from relacion.models import (
-	PeriodoEstudiante,
-	DocenteAsignatura,
-	EstudianteAsignatura,
-	EstudianteTramite,
-	AsignaturaTipoPostgrado,
-	)
+    PeriodoEstudiante,
+    DocenteAsignatura,
+    EstudianteAsignatura,
+    EstudianteTramite,
+    AsignaturaTipoPostgrado,
+    )
 
 from relacion.serializers import (
-	PeriodoEstudianteListSerializer,
-	PeriodoEstudianteDetailSerializer,
-	DocenteAsignaturaListSerializer,
-	DocenteAsignaturaDetailSerializer,
-	EstudianteAsignaturaListSerializer,
-	EstudianteAsignaturaDetailSerializer,
-	EstudianteTramiteListSerializer,
-	EstudianteTramiteDetailSerializer,
-	AsignaturaTipoPostgradoListSerializer,
-	AsignaturaTipoPostgradoDetailSerializer,
+    PeriodoEstudianteListSerializer,
+    PeriodoEstudianteDetailSerializer,
+    DocenteAsignaturaListSerializer,
+    DocenteAsignaturaDetailSerializer,
+    EstudianteAsignaturaListSerializer,
+    EstudianteAsignaturaDetailSerializer,
+    EstudianteTramiteListSerializer,
+    EstudianteTramiteDetailSerializer,
+    AsignaturaTipoPostgradoListSerializer,
+    AsignaturaTipoPostgradoDetailSerializer,
 
-	)
+    )
 from rest_framework.generics import (
-	ListCreateAPIView,
-	RetrieveAPIView,
+    ListCreateAPIView,
+    RetrieveAPIView,
     RetrieveUpdateAPIView,
     DestroyAPIView,
-	)
+    )
 
 from rest_framework.permissions import (
-    AllowAny,
     IsAdminUser,
     IsAuthenticated,
-    IsAuthenticatedOrReadOnly,
     )
 
 from .permissions import (
-    isOwnerOrReadOnly, 
     IsListOrCreate,
     EsEstudianteOAdministrador,
     EsDocenteOAdministrador,
@@ -70,8 +67,10 @@ from django.views.decorators.csrf import csrf_exempt
 
 """
 PeriodoEstudiante
-				Esto solo debe ser tratado por el administrador
+Esto solo debe ser tratado por el administrador
 """
+
+
 class PeriodoEstudianteListCreateAPIView(ListCreateAPIView):
     queryset = PeriodoEstudiante.objects.all()
     serializer_class = PeriodoEstudianteListSerializer
@@ -82,7 +81,7 @@ class PeriodoEstudianteListCreateAPIView(ListCreateAPIView):
             member = PeriodoEstudiante.objects.filter(periodo__estado_periodo__estado="activo")
             list_result = [entry for entry in member.values()]
 
-            lista_estudiantes = [] 
+            lista_estudiantes = []
 
             for estudiante_periodo in list_result:
                 estudiante = Usuario.objects.filter(id=estudiante_periodo['estudiante_id']).values()[0]
@@ -102,19 +101,19 @@ class PeriodoEstudianteListCreateAPIView(ListCreateAPIView):
 
             return HttpResponse(json.dumps(lista_estudiantes), content_type="application/json")
         response_data = {}
-        response_data['error'] = 'No tiene privilegios para realizar esta accion'      
+        response_data['error'] = 'No tiene privilegios para realizar esta accion'
         return HttpResponse(json.dumps(response_data), content_type="application/json")
-
 
 
 class PeriodoEstudianteDetailAPIView():
     def get_periodo(request, cedula, periodo):
         if(request.method == "GET"):
-            periodo = periodo.replace("%20"," ")
-            member = PeriodoEstudiante.objects.filter(estudiante__usuario__cedula=cedula , periodo__estado_periodo__estado=periodo)
+            periodo = periodo.replace("%20", " ")
+            member = PeriodoEstudiante.objects.filter(estudiante__usuario__cedula=cedula,
+                                                      periodo__estado_periodo__estado=periodo)
             list_result = [entry for entry in member.values()]
 
-            lista_estudiantes = [] 
+            lista_estudiantes = []
 
             for estudiante_periodo in list_result:
                 estudiante = Usuario.objects.filter(id=estudiante_periodo['estudiante_id']).values()[0]
@@ -134,13 +133,15 @@ class PeriodoEstudianteDetailAPIView():
 
             return HttpResponse(json.dumps(lista_estudiantes), content_type="application/json")
         response_data = {}
-        response_data['error'] = 'No tiene privilegios para realizar esta accion'      
+        response_data['error'] = 'No tiene privilegios para realizar esta accion'
         return HttpResponse(json.dumps(response_data), content_type="application/json")
+
 
 class PeriodoEstudianteUpdateAPIView(RetrieveUpdateAPIView):
     queryset = PeriodoEstudiante.objects.all()
     serializer_class = PeriodoEstudianteDetailSerializer
     permission_classes = [EsAdministrativoOAdministrador]
+
 
 class PeriodoEstudianteDeleteAPIView(DestroyAPIView):
     queryset = PeriodoEstudiante.objects.all()
@@ -150,26 +151,32 @@ class PeriodoEstudianteDeleteAPIView(DestroyAPIView):
 
 """
 DocenteAsignatura
-				Esto solo debe ser tratado por el administrador
+Esto solo debe ser tratado por el administrador
 """
+
+
 class DocenteAsignaturaListCreateAPIView(ListCreateAPIView):
     queryset = DocenteAsignatura.objects.all()
     serializer_class = DocenteAsignaturaListSerializer
     permission_classes = [EsAdministrativoOAdministrador]
 
+
 class DocenteAsignaturaDetailAPIView():
     def get_periodo(request, cedula, periodo):
         if(request.method == "GET"):
-            member = DocenteAsignatura.objects.filter(docente__usuario__cedula=cedula , periodo__estado_periodo__estado=periodo)
+            member = DocenteAsignatura.objects.filter(docente__usuario__cedula=cedula,
+                                                      periodo__estado_periodo__estado=periodo)
             list_result = [entry for entry in member.values()]
 
-            lista_docentes = [] 
+            lista_docentes = []
 
             for docente_periodo in list_result:
                 docente = Usuario.objects.filter(id=docente_periodo['docente_id']).values()[0]
                 asignatura = Asignatura.objects.filter(id=docente_periodo['asignatura_id']).values()[0]
                 periodo = Periodo.objects.filter(id=docente_periodo['periodo_id']).values()[0]
                 tipo_postgrado = TipoPostgrado.objects.filter(id=periodo['tipo_postgrado_id']).values()[0]
+                tipo_asignatura = TipoAsignatura.objects.filter(
+                    id=asignatura["tipo_asignatura_id"]).values()[0]
 
                 docente_periodo['usuario'] = {}
                 docente_periodo['asignatura'] = {}
@@ -182,7 +189,6 @@ class DocenteAsignaturaDetailAPIView():
                 docente_periodo['asignatura']['unidad_credito'] = asignatura['unidad_credito']
                 docente_periodo['asignatura']['tipo_asignatura'] = tipo_asignatura['nombre']
 
-
                 del docente_periodo['docente_id']
                 del docente_periodo['periodo_id']
                 del docente_periodo['asignatura_id']
@@ -191,7 +197,7 @@ class DocenteAsignaturaDetailAPIView():
 
             return HttpResponse(json.dumps(lista_docentes), content_type="application/json")
         response_data = {}
-        response_data['error'] = 'No tiene privilegios para realizar esta accion'      
+        response_data['error'] = 'No tiene privilegios para realizar esta accion'
         return HttpResponse(json.dumps(response_data), content_type="application/json", status=401)
 
     def get_docente(request, asignatura, periodo):

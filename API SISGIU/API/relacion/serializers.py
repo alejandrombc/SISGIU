@@ -1,16 +1,20 @@
 from rest_framework import serializers
 from relacion.models import (
-	PeriodoEstudiante,
-	DocenteAsignatura,
-	EstudianteAsignatura,
-	EstudianteTramite,
-	AsignaturaTipoPostgrado,
-	)
+    PeriodoEstudiante,
+    DocenteAsignatura,
+    EstudianteAsignatura,
+    EstudianteTramite,
+    AsignaturaTipoPostgrado,
+    )
+
 
 """
 Serializer de Periodo Estudiante
 """
+
+
 class PeriodoEstudianteListSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = PeriodoEstudiante
         fields = ('__all__')
@@ -21,15 +25,11 @@ class PeriodoEstudianteDetailSerializer(serializers.ModelSerializer):
         model = PeriodoEstudiante
         fields = ('__all__')
 
-    def get_object(self):
-        queryset = self.get_queryset()             # Get the base queryset
-        print("##################")
-        print(queryset)
-
 
 """
 Serializer de Docente Asignatura
 """
+
 
 class DocenteAsignaturaListSerializer(serializers.ModelSerializer):
     class Meta:
@@ -42,11 +42,10 @@ class DocenteAsignaturaDetailSerializer(serializers.ModelSerializer):
         model = DocenteAsignatura
         fields = ('__all__')
 
-
-
 """
 Serializer de Estudiante Asignatura
 """
+
 
 class EstudianteAsignaturaListSerializer(serializers.ModelSerializer):
     class Meta:
@@ -59,11 +58,10 @@ class EstudianteAsignaturaDetailSerializer(serializers.ModelSerializer):
         model = EstudianteAsignatura
         fields = ('__all__')
 
-
-
 """
 Serializer de Estudiante Tramite
 """
+
 
 class EstudianteTramiteListSerializer(serializers.ModelSerializer):
     class Meta:
@@ -76,11 +74,10 @@ class EstudianteTramiteDetailSerializer(serializers.ModelSerializer):
         model = EstudianteTramite
         fields = ('__all__')
 
-
-
 """
 Serializer de Asignatura TipoPostgrado
 """
+
 
 class AsignaturaTipoPostgradoListSerializer(serializers.ModelSerializer):
     class Meta:

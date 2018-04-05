@@ -7,22 +7,25 @@ from usuario.models import (
     PersonalDocente,
     PersonalAdministrativo,
     )
-    
-from django.forms.fields import ImageField, FileField
+
+# from django.forms.fields import ImageField
 
 
 """
 Serializer de Usuario/Administrador
 """
+
+
 class AdministradorListSerializer(serializers.ModelSerializer):
     foto = serializers.ImageField(required=False, max_length=None, allow_empty_file=True, use_url=True)
+
     class Meta:
         model = Usuario
-        fields = ('id','is_superuser', 'cedula', 'first_name', 'segundo_nombre', 
-            'last_name', 'segundo_apellido', 'last_name', 'email', 
-            'correo_alternativo', 'celular', 'telefono_casa', 'telefono_trabajo', 
-            'fecha_nacimiento', 'sexo', 'nacionalidad', 'estado_civil', 'foto', 'username', 'password')
-        
+        fields = ('id', 'is_superuser', 'cedula', 'first_name', 'segundo_nombre',
+                  'last_name', 'segundo_apellido', 'last_name', 'email',
+                  'correo_alternativo', 'celular', 'telefono_casa', 'telefono_trabajo',
+                  'fecha_nacimiento', 'sexo', 'nacionalidad', 'estado_civil', 'foto', 'username', 'password')
+
     def create(self, validated_data):
         password = validated_data.pop('password', None)
         instance = self.Meta.model(**validated_data)
@@ -35,12 +38,13 @@ class AdministradorListSerializer(serializers.ModelSerializer):
 # Todo menos el username (no se debe "re-poner")
 class AdministradorDetailSerializer(serializers.ModelSerializer):
     foto = serializers.ImageField(required=False, max_length=None, allow_empty_file=True, use_url=True)
+
     class Meta:
         model = Usuario
-        fields = ('cedula', 'is_superuser', 'first_name', 'segundo_nombre', 
-            'last_name', 'segundo_apellido', 'last_name', 'email', 
-            'correo_alternativo', 'celular', 'telefono_casa', 'telefono_trabajo', 
-            'fecha_nacimiento', 'sexo', 'nacionalidad', 'estado_civil', 'foto', 'username', 'password')
+        fields = ('cedula', 'is_superuser', 'first_name', 'segundo_nombre',
+                  'last_name', 'segundo_apellido', 'last_name', 'email',
+                  'correo_alternativo', 'celular', 'telefono_casa', 'telefono_trabajo',
+                  'fecha_nacimiento', 'sexo', 'nacionalidad', 'estado_civil', 'foto', 'username', 'password')
 
     def update(self, instance, validated_data):
         for attr, value in validated_data.items():
@@ -51,20 +55,21 @@ class AdministradorDetailSerializer(serializers.ModelSerializer):
         instance.save()
         return instance
 
-
-
 """
 Serializer de Usuario Generico
 """
+
+
 class UsuarioListSerializer(serializers.ModelSerializer):
     foto = serializers.ImageField(required=False, max_length=None, allow_empty_file=True, use_url=True)
+
     class Meta:
         model = Usuario
-        fields = ('id', 'cedula', 'first_name', 'segundo_nombre', 
-            'last_name', 'segundo_apellido', 'last_name', 'email', 
-            'correo_alternativo', 'celular', 'telefono_casa', 'telefono_trabajo', 
-            'fecha_nacimiento', 'sexo', 'nacionalidad', 'estado_civil', 'foto', 'username', 'password')
-    
+        fields = ('id', 'cedula', 'first_name', 'segundo_nombre',
+                  'last_name', 'segundo_apellido', 'last_name', 'email',
+                  'correo_alternativo', 'celular', 'telefono_casa', 'telefono_trabajo',
+                  'fecha_nacimiento', 'sexo', 'nacionalidad', 'estado_civil', 'foto', 'username', 'password')
+
     def create(self, validated_data):
         password = validated_data.pop('password', None)
         instance = self.Meta.model(**validated_data)
@@ -73,19 +78,22 @@ class UsuarioListSerializer(serializers.ModelSerializer):
         instance.save()
         return instance
 
-# Todo menos el username (no se debe "re-poner")
+
 class UsuarioDetailSerializer(serializers.ModelSerializer):
     foto = serializers.ImageField(required=False, max_length=None, allow_empty_file=True, use_url=True)
+
     class Meta:
         model = Usuario
-        fields = ('cedula', 'first_name', 'segundo_nombre', 
-            'last_name', 'segundo_apellido', 'last_name', 'email', 
-            'correo_alternativo', 'celular', 'telefono_casa', 'telefono_trabajo', 
-            'fecha_nacimiento', 'sexo', 'nacionalidad', 'estado_civil', 'foto', 'password')
+        fields = ('cedula', 'first_name', 'segundo_nombre',
+                  'last_name', 'segundo_apellido', 'last_name', 'email',
+                  'correo_alternativo', 'celular', 'telefono_casa', 'telefono_trabajo',
+                  'fecha_nacimiento', 'sexo', 'nacionalidad', 'estado_civil', 'foto', 'password')
 
 """
 Serializer de TipoPostgrado
 """
+
+
 class TipoPostgradoSerializer(serializers.ModelSerializer):
     class Meta:
         model = TipoPostgrado
@@ -94,6 +102,8 @@ class TipoPostgradoSerializer(serializers.ModelSerializer):
 """
 Serializer de EstadoEstudiante
 """
+
+
 class EstadoEstudianteSerializer(serializers.ModelSerializer):
     class Meta:
         model = EstadoEstudiante
@@ -102,8 +112,11 @@ class EstadoEstudianteSerializer(serializers.ModelSerializer):
 """
 Serializer de Estudiante
 """
+
+
 class EstudianteSerializer(serializers.ModelSerializer):
     usuario = UsuarioListSerializer()
+
     class Meta:
         model = Estudiante
         fields = ('usuario',  'id_tipo_postgrado', 'id_estado_estudiante', 'direccion',)
@@ -115,25 +128,26 @@ class EstudianteSerializer(serializers.ModelSerializer):
             return estudiante
         except:
             user = UsuarioListSerializer.create(UsuarioListSerializer(), validated_data=user_data)
-            estudiante, created = Estudiante.objects.update_or_create(usuario=user,
-                                id_tipo_postgrado=validated_data.pop('id_tipo_postgrado'),id_estado_estudiante=validated_data.pop('id_estado_estudiante'),
-                                direccion=validated_data.pop('direccion') )
+            estudiante, created = Estudiante.objects.update_or_create(
+                                usuario=user,
+                                id_tipo_postgrado=validated_data.pop('id_tipo_postgrado'),
+                                id_estado_estudiante=validated_data.pop('id_estado_estudiante'),
+                                direccion=validated_data.pop('direccion')
+                                )
             return estudiante
-            
-
-    
 
 
 class EstudianteDetailSerializer(serializers.ModelSerializer):
     usuario = UsuarioDetailSerializer()
-    class Meta:
 
+    class Meta:
         model = Estudiante
         fields = ('usuario',  'id_tipo_postgrado', 'id_estado_estudiante', 'direccion',)
 
     def update(self, instance, validated_data):
         instance.id_tipo_postgrado = validated_data.get('id_tipo_postgrado', instance.id_tipo_postgrado)
-        instance.id_estado_estudiante = validated_data.get('id_estado_estudiante', instance.id_estado_estudiante)
+        instance.id_estado_estudiante = validated_data.get('id_estado_estudiante',
+                                                           instance.id_estado_estudiante)
         instance.direccion = validated_data.get('direccion', instance.direccion)
         instance.save()
 
@@ -165,15 +179,18 @@ class EstudianteDetailSerializer(serializers.ModelSerializer):
 """
 Serializer de Docente
 """
+
+
 class DocenteSerializer(serializers.ModelSerializer):
     usuario = UsuarioListSerializer()
     curriculum = serializers.FileField(required=False, max_length=None, allow_empty_file=True, use_url=True)
     rif = serializers.FileField(required=False, max_length=None, allow_empty_file=True, use_url=True)
-    permiso_ingresos = serializers.FileField(required=False, max_length=None, allow_empty_file=True, use_url=True)
+    permiso_ingresos = serializers.FileField(required=False, max_length=None, allow_empty_file=True,
+                                             use_url=True)
 
     class Meta:
         model = PersonalDocente
-        fields = ('usuario',  'curriculum', 'rif', 'direccion', 'permiso_ingresos','coordinador')
+        fields = ('usuario',  'curriculum', 'rif', 'direccion', 'permiso_ingresos', 'coordinador')
 
     def create(self, validated_data):
         user_data = validated_data.pop('usuario')
@@ -182,38 +199,39 @@ class DocenteSerializer(serializers.ModelSerializer):
             return docente
         except:
             user = UsuarioListSerializer.create(UsuarioListSerializer(), validated_data=user_data)
-        
-            docente, created = PersonalDocente.objects.update_or_create(usuario=user,
-                                curriculum=validated_data.get('curriculum'),rif=validated_data.get('rif'),
-                                direccion=validated_data.pop('direccion'), permiso_ingresos=validated_data.get('permiso_ingresos'),
-                                coordinador=validated_data.pop('coordinador') )
-            return docente
 
-    
+            docente, created = PersonalDocente.objects.update_or_create(
+                                usuario=user,
+                                curriculum=validated_data.get('curriculum'), rif=validated_data.get('rif'),
+                                direccion=validated_data.pop('direccion'),
+                                permiso_ingresos=validated_data.get('permiso_ingresos'),
+                                coordinador=validated_data.pop('coordinador'))
+            return docente
 
 
 class DocenteDetailSerializer(serializers.ModelSerializer):
     usuario = UsuarioDetailSerializer()
     curriculum = serializers.FileField(required=False, max_length=None, allow_empty_file=True, use_url=True)
     rif = serializers.FileField(required=False, max_length=None, allow_empty_file=True, use_url=True)
-    permiso_ingresos = serializers.FileField(required=False, max_length=None, allow_empty_file=True, use_url=True)
+    permiso_ingresos = serializers.FileField(required=False, max_length=None, allow_empty_file=True,
+                                             use_url=True)
 
     class Meta:
 
         model = PersonalDocente
-        fields = ('usuario',  'curriculum', 'rif', 'direccion', 'permiso_ingresos','coordinador')
+        fields = ('usuario',  'curriculum', 'rif', 'direccion', 'permiso_ingresos', 'coordinador')
 
     def update(self, instance, validated_data):
 
-        if(instance.curriculum != None):
+        if(instance.curriculum is not None):
             instance.curriculum = validated_data.get('curriculum', instance.curriculum)
-        
-        if(instance.rif != None):
+
+        if(instance.rif is not None):
             instance.rif = validated_data.get('rif', instance.rif)
-       
-        if(instance.permiso_ingresos != None): 
+
+        if(instance.permiso_ingresos is not None):
             instance.permiso_ingresos = validated_data.get('permiso_ingresos', instance.permiso_ingresos)
-        
+
         instance.coordinador = validated_data.get('coordinador', instance.coordinador)
         instance.direccion = validated_data.get('direccion', instance.direccion)
         instance.save()
@@ -247,8 +265,11 @@ class DocenteDetailSerializer(serializers.ModelSerializer):
 """
 Serializer de PersonalAdministrativo
 """
+
+
 class AdministrativoSerializer(serializers.ModelSerializer):
     usuario = UsuarioListSerializer()
+
     class Meta:
         model = PersonalAdministrativo
         fields = ('__all__')
@@ -263,21 +284,18 @@ class AdministrativoSerializer(serializers.ModelSerializer):
             personal_admin, created = PersonalAdministrativo.objects.update_or_create(usuario=user)
             return personal_admin
 
-    
-
 
 class AdministrativoDetailSerializer(serializers.ModelSerializer):
     usuario = UsuarioDetailSerializer()
-    class Meta:
 
+    class Meta:
         model = PersonalAdministrativo
         fields = ('__all__')
 
     def update(self, instance, validated_data):
         usuario = validated_data.get('usuario')
-
         administrativo_usuario = Usuario.objects.get(cedula=usuario['cedula'])
-        
+
         if(administrativo_usuario.password != usuario['password']):
             administrativo_usuario.set_password(usuario['password'])
         administrativo_usuario.first_name = usuario['first_name']
@@ -298,7 +316,6 @@ class AdministrativoDetailSerializer(serializers.ModelSerializer):
 
         administrativo_usuario.save()
 
-        personal_admin, created = PersonalAdministrativo.objects.update_or_create(usuario=administrativo_usuario)
+        personal_admin, created = PersonalAdministrativo.objects.update_or_create(
+                                usuario=administrativo_usuario)
         return personal_admin
-
-
