@@ -108,7 +108,7 @@ urlpatterns = format_suffix_patterns([
 
     # Constancias
     url(r'^api/reporte/(?P<cedula>[0-9]{6,8})/$',
-        Reportes.report_test, name='reportes'),
+        Reportes.constancia_estudio, name='reportes'),
 
 
     # Lista de estudiantes que cursan una asignatura

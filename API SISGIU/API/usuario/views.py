@@ -518,15 +518,13 @@ class AdministrativoDeleteAPIView(DestroyAPIView):
 
 
 class Reportes():
-    def report_test(request, cedula):
-        if not request.user.is_anonymous:
-            member = Usuario.objects.get(username=request.user)
-            if(member.is_superuser or cedula == str(request.user.cedula)):
-                content = 'attachment; filename="constancia_'+str(cedula)+'.pdf"'
-                member = Usuario.objects.get(cedula=cedula)
-                pdf = render_to_pdf('constancia.html', member.__dict__)
-                pdf['Content-Disposition'] = content
-                return HttpResponse(pdf, content_type='application/pdf')
+    def constancia_estudio(request, cedula):
+        if (request.method == "GET"):
+            member = Usuario.objects.get(cedula=cedula)
+            content = 'attachment; filename="constancia_'+str(cedula)+'.pdf"'
+            pdf = render_to_pdf('constancia.html', member.__dict__)
+            pdf['Content-Disposition'] = content
+            return HttpResponse(pdf, content_type='application/pdf')
 
         response_data = {}
         response_data['error'] = 'No tiene privilegios para realizar esta accion'
