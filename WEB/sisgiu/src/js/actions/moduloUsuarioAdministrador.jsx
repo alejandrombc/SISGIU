@@ -106,6 +106,7 @@ export const crearUsuario = (user, tipo_usuario) => {
 		user = user['usuario'];
 		user['is_superuser'] = true;
 	}
+	console.log(user);
 	return request
 	   .post(host+'api/'+modulo+'/')
 	   .set('Authorization', 'JWT '+token)
