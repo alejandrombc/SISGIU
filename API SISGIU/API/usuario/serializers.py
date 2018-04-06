@@ -127,14 +127,24 @@ class EstudianteSerializer(serializers.ModelSerializer):
             estudiante = Estudiante.objects.get(usuario__cedula=user_data['cedula'])
             return estudiante
         except:
-            user = UsuarioListSerializer.create(UsuarioListSerializer(), validated_data=user_data)
-            estudiante, created = Estudiante.objects.update_or_create(
-                                usuario=user,
-                                id_tipo_postgrado=validated_data.pop('id_tipo_postgrado'),
-                                id_estado_estudiante=validated_data.pop('id_estado_estudiante'),
-                                direccion=validated_data.pop('direccion')
-                                )
-            return estudiante
+            try:
+                user = Usuario.objects.get(cedula=user_data['cedula'])
+                estudiante, created = Estudiante.objects.update_or_create(
+                                    usuario=user,
+                                    id_tipo_postgrado=validated_data.pop('id_tipo_postgrado'),
+                                    id_estado_estudiante=validated_data.pop('id_estado_estudiante'),
+                                    direccion=validated_data.pop('direccion')
+                                    )
+                return estudiante
+            except:    
+                user = UsuarioListSerializer.create(UsuarioListSerializer(), validated_data=user_data)
+                estudiante, created = Estudiante.objects.update_or_create(
+                                    usuario=user,
+                                    id_tipo_postgrado=validated_data.pop('id_tipo_postgrado'),
+                                    id_estado_estudiante=validated_data.pop('id_estado_estudiante'),
+                                    direccion=validated_data.pop('direccion')
+                                    )
+                return estudiante
 
 
 class EstudianteDetailSerializer(serializers.ModelSerializer):
@@ -198,15 +208,24 @@ class DocenteSerializer(serializers.ModelSerializer):
             docente = PersonalDocente.objects.get(usuario__cedula=user_data['cedula'])
             return docente
         except:
-            user = UsuarioListSerializer.create(UsuarioListSerializer(), validated_data=user_data)
-
-            docente, created = PersonalDocente.objects.update_or_create(
-                                usuario=user,
-                                curriculum=validated_data.get('curriculum'), rif=validated_data.get('rif'),
-                                direccion=validated_data.pop('direccion'),
-                                permiso_ingresos=validated_data.get('permiso_ingresos'),
-                                coordinador=validated_data.pop('coordinador'))
-            return docente
+            try:
+                user = Usuario.objects.get(cedula=user_data['cedula'])
+                docente, created = PersonalDocente.objects.update_or_create(
+                    usuario=user,
+                    curriculum=validated_data.get('curriculum'), rif=validated_data.get('rif'),
+                    direccion=validated_data.pop('direccion'),
+                    permiso_ingresos=validated_data.get('permiso_ingresos'),
+                    coordinador=validated_data.pop('coordinador'))
+                return docente
+            except:    
+                user = UsuarioListSerializer.create(UsuarioListSerializer(), validated_data=user_data)
+                docente, created = PersonalDocente.objects.update_or_create(
+                                    usuario=user,
+                                    curriculum=validated_data.get('curriculum'), rif=validated_data.get('rif'),
+                                    direccion=validated_data.pop('direccion'),
+                                    permiso_ingresos=validated_data.get('permiso_ingresos'),
+                                    coordinador=validated_data.pop('coordinador'))
+                return docente
 
 
 class DocenteDetailSerializer(serializers.ModelSerializer):
@@ -280,9 +299,15 @@ class AdministrativoSerializer(serializers.ModelSerializer):
             personal_admin = PersonalAdministrativo.objects.get(usuario__cedula=user_data['cedula'])
             return personal_admin
         except:
-            user = UsuarioListSerializer.create(UsuarioListSerializer(), validated_data=user_data)
-            personal_admin, created = PersonalAdministrativo.objects.update_or_create(usuario=user)
-            return personal_admin
+            try:
+                user = Usuario.objects.get(cedula=user_data['cedula'])
+                personal_admin, created = PersonalAdministrativo.objects.update_or_create(usuario=user)
+                return personal_admin
+            except:    
+                user = UsuarioListSerializer.create(UsuarioListSerializer(), validated_data=user_data)
+                personal_admin, created = PersonalAdministrativo.objects.update_or_create(usuario=user)
+                return personal_admin
+
 
 
 class AdministrativoDetailSerializer(serializers.ModelSerializer):
