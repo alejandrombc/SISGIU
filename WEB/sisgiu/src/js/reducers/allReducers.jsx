@@ -6,6 +6,7 @@ import EstudianteReducer from './reducer-estudiante';
 import EditUserReducer from './reducer-edit-user';
 import AdminReducer from './reducer-administrador';
 import PaginacionReducer from './reducer-paginacion';
+import AdministrativoUser from './reducer-administrativo';
 
 /*
  * Combinamos todos los reducers en un solo objeto para enviar al store
@@ -16,11 +17,12 @@ import PaginacionReducer from './reducer-paginacion';
 
 const allReducers = combineReducers({
 	activeUser: ActiveUserReducer,
-	docenteUser: DocenteReducer,
-	estudianteUser: EstudianteReducer,
-	recuperarContrasena : RecuperarContrasena,
-	editUser: EditUserReducer,
 	adminUser: AdminReducer,
+	estudianteUser: EstudianteReducer,
+	docenteUser: DocenteReducer,
+	administrativoUser: AdministrativoUser,
+	editUser: EditUserReducer,
+	recuperarContrasena : RecuperarContrasena,
 	paginacion: PaginacionReducer,
 });
 

@@ -10,8 +10,7 @@ import {check_login} from '../actions/inicio.jsx';
 
 class Inicio extends Component{
 
-	constructor(props) {
-   		super(props);
+ 	componentDidMount() {
     	this.props.check_login();
     }
 

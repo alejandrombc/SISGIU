@@ -88,19 +88,20 @@ class PeriodoListCreateAPIView(ListCreateAPIView):
         if (len(periodo) != 0):
             raise ParseError('Ya existe un periodo con el estatus "No Iniciado" para el tipo de postgrado seleccionado')
 
-        nuevo_periodo = PeriodoListSerializer(data=serializer.data) 
+        nuevo_periodo = PeriodoListSerializer(data=serializer.data)
         nuevo_periodo.is_valid()
         nuevo_periodo.save()
 
     def get_periodos_by_filter(request, filtro):
         if (request.method == "GET"):
-            filtro = filtro.replace("%20"," ")
+            filtro = filtro.replace("%20", " ")
             if (filtro == 'todos'):
                 member = Periodo.objects.all()
             elif (filtro == 'actuales'):
-                member = Periodo.objects.filter(Q(estado_periodo_id__estado='activo') | Q(estado_periodo_id__estado='en inscripcion'))
+                member = Periodo.objects.filter(Q(estado_periodo_id__estado='activo') |
+                                                Q(estado_periodo_id__estado='en inscripcion'))
             else:
-                member = Periodo.objects.filter(estado_periodo_id__estado = filtro )
+                member = Periodo.objects.filter(estado_periodo_id__estado=filtro)
 
             list_result = [entry for entry in member.values()]
 
@@ -111,9 +112,10 @@ class PeriodoListCreateAPIView(ListCreateAPIView):
                 periodo['estado_periodo'] = estado_periodo['estado']
                 periodo['tipo_postgrado'] = tipo_postgrado['tipo']
 
-            list_result = sorted(list_result, key=lambda k: k['tipo_postgrado']) 
+            list_result = sorted(list_result, key=lambda k: k['tipo_postgrado'])
 
-            return HttpResponse(json.dumps(list_result, default=date_handler), content_type="application/json")
+            return HttpResponse(json.dumps(list_result, default=date_handler),
+                                content_type="application/json")
 
 
 

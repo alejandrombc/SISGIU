@@ -191,7 +191,7 @@ export const get_periodos_actuales = () => {
 	   		localStorage.removeItem('user_token');
 	   		localStorage.removeItem('modulo');
 	      	return {
-				type: "GET_PERIODOS_ERROR"
+				type: "ERROR"
 			}
 	   });
 

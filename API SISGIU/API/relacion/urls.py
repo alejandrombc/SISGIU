@@ -32,12 +32,16 @@ urlpatterns = format_suffix_patterns([
         PeriodoEstudianteListCreateAPIView.as_view(), name='PeriodoEstudiante-list-create'),
     url(r'^api/periodoEstudiante/$',
         PeriodoEstudianteListCreateAPIView.get_all_estudiantes, name='PeriodoEstudiante-list-all'),
+    url(r'^api/periodoEstudiante/(?P<periodo_id>\d+)/$',
+        PeriodoEstudianteListCreateAPIView.get_estudiantes_por_periodo, name='estudiante-list-periodo'),
     url(r'^api/periodoEstudiante/(?P<cedula>[0-9]{6,8})/periodo/(?P<periodo>[\w\s]+)/$',
         PeriodoEstudianteDetailAPIView.get_periodo, name='PeriodoEstudiante-detail'),
     url(r'^api/periodoEstudiante/(?P<pk>\d+)/edit/$',
         PeriodoEstudianteUpdateAPIView.as_view(), name='PeriodoEstudiante-update'),
     url(r'^api/periodoEstudiante/(?P<pk>\d+)/delete/$',
         PeriodoEstudianteDeleteAPIView.as_view(), name='PeriodoEstudiante-delete'),
+
+
 
 
     # DocenteAsignatura

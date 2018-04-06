@@ -34,7 +34,6 @@ class NavigationBar extends Component {
 
   render() {
 
-
     let navigationBar;
     if (this.props.token['loggedIn']) {
 
@@ -50,7 +49,7 @@ class NavigationBar extends Component {
           navigationBar = ( <NavBarDocente /> )
         break;
 
-        case 'administrativos':
+        case 'administrativo':
           navigationBar = ( <NavBarAdministrativo /> )
         break;
 

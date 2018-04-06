@@ -106,6 +106,14 @@ class RutasPrincipales extends React.Component {
 							  )
 						)}/>
 
+						<Route path="/estudiantes" render={(props) => (
+							  this.props.token['loggedIn'] ? (
+							    <Inicio pestana="estudiantes" />
+							  ) : (
+							  	<Redirect to="/login"/>
+							  )
+						)}/>
+
 
 					   	<Route component={Page404} ></Route>
 					</Switch>
