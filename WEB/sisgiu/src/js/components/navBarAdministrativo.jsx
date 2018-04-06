@@ -1,26 +1,45 @@
 // Dependencies
-import React from 'react';
+import React, {Component} from 'react';
 import {NavItem, NavLink, Nav } from 'reactstrap';
-// Components
+import { connect } from 'react-redux';
 
-const NavBarAdministrativo = () => (
-  <Nav navbar >
+class NavBarAdministrativo extends Component{
+
+  render() {
+    
+      return (
+        <Nav navbar >
                                 
-    <NavItem>
-      <NavLink href="/#">Inicio</NavLink>
-    </NavItem>
+          <NavItem>
+            <NavLink href="/inicio" disabled={!this.props.activeUser.cargado}>Inicio</NavLink>
+          </NavItem>
 
-    <NavItem>
-        <NavLink href="/#">Trámites</NavLink>
-    </NavItem>
+          <NavItem>
+              <NavLink href="/estudiantes" disabled={!this.props.activeUser.cargado}>Estudiantes</NavLink>
+          </NavItem>
 
-    <NavItem>
-      <NavLink href="/#">Estudiantes</NavLink>
-    </NavItem>
+          {/*<NavItem>
+                <NavLink href="/#" disabled={!this.props.activeUser.cargado}>Estudiantes</NavLink>
+              </NavItem>
+            */}
 
 
-  </Nav>
-);
+        </Nav>
 
-export default (NavBarAdministrativo);
+      )
 
+  }
+
+}
+
+
+
+const mapStateToProps = (state)=> {
+  return{
+    activeUser: state.activeUser,
+  };
+}
+
+
+
+export default connect(mapStateToProps)(NavBarAdministrativo);

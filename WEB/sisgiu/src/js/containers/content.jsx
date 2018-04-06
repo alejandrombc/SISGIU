@@ -6,12 +6,14 @@ import { connect } from 'react-redux';
 import InicioEstudiante from './Estudiante/inicioEstudiante';
 import InicioAdministrador from './Administrador/inicioAdministrador';
 import InicioDocente from './Docente/inicioDocente';
+import InicioAdministrativo from './Administrativo/inicioAdministrativo';
 import PerfilUsuario from '../components/perfilUsuario';
 import ModuloUsuarioAdministrador from './Administrador/moduloUsuarioAdministrador';
 import ModuloAsignaturas from './Administrador/moduloAsignaturas';
 import ModuloPeriodos from './Administrador/moduloPeriodos';
 import HistorialAcademico from './Estudiante/historialAcademico';
 import CargarNotas from './Docente/cargarNotas';
+import Estudiantes from './Administrativo/estudiantes';
 
 
 
@@ -39,7 +41,7 @@ class Content extends Component{
 
 
 		            	{this.props.pestana === "inicio" && modulo === "administrativo" &&
-		                	<InicioEstudiante/>
+		                	<InicioAdministrativo/>
 		            	}
 
 
@@ -65,7 +67,11 @@ class Content extends Component{
 
 		            	{this.props.pestana === "cargarNotas" && modulo === "docentes"&&
 		                	<CargarNotas/>
-		            	} 
+		            	}
+
+		            	{this.props.pestana === "estudiantes" && modulo === "administrativo"&&
+		                	<Estudiantes/>
+		            	}
 
 		              </div>
 		      </div>
