@@ -1,5 +1,5 @@
 import json
-import os
+import os, datetime
 from django.http import HttpResponse
 from usuario.utils import render_to_pdf, date_handler
 from django.core.mail import send_mail
@@ -39,6 +39,16 @@ from relacion.models import (
     EstudianteAsignatura,
     PeriodoEstudiante,
     )
+
+from asignatura.models import (
+    Asignatura,
+    )
+
+
+from periodo.models import (
+    Periodo,
+    )
+
 from rest_framework.generics import (
     ListCreateAPIView,
     RetrieveAPIView,
@@ -520,9 +530,49 @@ class AdministrativoDeleteAPIView(DestroyAPIView):
 class Reportes():
     def constancia_estudio(request, cedula):
         if (request.method == "GET"):
-            member = Usuario.objects.get(cedula=cedula)
+            user_information = {}
+            user = Usuario.objects.get(cedula=cedula).__dict__
+            estudiante = Estudiante.objects.get(usuario__cedula=cedula).__dict__
+
+            user_information['cedula'] = user['cedula']
+            user_information['first_name'] = user['first_name']
+            user_information['last_name'] = user['last_name']
+            
+            tipo_postgrado = TipoPostgrado.objects.get(id=estudiante['id_tipo_postgrado_id']).__dict__
+            
+            user_information['tipo_postgrado'] = tipo_postgrado['tipo']
+
+            periodo = Periodo.objects.get(
+                estado_periodo__estado="activo",
+                tipo_postgrado__id=tipo_postgrado['id']).__dict__
+            
+            user_information['periodo'] = periodo['descripcion']
+
+            asignaturas = EstudianteAsignatura.objects.filter(
+                periodo_estudiante__periodo_id=periodo['id'], 
+                periodo_estudiante__estudiante__usuario__cedula=cedula).values()
+
+            user_information['asignaturas'] = []
+            user_information['unidad_creditos'] = 0
+            for entry in asignaturas:
+                asignatura = Asignatura.objects.get(id=entry['asignatura_id']).__dict__
+                user_information['asignaturas'].append(asignatura)
+                user_information['unidad_creditos'] += asignatura['unidad_credito']
+
+
+            now = datetime.datetime.now()
+            meses = [
+            'Enero','Febrero','Marzo','Abril',
+            'Mayo','Junio','Julio','Agosto',
+            'Septiembre','Octubre','Noviembre',
+            'Diciembre'
+            ];
+            user_information['dia'] = now.day
+            user_information['mes'] = meses[now.month - 1]
+            user_information['anio'] = now.year
+
             content = 'attachment; filename="constancia_'+str(cedula)+'.pdf"'
-            pdf = render_to_pdf('constancia.html', member.__dict__)
+            pdf = render_to_pdf('constancia.html', user_information)
             pdf['Content-Disposition'] = content
             return HttpResponse(pdf, content_type='application/pdf')
 

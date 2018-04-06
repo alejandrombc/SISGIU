@@ -68,17 +68,19 @@
              </div>
          <div>
          <div class='texto'>
-			 <p>Quien subscribe, jefe de la División de Control de Estudios de la Facultad de Arquitectura de la Universidad Central de Venezuela, por medio de la presente, hace constar que el Sr(a). <b>{{last_name}} {{first_name}}</b> portador de la cédula de identidad No. <b>{{cedula}}</b> es estudiante de <b>MAESTRIA</b> para el período <b>01-2017</b> y cursa un total de <b>5</b> unidades de crédito en las siguientes asignaturas:</p>
+			 <p>Quien subscribe, jefe de la División de Control de Estudios de la Facultad de Arquitectura de la Universidad Central de Venezuela, por medio de la presente, hace constar que el Sr(a). <b>{{last_name}} {{first_name}}</b> portador de la cédula de identidad No. <b>{{cedula}}</b> es estudiante de <b>{{tipo_postgrado}}</b> para el período <b>{{periodo}}</b> y cursa un total de <b>{{unidad_creditos}}</b> unidades de crédito en las siguientes asignaturas:</p>
 			<br>
 			<b>
 				<ul>
+                    {% for asignatura in asignaturas %}
 					<li>
-						SEMINARIO (APLICACIONES INTERNET)
+						({{ asignatura.codigo }}) {{ asignatura.nombre }} 
 					</li>
+                    {% endfor %}
 				</ul>
 			</b>
 			<br>
-			<p>Constancia que se expide a solicitud de la parte interesada en Caracas, a los 16 días del mes de Enero del año 2018.</p>
+			<p>Constancia que se expide a solicitud de la parte interesada en Caracas, a los {{dia}} días del mes de {{mes}} del año {{anio}}.</p>
 			<br>
 			<center><p>*** Válida por el período actual ***</p></center>
 			<br>
