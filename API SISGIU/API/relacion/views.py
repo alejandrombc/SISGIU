@@ -111,13 +111,14 @@ class PeriodoEstudianteListCreateAPIView(ListCreateAPIView):
 
             for x in periodo_estudiante:
                 estudiante = Usuario.objects.filter(id=x['estudiante_id']).values()[0]
-
+                estudiante['foto'] = request.build_absolute_uri('/') + "media/" + estudiante['foto']
+                
                 del estudiante['id']
                 del estudiante['date_joined']
                 del estudiante['is_superuser']
                 del estudiante['is_active']
                 del estudiante['password']
-                del estudiante['foto']
+                # del estudiante['foto']
                 del estudiante['last_login']
                 del estudiante['is_staff']
 
