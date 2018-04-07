@@ -20,6 +20,7 @@ import {
   pago_inscripcion_estudiantes
   } from '../../actions/moduloEstudiantes';
   
+import ModalEstudianteEdit from './modalEstudianteEdit';
 
 
 const KEYS_TO_FILTERS = ['estudiante.first_name', 'estudiante.last_name', 'estudiante.cedula'];
@@ -153,6 +154,7 @@ class Estudiantes extends Component{
           <td>  
             <Row >
               <Col md={{ size: 'auto', offset: 3 }} className='botones'>
+                <ModalEstudianteEdit onDismiss={this.onDismiss} data={data} />
               </Col>
             </Row>
           </td>

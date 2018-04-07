@@ -36,7 +36,7 @@ export const pago_inscripcion_estudiantes = (estudiante_pagado, periodo_id) =>{
 	let token = localStorage.getItem('user_token');
 
 	return request
-	   .post(host+'api/estudiantes/pagoInscripcion/')
+	   .post(host+'api/estudiantes/pagoInscripcion/periodo/'+periodo_id+'/')
 	   .set('Authorization', 'JWT '+token)
 	   .set('Content-Type', 'application/json')
 	   .send(estudiante_pagado)

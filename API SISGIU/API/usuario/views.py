@@ -317,12 +317,12 @@ class EstudianteListCreateAPIView(ListCreateAPIView):
     permission_classes = [IsAuthenticated, IsListOrCreate]
 
     @csrf_exempt
-    def estudiante_pago_inscripcion(request):
+    def estudiante_pago_inscripcion(request, periodo_id):
         if(request.method == "POST"):
             body_unicode = request.body.decode('utf-8')
             body = json.loads(body_unicode)
 
-            # Almaceno las cedulas en un arrau
+            # Almaceno las cedulas en un array
             cedulas = []
             for x in body:
                 cedulas.append(x)
@@ -331,7 +331,7 @@ class EstudianteListCreateAPIView(ListCreateAPIView):
             for x in cedulas:
                 print(body[x])
                 PeriodoEstudiante.objects.filter(
-                                                periodo__estado_periodo__estado='activo',
+                                                periodo__id=periodo_id,
                                                 estudiante__usuario__cedula=x).update(pagado=body[x])
 
             return HttpResponse(json.dumps({"Estatus": "OK"}),
