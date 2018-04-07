@@ -3,7 +3,8 @@ const initialState = {
 	tiene_periodos_activos: true, 
 	edit:false, 
 	lista_estudiantes: [],
-	
+	pago_inscripcion_editado: false,
+	error_pago_inscripcion: false,
 };
 
 export default function (state=initialState, action) {
@@ -47,6 +48,17 @@ export default function (state=initialState, action) {
 
 		case "GET_ESTUDIANTES_POR_PERIODO_EXITOSO":
 			nuevo_estado['lista_estudiantes'] = action.payload['lista_estudiantes'];
+			return nuevo_estado;
+
+		case "PAGO_INSCRIPCION_ESTUDIANTES_EXITOSO":
+			nuevo_estado['pago_inscripcion_editado'] = true;
+			nuevo_estado['error_pago_inscripcion'] = false;
+			return nuevo_estado;
+
+		case "PAGO_INSCRIPCION_ESTUDIANTES_ERROR":
+			nuevo_estado['pago_inscripcion_editado'] = false;
+			nuevo_estado['error_pago_inscripcion'] = true;
+
 			return nuevo_estado;
 		
 

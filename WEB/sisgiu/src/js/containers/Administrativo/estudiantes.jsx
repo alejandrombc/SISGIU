@@ -2,19 +2,24 @@
 import React, {Component} from 'react';
 import { connect } from 'react-redux';
 import {bindActionCreators} from 'redux';
-import { Input, Form, FormGroup, Label, Row, Col, Button, Modal, ModalHeader, ModalBody, ModalFooter, Select, Table } from 'reactstrap';
+import { Alert, Input, Form, FormGroup, Label, Row, Col, Button, Modal, ModalHeader, ModalBody, ModalFooter, Select, Table } from 'reactstrap';
 import { PulseLoader } from 'halogenium';
 import SearchInput, {createFilter} from 'react-search-input';
 import '../../../css/switch.css'; 
 
 // Components
+import Paginacion from '../../components/pagination';
 import { 
     cargado,
     get_periodos_actuales,
     } from '../../actions/inicio';
 
-import { get_estudiantes_por_periodo, vaciar_lista_estudiantes } from '../../actions/moduloEstudiantes';
-import Paginacion from '../../components/pagination';
+import { 
+  get_estudiantes_por_periodo,
+  vaciar_lista_estudiantes,
+  pago_inscripcion_estudiantes
+  } from '../../actions/moduloEstudiantes';
+  
 
 
 const KEYS_TO_FILTERS = ['estudiante.first_name', 'estudiante.last_name', 'estudiante.cedula'];
@@ -29,14 +34,16 @@ class Estudiantes extends Component{
       periodo: '',
       searchTerm: '',
       estudiante_pagado: {},
+      loading: false,
     }
-    // this.onDismiss = this.onDismiss.bind(this);
+    this.onDismiss = this.onDismiss.bind(this);
     this.get_periodos = this.get_periodos.bind(this);
 		this.handleChange = this.handleChange.bind(this);
     this.searchUpdated = this.searchUpdated.bind(this);
     this.get_listItems = this.get_listItems.bind(this);
     this.updateEstudiantes = this.updateEstudiantes.bind(this);
     this.handleChangePagado = this.handleChangePagado.bind(this);
+    this.guardarPagadoEstudiante = this.guardarPagadoEstudiante.bind(this);
 	}
 
 	componentDidMount() {
@@ -45,9 +52,9 @@ class Estudiantes extends Component{
     	
 	}
 
-  // onDismiss() {
-  //   this.setState({ visible: false });
-  // }
+  onDismiss() {
+    this.setState({ visible: false });
+  }
 
   updateEstudiantes (){
     let N = this.props.administrativoUser.lista_estudiantes.length;
@@ -84,6 +91,12 @@ class Estudiantes extends Component{
       this.props.vaciar_lista_estudiantes();
     }
 
+  }
+
+  guardarPagadoEstudiante() {
+    this.setState({loading: true}, 
+      () => this.props.pago_inscripcion_estudiantes(this.state.estudiante_pagado, this.state.periodo)
+        .then( () => this.setState({loading: false})) );
   }
 
   get_periodos() {
@@ -153,7 +166,6 @@ class Estudiantes extends Component{
 
   render(){
       
-
     if (!this.props.activeUser.cargado) {
       return (<center><PulseLoader color="#b3b1b0" size="16px" margin="4px"/></center>);
     } else 
@@ -162,6 +174,24 @@ class Estudiantes extends Component{
       return(
 
         <div>
+
+            {/*ALERT DE EXITO*/}
+            {this.props.administrativoUser.pago_inscripcion_editado && !this.state.loading &&
+              <Alert color="success" isOpen={this.state.visible} toggle={this.onDismiss}>
+                  Estado de pago de inscripción de estudiantes actualizado exitosamente
+              </Alert> 
+            }
+            {/*ALERT DE ERROR*/}
+            {this.props.administrativoUser.error_pago_inscripcion && !this.state.loading &&
+              <Alert color="danger" isOpen={this.state.visible} toggle={this.onDismiss}>
+                  Ha ocurrido un error
+              </Alert>
+            }
+            {/*SPINNER*/}
+            { this.state.loading &&
+              <center><PulseLoader color="#b3b1b0" size="16px" margin="4px"/></center>
+            }
+
 
           <FormGroup row>
             <Label for="periodo" sm={5}>Seleccione un periodo:</Label>
@@ -207,17 +237,34 @@ class Estudiantes extends Component{
 
 
           {this.props.administrativoUser.lista_estudiantes.length > 0 &&
-            <Row >
-              <Col lg='4' md='4' sm='3' xs='1'> </Col>
-              <Col lg='4' md='4' sm='6' xs='10' className='Pagination'>
-                <br />
-                {this.state.searchTerm === '' &&
-                  <Paginacion cant_items={this.props.administrativoUser.lista_estudiantes.length} item_por_pagina={estudiantes_por_pagina}/>
-                }
-              </Col>
-              <Col lg='4' md='4' sm='3' xs='1'> </Col>
-            </Row>
+            <div>
+              <Row >
+                <Col lg='4' md='4' sm='3' xs='1'> </Col>
+                <Col lg='4' md='4' sm='6' xs='10' className='Pagination'>
+                  <br />
+                  {this.state.searchTerm === '' &&
+                    <Paginacion cant_items={this.props.administrativoUser.lista_estudiantes.length} item_por_pagina={estudiantes_por_pagina}/>
+                  }
+                </Col>
+                <Col lg='4' md='4' sm='3' xs='1'> </Col>
+              </Row>
+
+
+              <Row>
+                <Col md="6" sm="6"> </Col>
+                <Col md="6" sm="6">
+                    <div className="text-right">
+                      <Button color="primary" size='sm' data-toggle="tooltip" title="Guardar" onClick={() => this.guardarPagadoEstudiante()}>Guardar</Button>
+                    </div>
+                </Col>
+
+              </Row>
+            </div>
           }
+
+
+
+
         </div>
 
 
@@ -247,6 +294,7 @@ const mapDispatchToProps = (dispatch) => {
     get_periodos_actuales: get_periodos_actuales,
     get_estudiantes_por_periodo: get_estudiantes_por_periodo,
     vaciar_lista_estudiantes: vaciar_lista_estudiantes,
+    pago_inscripcion_estudiantes: pago_inscripcion_estudiantes,
   }, dispatch )
 }
 

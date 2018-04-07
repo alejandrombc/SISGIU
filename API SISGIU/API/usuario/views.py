@@ -131,7 +131,7 @@ class AdministradorListCreateAPIView(ListCreateAPIView):
 
             else:
                 response_data = {}
-                response_data['error'] = "No existe el modulo especificado."
+                response_data['Error'] = "No existe el modulo especificado."
                 return HttpResponse(json.dumps(response_data, default=date_handler),
                                     content_type="application/json", status=400)
 
@@ -147,7 +147,7 @@ class AdministradorListCreateAPIView(ListCreateAPIView):
 
         except:
             response_data = {}
-            response_data['error'] = "Ha ocurrido un error obteniendo la lista de usuarios."
+            response_data['Error'] = "Ha ocurrido un error obteniendo la lista de usuarios."
             return HttpResponse(json.dumps(response_data, default=date_handler),
                                 content_type="application/json", status=500)
 
@@ -174,7 +174,7 @@ class AdministradorDetailAPIView(RetrieveAPIView):
             return HttpResponse(json.dumps(list_result, default=date_handler),
                                 content_type="application/json")
         response_data = {}
-        response_data['error'] = 'No tiene privilegios para realizar esta accion'
+        response_data['Error'] = 'No tiene privilegios para realizar esta accion'
         return HttpResponse(json.dumps(response_data), content_type="application/json", status=401)
 
     @csrf_exempt
@@ -287,7 +287,7 @@ class AdministradorDetailAPIView(RetrieveAPIView):
             return HttpResponse(json.dumps(response_data), content_type="application/json", status=200)
 
         response_data = {}
-        response_data['error'] = 'Cedula no encontrada'
+        response_data['Error'] = 'Cedula no encontrada'
 
         return HttpResponse(json.dumps(response_data), content_type="application/json", status=404)
 
@@ -315,6 +315,31 @@ class EstudianteListCreateAPIView(ListCreateAPIView):
     queryset = Estudiante.objects.all()
     serializer_class = EstudianteSerializer
     permission_classes = [IsAuthenticated, IsListOrCreate]
+
+    @csrf_exempt
+    def estudiante_pago_inscripcion(request):
+        if(request.method == "POST"):
+            body_unicode = request.body.decode('utf-8')
+            body = json.loads(body_unicode)
+
+            # Almaceno las cedulas en un arrau
+            cedulas = []
+            for x in body:
+                cedulas.append(x)
+
+            # Itero en el json de pagado y hago el update en la BD
+            for x in cedulas:
+                print(body[x])
+                PeriodoEstudiante.objects.filter(
+                                                periodo__estado_periodo__estado='activo',
+                                                estudiante__usuario__cedula=x).update(pagado=body[x])
+
+            return HttpResponse(json.dumps({"Estatus": "OK"}),
+                                content_type="application/json", status=200)
+
+        response_data = {}
+        response_data['Error'] = 'No tiene privilegios para realizar esta acción'
+        return HttpResponse(json.dumps(response_data), content_type="application/json", status=401)
 
 
 class EstudianteDetailAPIView(RetrieveAPIView):
@@ -361,7 +386,7 @@ class EstudianteDetailAPIView(RetrieveAPIView):
                                 content_type="application/json")
 
         response_data = {}
-        response_data['error'] = 'No tiene privilegios para realizar esta accion'
+        response_data['Error'] = 'No tiene privilegios para realizar esta accion'
         return HttpResponse(json.dumps(response_data), content_type="application/json", status=401)
 
 
@@ -577,5 +602,5 @@ class Reportes():
             return HttpResponse(pdf, content_type='application/pdf')
 
         response_data = {}
-        response_data['error'] = 'No tiene privilegios para realizar esta accion'
+        response_data['Error'] = 'No tiene privilegios para realizar esta accion'
         return HttpResponse(json.dumps(response_data), content_type="application/json", status=401)

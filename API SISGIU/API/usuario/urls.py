@@ -33,7 +33,8 @@ urlpatterns = format_suffix_patterns([
     url(r'^api/usuarios/$', AdministradorListCreateAPIView.as_view(), name='usuario-list-create'),
     url(r'^api/usuarios/(?P<modulo>[\w\-]+)/$',
         AdministradorListCreateAPIView.get_usuarios, name='usuario-list'),
-    url(r'^api/usuarios/cedula/(?P<cedula>\d+)/$', AdministradorDetailAPIView.as_view(), name='usuario-detail'),
+    url(r'^api/usuarios/cedula/(?P<cedula>\d+)/$',
+        AdministradorDetailAPIView.as_view(), name='usuario-detail'),
     url(r'^api/usuarios/id/(?P<id_usr>[0-9]{1})/$',
         AdministradorDetailAPIView.get_usr_id, name='usuario-detail'),
     url(r'^api/usuarios/(?P<cedula>\d+])/edit/$',
@@ -59,6 +60,8 @@ urlpatterns = format_suffix_patterns([
     # Estudiantes
     url(r'^api/estudiantes/$',
         EstudianteListCreateAPIView.as_view(), name='estudiante-list-create'),
+    url(r'^api/estudiantes/pagoInscripcion/$',
+        EstudianteListCreateAPIView.estudiante_pago_inscripcion, name='estudiante-pago-inscripcion'),
     url(r'^api/estudiantes/(?P<usuario__cedula>\d+)/$',
         EstudianteDetailAPIView.as_view(), name='estudiante-detail'),
     url(r'^api/estudiantes/(?P<usuario__cedula>\d+)/edit/$',
