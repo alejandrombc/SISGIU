@@ -2,6 +2,7 @@ const initialState = {
 	lista_periodos : [],
 	tiene_periodos_activos: true, 
 	edit:false, 
+	lista_estudiantes: [],
 	
 };
 
@@ -42,6 +43,10 @@ export default function (state=initialState, action) {
 
 		case "ERROR":
 			nuevo_estado['loggedIn'] = false;
+			return nuevo_estado;
+
+		case "GET_ESTUDIANTES_POR_PERIODO_EXITOSO":
+			nuevo_estado['lista_estudiantes'] = action.payload['lista_estudiantes'];
 			return nuevo_estado;
 		
 

@@ -2,8 +2,9 @@
 import React, {Component} from 'react';
 import { connect } from 'react-redux';
 import {bindActionCreators} from 'redux';
-import { Input, Form, FormGroup, Label, Row, Col, Button, Modal, ModalHeader, ModalBody, ModalFooter, Select } from 'reactstrap';
+import { Input, Form, FormGroup, Label, Row, Col, Button, Modal, ModalHeader, ModalBody, ModalFooter, Select, Table } from 'reactstrap';
 import { PulseLoader } from 'halogenium';
+import SearchInput, {createFilter} from 'react-search-input';
 
 
 // Components
@@ -12,11 +13,12 @@ import {
     get_periodos_actuales,
     } from '../../actions/inicio';
 
-import { get_estudiantes_por_periodo } from '../../actions/moduloEstudiantes';
+import { get_estudiantes_por_periodo, vaciar_lista_estudiantes } from '../../actions/moduloEstudiantes';
+import Paginacion from '../../components/pagination';
 
 
-const KEYS_TO_FILTERS = ['first_name', 'last_name', 'cedula'];
-const usuarios_por_pagina = 10;
+const KEYS_TO_FILTERS = ['estudiante.first_name', 'estudiante.last_name', 'estudiante.cedula'];
+const estudiantes_por_pagina = 10;
 
 class Estudiantes extends Component{
 
@@ -31,6 +33,7 @@ class Estudiantes extends Component{
     this.get_periodos = this.get_periodos.bind(this);
 		this.handleChange = this.handleChange.bind(this);
     this.searchUpdated = this.searchUpdated.bind(this);
+    this.get_listItems = this.get_listItems.bind(this);
 	}
 
 	componentDidMount() {
@@ -51,9 +54,14 @@ class Estudiantes extends Component{
     const { name, value } = e.target;
     this.setState({ [name]: value })
 
-    // Busco la lista de estudiantes del perido seleccionado
+    if (value !== "-1") {
+      // Busco la lista de estudiantes del perido seleccionado
+      this.props.get_estudiantes_por_periodo(e.target.value);
+    } else {
+      this.props.vaciar_lista_estudiantes();
+    }
 
-    this.props.get_estudiantes_por_periodo(e.target.value);
+
 
   }
 
@@ -68,49 +76,133 @@ class Estudiantes extends Component{
     return '';
   }
 
+  get_listItems() {
+    let listItems;
+
+    let cant_estudiantes = this.props.administrativoUser.lista_estudiantes.length;
+    let estudiantes = [];
+
+    var init = this.props.pagination.pagina*estudiantes_por_pagina-estudiantes_por_pagina;
+    var end = this.props.pagination.pagina*estudiantes_por_pagina;
+
+    //Si se esta realizando una busqueda uso toda la lista de usuario, sino no
+    if(this.state.searchTerm === ''){
+      for (var i = init; i < end; i++) {
+        if (this.props.administrativoUser.lista_estudiantes[i]) {
+          estudiantes.push(this.props.administrativoUser.lista_estudiantes[i]);
+        }
+      }
+
+    } else {
+      for (i = 0; i < cant_estudiantes; i++) {
+          estudiantes.push(this.props.administrativoUser.lista_estudiantes[i]);
+      }
+    }
+
+    const filteredEstudiantes = estudiantes.filter(createFilter(this.state.searchTerm, KEYS_TO_FILTERS));
+
+    listItems = filteredEstudiantes.map((data) =>
+      <tr key={data.estudiante['cedula']}>
+        <td>{data.estudiante['cedula']}</td>
+        <td>{data.estudiante['first_name']} {data.estudiante['last_name']}</td>
+        <td>  
+          <Row >
+            <Col md={{ size: 'auto', offset: 3 }} className='botones'>
+            </Col>
+          </Row>
+        </td>
+      </tr>
+    );
+
+    return listItems;
+  }
+
 
   render(){
       
-    console.log(this.state.periodo);
 
     if (!this.props.activeUser.cargado) {
       return (<center><PulseLoader color="#b3b1b0" size="16px" margin="4px"/></center>);
-    } else {
-    	return (
-    		<div>
+    } else 
+    {
+
+      return(
+
+        <div>
 
           <FormGroup row>
             <Label for="periodo" sm={5}>Seleccione un periodo</Label>
             <Col sm={7}>
               <Input 
                 bsSize="sm" 
-                value={this.state.value} 
                 defaultValue={this.state.periodo} 
                 onChange={this.handleChange} 
                 type="select" 
                 name="periodo" 
                 required>
+                <option value={-1} name='periodo'> </option>
                 {this.get_periodos()}
               </Input>
             </Col>
           </FormGroup>
 
-    		</div>
-    	);
 
-    }
+          <Row>
+            <Col md='5'></Col>
+
+            <Col md='7'>
+              <SearchInput className="searchBox" placeholder="Buscar estudiante..." onChange={this.searchUpdated} />
+            </Col>
+          </Row>
+
+          <br/>
 
 
-  }
+          <Table bordered hover responsive striped size="sm">
+            <thead>
+              <tr>
+                <th>Cédula</th>
+                <th>Nombre</th>
+                <th>Acción</th>
+              </tr>
+            </thead>
+            <tbody className="tabla_usuarios">
+              {this.get_listItems()}
+            </tbody>
+          </Table>
 
 
-}
+        
+          <Row >
+            <Col lg='4' md='4' sm='3' xs='1'> </Col>
+            <Col lg='4' md='4' sm='6' xs='10' className='Pagination'>
+              <br />
+              {this.state.searchTerm === '' &&
+                <Paginacion cant_items={this.props.administrativoUser.lista_estudiantes.length} item_por_pagina={estudiantes_por_pagina}/>
+              }
+            </Col>
+            <Col lg='4' md='4' sm='3' xs='1'> </Col>
+          </Row>
+
+        </div>
+
+
+        )
+
+    } // else
+
+
+  } // render
+
+
+} // class
 
 
 const mapStateToProps = (state)=> {
   return{
     activeUser: state.activeUser,
     administrativoUser: state.administrativoUser,
+    pagination: state.paginacion,
   };
 }
 
@@ -119,6 +211,7 @@ const mapDispatchToProps = (dispatch) => {
     cargado: cargado,
     get_periodos_actuales: get_periodos_actuales,
     get_estudiantes_por_periodo: get_estudiantes_por_periodo,
+    vaciar_lista_estudiantes: vaciar_lista_estudiantes,
   }, dispatch )
 }
 
