@@ -24,7 +24,7 @@ export const get_estudiantes_por_periodo = (periodo_id) =>{
 
 
 export const vaciar_lista_estudiantes = () =>{
-	let token = localStorage.getItem('user_token');
+	// let token = localStorage.getItem('user_token');
 		
 	return {
 		type: "GET_ESTUDIANTES_POR_PERIODO_EXITOSO",

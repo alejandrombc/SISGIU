@@ -5,7 +5,7 @@ import {bindActionCreators} from 'redux';
 import { Input, Form, FormGroup, Label, Row, Col, Button, Modal, ModalHeader, ModalBody, ModalFooter, Select, Table } from 'reactstrap';
 import { PulseLoader } from 'halogenium';
 import SearchInput, {createFilter} from 'react-search-input';
-
+import '../../../css/switch.css'; 
 
 // Components
 import { 
@@ -28,12 +28,15 @@ class Estudiantes extends Component{
 	    visible: true,
       periodo: '',
       searchTerm: '',
+      estudiante_pagado: {},
     }
     // this.onDismiss = this.onDismiss.bind(this);
     this.get_periodos = this.get_periodos.bind(this);
 		this.handleChange = this.handleChange.bind(this);
     this.searchUpdated = this.searchUpdated.bind(this);
     this.get_listItems = this.get_listItems.bind(this);
+    this.updateEstudiantes = this.updateEstudiantes.bind(this);
+    this.handleChangePagado = this.handleChangePagado.bind(this);
 	}
 
 	componentDidMount() {
@@ -46,8 +49,27 @@ class Estudiantes extends Component{
   //   this.setState({ visible: false });
   // }
 
+  updateEstudiantes (){
+    let N = this.props.administrativoUser.lista_estudiantes.length;
+    let pagados = {};
+    for(var i = 0; i < N; i++){
+      pagados[this.props.administrativoUser.lista_estudiantes[i].estudiante.cedula] = this.props.administrativoUser.lista_estudiantes[i].pagado;
+    }
+    this.setState({estudiante_pagado:pagados});
+  }
+
   searchUpdated (term) {
     this.setState({searchTerm: term})
+  }
+
+  handleChangePagado(e){
+    const { name, value } = e.target;
+
+    let estudiante_pagado = this.state.estudiante_pagado;
+    estudiante_pagado[name] = !estudiante_pagado[name];
+
+    this.setState({estudiante_pagado:estudiante_pagado});
+
   }
 
   handleChange(e) {
@@ -56,12 +78,11 @@ class Estudiantes extends Component{
 
     if (value !== "-1") {
       // Busco la lista de estudiantes del perido seleccionado
-      this.props.get_estudiantes_por_periodo(e.target.value);
+      this.props.get_estudiantes_por_periodo(e.target.value)
+      .then( () => this.updateEstudiantes() );
     } else {
       this.props.vaciar_lista_estudiantes();
     }
-
-
 
   }
 
@@ -79,42 +100,54 @@ class Estudiantes extends Component{
   get_listItems() {
     let listItems;
 
-    let cant_estudiantes = this.props.administrativoUser.lista_estudiantes.length;
-    let estudiantes = [];
+    if(this.state.estudiante_pagado != {}){
+      let cant_estudiantes = this.props.administrativoUser.lista_estudiantes.length;
+      let estudiantes = [];
 
-    var init = this.props.pagination.pagina*estudiantes_por_pagina-estudiantes_por_pagina;
-    var end = this.props.pagination.pagina*estudiantes_por_pagina;
+      var init = this.props.pagination.pagina*estudiantes_por_pagina-estudiantes_por_pagina;
+      var end = this.props.pagination.pagina*estudiantes_por_pagina;
 
-    //Si se esta realizando una busqueda uso toda la lista de usuario, sino no
-    if(this.state.searchTerm === ''){
-      for (var i = init; i < end; i++) {
-        if (this.props.administrativoUser.lista_estudiantes[i]) {
-          estudiantes.push(this.props.administrativoUser.lista_estudiantes[i]);
+      //Si se esta realizando una busqueda uso toda la lista de usuario, sino no
+      if(this.state.searchTerm === ''){
+        for (var i = init; i < end; i++) {
+          if (this.props.administrativoUser.lista_estudiantes[i]) {
+            estudiantes.push(this.props.administrativoUser.lista_estudiantes[i]);
+          }
+        }
+
+      } else {
+        for (i = 0; i < cant_estudiantes; i++) {
+            estudiantes.push(this.props.administrativoUser.lista_estudiantes[i]);
         }
       }
 
-    } else {
-      for (i = 0; i < cant_estudiantes; i++) {
-          estudiantes.push(this.props.administrativoUser.lista_estudiantes[i]);
-      }
-    }
+      const filteredEstudiantes = estudiantes.filter(createFilter(this.state.searchTerm, KEYS_TO_FILTERS));
 
-    const filteredEstudiantes = estudiantes.filter(createFilter(this.state.searchTerm, KEYS_TO_FILTERS));
-
-    listItems = filteredEstudiantes.map((data) =>
-      <tr key={data.estudiante['cedula']}>
-        <td>{data.estudiante['cedula']}</td>
-        <td>{data.estudiante['first_name']} {data.estudiante['last_name']}</td>
-        <td>  
-          <Row >
-            <Col md={{ size: 'auto', offset: 3 }} className='botones'>
-            </Col>
-          </Row>
-        </td>
-      </tr>
-    );
-
+      listItems = filteredEstudiantes.map((data) =>
+        <tr key={data.estudiante['cedula']}>
+          <td>{data.estudiante['cedula']}</td>
+          <td>{data.estudiante['first_name']} {data.estudiante['last_name']}</td>
+          <td>  
+            <Row >
+              <Col md={{ size: 'auto', offset: 3 }} className='botones'>
+                <label className="switch">
+                  <input type="checkbox" name={data.estudiante['cedula']} checked={this.state.estudiante_pagado[data.estudiante['cedula']]} onChange={this.handleChangePagado} />
+                  <span className="slider round"></span>
+                </label>
+              </Col>
+            </Row>
+          </td>
+          <td>  
+            <Row >
+              <Col md={{ size: 'auto', offset: 3 }} className='botones'>
+              </Col>
+            </Row>
+          </td>
+        </tr>
+      );
+    }   
     return listItems;
+
   }
 
 
@@ -131,7 +164,7 @@ class Estudiantes extends Component{
         <div>
 
           <FormGroup row>
-            <Label for="periodo" sm={5}>Seleccione un periodo</Label>
+            <Label for="periodo" sm={5}>Seleccione un periodo:</Label>
             <Col sm={7}>
               <Input 
                 bsSize="sm" 
@@ -163,7 +196,8 @@ class Estudiantes extends Component{
               <tr>
                 <th>Cédula</th>
                 <th>Nombre</th>
-                <th>Acción</th>
+                <th>Pagado</th>
+                <th>Editar</th>
               </tr>
             </thead>
             <tbody className="tabla_usuarios">
@@ -172,19 +206,20 @@ class Estudiantes extends Component{
           </Table>
 
 
-        
-          <Row >
-            <Col lg='4' md='4' sm='3' xs='1'> </Col>
-            <Col lg='4' md='4' sm='6' xs='10' className='Pagination'>
-              <br />
-              {this.state.searchTerm === '' &&
-                <Paginacion cant_items={this.props.administrativoUser.lista_estudiantes.length} item_por_pagina={estudiantes_por_pagina}/>
-              }
-            </Col>
-            <Col lg='4' md='4' sm='3' xs='1'> </Col>
-          </Row>
-
+          {this.props.administrativoUser.lista_estudiantes.length > 0 &&
+            <Row >
+              <Col lg='4' md='4' sm='3' xs='1'> </Col>
+              <Col lg='4' md='4' sm='6' xs='10' className='Pagination'>
+                <br />
+                {this.state.searchTerm === '' &&
+                  <Paginacion cant_items={this.props.administrativoUser.lista_estudiantes.length} item_por_pagina={estudiantes_por_pagina}/>
+                }
+              </Col>
+              <Col lg='4' md='4' sm='3' xs='1'> </Col>
+            </Row>
+          }
         </div>
+
 
 
         )
