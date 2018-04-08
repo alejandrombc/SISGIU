@@ -4,9 +4,11 @@ import FontAwesomeIcon from 'react-fontawesome';
 import '../../../css/moduloUsuarioAdministrador.css';
 import {bindActionCreators} from 'redux';
 import { connect } from 'react-redux';
-import CambiarAsignaturas from './cambiarAsignaturas';
 
 // Components
+import CambiarAsignaturas from './cambiarAsignaturas';
+import { get_asignaturas_inscripcion } from '../../actions/inscripcion';
+import { get_estado_periodo } from '../../actions/moduloEstudiantes';
 
 class ModalEstudianteEdit extends React.Component {
 
@@ -19,13 +21,46 @@ class ModalEstudianteEdit extends React.Component {
     };
     this.toggle = this.toggle.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.buscar_asignaturas = this.buscar_asignaturas.bind(this);
     
   }
 
+
+  componentDidMount() {
+
+    // this.props.get_estado_periodo(this.props.periodo)
+      // .then( () => this.buscar_asignaturas() );
+
+    
+
+
+
+
+  }
+
+  buscar_asignaturas() {
+    
+    if (this.state.modal) {
+      if (this.props.administrativoUser.estado_periodo.estado === 'activo') {
+        console.log('el periodo esta activo');  
+      } else if (this.props.administrativoUser.estado_periodo.estado === 'en inscripcion') {
+        console.log('el periodo esta en inscripcion');
+        this.props.get_asignaturas_inscripcion(this.props.data.estudiante.cedula);
+      }
+    }
+
+  }
+
   toggle() {
+
     this.setState({
       modal: !this.state.modal
-    });
+    }, () => this.props.get_estado_periodo(this.props.periodo)
+              .then( () => this.buscar_asignaturas()  ));
+
+    // this.setState({
+    //   modal: !this.state.modal
+    // }, () => this.buscar_asignaturas() );
     if(!this.state.modal) { this.props.onDismiss(); };
   }
 
@@ -34,24 +69,27 @@ class ModalEstudianteEdit extends React.Component {
   }
 
 
-    get_asignaturas() {
+  get_asignaturas() {
 
-      let aux = [];
-      let asignaturas = [];
-      let N = aux.length;
+    // let aux = [];
+    let aux = this.props.administrativoUser.lista_asignaturas_inscripcion;
+    // console.log(aux);
+    let asignaturas = [];
+    let N = aux.length;
 
-      for (var i = 0; i < N; i++) {
-        let asignatura = {};
-        asignatura['codigo'] = aux[i]['codigo'];
-        asignatura['nombre'] = aux[i]['nombre'];
-        asignatura['tipo_asignatura'] = aux[i]['tipo_asignatura_id'];
-        asignatura['unidad_credito'] = aux[i]['unidad_credito'];
-        asignatura['value'] = aux[i]['id'];
-        asignaturas.push(asignatura);
-      }
-
-      return asignaturas;
+    for (var i = 0; i < N; i++) {
+      let asignatura = {};
+      asignatura['codigo'] = aux[i]['codigo'];
+      asignatura['nombre'] = aux[i]['nombre'];
+      asignatura['tipo_asignatura'] = aux[i]['tipo_asignatura_id'];
+      asignatura['unidad_credito'] = aux[i]['unidad_credito'];
+      asignatura['value'] = aux[i]['id'];
+      asignaturas.push(asignatura);
     }
+
+    // console.log(asignaturas);
+    return asignaturas;
+  }
 
   render() {
 
@@ -163,12 +201,14 @@ class ModalEstudianteEdit extends React.Component {
 
 const mapStateToProps = (state)=> {
   return{
+    administrativoUser: state.administrativoUser,
   };
 }
 
 const mapDispatchToProps = (dispatch) => {
   return bindActionCreators({
-
+    get_asignaturas_inscripcion: get_asignaturas_inscripcion,
+    get_estado_periodo: get_estado_periodo,
     }, 
     dispatch 
   )

@@ -73,8 +73,10 @@ class EstadoPeriodoDeleteAPIView(DestroyAPIView):
 
 """
 Periodo
-		Esto solo debe ser tratado por el administrador
+Esto solo debe ser tratado por el administrador
 """
+
+
 class PeriodoListCreateAPIView(ListCreateAPIView):
     queryset = Periodo.objects.all()
     serializer_class = PeriodoListSerializer
@@ -176,16 +178,29 @@ class PeriodoListCreateAPIView(ListCreateAPIView):
         return HttpResponse(json.dumps(response_data), content_type="application/json", status=405)
 
 
-
 class PeriodoCreateAPIView(CreateAPIView):
     queryset = Periodo.objects.all()
     serializer_class = PeriodoListSerializer
     permission_classes = [IsAuthenticated, IsListOrCreate]
 
+
 class PeriodoDetailAPIView(RetrieveAPIView):
     queryset = Periodo.objects.all()
     serializer_class = PeriodoDetailSerializer
     permission_classes = [IsAuthenticated]
+
+    def get_estado_periodo(request, periodo_id):
+        response_data = {}
+        if (request.method == "GET"):
+            estado_periodo = EstadoPeriodo.objects.get(periodo__id=periodo_id)
+            print(estado_periodo.estado)
+
+            response_data['estado'] = estado_periodo.estado
+
+            return HttpResponse(json.dumps(response_data), content_type="application/json")
+
+        response_data['error'] = 'No tiene privilegios para realizar esta acción'
+        return HttpResponse(json.dumps(response_data), content_type="application/json", status=401)
 
 class PeriodoUpdateAPIView(RetrieveUpdateAPIView):
     queryset = Periodo.objects.all()
@@ -224,5 +239,3 @@ class PeriodoDeleteAPIView(DestroyAPIView):
     queryset = Periodo.objects.all()
     serializer_class = PeriodoDetailSerializer
     permission_classes = [IsAdminUser]
-
-

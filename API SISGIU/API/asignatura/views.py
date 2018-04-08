@@ -343,17 +343,16 @@ class PrelacionAsignaturaListCreateAPIView(ListCreateAPIView):
     @csrf_exempt
     def delete_all_asignaturas_necesarias(request):
         if (request.method == "DELETE"):
-            
-            asignaturas = PrelacionAsignatura.objects.all().delete()
+
+            PrelacionAsignatura.objects.all().delete()
 
             response_data = {}
-            response_data['status'] = 'Eliminacion exitosa'  
+            response_data['status'] = 'Eliminacion exitosa'
             return HttpResponse(json.dumps(response_data), content_type="application/json")
 
         response_data = {}
-        response_data['error'] = 'No tiene privilegios para realizar esta acción'      
+        response_data['error'] = 'No tiene privilegios para realizar esta acción'
         return HttpResponse(json.dumps(response_data), content_type="application/json", status=401)
-
 
     def get_asignaturas_a_inscribir(request, cedula):
 
@@ -372,12 +371,15 @@ class PrelacionAsignaturaListCreateAPIView(ListCreateAPIView):
             # Lista de todos los codigos de las asignaturas que ya se cursaron
             lista_asignaturas_cursadas = []
             for x in periodo_estudiante:
-                estudiante_asignatura = EstudianteAsignatura.objects.filter(periodo_estudiante=x, nota_definitiva__gte=10, retirado=False)
+                estudiante_asignatura = EstudianteAsignatura.objects.filter(
+                                                                            periodo_estudiante=x,
+                                                                            nota_definitiva__gte=10,
+                                                                            retirado=False)
                 for y in estudiante_asignatura:
                     lista_asignaturas_cursadas.append(y.asignatura.codigo)
 
-            print('ya se cursaron -> ', lista_asignaturas_cursadas,'\n')
-            
+            print('ya se cursaron -> ', lista_asignaturas_cursadas, '\n')
+
             # Convierto el QuerySet de Asignaturas en un JSON
             asignaturas = [entry for entry in asignaturas.values()]
 
@@ -397,19 +399,19 @@ class PrelacionAsignaturaListCreateAPIView(ListCreateAPIView):
                 aux = [entry for entry in aux.values()]
 
                 for y in aux:
-                    lista_eliminar.append( y['asignatura_objetivo_id'] )
+                    lista_eliminar.append(y['asignatura_objetivo_id'])
 
-            print('Aun no se pueden cursar  -> ', lista_eliminar,'\n')
-            
-            # Construyo la lista final 
+            print('Aun no se pueden cursar  -> ', lista_eliminar, '\n')
+
+            # Construyo la lista final
             for x in lista_codigos_asignaturas:
                 if (x not in lista_eliminar):
                     lista_codigo_asignaturas_a_inscribir.append(x)
 
-            print('lista_codigo_asignaturas_a_inscribir = ', lista_codigo_asignaturas_a_inscribir,'\n')
+            print('lista_codigo_asignaturas_a_inscribir = ', lista_codigo_asignaturas_a_inscribir, '\n')
 
-
-            periodo = Periodo.objects.get(estado_periodo_id__estado='en inscripcion', tipo_postgrado_id__tipo=estudiante.id_tipo_postgrado)
+            periodo = Periodo.objects.get(estado_periodo_id__estado='en inscripcion',
+                                          tipo_postgrado_id__tipo=estudiante.id_tipo_postgrado)
 
             asignaturas_id = DocenteAsignatura.objects.filter(periodo=periodo).values('asignatura')
 
@@ -423,24 +425,20 @@ class PrelacionAsignaturaListCreateAPIView(ListCreateAPIView):
                 if (asignatura.codigo in lista_codigo_asignaturas_a_inscribir):
                     lista_codigos_en_periodo_a_inscribir.append(asignatura.codigo)
 
-
                 print('##############################')
 
             n = len(asignaturas)
             lista_asignaturas_a_inscribir = []
 
             for i in range(0, n):
-                if ( asignaturas[i]['codigo'] in lista_codigos_en_periodo_a_inscribir ):
+                if asignaturas[i]['codigo'] in lista_codigos_en_periodo_a_inscribir:
                     lista_asignaturas_a_inscribir.append(asignaturas[i])
 
             print(lista_asignaturas_a_inscribir)
 
-            return HttpResponse(json.dumps(lista_asignaturas_a_inscribir), content_type="application/json", status=200)
-
-
-
+            return HttpResponse(json.dumps(lista_asignaturas_a_inscribir),
+                                content_type="application/json", status=200)
 
         response_data = {}
-        response_data['error'] = 'No tiene privilegios para realizar esta acción'      
+        response_data['error'] = 'No tiene privilegios para realizar esta acción'
         return HttpResponse(json.dumps(response_data), content_type="application/json", status=401)
-

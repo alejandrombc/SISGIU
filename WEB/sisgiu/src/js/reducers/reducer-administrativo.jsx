@@ -5,6 +5,8 @@ const initialState = {
 	lista_estudiantes: [],
 	pago_inscripcion_editado: false,
 	error_pago_inscripcion: false,
+	lista_asignaturas_inscripcion: [],
+	estado_periodo: '',
 };
 
 export default function (state=initialState, action) {
@@ -59,6 +61,17 @@ export default function (state=initialState, action) {
 			nuevo_estado['pago_inscripcion_editado'] = false;
 			nuevo_estado['error_pago_inscripcion'] = true;
 
+			return nuevo_estado;
+
+		case "GET_ASIGNATURAS_INSCRIPCION_EXITOSO":
+			nuevo_estado['lista_asignaturas_inscripcion'] = action.payload['lista_asignaturas_inscripcion'];
+			return nuevo_estado;
+
+		case "GET_ESTADO_PERIODO_EXITOSO":
+			nuevo_estado['estado_periodo'] = action.payload['estado_periodo'];
+			return nuevo_estado;
+
+		case "GET_ESTADO_PERIODO_ERROR":
 			return nuevo_estado;
 		
 

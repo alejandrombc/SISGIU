@@ -2,7 +2,7 @@
 import React, {Component} from 'react';
 import { connect } from 'react-redux';
 import {bindActionCreators} from 'redux';
-import { Alert, Input, Form, FormGroup, Label, Row, Col, Button, Modal, ModalHeader, ModalBody, ModalFooter, Select, Table } from 'reactstrap';
+import { Alert, Input, FormGroup, Label, Row, Col, Button, Table } from 'reactstrap';
 import { PulseLoader } from 'halogenium';
 import SearchInput, {createFilter} from 'react-search-input';
 import '../../../css/switch.css'; 
@@ -21,6 +21,7 @@ import {
   } from '../../actions/moduloEstudiantes';
   
 import ModalEstudianteEdit from './modalEstudianteEdit';
+import { get_estado_periodo } from '../../actions/moduloEstudiantes';
 
 
 const KEYS_TO_FILTERS = ['estudiante.first_name', 'estudiante.last_name', 'estudiante.cedula'];
@@ -36,6 +37,7 @@ class Estudiantes extends Component{
       searchTerm: '',
       estudiante_pagado: {},
       loading: false,
+      estado_periodo: '',
     }
     this.onDismiss = this.onDismiss.bind(this);
     this.get_periodos = this.get_periodos.bind(this);
@@ -47,10 +49,10 @@ class Estudiantes extends Component{
     this.guardarPagadoEstudiante = this.guardarPagadoEstudiante.bind(this);
 	}
 
+
 	componentDidMount() {
       this.props.get_periodos_actuales()
-      .then( () => this.props.cargado() );
-    	
+        .then( () => this.props.cargado() );
 	}
 
   onDismiss() {
@@ -87,7 +89,9 @@ class Estudiantes extends Component{
     if (value !== "-1") {
       // Busco la lista de estudiantes del perido seleccionado
       this.props.get_estudiantes_por_periodo(e.target.value)
-      .then( () => this.updateEstudiantes() );
+      .then( () => this.props.get_estado_periodo(this.state.periodo) 
+      .then( () => this.updateEstudiantes() ));
+    
     } else {
       this.props.vaciar_lista_estudiantes();
     }
@@ -114,7 +118,7 @@ class Estudiantes extends Component{
   get_listItems() {
     let listItems;
 
-    if(this.state.estudiante_pagado != {}){
+    if(this.state.estudiante_pagado !== {}){
       let cant_estudiantes = this.props.administrativoUser.lista_estudiantes.length;
       let estudiantes = [];
 
@@ -145,7 +149,13 @@ class Estudiantes extends Component{
             <Row >
               <Col md={{ size: 'auto', offset: 3 }} className='botones'>
                 <label className="switch">
-                  <input type="checkbox" name={data.estudiante['cedula']} checked={this.state.estudiante_pagado[data.estudiante['cedula']]} onChange={this.handleChangePagado} />
+                  <input 
+                    type="checkbox" 
+                    name={data.estudiante['cedula']} 
+                    checked={this.state.estudiante_pagado[data.estudiante['cedula']]} 
+                    onChange={this.handleChangePagado} 
+                    disabled={this.props.administrativoUser.estado_periodo.estado === 'activo'} 
+                  />
                   <span className="slider round"></span>
                 </label>
               </Col>
@@ -154,7 +164,11 @@ class Estudiantes extends Component{
           <td>  
             <Row >
               <Col md={{ size: 'auto', offset: 3 }} className='botones'>
-                <ModalEstudianteEdit onDismiss={this.onDismiss} data={data} />
+                <ModalEstudianteEdit 
+                  onDismiss={this.onDismiss} 
+                  data={data} 
+                  periodo={this.state.periodo} 
+                />
               </Col>
             </Row>
           </td>
@@ -256,7 +270,14 @@ class Estudiantes extends Component{
                 <Col md="6" sm="6"> </Col>
                 <Col md="6" sm="6">
                     <div className="text-right">
-                      <Button color="primary" size='sm' data-toggle="tooltip" title="Guardar" onClick={() => this.guardarPagadoEstudiante()}>Guardar</Button>
+                      <Button 
+                        color="primary" 
+                        size='sm' 
+                        data-toggle="tooltip" 
+                        title="Guardar" 
+                        onClick={() => this.guardarPagadoEstudiante()}
+                        hidden={this.props.administrativoUser.estado_periodo.estado === 'activo'}
+                        >Guardar</Button>
                     </div>
                 </Col>
 
@@ -297,6 +318,7 @@ const mapDispatchToProps = (dispatch) => {
     get_estudiantes_por_periodo: get_estudiantes_por_periodo,
     vaciar_lista_estudiantes: vaciar_lista_estudiantes,
     pago_inscripcion_estudiantes: pago_inscripcion_estudiantes,
+    get_estado_periodo: get_estado_periodo,
   }, dispatch )
 }
 
