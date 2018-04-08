@@ -72,3 +72,50 @@ export const get_estado_periodo = (periodo_id) =>{
 			}
 	   });
 }
+
+export const get_asignaturas_totales = (periodo) =>{
+
+	let token = localStorage.getItem('user_token');
+
+	return request
+	   .get(host+'api/asignaturas_actuales/periodo/'+periodo+'/')
+	   .set('Authorization', 'JWT '+token)
+	   .set('Content-Type', 'application/json')
+	   .then(function(res) {
+			return {
+				type: "GET_ASIGNATURAS_PERIODO",
+				payload: {'lista_asignatura_periodo': res.body}
+			}
+	   })
+	   .catch(function(err) {
+	      	return {
+				type: "ERROR"
+			}
+	   });
+}
+
+
+export const get_asignaturas_estudiante = (cedula) =>{
+
+	let token = localStorage.getItem('user_token');
+
+	return request
+	   .get(host+'api/asignaturas_actuales/estudiante/'+cedula+'/')
+	   .set('Authorization', 'JWT '+token)
+	   .set('Content-Type', 'application/json')
+	   .then(function(res) {
+			return {
+				type: "GET_ASIGNATURAS_ESTUDIANTE",
+				payload: {'lista_asignatura_estudiante': res.body}
+			}
+	   })
+	   .catch(function(err) {
+	      	return {
+				type: "ERROR"
+			}
+	   });
+}
+
+
+
+

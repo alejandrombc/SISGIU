@@ -108,22 +108,49 @@ export const crearUsuario = (user, tipo_usuario) => {
 	}
 	console.log(user);
 	return request
-	   .post(host+'api/'+modulo+'/')
+	   .get(host+'api/usuarios/cedula/'+user['usuario']['cedula']+'/')
 	   .set('Authorization', 'JWT '+token)
-	   .set('Content-Type', 'application/json')
-	   .send(user)
 	   .then(function(res) {
-		   	  	return function (dispatch) {
-				    dispatch(get_usuarios(tipo_usuario ,1));
-				}
+	   		user['usuario']['username'] = "dummy";
+			return request
+			   .post(host+'api/'+modulo+'/')
+			   .set('Authorization', 'JWT '+token)
+			   .set('Content-Type', 'application/json')
+			   .send(user)
+			   .then(function(res) {
+				   	  	return function (dispatch) {
+						    dispatch(get_usuarios(tipo_usuario ,1));
+						}
 
+			   })
+			   .catch(function(err) {
+			   	console.log(err);
+			   	  	return function (dispatch) {
+					    dispatch(get_usuarios(tipo_usuario ,2));
+					}
+			   });
 	   })
 	   .catch(function(err) {
-	   	console.log(err);
-	   	  	return function (dispatch) {
-			    dispatch(get_usuarios(tipo_usuario ,2));
-			}
+			return request
+			   .post(host+'api/'+modulo+'/')
+			   .set('Authorization', 'JWT '+token)
+			   .set('Content-Type', 'application/json')
+			   .send(user)
+			   .then(function(res) {
+				   	  	return function (dispatch) {
+						    dispatch(get_usuarios(tipo_usuario ,1));
+						}
+
+			   })
+			   .catch(function(err) {
+			   	console.log(err);
+			   	  	return function (dispatch) {
+					    dispatch(get_usuarios(tipo_usuario ,2));
+					}
+			   });
 	   });
+
+
 }
 
 

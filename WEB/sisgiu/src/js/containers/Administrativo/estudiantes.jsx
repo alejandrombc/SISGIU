@@ -73,7 +73,7 @@ class Estudiantes extends Component{
   }
 
   handleChangePagado(e){
-    const { name, value } = e.target;
+    const { name } = e.target;
 
     let estudiante_pagado = this.state.estudiante_pagado;
     estudiante_pagado[name] = !estudiante_pagado[name];

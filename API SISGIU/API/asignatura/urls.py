@@ -75,4 +75,13 @@ urlpatterns = format_suffix_patterns([
     # Retirar asignatura
     url(r'^api/asignatura/(?P<codigo>[\w\-]+)/estudiante/(?P<cedula>[0-9]{6,8})/periodo/(?P<periodo>\d+)/$',
         AsignaturaListCreateAPIView.retirar_asignatura_estudiante, name='asignaturas-por-estudiante'),
+
+    # Asignaturas que tiene un estudiante en el periodo actual
+    url(r'^api/asignaturas_actuales/estudiante/(?P<cedula>[0-9]{6,8})/$',
+        PrelacionAsignaturaListCreateAPIView.get_asignaturas_actuales_estudiante, name='asignaturas-actuales'),
+  
+    # Asignaturas de un periodo
+    url(r'^api/asignaturas_actuales/periodo/(?P<periodo>\d+)/$',
+        PrelacionAsignaturaListCreateAPIView.get_asignaturas_actuales, name='asignaturas-actuales'),
+  
 ])

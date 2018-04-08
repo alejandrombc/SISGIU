@@ -13,15 +13,21 @@ class CambiarAsignaturas extends React.Component {
     super(props);
 
     this.state = {
-      options: this.props.asignaturas,
+      options: [],
       value: [],
-      creditos: 0,
-      cantidad_max_creditos: 24,
-
     }
-    this.setCreditos = this.setCreditos.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.inscribirse = this.inscribirse.bind(this);
+
+  }
+
+  componentDidMount() {
+
+    this.setState(
+    {
+      options:this.props.asignaturas, 
+      value:this.props.asignaturas_inscritas,
+    })
 
   }
 
@@ -29,26 +35,8 @@ class CambiarAsignaturas extends React.Component {
     this.setState({options: nextProps.asignaturas});
   }
  
-
-  setCreditos(value){
-    var j = 0;
-    var creditos = 0;
-    while(j < value.length){
-      for (let i = 0; i < this.state.options.length; i++) {
-        if (this.state.options[i].value === value[j]){
-            creditos+=this.state.options[i].unidad_credito;
-            j++;
-        }
-      }
-    }
-
-    this.setState({creditos: creditos});
-  }
-
   handleChange (value) {
     this.setState({ value: value }); //another array
-    this.setCreditos(value);
-
   }
 
   inscribirse() {
@@ -58,9 +46,6 @@ class CambiarAsignaturas extends React.Component {
   }
  
   render() {
-
-    var total = this.state.creditos;
-
     return (
       <div>
         <MultiselectTwoSides
@@ -68,9 +53,8 @@ class CambiarAsignaturas extends React.Component {
           className="msts_theme_example"
           onChange={this.handleChange}
           availableHeader="Asignaturas Disponibles"
-          // availableFooter={`Available: ${availableCount}`}
           selectedHeader="Asignaturas Seleccionadas"
-          selectedFooter={`Creditos seleccionados: ${total}`}
+          selectedFooter={`Asignaturas seleccionadas: ${this.state.value.length}`}
           labelKey="nombre"
           searchable
           limit='10'
@@ -78,7 +62,7 @@ class CambiarAsignaturas extends React.Component {
         <br />
         <Row>
           <Col className="text-right" md="12">
-            <Button onClick={ ()=> this.inscribirse() } disabled={this.state.creditos===0 || this.state.creditos>this.state.cantidad_max_creditos}>
+            <Button onClick={ ()=> this.inscribirse() } disabled={this.props.boton}>
               Guardar
             </Button>
           </Col>
