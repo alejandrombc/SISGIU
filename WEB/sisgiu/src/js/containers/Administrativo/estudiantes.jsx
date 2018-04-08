@@ -47,6 +47,7 @@ class Estudiantes extends Component{
     this.updateEstudiantes = this.updateEstudiantes.bind(this);
     this.handleChangePagado = this.handleChangePagado.bind(this);
     this.guardarPagadoEstudiante = this.guardarPagadoEstudiante.bind(this);
+    this.habilitarAlerts = this.habilitarAlerts.bind(this);
 	}
 
 
@@ -57,6 +58,10 @@ class Estudiantes extends Component{
 
   onDismiss() {
     this.setState({ visible: false });
+  }
+
+  habilitarAlerts() {
+    this.setState({ visible: true });
   }
 
   updateEstudiantes (){
@@ -165,7 +170,8 @@ class Estudiantes extends Component{
             <Row >
               <Col md={{ size: 'auto', offset: 3 }} className='botones'>
                 <ModalEstudianteEdit 
-                  onDismiss={this.onDismiss} 
+                  onDismiss={this.onDismiss}
+                  habilitarAlerts={this.habilitarAlerts}
                   data={data} 
                   periodo={this.state.periodo} 
                 />
@@ -197,8 +203,14 @@ class Estudiantes extends Component{
                   Estado de pago de inscripción de estudiantes actualizado exitosamente
               </Alert> 
             }
+            {/*ALERT DE EXITO*/}
+            {this.props.administrativoUser.inscripcion_modificada && !this.state.loading &&
+              <Alert color="success" isOpen={this.state.visible} toggle={this.onDismiss}>
+                  Inscripción actualizada exitosamente
+              </Alert> 
+            }
             {/*ALERT DE ERROR*/}
-            {this.props.administrativoUser.error_pago_inscripcion && !this.state.loading &&
+            {this.props.administrativoUser.error && !this.state.loading &&
               <Alert color="danger" isOpen={this.state.visible} toggle={this.onDismiss}>
                   Ha ocurrido un error
               </Alert>

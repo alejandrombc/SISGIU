@@ -6,7 +6,7 @@ import {bindActionCreators} from 'redux';
 import { connect } from 'react-redux';
 
 // Components
-import { inscribir_asignaturas } from '../../actions/inscripcion';
+import { inscribir_asignaturas_administrativo } from '../../actions/moduloEstudiantes';
 
 class CambiarAsignaturas extends React.Component {
   constructor(props) {
@@ -40,9 +40,8 @@ class CambiarAsignaturas extends React.Component {
   }
 
   inscribirse() {
-    this.props.inscribir_asignaturas(this.state, this.props.cedula);
 
-    this.props.triggerInscripcion();
+    this.props.inscribir_asignaturas_administrativo(this.state, this.props.cedula).then( () => this.props.triggerEsconderModal() );
   }
  
   render() {
@@ -62,7 +61,7 @@ class CambiarAsignaturas extends React.Component {
         <br />
         <Row>
           <Col className="text-right" md="12">
-            <Button onClick={ ()=> this.inscribirse() } disabled={this.props.boton}>
+            <Button onClick={ ()=> this.inscribirse() } disabled={this.props.estado_periodo} size='sm'>
               Guardar
             </Button>
           </Col>
@@ -81,7 +80,7 @@ const mapStateToProps = (state)=> {
 
 const mapDispatchToProps = (dispatch) => {
   return bindActionCreators({
-  inscribir_asignaturas: inscribir_asignaturas,
+  inscribir_asignaturas_administrativo: inscribir_asignaturas_administrativo,
 
   }, dispatch )
 }

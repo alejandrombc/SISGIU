@@ -67,8 +67,10 @@ export const get_estado_periodo = (periodo_id) =>{
 			}
 	   })
 	   .catch(function(err) {
+	   		localStorage.removeItem('user_token');
+	   		localStorage.removeItem('modulo');
 	      	return {
-				type: "GET_ESTADO_PERIODO_ERROR"
+				type: "ERROR"
 			}
 	   });
 }
@@ -88,6 +90,8 @@ export const get_asignaturas_totales = (periodo) =>{
 			}
 	   })
 	   .catch(function(err) {
+	   		localStorage.removeItem('user_token');
+	   		localStorage.removeItem('modulo');
 	      	return {
 				type: "ERROR"
 			}
@@ -110,10 +114,33 @@ export const get_asignaturas_estudiante = (cedula) =>{
 			}
 	   })
 	   .catch(function(err) {
+	   		localStorage.removeItem('user_token');
+	   		localStorage.removeItem('modulo');
 	      	return {
 				type: "ERROR"
 			}
 	   });
+}
+
+
+export function inscribir_asignaturas_administrativo(data, cedula) {
+	let token = localStorage.getItem('user_token');
+
+	return request
+	   .post(host+'api/estudianteAsignatura/modificarInscripcion/'+cedula+'/')
+	   .set('Authorization', 'JWT '+token)
+	   .send(data)
+	   .then(function(res) {
+	   		return {
+	   			type: 'MODIFICAR_INSCRIPCION_EXITOSO',
+	   		}
+	   })
+	   .catch(function(err) {
+	      	return {
+				type: "MODIFICAR_INSCRIPCION_ERROR"
+			}
+	   });
+
 }
 
 

@@ -392,8 +392,10 @@ class DocenteAsignaturaDeleteAPIView(DestroyAPIView):
 
 """
 EstudianteAsignatura
-				Esto solo debe ser tratado por el administrador
+Esto solo debe ser tratado por el administrador
 """
+
+
 class EstudianteAsignaturaListCreateAPIView(ListCreateAPIView):
     queryset = EstudianteAsignatura.objects.all()
     serializer_class = EstudianteAsignaturaListSerializer
@@ -409,29 +411,71 @@ class EstudianteAsignaturaListCreateAPIView(ListCreateAPIView):
 
             # En el list 'value' se encuentran los IDs de las asignaturas a agregar
             asignaturas_id = body['value']
-            print(asignaturas_id)
+            # print(asignaturas_id)
 
             estudiante = Estudiante.objects.get(usuario__cedula=cedula)
-            print(estudiante.id_tipo_postgrado)
+            # print(estudiante.id_tipo_postgrado)
 
-            periodo = Periodo.objects.get(estado_periodo_id__estado='en inscripcion', tipo_postgrado_id__tipo=estudiante.id_tipo_postgrado)
-            print(periodo)
+            periodo = Periodo.objects.get(estado_periodo_id__estado='en inscripcion',
+                                          tipo_postgrado_id__tipo=estudiante.id_tipo_postgrado)
+            # print(periodo)
 
             periodo_estudiante = PeriodoEstudiante(periodo=periodo, estudiante=estudiante, pagado=False)
             periodo_estudiante.save()
 
             for x in asignaturas_id:
                 asignatura = Asignatura.objects.get(id=x)
-                print(asignatura)
-                estudiante_asignatura = EstudianteAsignatura(periodo_estudiante=periodo_estudiante, asignatura=asignatura, nota_definitiva=0)
-                print(estudiante_asignatura)
+                # print(asignatura)
+                estudiante_asignatura = EstudianteAsignatura(periodo_estudiante=periodo_estudiante,
+                                                             asignatura=asignatura,
+                                                             nota_definitiva=0)
+                # print(estudiante_asignatura)
                 estudiante_asignatura.save()
 
-            response_data['mensaje'] = 'Inscripción realizada exitosamente.'      
+            response_data['mensaje'] = 'Inscripción realizada exitosamente.'
             return HttpResponse(json.dumps(response_data), content_type="application/json", status=200)
-            
-        response_data['Error'] = 'No tiene privilegios para realizar esta acción'      
+
+        response_data['Error'] = 'No tiene privilegios para realizar esta acción'
         return HttpResponse(json.dumps(response_data), content_type="application/json", status=401)
+
+    @csrf_exempt
+    def modificar_estudiante_asignatura(request, cedula):
+        response_data = {}
+        if (request.method == 'POST'):
+
+            body_unicode = request.body.decode('utf-8')
+            body = json.loads(body_unicode)
+
+            # En el list 'value' se encuentran los IDs de las asignaturas a agregar
+            asignaturas_id = body['value']
+
+            estudiante = Estudiante.objects.get(usuario__cedula=cedula)
+
+            periodo = Periodo.objects.get(estado_periodo_id__estado='en inscripcion',
+                                          tipo_postgrado_id__tipo=estudiante.id_tipo_postgrado)
+
+            # Si ya existe no hago nada, sino lo creo.
+            if not PeriodoEstudiante.objects.filter(periodo=periodo, estudiante=estudiante).exists():
+                periodo_estudiante = PeriodoEstudiante(periodo=periodo, estudiante=estudiante, pagado=False)
+                periodo_estudiante.save()
+            else:
+                periodo_estudiante = PeriodoEstudiante.objects.get(periodo=periodo, estudiante=estudiante)
+
+            EstudianteAsignatura.objects.filter(periodo_estudiante=periodo_estudiante).delete()
+
+            for x in asignaturas_id:
+                asignatura = Asignatura.objects.get(id=x)
+                estudiante_asignatura = EstudianteAsignatura(periodo_estudiante=periodo_estudiante,
+                                                             asignatura=asignatura,
+                                                             nota_definitiva=0)
+                estudiante_asignatura.save()
+
+            response_data['mensaje'] = 'Inscripción realizada exitosamente.'
+            return HttpResponse(json.dumps(response_data), content_type="application/json", status=200)
+
+        response_data['Error'] = 'No tiene privilegios para realizar esta acción'
+        return HttpResponse(json.dumps(response_data), content_type="application/json", status=401)
+
 
 class EstudianteAsignaturaDetailAPIView(RetrieveAPIView):
     queryset = EstudianteAsignatura.objects.all()

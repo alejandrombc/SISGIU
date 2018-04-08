@@ -4,35 +4,18 @@ const initialState = {
 	edit:false, 
 	lista_estudiantes: [],
 	pago_inscripcion_editado: false,
-	error_pago_inscripcion: false,
+	error: false,
 	estado_periodo: '',
 	lista_asignatura_periodo: [],
 	lista_asignatura_estudiante: [],
+	inscripcion_modificada: false,
+	// error_modificando_inscripcion: false,
 };
 
 export default function (state=initialState, action) {
 	var nuevo_estado = Object.assign({}, state);
 
 	switch (action.type){
-
-		// case "EDIT_PERIODO_EXITOSO":
-		// 	nuevo_estado['edit'] = true;
-		// 	nuevo_estado['bad_input'] = false;
-		// 	nuevo_estado['error_creando_periodo'] = false;
-		// 	nuevo_estado['lista_periodos'] = action.payload['lista_periodos'];
-		// 	return nuevo_estado;
-
-		// case "PERIODO_ERROR":
-		// 	nuevo_estado['lista_periodos'] = action.payload['lista_periodos'];
-		// 	nuevo_estado['bad_input'] = true;
-		// 	nuevo_estado['loading'] = false;
-		// 	return nuevo_estado;
-
-		// case "GET_PERIODOS_EXITOSO":
-		// 	nuevo_estado['lista_periodos'] = action.payload['lista_periodos'];
-		// 	nuevo_estado['edit'] = false;
-		// 	return nuevo_estado;
-
 
 		case "GET_PERIODOS_ACTIVOS_EXITOSO":
 			nuevo_estado['lista_periodos'] = action.payload['periodos'];
@@ -55,12 +38,13 @@ export default function (state=initialState, action) {
 
 		case "PAGO_INSCRIPCION_ESTUDIANTES_EXITOSO":
 			nuevo_estado['pago_inscripcion_editado'] = true;
-			nuevo_estado['error_pago_inscripcion'] = false;
+			nuevo_estado['inscripcion_modificada'] = false;
+			nuevo_estado['error'] = false;
 			return nuevo_estado;
 
 		case "PAGO_INSCRIPCION_ESTUDIANTES_ERROR":
 			nuevo_estado['pago_inscripcion_editado'] = false;
-			nuevo_estado['error_pago_inscripcion'] = true;
+			nuevo_estado['error'] = true;
 
 			return nuevo_estado;
 
@@ -76,7 +60,16 @@ export default function (state=initialState, action) {
 			nuevo_estado['estado_periodo'] = action.payload['estado_periodo'];
 			return nuevo_estado;
 
-		case "GET_ESTADO_PERIODO_ERROR":
+		case "MODIFICAR_INSCRIPCION_EXITOSO":
+			nuevo_estado['inscripcion_modificada'] = true;
+			nuevo_estado['pago_inscripcion_editado'] = false;
+			nuevo_estado['error'] = false;
+			return nuevo_estado;
+
+		case "MODIFICAR_INSCRIPCION_ERROR":
+			nuevo_estado['error'] = true;
+			nuevo_estado['inscripcion_modificada'] = false;
+			nuevo_estado['pago_inscripcion_editado'] = false;
 			return nuevo_estado;
 		
 

@@ -17,34 +17,18 @@ class ModalEstudianteEdit extends React.Component {
     super(props);
     this.state = {
       modal: false,
-      // visible: true,
       cargado: false,
       asignaturas: [],
     };
     this.toggle = this.toggle.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
     this.buscar_asignaturas = this.buscar_asignaturas.bind(this);
-    
-  }
-
-
-  componentDidMount() {
-
-    // this.props.get_estado_periodo(this.props.periodo)
-      // .then( () => this.buscar_asignaturas() );
-
+    this.buscar_asignaturas = this.buscar_asignaturas.bind(this);
+    this.get_asignaturas = this.get_asignaturas.bind(this);
   }
 
   buscar_asignaturas() {
     
     if (this.state.modal) {
-      // if (this.props.administrativoUser.estado_periodo.estado === 'activo') {
-      //   console.log('el periodo esta activo');  
-      //   this.setState({boton_periodo:true});
-      // } else if (this.props.administrativoUser.estado_periodo.estado === 'en inscripcion') {
-      //   console.log('el periodo esta en inscripcion');
-      //   this.props.get_asignaturas_inscripcion(this.props.data.estudiante.cedula);
-      // }
       this.props.get_asignaturas_totales(this.props.periodo)
           .then( () => this.props.get_asignaturas_estudiante(this.props.data.estudiante.cedula) 
           .then( () => this.setState({cargado:true}) 
@@ -59,15 +43,9 @@ class ModalEstudianteEdit extends React.Component {
     this.setState({
       modal: !this.state.modal
     }, () => this.props.get_estado_periodo(this.props.periodo)
-              .then( () => this.buscar_asignaturas()  ));
+              .then( () => this.buscar_asignaturas() ));
 
-    // this.setState({
-    //   modal: !this.state.modal
-    // }, () => this.buscar_asignaturas() );
-    if(!this.state.modal) { this.props.onDismiss(); };
-  }
-
-  handleSubmit() {
+    if(!this.state.modal) { this.props.habilitarAlerts(); }
 
   }
 
@@ -79,7 +57,6 @@ class ModalEstudianteEdit extends React.Component {
     aux = this.props.administrativoUser.lista_asignatura_periodo
     :
     aux = this.props.administrativoUser.lista_asignatura_estudiante;
-    // console.log(aux);
     let asignaturas = [];
     let values = [];
     let N = aux.length;
@@ -114,7 +91,7 @@ class ModalEstudianteEdit extends React.Component {
           <ModalHeader toggle={this.toggle}> 
                 Editar estudiante 
           </ModalHeader>
-          <Form id="Form" onSubmit={this.handleSubmit}>
+          <Form id="Form">
             <ModalBody>
                 <img className="center-img" width="100px" height="100px" src={this.props.data.estudiante.foto} alt="foto_usuario" />
                 <br />
@@ -194,15 +171,18 @@ class ModalEstudianteEdit extends React.Component {
                       </Col>
                     </Row>
                     <br />
-                    <CambiarAsignaturas boton={this.props.administrativoUser.estado_periodo.estado !== 'en inscripcion'} asignaturas_inscritas={this.get_asignaturas(false)} asignaturas={this.get_asignaturas(true)} cedula={this.props.data.estudiante.cedula}/>   
+                    <CambiarAsignaturas
+                      estado_periodo={this.props.administrativoUser.estado_periodo.estado !== 'en inscripcion'} 
+                      asignaturas_inscritas={this.get_asignaturas(false)} 
+                      asignaturas={this.get_asignaturas(true)} 
+                      cedula={this.props.data.estudiante.cedula}
+                      triggerEsconderModal={ () => this.toggle() }
+                    />   
                 </div>
                 }
             </ModalBody>
             <ModalFooter>
-              {/*
-              <Button color="success" type="submit">Guardar</Button>{' '}      
-              <Button color="secondary" onClick={this.toggle}>Salir</Button>
-              */}
+
             </ModalFooter>
           </Form>
         </Modal>
