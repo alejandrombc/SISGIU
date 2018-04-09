@@ -43,18 +43,29 @@ class InicioDocente extends Component{
         )
       });
 
-    } else 
-    {
-      listItems = <center><PulseLoader color="#b3b1b0" size="16px" margin="4px"/></center>
-    }
+    } 
 
     return listItems;
   }
 
   render(){
 
+    if (this.props.docenteUser.asignaturas.length === 0)
+    {
+      return (
+        <center>
+          <br/>
+          <h4>Actualmente no se encuentra impartiendo ninguna asignatura</h4>
+        </center>
+      );
+    } else 
+    {
       return(
         <div>
+          
+          { !this.props.activeUser.cargado &&
+            <center><PulseLoader color="#b3b1b0" size="16px" margin="4px"/></center>
+          }
 
           <Row>
             <Col md='12' className="text-center">
@@ -74,6 +85,9 @@ class InicioDocente extends Component{
 
         </div>
       )
+    }
+
+      
   }
 }
 

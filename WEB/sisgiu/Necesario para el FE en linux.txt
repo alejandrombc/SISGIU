@@ -1,0 +1,15 @@
+Para que funcione react en ubuntu debemos:
+
+1. tener actualizadas las versiones de node y npm
+node v8.11.1 
+npm v5.8.0
+
+2. Instalar webpack
+> npm install --save webpack@3.11.0
+
+3. Se debe eliminar la carpeta node_modules/ en caso de que exista.
+
+
+4. Hacer "npm install" para instalar todo lo que esta en el package.json
+
+5. npm start

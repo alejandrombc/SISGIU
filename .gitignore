@@ -122,3 +122,7 @@ tests/report/
 
 
 media/
+
+
+# Visual Studio Code
+.vscode/
