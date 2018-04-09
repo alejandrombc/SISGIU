@@ -15,8 +15,8 @@ def user_directory_path_subuser(instance, filename):
 
 class Usuario(AbstractUser):
 	cedula = models.IntegerField(null=True)
-	segundo_nombre = models.CharField(max_length=50, null=True)
-	segundo_apellido = models.CharField(max_length=50, null=True)
+	segundo_nombre = models.CharField(max_length=50, null=True, blank=True)
+	segundo_apellido = models.CharField(max_length=50, null=True, blank=True)
 	correo_alternativo = models.EmailField(max_length=60, blank=True)
 	celular = models.CharField(max_length=14, blank=True)
 	telefono_casa = models.CharField(max_length=14, blank=True)
