@@ -4,7 +4,7 @@ import React,{Component} from 'react';
 import {login} from '../actions/login.jsx';
 import {bindActionCreators} from 'redux';
 import { connect } from 'react-redux';
-
+import '../../css/global.css';
 //Spinner
 import { PulseLoader } from 'halogenium';
 
@@ -56,22 +56,14 @@ class Login extends Component{
 		if(!this.props.token['loggedIn']){
 			const { cedula, password } = this.state;
 			return (
-					<div >
-
-						<Form onSubmit={this.handleSubmit}>
-							<Row>
-								<Col lg='4' md='4' sm='3' xs='2'></Col>
-								<Col md='4' sm='6' xs='8' className="border border-info border-bottom-0"> 
+					<div>
+						<Row>
+							<Col lg='4' md='4' sm='3' xs='2'></Col>
+							<Col md='4' sm='6' xs='8' className="shadowBox">
+								<Form onSubmit={this.handleSubmit}>
 							        <br/>
 							        <h5>Sesión</h5>
-									
-							    </Col>
-							    <Col lg='4' md='4' sm='3' xs='2'></Col> 
-							</Row>	
-
-							<Row>					
-								<Col lg='4' md='4' sm='3' xs='2'></Col>
-								<Col md='4' xs='8' sm='6' className="border border-info border-top-0 border-bottom-0"> 
+											
 							      	{!this.props.token['bad_input'] && !this.props.token['bad_module'] && this.state.loading &&
 	                    		      	<center><PulseLoader color="#b3b1b0" size="16px" margin="4px"/></center>
                     				}
@@ -100,45 +92,26 @@ class Login extends Component{
 							            <option value="administradores">Administrador</option>
 							          </select>
 							        </FormGroup>
-							    </Col>
-							    <Col lg='4' md='4' sm='3' xs='2'></Col>
-							    
-							</Row>							
-							<Row>					
-								<Col lg='4' md='4' sm='3' xs='2'></Col>
-								<Col md='4' xs='8' sm='6' className="border border-info border-top-0 border-bottom-0"> 							       
 							        <FormGroup>
 							          <Label for="username">Cédula</Label>
 							          <Input type="text" name="cedula" id="cedula" value={cedula} required onChange={this.handleChange} placeholder="Ej: 11122233"/> 
 							        </FormGroup>
-							    </Col>
-							    <Col lg='4' md='4' sm='3' xs='2'></Col>
-							</Row>
-							<Row>
-								<Col lg='4' md='4' sm='3' xs='2' ></Col>
-								<Col md='4' xs='8' sm='6' className="border border-info border-bottom-0 border-top-0">
 							        <FormGroup>
 							          <Label for="password">Contraseña</Label>
 							          <Input type="password" name="password" id="password" value={password} required onChange={this.handleChange} placeholder="Contraseña"/>
 							        </FormGroup>
-						      	</Col>
-						      	<Col lg='4' md='4' sm='3' xs='2'></Col>
-							</Row>
-							<Row>
-								<Col lg='4' md='4' sm='3' xs='2'></Col>
-								<Col md='4' xs='8' sm='6' className="border border-info border-top-0 text-center">
-						        	
-						        	<Button color="primary">Enviar</Button>
-						        	<br/>
-						        	<a href='/recuperarContraseña'>Olvidé mi contraseña</a>
-						        	<br/><br/>
-						      	</Col>
-						      	<Col lg='4' md='4' sm='3' xs='2'></Col>
-							</Row>
+						        	<div className="text-center">
+							        	<Button color="primary">Enviar</Button>
+							        	<br/>
+							        	<a href='/recuperarContraseña'>Olvidé mi contraseña</a>
+							        	<br/><br/>
+							        </div>
 
-							
-					    </Form>
-
+									
+							    </Form>
+							</Col>
+							<Col lg='4' md='4' sm='3' xs='2'></Col> 
+						</Row>
 					</div>
 				)
 			}

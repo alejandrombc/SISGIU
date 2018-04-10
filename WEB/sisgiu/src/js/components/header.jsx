@@ -29,7 +29,7 @@ class Header extends Component{
 
 						<Col lg='3' md='3' sm='3'>
 							<a href='http://ucv.ve'>
-	     						<img width="120px" height="120px" src="https://catedratesv.files.wordpress.com/2012/05/logo-ucv1.gif" className="logo-header-ucv" alt='ucv-logo'/>
+	     						<img width="120px" height="120px" src={host + 'media/sisgiu/logo_ucv_blanco.png'} className="logo-header-ucv" alt='ucv-logo'/>
 							</a>
 	          				<a href='https://www.fau.ucv.ve/'>
 	          					<img width="200px" height="100px" src={host + 'media/sisgiu/logo_fau_blanco.png'} className="logo-header-fau" alt='instituto-urbanismo-logo'/>

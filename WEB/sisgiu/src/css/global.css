@@ -1,3 +1,14 @@
-.prueba {
-    background-color: #E3E7E8;
+.content_background {
+	background: #d5dae0 !important; 
+}
+
+
+.footer_text{
+	color: white !important;
+}
+
+.shadowBox{
+	-webkit-box-shadow: 9px 18px 42px 0px rgba(0,0,0,0.53);
+	-moz-box-shadow: 9px 18px 42px 0px rgba(0,0,0,0.53);
+	box-shadow: 9px 18px 42px 0px rgba(0,0,0,0.53);
 }

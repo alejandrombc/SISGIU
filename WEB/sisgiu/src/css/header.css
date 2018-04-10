@@ -4,7 +4,10 @@
 
 .jumbotron {
   padding: 0;
-  background-color: #4682B4;
+  /*background-color: #4682B4;*/
+  background: #4b8eaf; 
+  background: -webkit-linear-gradient(to right, #16222A, #4b8eaf);   
+  background: linear-gradient(to right, #16222A, #4b8eaf);
   color: white;
   /* background-color: #84CBEF; */
 }
@@ -23,10 +26,14 @@ body{
 
 .navbar-light .navbar-collapse .navbar-nav > li > a:hover {
   /*background-color: #E4EAF0;*/
-  background-color: #CCDFF1;
-  border-radius: 10%;
+  background-color: #ededed;
+  font-size: 17px;
 }
 
+
+.navbar-light .navbar-collapse .navbar-nav > li > a{
+  color:white;
+}
 
 @media (max-width: 768px) {
   .logo-header-iu, .titulo-app, .hr-header, .logo-header-fau, .logo-header-ucv {
