@@ -489,7 +489,7 @@ class EstudianteAsignaturaDetailAPIView(RetrieveAPIView):
 
             lista_estudiante_asignatura = [entry for entry in estudiante_asignatura.values()]
 
-            historial_estudiante =  {}
+            historial_estudiante = {}
             periodos = []
             subPeriodo = []
             periodo_info = {}
@@ -499,7 +499,6 @@ class EstudianteAsignaturaDetailAPIView(RetrieveAPIView):
             cantidad_materias_ponderadas = 0
             cantidad_materias_reprobadas = 0
             cantidad_materias_retiradas = 0
-            eficiencia = 0
 
             for x in lista_estudiante_asignatura:
                 if subPeriodo == []:
@@ -536,12 +535,13 @@ class EstudianteAsignaturaDetailAPIView(RetrieveAPIView):
                         cantidad_materias+=1
                         if(periodo_info['nota_definitiva'] < 10):
                             cantidad_materias_reprobadas+=1
+                
+                if estado_periodo.estado == "activo" or estado_periodo.estado == "en inscripcion":
+                    if not x['retirado']:
+                        periodo_info['nota_definitiva'] = 'SC'
 
                 subPeriodo.append(periodo_info)  
                 periodo_info = {}
-
-
-            eficiencia = (cantidad_materias-cantidad_materias_reprobadas)/cantidad_materias
 
             periodos.append(subPeriodo)
 
@@ -550,8 +550,13 @@ class EstudianteAsignaturaDetailAPIView(RetrieveAPIView):
             historial_estudiante['asignaturas_reprobadas'] = cantidad_materias_reprobadas
             historial_estudiante['asignaturas_retiradas'] = cantidad_materias_retiradas
             historial_estudiante['asignaturas_aprobadas'] = cantidad_materias-cantidad_materias_reprobadas
-            historial_estudiante['promedio_general'] = '{0:.2f}'.format(promedio_general/cantidad_materias)
-            historial_estudiante['promedio_ponderado'] = '{0:.2f}'.format(promedio_ponderado/cantidad_materias_ponderadas)
+            if cantidad_materias == 0:
+                historial_estudiante['promedio_general'] = 0
+                historial_estudiante['promedio_ponderado'] = 0
+            else:
+                historial_estudiante['promedio_general'] = '{0:.2f}'.format(promedio_general/cantidad_materias)
+                historial_estudiante['promedio_ponderado'] = '{0:.2f}'.format(promedio_ponderado/cantidad_materias_ponderadas)
+
             return HttpResponse(json.dumps(historial_estudiante), content_type="application/json")
 
         response_data = {}
