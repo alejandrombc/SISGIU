@@ -165,13 +165,13 @@ class ModalUsuarioEdit extends React.Component {
                           <FormGroup row>
                             <Label for="first_name" sm={4}>Cedula</Label>
                             <Col sm={8}>
-                              <Input  bsSize="sm" type="text" name="cedula" id="cedula" defaultValue={this.state.usuario['cedula']} readOnly/>
+                              <Input  bsSize="sm" type="text" name="cedula" id="cedula" defaultValue={this.state.usuario['cedula']} readOnly required/>
                             </Col>
                           </FormGroup>
                           <FormGroup row>
                             <Label for="first_name" sm={4}>Primer Nombre</Label>
                             <Col sm={8}>
-                              <Input  bsSize="sm" type="text" name="first_name" id="first_name" onChange={this.handleChangeUsuario} defaultValue={this.state.usuario['first_name']} />
+                              <Input  bsSize="sm" type="text" name="first_name" id="first_name" onChange={this.handleChangeUsuario} defaultValue={this.state.usuario['first_name']} required/>
                             </Col>
                           </FormGroup>
                           <FormGroup row>
@@ -183,25 +183,25 @@ class ModalUsuarioEdit extends React.Component {
                           <FormGroup row>
                             <Label for="last_name" sm={4}>Primer Apellido</Label>
                             <Col sm={8}>
-                              <Input  bsSize="sm" type="text" name="last_name" id="last_name" onChange={this.handleChangeUsuario} defaultValue={this.state.usuario['last_name']} />
+                              <Input  bsSize="sm" type="text" name="last_name" id="last_name" onChange={this.handleChangeUsuario} defaultValue={this.state.usuario['last_name']} required/>
                             </Col>
                           </FormGroup>
                           <FormGroup row>
                             <Label for="segundo_apellido" sm={4}>Segundo Apellido</Label>
                             <Col sm={8}>
-                              <Input  bsSize="sm" type="text" name="segundo_apellido" id="segundo_apellido" onChange={this.handleChangeUsuario} defaultValue={this.state.usuario['segundo_apellido']} />
+                              <Input  bsSize="sm" type="text" name="segundo_apellido" id="segundo_apellido" onChange={this.handleChangeUsuario} defaultValue={this.state.usuario['segundo_apellido']} required/>
                             </Col>
                           </FormGroup>
                           <FormGroup row>
                             <Label for="fecha_nacimiento" sm={4}>Nacimiento</Label>
                             <Col sm={8}>
-                              <Input  bsSize="sm" type="date" name="fecha_nacimiento" id="fecha_nacimiento" onChange={this.handleChangeUsuario} readOnly defaultValue={this.state.usuario['fecha_nacimiento']} />
+                              <Input  bsSize="sm" type="date" name="fecha_nacimiento" id="fecha_nacimiento" onChange={this.handleChangeUsuario} readOnly defaultValue={this.state.usuario['fecha_nacimiento']} required/>
                             </Col>
                           </FormGroup>
                           <FormGroup row>
                             <Label for="email" sm={4}>Correo</Label>
                             <Col sm={8}>
-                              <Input  bsSize="sm" type="email" name="email" id="email"  onChange={this.handleChangeUsuario} value={this.state.usuario['email']} />
+                              <Input  bsSize="sm" type="email" name="email" id="email"  onChange={this.handleChangeUsuario} value={this.state.usuario['email']} required/>
                             </Col>
                           </FormGroup>
                           <FormGroup row>
@@ -225,13 +225,13 @@ class ModalUsuarioEdit extends React.Component {
                           <FormGroup row>
                             <Label for="nacionalidad" sm={4}>Nacionalidad</Label>
                             <Col sm={8}>
-                              <Input  bsSize="sm" type="text" name="nacionalidad" id="nacionalidad" onChange={this.handleChangeUsuario} value={this.state.usuario['nacionalidad']} />
+                              <Input  bsSize="sm" type="text" name="nacionalidad" id="nacionalidad" onChange={this.handleChangeUsuario} value={this.state.usuario['nacionalidad']} required/>
                             </Col>
                           </FormGroup>
                           <FormGroup row>
                             <Label for="sexo" sm={4}>Sexo</Label>
                             <Col sm={8}>
-                              <Input  bsSize="sm" value={this.state.value} defaultValue={this.state.usuario['sexo']} onChange={this.handleChangeUsuario} type="select" name="sexo" id="sexo">
+                              <Input  bsSize="sm" value={this.state.value} defaultValue={this.state.usuario['sexo']} onChange={this.handleChangeUsuario} type="select" name="sexo" id="sexo" required>
                                 <option value="M" name="M">M</option>
                                 <option value="F" name="F">F</option>
                               </Input>
@@ -240,7 +240,7 @@ class ModalUsuarioEdit extends React.Component {
                           <FormGroup row>
                             <Label for="estado_civil" sm={4}>Estado Civil</Label>
                             <Col sm={8}>
-                              <Input  bsSize="sm" value={this.state.value} defaultValue={this.state.usuario['estado_civil']} onChange={this.handleChangeUsuario} type="select" name="estado_civil" id="estado_civil">
+                              <Input  bsSize="sm" value={this.state.value} defaultValue={this.state.usuario['estado_civil']} onChange={this.handleChangeUsuario} type="select" name="estado_civil" id="estado_civil" required>
                                 <option value="Soltero" name="Soltero">Soltero</option>
                                 <option value="Casado" name="Casado">Casado</option>
                                 <option value="Viudo" name="Viudo">Viudo</option>
@@ -270,7 +270,7 @@ class ModalUsuarioEdit extends React.Component {
                               <FormGroup row>
                                 <Label for="estado_estudiante" sm={4}>Estado</Label>
                                 <Col sm={8}>
-                                  <Input bsSize="sm" value={this.state.value} defaultValue={this.state['id_estado_estudiante']} onChange={this.handleChangeExtraData} type="select" name="id_estado_estudiante" id="id_estado_estudiante">
+                                  <Input bsSize="sm" value={this.state.value} defaultValue={this.state['id_estado_estudiante']} onChange={this.handleChangeExtraData} type="select" name="id_estado_estudiante" id="id_estado_estudiante" required>
                                     {lista_estadoEstudiante}
                                   </Input>
                                 </Col>
