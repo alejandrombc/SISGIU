@@ -3,7 +3,6 @@ import React,{Component} from 'react';
 import { connect } from 'react-redux';
 import {bindActionCreators} from 'redux';
 import { Alert, Form, FormGroup, Input, Button, Row, Col} from 'reactstrap';
-import '../../css/perfil.css';
 import { PulseLoader } from 'halogenium'; //Spinner
 
 // Components

@@ -2,6 +2,7 @@
 import React,{Component} from 'react';
 import { connect } from 'react-redux';
 
+
 //Components
 import InicioEstudiante from './Estudiante/inicioEstudiante';
 import InicioAdministrador from './Administrador/inicioAdministrador';
@@ -23,7 +24,7 @@ class Content extends Component{
 	render(){
 		var modulo = localStorage.getItem('modulo');
 		return (
-		      <div className="col-md-9">
+		      <div className="col-md-9" >
 		              <div className="profile-content">
 
 		                

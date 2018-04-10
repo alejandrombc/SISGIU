@@ -15,7 +15,8 @@ class Header extends Component{
 					<Row>
 						<Col lg='2' md='2' sm='4'>
 							<a href='http://urbe.fau.ucv.ve/presentacion_gente_marcano-f.html'>
-	        		  			<img width="230px" height="120px" src={host + 'media/sisgiu/logo_iu_negro.png'} className="logo-header-iu" alt='fau-logo'/>
+	        		  			{/* <img width="230px" height="120px" src={host + 'media/sisgiu/logo_iu_negro.png'} className="logo-header-iu" alt='fau-logo'/> */}
+	        		  			<img width="230px" height="120px" src={host + 'media/sisgiu/logo_iu_blanco.png'} className="logo-header-iu" alt='fau-logo'/>
 							</a>
 						</Col>
 
@@ -31,7 +32,7 @@ class Header extends Component{
 	     						<img width="120px" height="120px" src="https://catedratesv.files.wordpress.com/2012/05/logo-ucv1.gif" className="logo-header-ucv" alt='ucv-logo'/>
 							</a>
 	          				<a href='https://www.fau.ucv.ve/'>
-	          					<img width="200px" height="100px" src={host + 'media/sisgiu/logo_fau_negro.png'} className="logo-header-fau" alt='instituto-urbanismo-logo'/>
+	          					<img width="200px" height="100px" src={host + 'media/sisgiu/logo_fau_blanco.png'} className="logo-header-fau" alt='instituto-urbanismo-logo'/>
           					</a>
 						</Col>
 

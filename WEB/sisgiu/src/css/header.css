@@ -3,7 +3,10 @@
 }
 
 .jumbotron {
-	padding: 0;
+  padding: 0;
+  background-color: #4682B4;
+  color: white;
+  /* background-color: #84CBEF; */
 }
 
 body{

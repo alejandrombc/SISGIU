@@ -4,7 +4,7 @@ import {bindActionCreators} from 'redux';
 import { Table, Row, Col } from 'reactstrap';
 import { connect } from 'react-redux';
 import { PulseLoader } from 'halogenium';
-import '../../../css/inicio.css'; 
+import '../../../css/historialAcademico.css'; 
 import {Doughnut} from 'react-chartjs-2';
 
 //Components

@@ -2,7 +2,8 @@
 import React,{Component} from 'react';
 import {bindActionCreators} from 'redux';
 import { connect } from 'react-redux';
-import { PulseLoader } from 'halogenium'; 
+import { PulseLoader } from 'halogenium';
+import '../../css/global.css';
 
 import Usuario from './usuario';
 import Content from './content'; 
@@ -19,7 +20,7 @@ class Inicio extends Component{
 
 		if ( this.props.token['user'] && this.props.token['user'].usuario ) {
 			return (
-		        <div>
+		        <div className='prueba'>
 		          <div className="container">
 		              <div className="row profile">
 		                <Usuario />
