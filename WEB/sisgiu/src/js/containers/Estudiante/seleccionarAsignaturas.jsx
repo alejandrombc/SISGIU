@@ -52,8 +52,7 @@ class SeleccionarAsignaturas extends React.Component {
   }
 
   inscribirse() {
-    this.props.inscribir_asignaturas(this.state, this.props.cedula);
-
+    this.props.inscribir_asignaturas(this.state, this.props.cedula).then( ()=> this.props.triggerBuscarInformacionAsignaturas() );
     this.props.triggerInscripcion();
   }
  

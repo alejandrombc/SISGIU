@@ -43,7 +43,7 @@ class HistorialAcademico extends Component{
     }
 
   	get_listPeriodos(){
-  		if(this.props.estudianteUser.historial_academico.periodos){
+  		if(this.props.estudianteUser.historial_academico.periodos && this.props.estudianteUser.historial_academico.periodos[0].length>0){
 	  		let listItems = this.props.estudianteUser.historial_academico.periodos.map((historial, i) => {
 	        return (
 	        <div key={i}>
@@ -84,8 +84,9 @@ class HistorialAcademico extends Component{
 	  								];
 
 	  		this.setState({periodos: listItems, data: data});
-	  		this.props.cargado();
-	  	}
+	  		
+		  }
+		this.props.cargado();
   	}
 
   	componentDidMount() {

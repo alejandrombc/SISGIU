@@ -129,7 +129,7 @@ class InicioAdministrador extends Component{
                 <Col md='12' className="text-center">
                   { this.props.adminUser['tiene_periodos_activos'] === true ? <h5>Periodos Actuales</h5>
                     :
-                    <h5>No hay ningun periodo activo actualmente</h5>
+                    <h5>No existe ningún periodo activo actualmente</h5>
                   }
                 </Col>
 

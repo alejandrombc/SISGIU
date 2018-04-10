@@ -31,6 +31,7 @@ class InicioEstudiante extends Component{
       this.onDismiss = this.onDismiss.bind(this);
       this.get_ListItems = this.get_ListItems.bind(this);
       this.actualizarInformacionInicio = this.actualizarInformacionInicio.bind(this);
+      this.buscarInformacionAsignaturas = this.buscarInformacionAsignaturas.bind(this);
   }
 
   componentDidMount() {
@@ -42,8 +43,11 @@ class InicioEstudiante extends Component{
            .then( () => this.props.cargado() )
     ))));
     
-    }
+  }
 
+  buscarInformacionAsignaturas() {
+    this.props.get_information(this.props.activeUser['user']);
+  }
 
   onDismiss() {
     this.setState({ visible: false });
@@ -83,7 +87,7 @@ class InicioEstudiante extends Component{
                       className: 'btn btn-danger btn-sm float-right',
                     }}
                     disabled={{
-                      text: 'Usted ya esta retirado',
+                      text: 'Retirada',
                       className: 'btn btn-danger btn-sm float-right',
                     }}
                   />
@@ -208,7 +212,7 @@ class InicioEstudiante extends Component{
           );
         } else{
           return (
-            <Inscripcion triggerInscripcion={()=> this.enInscripcion() }/>
+            <Inscripcion triggerBuscarInformacionAsignaturas={()=> this.buscarInformacionAsignaturas()} triggerInscripcion={()=> this.enInscripcion() }/>
           );
         }
       } else 

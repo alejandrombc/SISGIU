@@ -44,7 +44,7 @@ class Inscripcion extends Component{
 					Seleccione las asignaturas
 				</h4>
 				<br />
-				<SeleccionarAsignaturas asignaturas={this.get_asignaturas()} cedula={this.props.usuario_activo.user.usuario.cedula} triggerInscripcion={() => this.props.triggerInscripcion()}/>
+				<SeleccionarAsignaturas triggerBuscarInformacionAsignaturas={()=>this.props.triggerBuscarInformacionAsignaturas()} asignaturas={this.get_asignaturas()} cedula={this.props.usuario_activo.user.usuario.cedula} triggerInscripcion={() => this.props.triggerInscripcion()}/>
 			</div>
 		);
 	}

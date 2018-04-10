@@ -57,6 +57,7 @@ export default function (state=initialState, action) {
 		case "INSCRIPCION_EXITOSA":
 			nuevo_estado['inscripcion_exitosa'] = true
 			nuevo_estado['error_inscripcion'] = false
+			nuevo_estado['tiene_asignaturas'] = true
 			return nuevo_estado;
 
 		case "ERROR_INSCRIPCION":

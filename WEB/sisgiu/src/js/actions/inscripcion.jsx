@@ -33,7 +33,6 @@ export function inscribir_asignaturas(data, cedula) {
 	   .set('Authorization', 'JWT '+token)
 	   .send(data)
 	   .then(function(res) {
-	   		console.log(res.body);
 	   		return {
 	   			type: 'INSCRIPCION_EXITOSA',
 	   		}
