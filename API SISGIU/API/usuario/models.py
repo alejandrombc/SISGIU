@@ -4,13 +4,13 @@ from django.utils import timezone
 
 
 def user_directory_path(instance, filename):
-    # file will be uploaded to MEDIA_ROOT/user_<id>/<filename>
-    return 'user_{0}/{1}'.format(instance.cedula, filename)
+	# file will be uploaded to MEDIA_ROOT/user_<id>/<filename>
+	return 'user_{0}/{1}'.format(instance.cedula, filename)
 
 
 def user_directory_path_subuser(instance, filename):
-    # file will be uploaded to MEDIA_ROOT/user_<id>/<filename>
-    return 'user_{0}/{1}'.format(instance.usuario.cedula, filename)
+	# file will be uploaded to MEDIA_ROOT/user_<id>/<filename>
+	return 'user_{0}/{1}'.format(instance.usuario.cedula, filename)
 
 
 class Usuario(AbstractUser):

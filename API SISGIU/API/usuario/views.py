@@ -1,5 +1,6 @@
 import json
-import os, datetime
+import os
+import datetime
 from django.http import HttpResponse
 from usuario.utils import render_to_pdf, date_handler
 from django.core.mail import send_mail
@@ -7,13 +8,11 @@ from django.views.decorators.csrf import csrf_exempt
 from rest_framework.permissions import (
     IsAdminUser,
     IsAuthenticated,
-    IsAuthenticatedOrReadOnly,
-    )
+    IsAuthenticatedOrReadOnly,)
 
 from .permissions import (
     isOwnerOrReadOnly,
-    IsListOrCreate,
-    )
+    IsListOrCreate,)
 
 from usuario.models import (
     Usuario,
@@ -21,8 +20,7 @@ from usuario.models import (
     TipoPostgrado,
     EstadoEstudiante,
     PersonalDocente,
-    PersonalAdministrativo,
-    )
+    PersonalAdministrativo,)
 from usuario.serializers import (
     AdministradorListSerializer,
     AdministradorDetailSerializer,
@@ -33,16 +31,13 @@ from usuario.serializers import (
     DocenteSerializer,
     DocenteDetailSerializer,
     AdministrativoSerializer,
-    AdministrativoDetailSerializer
-    )
+    AdministrativoDetailSerializer)
 from relacion.models import (
     EstudianteAsignatura,
-    PeriodoEstudiante,
-    )
+    PeriodoEstudiante,)
 
 from asignatura.models import (
-    Asignatura,
-    )
+    Asignatura,)
 
 
 from periodo.models import (
@@ -565,19 +560,19 @@ class Reportes():
             user_information['cedula'] = user['cedula']
             user_information['first_name'] = user['first_name']
             user_information['last_name'] = user['last_name']
-            
+
             tipo_postgrado = TipoPostgrado.objects.get(id=estudiante['id_tipo_postgrado_id']).__dict__
-            
+
             user_information['tipo_postgrado'] = tipo_postgrado['tipo']
 
             periodo = Periodo.objects.get(
                 estado_periodo__estado="activo",
                 tipo_postgrado__id=tipo_postgrado['id']).__dict__
-            
+
             user_information['periodo'] = periodo['descripcion']
 
             asignaturas = EstudianteAsignatura.objects.filter(
-                periodo_estudiante__periodo_id=periodo['id'], 
+                periodo_estudiante__periodo_id=periodo['id'],
                 periodo_estudiante__estudiante__usuario__cedula=cedula).values()
 
             user_information['asignaturas'] = []
@@ -587,14 +582,13 @@ class Reportes():
                 user_information['asignaturas'].append(asignatura)
                 user_information['unidad_creditos'] += asignatura['unidad_credito']
 
-
             now = datetime.datetime.now()
             meses = [
-            'Enero','Febrero','Marzo','Abril',
-            'Mayo','Junio','Julio','Agosto',
-            'Septiembre','Octubre','Noviembre',
-            'Diciembre'
-            ];
+                    'Enero', 'Febrero', 'Marzo', 'Abril',
+                    'Mayo', 'Junio', 'Julio', 'Agosto',
+                    'Septiembre', 'Octubre', 'Noviembre',
+                    'Diciembre'
+            ]
             user_information['dia'] = now.day
             user_information['mes'] = meses[now.month - 1]
             user_information['anio'] = now.year
