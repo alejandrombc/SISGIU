@@ -1,5 +1,6 @@
 .content_background {
 	background: #d5dae0 !important; 
+	overflow: hidden !important;
 }
 
 
@@ -11,4 +12,8 @@
 	-webkit-box-shadow: 9px 18px 42px 0px rgba(0,0,0,0.53);
 	-moz-box-shadow: 9px 18px 42px 0px rgba(0,0,0,0.53);
 	box-shadow: 9px 18px 42px 0px rgba(0,0,0,0.53);
+}
+
+.footer{
+	margin-top: 5%;
 }

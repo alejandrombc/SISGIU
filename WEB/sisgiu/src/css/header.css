@@ -13,7 +13,8 @@
 }
 
 body{
-	overflow-x:hidden;
+  overflow-x:hidden;
+  background: #d5dae0 !important; 
 }
 
 .new_align{
@@ -116,4 +117,3 @@ body{
   }
 
 }
-

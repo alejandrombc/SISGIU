@@ -93,7 +93,7 @@ class InicioEstudiante extends Component{
                   />
             }
             { this.props.estudianteUser.lista_periodos.length === 0 && valor['retirado'] &&
-              <Button key={valor['codigo']} className="btn btn-danger btn-sm float-right" disabled>Usted ya esta retirado</Button>
+              <Button key={valor['codigo']} className="btn btn-danger btn-sm float-right" disabled>Retirada</Button>
             }
               
 

@@ -22,7 +22,7 @@ class Header extends Component{
 
 						<Col lg='7' md='7' sm='5'>
 							<center>
-								<h1 className="display-3">SISGIU</h1>
+								<h1>SISGIU</h1>
         						<p className="lead">Sistema de Gestión del Instituto de Urbanismo</p>
         					</center>
 						</Col>

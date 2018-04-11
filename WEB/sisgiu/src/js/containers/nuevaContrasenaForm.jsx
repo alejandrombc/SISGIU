@@ -75,20 +75,13 @@ class NuevaContrasenaForm extends Component{
 
 				return (
 					<div >
+						<Row>
+							<Col lg='4' md='4' sm='3' xs='2'></Col>
+							<Col md='4' sm='6' xs='8' className="shadowBox">
 						<Form onSubmit={this.handleSubmit}>
-							<Row>
-								<Col lg='4' md='4' sm='3' xs='2'></Col>
-								<Col md='4' sm='6' xs='8' className="border border-info border-bottom-0"> 
-							        <br/>
-							        <h5>Recuperación de contraseña</h5>
-									
-							    </Col>
-							    <Col lg='4' md='4' sm='3' xs='2'></Col> 
-							</Row>	
 
-							<Row>					
-								<Col lg='4' md='4' sm='3' xs='2'></Col>
-								<Col md='4' xs='8' sm='6' className="border border-info border-top-0 border-bottom-0"> 							       
+							        <br/>
+							        <h5>Recuperación de contraseña</h5>						       
 							      	
 							      	{this.state.loading &&
 							      	
@@ -117,28 +110,19 @@ class NuevaContrasenaForm extends Component{
 							          <Label for="confirmation_password">Repite tu contraseña</Label>
 							          <Input type="password" name="confirmation_password" id="confirmation_password" value={confirmation_password} required onChange={this.handleChange} placeholder="Repite tu contraseña"/> 
 							        </FormGroup>
-							    </Col>
-							    <Col lg='4' md='4' sm='3' xs='2'></Col>
-							</Row>
-							<Row>
-								<Col lg='4' md='4' sm='3' xs='2'></Col>
-								<Col md='4' xs='8' sm='6' className="border border-info border-top-0 text-center">
-						        	<br />
-						        	{this.state.password !== this.state.confirmation_password &&
-						        		<Button disabled color="primary">Aceptar</Button>
-						       		}
-
-						       		{this.state.password === this.state.confirmation_password &&
-						        		<Button color="primary">Aceptar</Button>
-						       		}
-						        	<br/><br/>
-						      	</Col>
-						      	<Col lg='4' md='4' sm='3' xs='2'></Col>
-							</Row>
-
+									
+									<div className="text-center">
+										<br />
+										<Button disabled={this.state.password !== this.state.confirmation_password} color="primary">Aceptar</Button>
+										<br />
+										<a href='/login'>Iniciar sesión</a>
+										<br/><br/>
+									</div>
 							
 					    </Form>
-
+							</Col>
+							<Col lg='4' md='4' sm='3' xs='2'></Col>
+						</Row>
 					</div>
 				)
 			} else if ( this.props.status['check_url'] === false ) {

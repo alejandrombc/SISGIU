@@ -4,6 +4,7 @@ import React,{Component} from 'react';
 import {recuperarContrasenaMail} from '../actions/recuperarContrasenaMail.jsx';
 import {bindActionCreators} from 'redux';
 import { connect } from 'react-redux';
+import '../../css/global.css';
 
 //Spinner
 import { PulseLoader } from 'halogenium';
@@ -48,21 +49,15 @@ class RecuperarContrasenaForm extends Component{
 			const { cedula } = this.state;
 			return (
 					<div >
+					<Row>
+					<Col lg='4' md='4' sm='3' xs='2'></Col>
+					<Col md='4' sm='6' xs='8' className="shadowBox">
+
 
 						<Form onSubmit={this.handleSubmit}>
-							<Row>
-								<Col lg='4' md='4' sm='3' xs='2'></Col>
-								<Col md='4' sm='6' xs='8' className="border border-info border-bottom-0"> 
-							        <br/>
-							        <h5>Recuperación de contraseña</h5>
-									
-							    </Col>
-							    <Col lg='4' md='4' sm='3' xs='2'></Col> 
-							</Row>	
 
-							<Row>					
-								<Col lg='4' md='4' sm='3' xs='2'></Col>
-								<Col md='4' xs='8' sm='6' className="border border-info border-top-0 border-bottom-0"> 							       
+							        <br/>
+							        <h5>Recuperación de contraseña</h5>							       
 							      	
 							      	{this.state.loading && !this.props.status['bad_input'] && !this.props.status['correo_enviado'] &&
 							      	
@@ -86,24 +81,19 @@ class RecuperarContrasenaForm extends Component{
 							          <Input type="text" name="cedula" id="cedula" value={cedula} required onChange={this.handleChange} placeholder="Ej: 11122233"/> 
 							          <font size="1">Se le enviará un correo electronico con un link para poder restablecer su contraseña</font>
 							        </FormGroup>
-							    </Col>
-							    <Col lg='4' md='4' sm='3' xs='2'></Col>
-							</Row>
-							<Row>
-								<Col lg='4' md='4' sm='3' xs='2'></Col>
-								<Col md='4' xs='8' sm='6' className="border border-info border-top-0 text-center">
-						        	<br />
-						        	<Button color="primary">Restablecer</Button>
-						        	<br/>
-						        	<a href='/login'>Iniciar sesión</a>
-						        	<br/><br/>
-						      	</Col>
-						      	<Col lg='4' md='4' sm='3' xs='2'></Col>
-							</Row>
+									
+									<div className="text-center">
+										<Button color="primary">Restablecer</Button>
+										<br/>
+										<a href='/login'>Iniciar sesión</a>
+										<br/><br/>
+									</div>
 
 							
 					    </Form>
-
+					</Col>
+					<Col lg='4' md='4' sm='3' xs='2'></Col> 
+					</Row>
 					</div>
 				)
 		}

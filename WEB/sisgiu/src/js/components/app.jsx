@@ -10,10 +10,10 @@ import Footer from './footer'
 const App = () => (
 		<div className="content_background">
 			<Header />
-			{/* <hr /> */} 
+
 			<RutasPrincipales />
-			<hr />
-			<Footer className="content_background"/>
+
+			<Footer/>
 		</div>
 );
 

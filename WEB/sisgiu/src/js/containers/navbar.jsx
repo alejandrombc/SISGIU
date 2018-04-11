@@ -70,7 +70,7 @@ class NavigationBar extends Component {
 
     return (
       <div>
-        <Navbar color="faded" light expand="md">
+        <Navbar color="fixed" dark expand="md">
           
           
           <NavbarToggler onClick={this.toggle} />
