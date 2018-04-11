@@ -79,7 +79,7 @@ TEMPLATES = [
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
                 BASE_DIR + '/templates/',
-            ],
+                ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -104,7 +104,7 @@ DATABASES = {
         "ENGINE": "django.db.backends.postgresql_psycopg2",
         "NAME": "sisgiu",
         "USER": "postgres",
-        "PASSWORD": "123456",
+        "PASSWORD": "",
         "HOST": "localhost",
         "PORT": "5432",
     }
@@ -174,10 +174,15 @@ REST_USE_JWT = True
 
 SITE_ID = 1
 
-#Email settings (SMTP)
+# Email settings (SMTP)
 
 EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = 'sisgiu.fau@gmail.com' 
+EMAIL_HOST_USER = 'sisgiu.fau@gmail.com'
 EMAIL_HOST_PASSWORD = 'sisgiu2018'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
+
+try:
+    from .local_settings import *
+except ImportError:
+    pass
