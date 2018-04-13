@@ -85,6 +85,7 @@ class AsignaturaListCreateAPIView(ListCreateAPIView):
 
     def get_estudiantes_docente(request, codigo, tipo_postgrado):
         if(request.method == "GET"):
+            tipo_postgrado = tipo_postgrado.replace("%20", " ")
             member = EstudianteAsignatura.objects.filter(asignatura__codigo=codigo, periodo_estudiante__periodo__tipo_postgrado__tipo=tipo_postgrado, periodo_estudiante__periodo__estado_periodo__estado="activo").values()
             lista_estudiante_asignatura = [entry for entry in member]  # converts ValuesQuerySet into Python list
 

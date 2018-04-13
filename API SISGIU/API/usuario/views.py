@@ -317,7 +317,6 @@ class EstudianteListCreateAPIView(ListCreateAPIView):
             body_unicode = request.body.decode('utf-8')
             body = json.loads(body_unicode)
 
-            print(body)
             # Almaceno las cedulas en un array
             cedulas = []
             for x in body:
@@ -325,8 +324,6 @@ class EstudianteListCreateAPIView(ListCreateAPIView):
 
             # Itero en el json de pagado y hago el update en la BD
             for x in cedulas:
-                print(body[x])
-                # print(int(periodo_id))
                 periodo_id = int(periodo_id)
                 PeriodoEstudiante.objects.filter(
                                                 periodo__id=periodo_id,

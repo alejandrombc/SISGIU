@@ -37,7 +37,7 @@ urlpatterns = format_suffix_patterns([
     url(r'^api/periodo/(?P<periodo_id>\d+)/estado/$',
         PeriodoDetailAPIView.get_estado_periodo, name='estado-periodo'),
     url(r'^api/periodo/(?P<periodo>\d+)/edit/filtro/(?P<filtro>[\w\s]+)/$',
-        PeriodoUpdateAPIView.cambiar_estado_periodo, name='Periodo-update'),
+        PeriodoUpdateAPIView.cambiar_estado_periodo, name='cambiar-estado-periodo'),
     url(r'^api/periodo/(?P<pk>\d+)/edit/$',
         PeriodoUpdateAPIView.as_view(), name='Periodo-update'),
     url(r'^api/periodo/(?P<pk>\d+)/delete/$',
