@@ -97,10 +97,10 @@ export const get_historial = () =>{
 }
 
 
-export const retirar_estudiante = (codigo,user,periodo) => {
+export const retirar_periodo = (user, periodo) => {
 	let token = localStorage.getItem('user_token');
 	return request
-	   .post(host+'api/asignatura/'+codigo+'/estudiante/'+user.usuario.cedula+'/periodo/'+periodo+'/')
+	   .post(host+'api/retirar/estudiante/'+user.usuario.cedula+'/periodo/'+periodo+'/')
 	   .set('Authorization', 'JWT '+token)
 	   .then(function(res) {
 				return function (dispatch) {
@@ -113,6 +113,9 @@ export const retirar_estudiante = (codigo,user,periodo) => {
 			}
 	   });
 }
+
+
+
 
 export function get_periodo_estudiante (cedula, filtro) {
 	let token = localStorage.getItem('user_token');

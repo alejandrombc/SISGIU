@@ -167,12 +167,10 @@ class AsignaturaListCreateAPIView(ListCreateAPIView):
                 docente_informacion = Usuario.objects.filter(id=lista_docente_asignatura[0]['docente_id']).values()[0]
                 asignatura['docente']['first_name'] = docente_informacion['first_name']
                 asignatura['docente']['last_name'] = docente_informacion['last_name']
-                
 
                 for docente in lista_docente_asignatura:
                     horarios_dia.append(docente['horario_dia'])
                     horarios_hora.append(docente['horario_hora'])
-                    
 
                 asignatura['docente']['horario_dia'] = horarios_dia
                 asignatura['docente']['horario_hora'] = horarios_hora
@@ -212,22 +210,20 @@ class AsignaturaListCreateAPIView(ListCreateAPIView):
         return HttpResponse(json.dumps(response_data), content_type="application/json", status=401)
 
     @csrf_exempt
-    def retirar_asignatura_estudiante(request, codigo, cedula, periodo):
+    def retirar_periodo_estudiante(request, cedula, periodo):
         if (request.method == 'POST'):
 
             member = EstudianteAsignatura.objects.filter(
-                asignatura_id__codigo=codigo, 
                 periodo_estudiante__estudiante__usuario__cedula=cedula,
                 periodo_estudiante__periodo_id=periodo).update(retirado=True)
 
             response_data = {}
             response_data['status'] = 'Edicion exitosa'      
             return HttpResponse(json.dumps(response_data), content_type="application/json")
-        
+
         response_data = {}
         response_data['error'] = 'No tiene privilegios para realizar esta acción'      
         return HttpResponse(json.dumps(response_data), content_type="application/json", status=401)
-  
 
 
 class AsignaturaDetailAPIView(RetrieveAPIView):
@@ -236,11 +232,13 @@ class AsignaturaDetailAPIView(RetrieveAPIView):
     permission_classes = [IsAuthenticated]
     lookup_field = 'codigo'
 
+
 class AsignaturaUpdateAPIView(RetrieveUpdateAPIView):
     queryset = Asignatura.objects.all()
     serializer_class = AsignaturaDetailSerializer
     permission_classes = [IsAdminUser]
     lookup_field = 'codigo'
+
 
 class AsignaturaDeleteAPIView(DestroyAPIView):
     queryset = Asignatura.objects.all()
@@ -249,11 +247,12 @@ class AsignaturaDeleteAPIView(DestroyAPIView):
     lookup_field = 'codigo'
 
 
-
 """
 PrelacionAsignatura
                 Esto solo debe ser tratado por el administrador
 """
+
+
 class PrelacionAsignaturaListCreateAPIView(ListCreateAPIView):
     queryset = PrelacionAsignatura.objects.all()
     serializer_class = PrelacionAsignaturaListSerializer

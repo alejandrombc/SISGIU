@@ -22,11 +22,10 @@ class NavBarEstudiante extends Component{
             <NavLink href="/#" disabled={!this.props.activeUser.cargado}>Constancias</NavLink>
           </NavItem>
 
-        {/*
           <NavItem>
-            <NavLink href="/#">Trámites</NavLink>
+            <NavLink href="/programacionAcademica" disabled={!this.props.activeUser.cargado}>Programación Académica</NavLink>
           </NavItem>
-        */}
+       
 
         </Nav>
 

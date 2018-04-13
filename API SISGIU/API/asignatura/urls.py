@@ -13,7 +13,7 @@ from asignatura.views import (
     )
 
 urlpatterns = format_suffix_patterns([
-
+    #region tipoAsignatura
     # TipoAsignatura
     url(r'^api/tipoAsignatura/$',
         TipoAsignaturaListCreateAPIView.as_view(), name='TipoAsignatura-list-create'),
@@ -23,6 +23,7 @@ urlpatterns = format_suffix_patterns([
         TipoAsignaturaUpdateAPIView.as_view(), name='TipoAsignatura-update'),
     url(r'^api/tipoAsignatura/(?P<pk>\d+)/delete/$',
         TipoAsignaturaDeleteAPIView.as_view(), name='TipoAsignatura-delete'),
+    #endregion
 
     # Asignatura
     url(r'^api/asignaturas/$',
@@ -72,14 +73,14 @@ urlpatterns = format_suffix_patterns([
         PrelacionAsignaturaListCreateAPIView.delete_all_asignaturas_necesarias,
         name='PrelacionAsignatura-delete-all'),
 
-    # Retirar asignatura
-    url(r'^api/asignatura/(?P<codigo>[\w\-]+)/estudiante/(?P<cedula>[0-9]{6,8})/periodo/(?P<periodo>\d+)/$',
-        AsignaturaListCreateAPIView.retirar_asignatura_estudiante, name='asignaturas-por-estudiante'),
+    # Retirar Periodo
+    url(r'^api/retirar/estudiante/(?P<cedula>[0-9]{6,8})/periodo/(?P<periodo>\d+)/$',
+        AsignaturaListCreateAPIView.retirar_periodo_estudiante, name='retirar-periodo'),
 
     # Asignaturas que tiene un estudiante en el periodo actual
     url(r'^api/asignaturas_actuales/estudiante/(?P<cedula>[0-9]{6,8})/$',
         PrelacionAsignaturaListCreateAPIView.get_asignaturas_actuales_estudiante, name='asignaturas-actuales'),
-  
+
     # Asignaturas de un periodo
     url(r'^api/asignaturas_actuales/periodo/(?P<periodo>\d+)/$',
         PrelacionAsignaturaListCreateAPIView.get_asignaturas_actuales, name='asignaturas-actuales'),

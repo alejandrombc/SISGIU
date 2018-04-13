@@ -15,8 +15,13 @@ const NavBarDocente = () => (
     </NavItem>
 
     <NavItem>
+      <NavLink href="/programacionAcademica" disabled={!this.props.activeUser.cargado}>Programación Académica</NavLink>
+    </NavItem>
+    
+    <NavItem>
       <NavLink href="/#">Constancias</NavLink>
     </NavItem>
+
 
 
   </Nav>

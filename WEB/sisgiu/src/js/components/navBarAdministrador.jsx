@@ -14,11 +14,7 @@ class NavBarAdministrador extends Component{
           <NavItem>
             <NavLink href="/inicio" disabled={!this.props.activeUser.cargado}>Inicio</NavLink>
           </NavItem>
-        {/*
-          <NavItem>
-              <NavLink href="/#" disabled={!this.props.activeUser.cargado}>Trámites</NavLink>
-          </NavItem>
-        */}
+
           <NavItem>
             <NavLink href="/moduloUsuarioAdministrador" disabled={!this.props.activeUser.cargado}>Usuarios</NavLink>
           </NavItem>
@@ -30,6 +26,11 @@ class NavBarAdministrador extends Component{
           <NavItem>
             <NavLink href="/moduloPeriodos" disabled={!this.props.activeUser.cargado}>Periodos</NavLink>
           </NavItem>
+
+          <NavItem>
+            <NavLink href="/programacionAcademica" disabled={!this.props.activeUser.cargado}>Programación Académica</NavLink>
+          </NavItem>
+          
         </Nav>
 
       )

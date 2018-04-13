@@ -16,7 +16,7 @@ import {
     get_estado_estudiante, 
     cargado,
     cargando,
-    retirar_estudiante,
+    retirar_periodo,
     } from '../../actions/inicio';
 
 
@@ -32,6 +32,9 @@ class InicioEstudiante extends Component{
       this.get_ListItems = this.get_ListItems.bind(this);
       this.actualizarInformacionInicio = this.actualizarInformacionInicio.bind(this);
       this.buscarInformacionAsignaturas = this.buscarInformacionAsignaturas.bind(this);
+      this.retirar_periodo = this.retirar_periodo.bind(this);
+      this.get_titulo = this.get_titulo.bind(this);
+
   }
 
   componentDidMount() {
@@ -53,8 +56,12 @@ class InicioEstudiante extends Component{
     this.setState({ visible: false });
   }
 
-  retirar_asignaturas(codigo, user, periodo){
-    this.props.retirar_estudiante(codigo,user,periodo);
+  // retirar_asignaturas(codigo, user, periodo){
+  //   this.props.retirar_estudiante(codigo,user,periodo);
+  // }
+
+  retirar_periodo(user, periodo) {
+    this.props.retirar_periodo(user, periodo);
   }
 
   get_ListItems(dias) {
@@ -73,32 +80,7 @@ class InicioEstudiante extends Component{
                 {lista_docentes}
                 Prof: {valor['docente']['first_name']} {valor['docente']['last_name']}
             </ListGroupItemText>
-
-            { this.props.estudianteUser.lista_periodos.length === 0 && !valor['retirado'] &&
-      
-              <ConfirmButton
-                    disableAfterConfirmed
-                    onConfirm={() => this.retirar_asignaturas(valor['codigo'], this.props.activeUser.user, this.props.estudianteUser.lista_periodo_activo[0].id) }
-                    text= "Retirar"
-                    key={valor['codigo']}
-                    className="btn btn-danger btn-sm float-right"
-                    confirming={{
-                      text: '¿Está Seguro?',
-                      className: 'btn btn-danger btn-sm float-right',
-                    }}
-                    disabled={{
-                      text: 'Retirada',
-                      className: 'btn btn-danger btn-sm float-right',
-                    }}
-                  />
-            }
-            { this.props.estudianteUser.lista_periodos.length === 0 && valor['retirado'] &&
-              <Button key={valor['codigo']} className="btn btn-danger btn-sm float-right" disabled>Retirada</Button>
-            }
-              
-
-
-        </ListGroupItem>
+          </ListGroupItem>
         )
       });
     }else{
@@ -123,6 +105,20 @@ class InicioEstudiante extends Component{
     this.setState({inscribiendo: !this.state.inscribiendo}, () => this.actualizarInformacionInicio() ); 
   }
 
+  get_titulo() {
+    if (!this.props.estudianteUser['tiene_asignaturas'] && this.props.estudianteUser.lista_periodo_activo.length > 0) {
+      return 'Usted no se encuentra inscrito en el periodo actual.';
+    } else if (this.props.estudianteUser.lista_periodo_activo.length === 0 && this.props.estudianteUser.lista_periodos.length === 0) {
+      return 'Actualmente no se encuentran periodos activos.';
+    } else if (this.props.estudianteUser['tiene_asignaturas']) {
+      if (this.props.estudianteUser.materias.length > 0 && !this.props.estudianteUser.materias[0].retirado) {
+        return 'Asignaturas Inscritas';
+      } else {
+        return 'Periodo Retirado';
+      }
+    }
+  }
+
   render(){
     const dias = {
       "0":"Lunes",
@@ -133,16 +129,7 @@ class InicioEstudiante extends Component{
       "5":"Sabado",
       "6":"Domingo",
     }
-
-    let mensaje = '';
-
-    if (!this.props.estudianteUser['tiene_asignaturas'] && this.props.estudianteUser.lista_periodo_activo.length>0) {
-      mensaje = 'Usted no se encuentra inscrito en el periodo actual.';
-    } else if (this.props.estudianteUser.lista_periodo_activo.length===0 && this.props.estudianteUser.lista_periodos.length===0) {
-      mensaje = 'Actualmente no se encuentran periodos activos.';
-    }
-
-
+    
     if (!this.props.activeUser.cargado) {
       return (<center><PulseLoader color="#b3b1b0" size="16px" margin="4px"/></center>);
     } else {
@@ -179,24 +166,15 @@ class InicioEstudiante extends Component{
                   </Row>
                 }
                 
-                <div>
                   <br/>
                   <Row>
                      <Col md='12' className="text-center">
-                        <h5>{mensaje}</h5>
+                      <h5>{this.get_titulo()}</h5>
                     </Col>
                   </Row>
-                </div>
-                
-
 
                 { this.props.estudianteUser['tiene_asignaturas'] &&
                   <div>
-                    <Row>
-                     <Col md='12' className="text-center">
-                        <h5>Asignaturas Inscritas</h5>
-                    </Col>
-                    </Row>
                     <br />
                     <Row>
                       <Col md='12'>
@@ -207,6 +185,32 @@ class InicioEstudiante extends Component{
                     </Row>
                   </div>
                 }
+
+                {this.props.estudianteUser.lista_periodos.length === 0 && this.props.estudianteUser['tiene_asignaturas']
+                  && this.props.estudianteUser.materias.length > 0 && !this.props.estudianteUser.materias[0].retirado &&
+                  <div>
+                    <br/>
+                    <Row>
+                      <Col md='12' className="text-center">
+                        <ConfirmButton
+                          disableAfterConfirmed
+                          onConfirm={() => this.retirar_periodo(this.props.activeUser.user, this.props.estudianteUser.lista_periodo_activo[0].id)}
+                          text="Retirar"
+                          className="btn btn-danger btn-sm float-right"
+                          confirming={{
+                            text: '¿Está Seguro?',
+                            className: 'btn btn-danger btn-sm float-right',
+                          }}
+                          disabled={{
+                            text: 'Retirada',
+                            className: 'btn btn-danger btn-sm float-right',
+                          }}
+                        />
+                      </Col>
+                    </Row>
+                  </div>
+                }
+
 
               </div>
           );
@@ -245,7 +249,7 @@ const mapDispatchToProps = (dispatch) => {
     get_estado_estudiante: get_estado_estudiante,
     cargado: cargado,
     cargando: cargando,
-    retirar_estudiante:retirar_estudiante,
+    retirar_periodo: retirar_periodo,
 
   }, dispatch )
 }
