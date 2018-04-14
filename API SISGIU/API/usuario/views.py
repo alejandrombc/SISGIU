@@ -408,6 +408,11 @@ class TipoPostgradoListCreateAPIView(ListCreateAPIView):
     serializer_class = TipoPostgradoSerializer
     permission_classes = [IsListOrCreate, IsAuthenticated]
 
+class TipoPostgradoDetailAPIView(RetrieveAPIView):
+    queryset = TipoPostgrado.objects.all()
+    serializer_class = TipoPostgradoSerializer
+    permission_classes = [IsListOrCreate, IsAuthenticated]
+
 
 class TipoPostgradoUpdateAPIView(RetrieveUpdateAPIView):
     queryset = TipoPostgrado.objects.all()

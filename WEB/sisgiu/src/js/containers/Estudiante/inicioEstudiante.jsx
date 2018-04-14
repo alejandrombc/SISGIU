@@ -17,6 +17,7 @@ import {
     cargado,
     cargando,
     retirar_periodo,
+    get_tipo_postgrado,
     } from '../../actions/inicio';
 
 
@@ -37,14 +38,22 @@ class InicioEstudiante extends Component{
 
   }
 
+  findElement(arr, propName, propValue) {
+    for (var i=0; i < arr.length; i++)
+      if (arr[i][propName] === propValue)
+        return arr[i];
+
+  }
+
   componentDidMount() {
     this.props.get_information(this.props.activeUser['user'])
     .then( ()=> this.props.get_periodos_tipo_postgrado("en inscripcion", this.props.activeUser['user'].id_tipo_postgrado)
       .then( () => this.props.get_periodo_estudiante(this.props.activeUser['user'].usuario.cedula, "en inscripcion")
         .then( () => this.props.get_periodos_tipo_postgrado("activo",this.props.activeUser['user'].id_tipo_postgrado)
           .then( () => this.props.get_estado_estudiante(this.props.activeUser['user']['id_estado_estudiante'])
-           .then( () => this.props.cargado() )
-    ))));
+            .then( ()=> this.props.get_tipo_postgrado(this.props.activeUser['user']['id_tipo_postgrado']) 
+              .then( () => this.props.cargado() )
+    )))));
     
   }
 
@@ -250,6 +259,7 @@ const mapDispatchToProps = (dispatch) => {
     cargado: cargado,
     cargando: cargando,
     retirar_periodo: retirar_periodo,
+    get_tipo_postgrado: get_tipo_postgrado,
 
   }, dispatch )
 }

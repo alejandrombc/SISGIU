@@ -1,5 +1,5 @@
 import React from 'react';
-import { Input, Form, FormGroup, Label, Row, Col, Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
+import { Input, Form, Label, Row, Col, Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import FontAwesomeIcon from 'react-fontawesome';
 import '../../../css/moduloUsuarioAdministrador.css';
 import {bindActionCreators} from 'redux';

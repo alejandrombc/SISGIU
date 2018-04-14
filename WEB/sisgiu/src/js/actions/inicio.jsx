@@ -74,6 +74,29 @@ export const get_information = (user) => {
 	   });
 }
 
+
+export function get_tipo_postgrado (periodo) {
+	let token = localStorage.getItem('user_token');
+	return request
+		.get(host+'api/tipoPostgrado/'+periodo+'/')
+		.set('Authorization', 'JWT '+token)
+		.then(function(res) {
+			return {
+				type: "GET_TIPO_POSTGRADO_EXITOSO",
+				payload: {postgrado: res.body}
+			}
+		})
+	.catch(function(err) {
+		localStorage.removeItem('user_token');
+		localStorage.removeItem('modulo');
+			return {
+			type: "ERROR"
+		}
+	});
+}
+
+
+
 export const get_historial = () =>{
 	let token = localStorage.getItem('user_token');
 	var decoded = jwt_decode(token);

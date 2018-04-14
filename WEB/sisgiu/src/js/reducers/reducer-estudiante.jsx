@@ -9,7 +9,8 @@ const initialState = {
 	error_inscripcion: false,
 	estado_estudiante: '',
 	lista_periodo_activo: [],
-	historial_academico:{}
+	historial_academico:{},
+	postgrado: {},
 };
 
 export default function (state=initialState, action) {
@@ -71,6 +72,10 @@ export default function (state=initialState, action) {
 
 		case "GET_HISTORIAL_EXITOSO":
 			nuevo_estado['historial_academico'] = action.payload['historial_academico'];
+			return nuevo_estado;
+
+		case "GET_TIPO_POSTGRADO_EXITOSO":
+			nuevo_estado['postgrado'] = action.payload['postgrado'];
 			return nuevo_estado;
 
 		default:
