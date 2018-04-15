@@ -3,16 +3,18 @@ import {host} from '../components/globalVariables';
 import mergeJSON from 'merge-json';
 import {check_login} from './inicio'
 
-let token = localStorage.getItem('user_token');
-let modulo = localStorage.getItem('modulo');
+
 
 export const editarUsuario = (cambios, user) => {
+	let token = localStorage.getItem('user_token');
+	let modulo = localStorage.getItem('modulo');
+
 	var result = mergeJSON.merge(user, cambios);
 	delete result.usuario.foto;
 	delete result.rif;
 	delete result.curriculum;
 	delete result.permiso_ingresos;
-	console.log(result);
+	console.log(modulo);
 	return request
 	   .put(host+'api/'+modulo+'/'+user['usuario']['cedula']+'/edit/')
 	   .set('Authorization', 'JWT '+token)
@@ -35,9 +37,10 @@ export const editarUsuario = (cambios, user) => {
 
 
 export const cambiarContrasena = (password, user) => {
+	let token = localStorage.getItem('user_token');
+	let modulo = localStorage.getItem('modulo');
 	user.usuario.password = password;
 	delete user.usuario.foto;
-	console.log(user);
 
 	return request
 	   .put(host+'api/'+modulo+'/'+user.usuario.cedula+'/edit/')
@@ -65,8 +68,6 @@ export const cambiarFoto = (foto, user) => {
     const formData = new FormData();
     formData.append('foto',foto)
     formData.append('username',user.usuario.cedula)
-    console.log(formData.values());
-	// let modulo = localStorage.getItem('modulo');
 	let token = localStorage.getItem('user_token');
 	return request
 	   .post(host+'api/usuarios/'+user.usuario.cedula+'/cambiarFoto/')
