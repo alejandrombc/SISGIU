@@ -140,7 +140,7 @@ class AsignaturaListCreateAPIView(ListCreateAPIView):
         return HttpResponse(json.dumps(response_data), content_type="application/json", status=401)
 
     def get_asignaturas_por_estudiante(request, cedula):
-        if (request.user.is_anonymous != False):
+        if (request.method == 'GET'):
 
             estudiante = Estudiante.objects.get(usuario__cedula=cedula)
 

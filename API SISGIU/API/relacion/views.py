@@ -217,7 +217,7 @@ class DocenteAsignaturaListCreateAPIView(ListCreateAPIView):
                 periodo = Periodo.objects.get(id=x.periodo_id)
                 if str(x.periodo_id) not in aux_doc_asig:
                     aux_doc_asig[str(x.periodo_id)] = []
-                
+
                 docente = Usuario.objects.get(id=x.docente_id)
                 docente_json = {}
                 docente_json['first_name'] = docente.first_name
@@ -240,7 +240,7 @@ class DocenteAsignaturaListCreateAPIView(ListCreateAPIView):
 
                 aux_doc_asig[str(x.periodo_id)].append(aux_periodo_info)
 
-            #Agregar tipo de postgrado y descripcion para colocarlo en el arreglo final
+            # Agregar tipo de postgrado y descripcion para colocarlo en el arreglo final
             for x in aux_doc_asig:
                 temp = {}
                 periodo = Periodo.objects.get(id=x)
@@ -249,9 +249,8 @@ class DocenteAsignaturaListCreateAPIView(ListCreateAPIView):
                 temp[x] = aux_doc_asig[x]
 
                 programacion_academica.append(temp)
-            
-            return HttpResponse(json.dumps(programacion_academica), content_type="application/json", status=200)
 
+            return HttpResponse(json.dumps(programacion_academica), content_type="application/json", status=200)
 
         response_data = {}
         response_data['Error'] = 'No tiene privilegios para realizar esta accion'
