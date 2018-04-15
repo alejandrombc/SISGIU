@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { PulseLoader } from 'halogenium';
-import { Alert, Input, FormGroup, Label, Row, Col, Button, Table, ListGroup, ListGroupItem, ListGroupItemHeading, ListGroupItemText } from 'reactstrap';
+import { Input, FormGroup, Label, Row, Col, ListGroup, ListGroupItem, ListGroupItemHeading, ListGroupItemText } from 'reactstrap';
 import { cargado } from '../actions/inicio';
 
 // Components
@@ -21,8 +21,8 @@ class ProgramacionAcademica extends Component {
         this.get_tipos_postgrados = this.get_tipos_postgrados.bind(this);
         this.handleChange = this.handleChange.bind(this);
         this.get_items = this.get_items.bind(this);
-        this.mostrar_programacion_academica = this.mostrar_programacion_academica.bind(this);
-        this.get_ListItems = this.get_ListItems.bind(this);
+        // this.mostrar_programacion_academica = this.mostrar_programacion_academica.bind(this);
+        // this.get_ListItems = this.get_ListItems.bind(this);
 
     }
 
@@ -34,19 +34,7 @@ class ProgramacionAcademica extends Component {
 
 
     get_items(postgrado){
-        if(postgrado != '-1'){
-            return postgrado;
-        }
-    }
-
-
-    handleChange(e) {
-        const { name, value } = e.target;
-        this.setState({ [name]: value }, () => this.mostrar_programacion_academica());
-    }
-
-    mostrar_programacion_academica() {
-        console.log(this.state.postgrado);
+        //Dias de la semana
         const dias = {
             "0": "Lunes",
             "1": "Martes",
@@ -56,7 +44,52 @@ class ProgramacionAcademica extends Component {
             "5": "Sabado",
             "6": "Domingo",
         }
-        this.get_ListItems(dias);
+
+        if(postgrado !== '-1'){
+            var listItems = "";
+            //Validamos que exista el arreglo y sea mayor a cero
+            if(this.props.activeUser['programacionAcademica'] && this.props.activeUser['programacionAcademica'].length > 0){
+                let N = this.props.activeUser['programacionAcademica'].length;
+                //Recorremos todos los periodos del arreglo
+                for (var j = 0; j < N; j++) {
+                    //Si el postgrado del periodo es el que se esta buscando, muestro su informacion
+                    if (this.props.activeUser['programacionAcademica'][j].tipo_postgrado === this.state.postgrado) {
+                        //Guardo el id del periodo
+                        let periodo = this.props.activeUser['programacionAcademica'][j].periodo_id;
+                        //Filtro el arreglo de ese id
+                        listItems = this.props.activeUser['programacionAcademica'][j][periodo].map((valor, index) =>{
+                            var lista_docentes = [];
+                            var codigo_asignatura = valor.codigo; //Obtengo el codigo de la asignatura
+                            //Parseo cada informacion de la asignatura (horario dia y horario hora)
+                            for (var i = 0; i < valor[codigo_asignatura].length; i++) {
+                                lista_docentes[i] = <font key={i}> {dias[valor[codigo_asignatura][i]['dia']]} {valor[codigo_asignatura][i]['hora']} | Aula: {valor[codigo_asignatura][i]['aula']} <br /></font>
+                            }
+                            //Creo la lista de retorno por cada asignatura
+                            return (
+                              <ListGroupItem key={index}>
+                                <ListGroupItemHeading>({valor['codigo']}) {valor['nombre']}</ListGroupItemHeading>
+                                <ListGroupItemText>
+                                    {lista_docentes}
+                                    Prof: {valor[codigo_asignatura][0]['first_name']} {valor[codigo_asignatura][0]['last_name']}
+                                </ListGroupItemText>
+                              </ListGroupItem>
+                            )
+                            });
+
+                        return listItems;
+                    } 
+                }
+                return (<center><h6>Este periodo no tiene asignaturas</h6></center>);
+            }
+        }
+        return (<center><h6>Seleccione un tipo de postgrado</h6></center>);
+    }
+    
+
+
+    handleChange(e) {
+        const { name, value } = e.target;
+        this.setState({ [name]: value });
     }
 
     get_tipos_postgrados() {
@@ -69,58 +102,6 @@ class ProgramacionAcademica extends Component {
 
         return '';
     }
-
-    get_ListItems(dias) {
-
-        let listItems = "";
-        if (this.props.activeUser['programacionAcademica'] && this.props.activeUser['programacionAcademica'].length > 0) {
-            
-            console.log(this.props.activeUser['programacionAcademica']);
-            let N = this.props.activeUser['programacionAcademica'].length;
-            let periodo = [];
-            for (let i = 0; i < N; i++) {
-                if (this.props.activeUser['programacionAcademica'][i].tipo_postgrado === this.state.postgrado) {
-                    periodo = this.props.activeUser['programacionAcademica'][i];
-                    i = N;
-                } 
-            }
-            delete periodo['tipo_postgrado'];
-            delete periodo['descripcion'];
-
-            console.log(periodo);
-            
-            let periodo_id;
-            for (var key in periodo) {
-                periodo_id = key;
-            }
-
-            console.log(periodo[key]);
-
-
-            listItems = periodo[key].map((valor, index) => {
-                var lista_docentes = [];
-                for (var i = 0; i < valor['docente']['horario_dia'].length; i++) {
-
-                    lista_docentes[i] = <font key={i}> {dias[valor['dia'][i]]} {valor['docente']['horario_hora'][i]} <br /></font>
-                }
-                return (
-                    ""
-                    // <ListGroupItem key={index}>
-                    //     <ListGroupItemHeading>({valor['codigo']}) {valor['nombre']}</ListGroupItemHeading>
-                    //     <ListGroupItemText>
-                    //         {lista_docentes}
-                    //         Prof: {valor['docente']['first_name']} {valor['docente']['last_name']}
-                    //     </ListGroupItemText>
-                    // </ListGroupItem>
-                )
-            });
-        } else {
-            listItems = <center><PulseLoader color="#b3b1b0" size="16px" margin="4px" /></center>
-        }
-
-        return listItems;
-    }
-
 
     render() {
 
@@ -145,16 +126,18 @@ class ProgramacionAcademica extends Component {
                 </Col>
             </FormGroup>
     
-            {this.get_items(this.state.postgrado)}
+            
             
             {this.state.postgrado !== '' &&
                 <div>
                     <br/>
                     <Row>
                         <Col md='12'>
+                            <center><h5>Asignaturas</h5></center>
+                            <br />
                             <ListGroup>
                                 {/* {this.get_ListItems(dias)} */}
-                                ""
+                                {this.get_items(this.state.postgrado)}
                             </ListGroup>
                         </Col>
                     </Row>

@@ -159,6 +159,7 @@ class AsignaturaListCreateAPIView(ListCreateAPIView):
                 docente_asignatura = DocenteAsignatura.objects.filter(Q(asignatura_id=asignatura['id']) & (Q(periodo__estado_periodo__estado='activo') | Q(periodo__estado_periodo__estado='en inscripcion') ) & Q(periodo__tipo_postgrado__tipo=estudiante.id_tipo_postgrado)).values()
                 horarios_dia = []
                 horarios_hora = []
+                aulas = []
 
                 lista_docente_asignatura = [entry for entry in docente_asignatura]
                 asignatura['docente'] = {}
@@ -167,13 +168,16 @@ class AsignaturaListCreateAPIView(ListCreateAPIView):
                 asignatura['docente']['first_name'] = docente_informacion['first_name']
                 asignatura['docente']['last_name'] = docente_informacion['last_name']
 
+
                 for docente in lista_docente_asignatura:
                     horarios_dia.append(docente['horario_dia'])
                     horarios_hora.append(docente['horario_hora'])
+                    aulas.append(docente['aula'])
 
                 asignatura['docente']['horario_dia'] = horarios_dia
                 asignatura['docente']['horario_hora'] = horarios_hora
-                print(estudiante_asignatura)
+                asignatura['docente']['aula'] = aulas
+
                 asignatura['retirado'] = estudiante_asignatura['retirado']
 
                 asignatura['tipo_asignatura'] = tipo_asignatura['nombre']

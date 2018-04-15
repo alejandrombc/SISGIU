@@ -80,7 +80,7 @@ class InicioEstudiante extends Component{
         var lista_docentes = [];
         for (var i = 0; i < valor['docente']['horario_dia'].length; i++) {
 
-            lista_docentes[i] = <font key={i}> {dias[valor['docente']['horario_dia'][i]]} {valor['docente']['horario_hora'][i]} <br /></font>
+            lista_docentes[i] = <font key={i}> {dias[valor['docente']['horario_dia'][i]]} {valor['docente']['horario_hora'][i]} | Aula: {valor['docente']['aula'][i]}<br /></font>
         }
         return (
           <ListGroupItem key={index}>

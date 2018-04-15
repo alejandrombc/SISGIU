@@ -207,38 +207,40 @@ class DocenteAsignaturaListCreateAPIView(ListCreateAPIView):
 
     def programacion_academica(request):
         if (request.method == 'GET'):
-            docente_asignatura = DocenteAsignatura.objects.filter(Q(periodo__estado_periodo__estado='activo') | Q(periodo__estado_periodo__estado='en inscripcion'))
+            docente_asignatura = DocenteAsignatura.objects.filter(Q(periodo__estado_periodo__estado='activo') | Q(periodo__estado_periodo__estado='en inscripcion')).order_by('periodo_id')
 
             response = []
             aux_doc_asig = {}
             programacion_academica = []
+            asignaturas = {}
 
             for x in docente_asignatura:
                 periodo = Periodo.objects.get(id=x.periodo_id)
-                if str(x.periodo_id) not in aux_doc_asig:
+                asignatura_codigo = Asignatura.objects.get(id=x.asignatura_id).codigo
+                if str(x.periodo_id) not in aux_doc_asig:        
+                    if(asignaturas):
+                        aux_doc_asig[str(last_period)].append(asignaturas)
+
                     aux_doc_asig[str(x.periodo_id)] = []
+                    last_period = x.periodo_id
+                    asignaturas = {}
 
+                if asignatura_codigo not in asignaturas:
+                    asignaturas[asignatura_codigo] = []
+
+                    
                 docente = Usuario.objects.get(id=x.docente_id)
-                docente_json = {}
-                docente_json['first_name'] = docente.first_name
-                docente_json['last_name'] = docente.last_name
+                asignatura_info = {}
+                asignatura_info['first_name'] = docente.first_name
+                asignatura_info['last_name'] = docente.last_name
+                asignatura_info['hora'] = x.horario_hora
+                asignatura_info['dia'] = x.horario_dia
+                asignatura_info['aula'] = x.aula
 
-                aux_periodo_info = {}
-                aux_periodo_info['docente'] = docente_json
+                asignaturas[asignatura_codigo].append(asignatura_info)
 
-                asignatura = Asignatura.objects.get(id=x.asignatura_id)
-                asignatura_json = {}
-                asignatura_json['nombre'] = asignatura.nombre
-                asignatura_json['codigo'] = asignatura.codigo
-                asignatura_json['unidad_credito'] = asignatura.unidad_credito
-
-                aux_periodo_info['asignatura'] = asignatura_json
-
-                aux_periodo_info['hora'] = x.horario_hora
-                aux_periodo_info['dia'] = x.horario_dia
-                aux_periodo_info['aula'] = x.aula
-
-                aux_doc_asig[str(x.periodo_id)].append(aux_periodo_info)
+            #Append del ultimo periodo
+            aux_doc_asig[str(last_period)].append(asignaturas)
 
             # Agregar tipo de postgrado y descripcion para colocarlo en el arreglo final
             for x in aux_doc_asig:
@@ -246,7 +248,17 @@ class DocenteAsignaturaListCreateAPIView(ListCreateAPIView):
                 periodo = Periodo.objects.get(id=x)
                 temp['tipo_postgrado'] = TipoPostgrado.objects.get(id=periodo.tipo_postgrado_id).tipo
                 temp['descripcion'] = periodo.descripcion
-                temp[x] = aux_doc_asig[x]
+                temp['periodo_id'] = x
+                temp[x] = []              
+                for asignaturas in aux_doc_asig[x]:
+                    for codigo in asignaturas:
+                        asignatura = Asignatura.objects.get(codigo=codigo)
+                        temp_asignatura = {}
+                        temp_asignatura[codigo] = asignaturas[codigo]
+                        temp_asignatura['nombre'] = asignatura.nombre
+                        temp_asignatura['unidad_credito'] = asignatura.unidad_credito
+                        temp_asignatura['codigo'] = codigo
+                        temp[x].append(temp_asignatura)
 
                 programacion_academica.append(temp)
 
