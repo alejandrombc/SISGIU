@@ -113,8 +113,6 @@ class AsignaturaListCreateAPIView(ListCreateAPIView):
             member = DocenteAsignatura.objects.filter(docente__usuario__cedula=cedula , periodo__estado_periodo__estado="activo")
             # member = DocenteAsignatura.objects.filter(docente__usuario__cedula=cedula)
 
-
-
             member = member.values()
             print(member)
             lista_docente_asignatura = [entry for entry in member]  # converts ValuesQuerySet into Python list

@@ -206,45 +206,51 @@ class DocenteAsignaturaListCreateAPIView(ListCreateAPIView):
     permission_classes = [EsAdministrativoOAdministrador]
 
     def programacion_academica(request):
-        docente_asignatura = DocenteAsignatura.objects.filter(Q(periodo__estado_periodo__estado='activo') | Q(periodo__estado_periodo__estado='en inscripcion'))
+        if (request.method == 'GET'):
+            docente_asignatura = DocenteAsignatura.objects.filter(Q(periodo__estado_periodo__estado='activo') | Q(periodo__estado_periodo__estado='en inscripcion'))
 
-        response = []
-        aux_doc_asig = {}
+            response = []
+            aux_doc_asig = {}
+            programacion_academica = []
 
-        for x in docente_asignatura:
-            periodo = Periodo.objects.get(id=x.periodo_id)
-            if str(x.periodo_id) not in aux_doc_asig:
+            for x in docente_asignatura:
+                periodo = Periodo.objects.get(id=x.periodo_id)
+                if str(x.periodo_id) not in aux_doc_asig:
+                    aux_doc_asig[str(x.periodo_id)] = []
+                
+                docente = Usuario.objects.get(id=x.docente_id)
+                docente_json = {}
+                docente_json['first_name'] = docente.first_name
+                docente_json['last_name'] = docente.last_name
+
+                aux_periodo_info = {}
+                aux_periodo_info['docente'] = docente_json
+
+                asignatura = Asignatura.objects.get(id=x.asignatura_id)
+                asignatura_json = {}
+                asignatura_json['nombre'] = asignatura.nombre
+                asignatura_json['codigo'] = asignatura.codigo
+                asignatura_json['unidad_credito'] = asignatura.unidad_credito
+
+                aux_periodo_info['asignatura'] = asignatura_json
+
+                aux_periodo_info['hora'] = x.horario_hora
+                aux_periodo_info['dia'] = x.horario_dia
+                aux_periodo_info['aula'] = x.aula
+
+                aux_doc_asig[str(x.periodo_id)].append(aux_periodo_info)
+
+            #Agregar tipo de postgrado y descripcion para colocarlo en el arreglo final
+            for x in aux_doc_asig:
                 temp = {}
+                periodo = Periodo.objects.get(id=x)
                 temp['tipo_postgrado'] = TipoPostgrado.objects.get(id=periodo.tipo_postgrado_id).tipo
                 temp['descripcion'] = periodo.descripcion
-                temp[str(x.periodo_id)] = []
-                # aux_doc_asig[str(x.periodo_id)] = []
+                temp[x] = aux_doc_asig[x]
+
+                programacion_academica.append(temp)
             
-            docente = Usuario.objects.get(id=x.docente_id)
-            docente_json = {}
-            docente_json['first_name'] = docente.first_name
-            docente_json['last_name'] = docente.last_name
-
-            aux_periodo_info = {}
-            aux_periodo_info['docente'] = docente_json
-
-            asignatura = Asignatura.objects.get(id=x.asignatura_id)
-            asignatura_json = {}
-            asignatura_json['nombre'] = asignatura.nombre
-            asignatura_json['codigo'] = asignatura.codigo
-            asignatura_json['unidad_credito'] = asignatura.unidad_credito
-
-            aux_periodo_info['asignatura'] = asignatura_json
-
-            aux_periodo_info['hora'] = x.horario_hora
-            aux_periodo_info['dia'] = x.horario_dia
-            aux_periodo_info['aula'] = x.aula
-
-            # print(aux_periodo_info)
-
-            temp[str(x.periodo_id)].append(aux_periodo_info)
-
-        print(temp)
+            return HttpResponse(json.dumps(programacion_academica), content_type="application/json", status=200)
 
 
         response_data = {}

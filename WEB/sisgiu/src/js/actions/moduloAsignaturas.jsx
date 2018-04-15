@@ -81,7 +81,7 @@ export function get_tipo_postgrado () {
 		.set('Authorization', 'JWT '+token)
 		.then(function(res) {
 			return {
-				type: "GET_TIPO_POSTGRADO_EXITOSO",
+				type: "GET_TIPOS_POSTGRADO_EXITOSO",
 				payload: {lista_postgrados: res.body}
 			}
 		})

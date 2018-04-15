@@ -2,9 +2,9 @@ let user = localStorage.getItem('user_token');
 let modulo = localStorage.getItem('modulo');
 
 const initialState = (user && modulo) ? 
-{ loggedIn: true, user, modulo, cargado: false} 
+{ loggedIn: true, user, modulo, cargado: false, programacionAcademica: []} 
 : 
-{loggedIn: false, cargado: false};
+{loggedIn: false, cargado: false, programacionAcademica: []};
 
 export default function (state=initialState, action) {
 	var nuevo_estado = Object.assign({}, state);
@@ -49,6 +49,10 @@ switch (action.type){
 
 	case "CARGANDO":
 		nuevo_estado['cargado'] = false;
+		return nuevo_estado;
+
+	case "GET_PROGRAMACION_ACADEMICA":
+		nuevo_estado['programacionAcademica'] = action.payload['programacionAcademica'];
 		return nuevo_estado;
 
 	default:

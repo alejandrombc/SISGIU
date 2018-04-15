@@ -70,7 +70,7 @@ export default function (state=initialState, action) {
 			nuevo_estado['edit'] = false;
 			return nuevo_estado;
 
-		case "GET_TIPO_POSTGRADO_EXITOSO":
+		case "GET_TIPOS_POSTGRADO_EXITOSO":
 			nuevo_estado['lista_postgrados'] = action.payload['lista_postgrados'];
 			return nuevo_estado;
 

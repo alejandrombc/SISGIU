@@ -285,3 +285,26 @@ export const cargando = () => {
 		type: "CARGANDO"
 	}
 }
+
+// Programacion Academica (Generico para todos)
+export const get_programacion_academica = () => {
+	let token = localStorage.getItem('user_token');
+	return request
+	   .get(host+'api/programacionAcademica/')
+	   .set('Authorization', 'JWT '+token)
+	   .then(function(res) {
+		    return {
+				type: "GET_PROGRAMACION_ACADEMICA",
+				payload: {'programacionAcademica': res.body }
+			}
+
+	   })
+	   .catch(function(err) {
+	   		localStorage.removeItem('user_token');
+	   		localStorage.removeItem('modulo');
+	      	return {
+				type: "ERROR"
+			}
+	   });
+
+}

@@ -4,6 +4,7 @@ const initialState = {
 	estudiantes: [],
 	edit: false,
 	error: false,
+	lista_postgrados: [],
 };
 
 export default function (state=initialState, action) {
@@ -38,6 +39,9 @@ export default function (state=initialState, action) {
 			nuevo_estado['error'] = true;
 			return nuevo_estado;
 		
+		case "GET_TIPOS_POSTGRADO_EXITOSO":
+			nuevo_estado['lista_postgrados'] = action.payload['lista_postgrados'];
+			return nuevo_estado;
 
 		default:
 			return state;
