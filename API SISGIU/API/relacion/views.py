@@ -64,6 +64,8 @@ from .permissions import (
 
 from django.views.decorators.csrf import csrf_exempt
 from usuario.utils import date_handler
+from django.db.models import Q
+
 """
 PeriodoEstudiante
 Esto solo debe ser tratado por el administrador
@@ -202,6 +204,52 @@ class DocenteAsignaturaListCreateAPIView(ListCreateAPIView):
     queryset = DocenteAsignatura.objects.all()
     serializer_class = DocenteAsignaturaListSerializer
     permission_classes = [EsAdministrativoOAdministrador]
+
+    def programacion_academica(request):
+        docente_asignatura = DocenteAsignatura.objects.filter(Q(periodo__estado_periodo__estado='activo') | Q(periodo__estado_periodo__estado='en inscripcion'))
+
+        response = []
+        aux_doc_asig = {}
+
+        for x in docente_asignatura:
+            periodo = Periodo.objects.get(id=x.periodo_id)
+            if str(x.periodo_id) not in aux_doc_asig:
+                temp = {}
+                temp['tipo_postgrado'] = TipoPostgrado.objects.get(id=periodo.tipo_postgrado_id).tipo
+                temp['descripcion'] = periodo.descripcion
+                temp[str(x.periodo_id)] = []
+                # aux_doc_asig[str(x.periodo_id)] = []
+            
+            docente = Usuario.objects.get(id=x.docente_id)
+            docente_json = {}
+            docente_json['first_name'] = docente.first_name
+            docente_json['last_name'] = docente.last_name
+
+            aux_periodo_info = {}
+            aux_periodo_info['docente'] = docente_json
+
+            asignatura = Asignatura.objects.get(id=x.asignatura_id)
+            asignatura_json = {}
+            asignatura_json['nombre'] = asignatura.nombre
+            asignatura_json['codigo'] = asignatura.codigo
+            asignatura_json['unidad_credito'] = asignatura.unidad_credito
+
+            aux_periodo_info['asignatura'] = asignatura_json
+
+            aux_periodo_info['hora'] = x.horario_hora
+            aux_periodo_info['dia'] = x.horario_dia
+            aux_periodo_info['aula'] = x.aula
+
+            # print(aux_periodo_info)
+
+            temp[str(x.periodo_id)].append(aux_periodo_info)
+
+        print(temp)
+
+
+        response_data = {}
+        response_data['Error'] = 'No tiene privilegios para realizar esta accion'
+        return HttpResponse(json.dumps(response_data), content_type="application/json", status=401)
 
 
 class DocenteAsignaturaDetailAPIView():
@@ -378,11 +426,11 @@ class DocenteAsignaturaDetailAPIView():
         return HttpResponse(json.dumps(response_data), content_type="application/json", status=405)
 
 
-
 class DocenteAsignaturaUpdateAPIView(RetrieveUpdateAPIView):
     queryset = DocenteAsignatura.objects.all()
     serializer_class = DocenteAsignaturaDetailSerializer
     permission_classes = [EsAdministrativoOAdministrador]
+
 
 class DocenteAsignaturaDeleteAPIView(DestroyAPIView):
     queryset = DocenteAsignatura.objects.all()

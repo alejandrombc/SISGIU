@@ -105,4 +105,9 @@ urlpatterns = format_suffix_patterns([
     url(r'^api/asignaturaTipoPostgrado/(?P<pk>\d+)/delete/$',
         AsignaturaTipoPostgradoDeleteAPIView.as_view(), name='AsignaturaTipoPostgrado-delete'),
 
+
+    # Programacion Academica
+    url(r'^api/programacionAcademica/$',
+        DocenteAsignaturaListCreateAPIView.programacion_academica, name='programacion-academica'),
+
 ])
