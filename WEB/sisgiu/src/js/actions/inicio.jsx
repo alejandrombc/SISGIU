@@ -97,12 +97,12 @@ export function get_tipo_postgrado (periodo) {
 
 
 
-export const get_historial = () =>{
+export const get_historial = (cedula) =>{
 	let token = localStorage.getItem('user_token');
-	var decoded = jwt_decode(token);
-
+	let modulo = localStorage.getItem('modulo');
+	console.log(modulo);
 	return request
-	   .get(host+'api/estudianteAsignatura/'+decoded['username']+'/historial/')
+	   .get(host+'api/estudianteAsignatura/'+cedula+'/historial/')
 	   .set('Authorization', 'JWT '+token)
 	   .then(function(res) {
 	      	return {
@@ -112,9 +112,15 @@ export const get_historial = () =>{
 
 	   })
 	   .catch(function(err) {
-	      	return {
-				type: "ERROR"
-			}
+			if (modulo === 'administrativo') {
+				return {
+					type:'GET_HISTORIAL_ERROR'
+				}
+			} else {
+			   	return {
+					type: "ERROR"
+			 	}
+		   }
 	   });
 
 }

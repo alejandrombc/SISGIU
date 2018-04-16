@@ -19,8 +19,13 @@ class NavBarAdministrativo extends Component{
           </NavItem>
 
           <NavItem>
+            <NavLink href="/historial" disabled={!this.props.activeUser.cargado}>Historial Académico</NavLink>
+          </NavItem>
+
+          <NavItem>
             <NavLink href="/programacionAcademica" disabled={!this.props.activeUser.cargado}>Programación Académica</NavLink>
           </NavItem>
+
 
 
         </Nav>

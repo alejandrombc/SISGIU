@@ -6,6 +6,7 @@ import { connect } from 'react-redux';
 import { PulseLoader } from 'halogenium';
 import '../../../css/historialAcademico.css'; 
 import {Doughnut} from 'react-chartjs-2';
+import jwt_decode from 'jwt-decode';
 
 //Components
 import { cargado, get_historial} from '../../actions/inicio';
@@ -90,7 +91,9 @@ class HistorialAcademico extends Component{
   	}
 
   	componentDidMount() {
-    	this.props.get_historial()
+		let token = localStorage.getItem('user_token');
+		var decoded = jwt_decode(token);
+    	this.props.get_historial(decoded['username'])
         	.then( () => this.get_listPeriodos() );
   	}
 
