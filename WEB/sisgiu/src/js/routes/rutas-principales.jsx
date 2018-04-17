@@ -122,9 +122,9 @@ class RutasPrincipales extends React.Component {
 							  )
 						)}/>
 
-						<Route path="/historial" render={(props) => (
+						<Route path="/usuarios" render={(props) => (
 							this.props.token['loggedIn'] ? (
-								<Inicio pestana="historial" />
+								<Inicio pestana="usuarios" />
 							) : (
 									<Redirect to="/login" />
 								)

@@ -7,9 +7,9 @@ import { InputGroup, Input, Button, Row, Col, Table, Alert } from 'reactstrap';
 import { Doughnut } from 'react-chartjs-2';
 
 // Components
-import { cargado, get_historial, cargando } from '../../actions/inicio';
+import { cargado, get_info_usuario, cargando } from '../../actions/inicio';
 
-class HistorialAcademicoAdministrativo extends Component {
+class UsuariosAdministrativo extends Component {
 
     constructor(props) {
         super(props);
@@ -59,12 +59,12 @@ class HistorialAcademicoAdministrativo extends Component {
 
     buscarEstudiante() {
         this.props.cargando();
-        this.props.get_historial(this.state.cedula).then(() => this.get_listPeriodos() );
+        this.props.get_info_usuario(this.state.cedula).then(() => this.get_listPeriodos() );
     }
 
     get_listPeriodos() {
-        if (this.props.administrativoUser.historial_academico.periodos && this.props.administrativoUser.historial_academico.periodos[0].length > 0) {
-            let listItems = this.props.administrativoUser.historial_academico.periodos.map((historial, i) => {
+        if (this.props.administrativoUser.info_usuarios_administrativo.periodos && this.props.administrativoUser.info_usuarios_administrativo.periodos[0].length > 0) {
+            let listItems = this.props.administrativoUser.info_usuarios_administrativo.periodos.map((historial, i) => {
                 return (
                     <div key={i}>
                         <center><h6>Periodo: {historial[0].periodo}</h6></center>
@@ -99,9 +99,9 @@ class HistorialAcademicoAdministrativo extends Component {
 
             let data = this.state.data;
 
-            data.datasets[0].data = [this.props.administrativoUser.historial_academico.asignaturas_aprobadas,
-            this.props.administrativoUser.historial_academico.asignaturas_reprobadas,
-            this.props.administrativoUser.historial_academico.asignaturas_retiradas,
+            data.datasets[0].data = [this.props.administrativoUser.info_usuarios_administrativo.asignaturas_aprobadas,
+            this.props.administrativoUser.info_usuarios_administrativo.asignaturas_reprobadas,
+            this.props.administrativoUser.info_usuarios_administrativo.asignaturas_retiradas,
             ];
 
             this.setState({ periodos: listItems, data: data });
@@ -116,7 +116,7 @@ class HistorialAcademicoAdministrativo extends Component {
             return (
                 <div>
                     {/* Alert de Error */}
-                    {this.props.administrativoUser['error_historial_academico'] &&
+                    {this.props.administrativoUser['error_info_usuarios'] &&
                         <Alert color="danger" isOpen={this.state.visible} toggle={this.onDismiss}>
                             Ha ocurrido un error. Asegurese de que el número de cédula es válido
                         </Alert>
@@ -132,65 +132,72 @@ class HistorialAcademicoAdministrativo extends Component {
                             <Button color="primary" onClick={this.buscarEstudiante}>Buscar</Button>
                         </Col>
                     </Row>
+                    {  this.props.administrativoUser.info_usuarios_administrativo.tipo_usuario === 'estudiante' &&
+                        <div>
+                            <br/>
+                            <h4>Historial Académico</h4>
+                            <hr />
+                            <br />
+                            <p>Datos del Estudiante</p>
+                            <Table bordered hover responsive striped size="sm" className="text-center">
+                                <thead>
+                                    <tr>
+                                        <th>Promedio General</th>
+                                        <th>Promedio Ponderado</th>
+                                        <th>Aprobadas</th>
+                                        <th>Retiradas</th>
+                                        <th>Reprobadas</th>
+                                        <th>Total</th>
+                                    </tr>
+                                </thead>
 
-                    <div>
-                        <br/>
-                        <h4>Historial Académico</h4>
-                        <hr />
-                        <br />
-                        <p>Datos del Estudiante</p>
-                        <Table bordered hover responsive striped size="sm" className="text-center">
-                            <thead>
-                                <tr>
-                                    <th>Promedio General</th>
-                                    <th>Promedio Ponderado</th>
-                                    <th>Aprobadas</th>
-                                    <th>Retiradas</th>
-                                    <th>Reprobadas</th>
-                                    <th>Total</th>
-                                </tr>
-                            </thead>
-
-                            <tbody className="tabla_usuarios">
-                                <tr key="1">
-                                    <td>{this.props.administrativoUser.historial_academico.promedio_general}</td>
-                                    <td>{this.props.administrativoUser.historial_academico.promedio_ponderado}</td>
-                                    <td>{this.props.administrativoUser.historial_academico.asignaturas_aprobadas}</td>
-                                    <td>{this.props.administrativoUser.historial_academico.asignaturas_retiradas}</td>
-                                    <td>{this.props.administrativoUser.historial_academico.asignaturas_reprobadas}</td>
-                                    <td>{this.props.administrativoUser.historial_academico.total_asignaturas}</td>
-                                </tr>
-                            </tbody>
-                        </Table>
-                        <hr />
-
-
-                        <Row>
-
-                            <Col md='2'>
-
-                            </Col>
+                                <tbody className="tabla_usuarios">
+                                    <tr key="1">
+                                        <td>{this.props.administrativoUser.info_usuarios_administrativo.promedio_general}</td>
+                                        <td>{this.props.administrativoUser.info_usuarios_administrativo.promedio_ponderado}</td>
+                                        <td>{this.props.administrativoUser.info_usuarios_administrativo.asignaturas_aprobadas}</td>
+                                        <td>{this.props.administrativoUser.info_usuarios_administrativo.asignaturas_retiradas}</td>
+                                        <td>{this.props.administrativoUser.info_usuarios_administrativo.asignaturas_reprobadas}</td>
+                                        <td>{this.props.administrativoUser.info_usuarios_administrativo.total_asignaturas}</td>
+                                    </tr>
+                                </tbody>
+                            </Table>
+                            <hr />
 
 
-                            <Col md='8'>
-                                <Doughnut data={this.state.data} />
+                            <Row>
 
-                            </Col>
+                                <Col md='2'>
 
-
-                            <Col md='2'>
-
-                            </Col>
+                                </Col>
 
 
-                        </Row>
+                                <Col md='8'>
+                                    <Doughnut data={this.state.data} />
 
-                        <hr />
+                                </Col>
 
 
-                        <p>Datos por Periodo</p>
-                        {this.state.periodos}
-                    </div>
+                                <Col md='2'>
+
+                                </Col>
+
+
+                            </Row>
+
+                            <hr />
+
+
+                            <p>Datos por Periodo</p>
+                            {this.state.periodos}
+                        </div>
+                    }
+
+                    { this.props.administrativoUser.info_usuarios_administrativo.tipo_usuario === 'docente' &&
+                        <div>
+                            docente
+                        </div>
+                    }
 
                 </div>
             )
@@ -210,12 +217,12 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
     return bindActionCreators({ 
         cargado: cargado,
-        get_historial: get_historial,
+        get_info_usuario: get_info_usuario,
         cargando: cargando,
      }, dispatch)
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(HistorialAcademicoAdministrativo);
+export default connect(mapStateToProps, mapDispatchToProps)(UsuariosAdministrativo);
 
 
 

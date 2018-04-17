@@ -114,7 +114,7 @@ class PeriodoEstudianteListCreateAPIView(ListCreateAPIView):
             for x in periodo_estudiante:
                 estudiante = Usuario.objects.filter(id=x['estudiante_id']).values()[0]
                 estudiante['foto'] = request.build_absolute_uri('/') + "media/" + estudiante['foto']
-                
+
                 del estudiante['id']
                 del estudiante['date_joined']
                 del estudiante['is_superuser']
@@ -574,7 +574,6 @@ class EstudianteAsignaturaDetailAPIView(RetrieveAPIView):
                     subPeriodo = []
                     id_periodo_estudiante = x['periodo_estudiante_id']
 
-
                 periodo_estudiante = PeriodoEstudiante.objects.get(id=id_periodo_estudiante)
                 periodo = Periodo.objects.get(id=periodo_estudiante.periodo_id)
                 estado_periodo = EstadoPeriodo.objects.get(id=periodo.estado_periodo_id)
@@ -588,7 +587,7 @@ class EstudianteAsignaturaDetailAPIView(RetrieveAPIView):
                 periodo_info['nota_definitiva'] = x['nota_definitiva']
                 if(x['retirado']):
                     periodo_info['nota_definitiva'] = "RET"
-                    cantidad_materias_retiradas+=1
+                    cantidad_materias_retiradas += 1
 
                 periodo_info['tipo_asignatura'] = tipo_asignatura.nombre
 
@@ -596,11 +595,11 @@ class EstudianteAsignaturaDetailAPIView(RetrieveAPIView):
                     if(not x['retirado']):
                         promedio_general += periodo_info['nota_definitiva']
                         promedio_ponderado += periodo_info['nota_definitiva'] * periodo_info['unidad_credito']
-                        cantidad_materias_ponderadas+=periodo_info['unidad_credito']
-                        cantidad_materias+=1
+                        cantidad_materias_ponderadas += periodo_info['unidad_credito']
+                        cantidad_materias += 1
                         if(periodo_info['nota_definitiva'] < 10):
-                            cantidad_materias_reprobadas+=1
-                
+                            cantidad_materias_reprobadas += 1
+
                 if estado_periodo.estado == "activo" or estado_periodo.estado == "en inscripcion":
                     if not x['retirado']:
                         periodo_info['nota_definitiva'] = 'SC'
@@ -625,8 +624,118 @@ class EstudianteAsignaturaDetailAPIView(RetrieveAPIView):
             return HttpResponse(json.dumps(historial_estudiante), content_type="application/json")
 
         response_data = {}
-        response_data['Error'] = 'No tiene privilegios para realizar esta acción.'      
+        response_data['Error'] = 'No tiene privilegios para realizar esta acción.'
         return HttpResponse(json.dumps(response_data), content_type="application/json", status=401)
+
+    def informacion_usuarios_administrativo(request, cedula):
+        if(request.method == "GET"):
+
+            if Estudiante.objects.filter(usuario__cedula=cedula).exists():
+                print('ES UN ESTUDIANTE')
+                #region info_historial
+                estudiante_asignatura = EstudianteAsignatura.objects.filter(periodo_estudiante__estudiante__usuario__cedula=cedula)
+
+                lista_estudiante_asignatura = [entry for entry in estudiante_asignatura.values()]
+
+                historial_estudiante = {}
+                periodos = []
+                subPeriodo = []
+                periodo_info = {}
+                promedio_general = 0
+                promedio_ponderado = 0
+                cantidad_materias = 0
+                cantidad_materias_ponderadas = 0
+                cantidad_materias_reprobadas = 0
+                cantidad_materias_retiradas = 0
+
+                for x in lista_estudiante_asignatura:
+                    if subPeriodo == []:
+                        id_periodo_estudiante = x['periodo_estudiante_id']
+
+                    if id_periodo_estudiante != x['periodo_estudiante_id']:
+                        periodos.append(subPeriodo)
+                        subPeriodo = []
+                        id_periodo_estudiante = x['periodo_estudiante_id']
+
+                    periodo_estudiante = PeriodoEstudiante.objects.get(id=id_periodo_estudiante)
+                    periodo = Periodo.objects.get(id=periodo_estudiante.periodo_id)
+                    estado_periodo = EstadoPeriodo.objects.get(id=periodo.estado_periodo_id)
+                    asignatura = Asignatura.objects.get(id=x['asignatura_id'])
+                    tipo_asignatura = TipoAsignatura.objects.get(id=asignatura.tipo_asignatura_id)
+
+                    periodo_info['periodo'] = periodo.descripcion
+                    periodo_info['asignatura_nombre'] = asignatura.nombre
+                    periodo_info['asignatura_codigo'] = asignatura.codigo
+                    periodo_info['unidad_credito'] = asignatura.unidad_credito
+                    periodo_info['nota_definitiva'] = x['nota_definitiva']
+                    if(x['retirado']):
+                        periodo_info['nota_definitiva'] = "RET"
+                        cantidad_materias_retiradas += 1
+
+                    periodo_info['tipo_asignatura'] = tipo_asignatura.nombre
+
+                    if(estado_periodo.estado == "finalizado"):
+                        if(not x['retirado']):
+                            promedio_general += periodo_info['nota_definitiva']
+                            promedio_ponderado += periodo_info['nota_definitiva'] * periodo_info['unidad_credito']
+                            cantidad_materias_ponderadas += periodo_info['unidad_credito']
+                            cantidad_materias += 1
+                            if(periodo_info['nota_definitiva'] < 10):
+                                cantidad_materias_reprobadas += 1
+
+                    if estado_periodo.estado == "activo" or estado_periodo.estado == "en inscripcion":
+                        if not x['retirado']:
+                            periodo_info['nota_definitiva'] = 'SC'
+
+                    subPeriodo.append(periodo_info)  
+                    periodo_info = {}
+
+                periodos.append(subPeriodo)
+
+                historial_estudiante['periodos'] = periodos
+                historial_estudiante['total_asignaturas'] = cantidad_materias+cantidad_materias_retiradas
+                historial_estudiante['asignaturas_reprobadas'] = cantidad_materias_reprobadas
+                historial_estudiante['asignaturas_retiradas'] = cantidad_materias_retiradas
+                historial_estudiante['asignaturas_aprobadas'] = cantidad_materias-cantidad_materias_reprobadas
+                if cantidad_materias == 0:
+                    historial_estudiante['promedio_general'] = 0
+                    historial_estudiante['promedio_ponderado'] = 0
+                else:
+                    historial_estudiante['promedio_general'] = '{0:.2f}'.format(promedio_general/cantidad_materias)
+                    historial_estudiante['promedio_ponderado'] = '{0:.2f}'.format(promedio_ponderado/cantidad_materias_ponderadas)
+                #endregion
+                estudiante = Estudiante.objects.get(usuario__cedula=cedula)
+
+                obj_estudiante = {}
+                obj_estudiante['tipo_postgrado'] = estudiante.id_tipo_postgrado.tipo
+                obj_estudiante['primer_nombre'] = estudiante.usuario.first_name
+                obj_estudiante['primer_apellido'] = estudiante.usuario.last_name
+                obj_estudiante['segundo_nombre'] = estudiante.usuario.segundo_nombre
+                obj_estudiante['segundo_apellido'] = estudiante.usuario.segundo_apellido
+                obj_estudiante['cedula'] = estudiante.usuario.cedula
+                obj_estudiante['email'] = estudiante.usuario.email
+                obj_estudiante['celular'] = estudiante.usuario.celular
+                obj_estudiante['telefono_casa'] = estudiante.usuario.telefono_casa
+                obj_estudiante['telefono_trabajo'] = estudiante.usuario.telefono_trabajo
+                obj_estudiante['sexo'] = estudiante.usuario.sexo
+                obj_estudiante['nacionalidad'] = estudiante.usuario.nacionalidad
+                obj_estudiante['estado_civil'] = estudiante.usuario.estado_civil
+                obj_estudiante['foto'] = request.build_absolute_uri('/') + "media/" + str(estudiante.usuario.foto)
+
+                historial_estudiante['estudiante'] = obj_estudiante
+                historial_estudiante['tipo_usuario'] = 'estudiante'
+
+                print(historial_estudiante)
+
+                return HttpResponse(json.dumps(historial_estudiante), content_type="application/json")
+
+            elif PersonalDocente.objects.filter(usuario__cedula=cedula).exists():
+                print('ES DOCENTE')
+
+        response_data = {}
+        response_data['Error'] = 'No tiene privilegios para realizar esta acción.'
+        return HttpResponse(json.dumps(response_data), content_type="application/json", status=401)
+
 
 class EstudianteAsignaturaUpdateAPIView(RetrieveUpdateAPIView):
     queryset = EstudianteAsignatura.objects.all()
@@ -641,7 +750,7 @@ class EstudianteAsignaturaUpdateAPIView(RetrieveUpdateAPIView):
 
             body_unicode = request.body.decode('utf-8')
             body = json.loads(body_unicode)
-            
+
             """Body contiene un array con todos los estudiantes y su respectiva nota y la cedula del docente """
 
             for estudiante in body['estudiantes']:
@@ -649,9 +758,9 @@ class EstudianteAsignaturaUpdateAPIView(RetrieveUpdateAPIView):
                 estudiante_asignatura = EstudianteAsignatura.objects.filter(periodo_estudiante=periodo_estudiante, asignatura__codigo=body['asignatura'])
 
                 estudiante_asignatura.update(nota_definitiva=estudiante['nota_definitiva'])
-           
-            return HttpResponse(json.dumps({"status":"OK"}), content_type="application/json", status=200)
-        
+
+            return HttpResponse(json.dumps({"status": "OK"}), content_type="application/json", status=200)
+
         response_data['Error'] = 'No tiene privilegios para realizar esta accion'      
         return HttpResponse(json.dumps(response_data), content_type="application/json", status=405)
 

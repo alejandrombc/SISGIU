@@ -126,6 +126,29 @@ export const get_historial = (cedula) =>{
 }
 
 
+export const get_info_usuario = (cedula) => {
+	let token = localStorage.getItem('user_token');
+	let modulo = localStorage.getItem('modulo');
+
+	return request
+		.get(host + 'api/informacionUsuariosAdministrativo/' + cedula + '/')
+		.set('Authorization', 'JWT ' + token)
+		.then(function (res) {
+			return {
+				type: "GET_INFO_USUARIOS_EXITOSO",
+				payload: { info_usuarios_administrativo: res.body }
+			}
+
+		})
+		.catch(function (err) {
+			return {
+				type: "GET_INFO_USUARIOS_ERROR"
+			}
+		});
+
+}
+
+
 export const retirar_periodo = (user, periodo) => {
 	let token = localStorage.getItem('user_token');
 	return request

@@ -9,8 +9,8 @@ const initialState = {
 	lista_asignatura_periodo: [],
 	lista_asignatura_estudiante: [],
 	inscripcion_modificada: false,
-	error_historial_academico: false,
-	historial_academico: {},
+	error_info_usuarios: false,
+	info_usuarios_administrativo: {},
 };
 
 export default function (state=initialState, action) {
@@ -73,13 +73,13 @@ export default function (state=initialState, action) {
 			nuevo_estado['pago_inscripcion_editado'] = false;
 			return nuevo_estado;
 
-		case "GET_HISTORIAL_EXITOSO":
-			nuevo_estado['historial_academico'] = action.payload['historial_academico'];
-			nuevo_estado['error_historial_academico'] = false;
+		case "GET_INFO_USUARIOS_EXITOSO":
+			nuevo_estado['info_usuarios_administrativo'] = action.payload['info_usuarios_administrativo'];
+			nuevo_estado['error_info_usuarios'] = false;
 			return nuevo_estado;
 		
-		case "GET_HISTORIAL_ERROR":
-			nuevo_estado['error_historial_academico'] = true;
+		case "GET_INFO_USUARIOS_ERROR":
+			nuevo_estado['error_info_usuarios'] = true;
 			return nuevo_estado;
 		
 
