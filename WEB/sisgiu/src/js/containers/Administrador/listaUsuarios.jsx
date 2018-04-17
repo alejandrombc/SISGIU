@@ -109,7 +109,7 @@ class ListaUsuarios extends Component{
             <td>  
               <Row >
                 <Col md={{ size: 'auto', offset: 3 }} className='botones'>
-                  <ModalUsuarioEdit onDismiss={this.onDismiss} triggerParentUpdate={this.updateLoading} usuario={usuario} tipo_usuario={this.props.tipo_usuario} />
+                  <ModalUsuarioEdit onDismiss={this.onDismiss} triggerParentUpdate={this.updateLoading} usuario={usuario} is_disabled={false} tipo_usuario={this.props.tipo_usuario} />
                   <ModalUsuarioDelete onDismiss={this.onDismiss} triggerParentUpdate={this.updateLoading} usuario={usuario} tipo_usuario={this.props.tipo_usuario}/>
                 </Col>
               </Row>

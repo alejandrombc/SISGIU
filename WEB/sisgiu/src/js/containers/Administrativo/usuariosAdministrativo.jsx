@@ -4,9 +4,10 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { PulseLoader } from 'halogenium';
 import { InputGroup, Input, Button, Row, Col, Table, Alert } from 'reactstrap';
-import { Doughnut } from 'react-chartjs-2';
 
 // Components
+import ModalUsuarioEdit from '../Administrador/modalUsuarioEdit';
+import HistorialAcademico from '../Estudiante/historialAcademico';
 import { cargado, get_info_usuario, cargando } from '../../actions/inicio';
 
 class UsuariosAdministrativo extends Component {
@@ -15,33 +16,12 @@ class UsuariosAdministrativo extends Component {
         super(props);
         this.state = {
             visible: true,
-            cedula: '',
-            periodos: '',
-            data:
-                {
-                    labels: [
-                        'Aprobadas',
-                        'Reprobadas',
-                        'Retiradas',
-                    ],
-                    datasets: [{
-                        data: [],
-                        backgroundColor: [
-                            '#2EFE2E',
-                            '#FE2E2E',
-                            '#FFCE56'
-                        ],
-                        hoverBackgroundColor: [
-                            '#00FF00',
-                            '#DF0101',
-                            '#ffc73d'
-                        ]
-                    }]
-                }     
+            cedula: '',   
         }
         this.handleChange = this.handleChange.bind(this);
         this.buscarEstudiante = this.buscarEstudiante.bind(this);
         this.get_listPeriodos = this.get_listPeriodos.bind(this);
+        this.onDismiss = this.onDismiss.bind(this);
     }
 
     onDismiss() {
@@ -125,79 +105,32 @@ class UsuariosAdministrativo extends Component {
                     <Row>
                         <Col md='6' sm='8' xs='8'>
                             <InputGroup>
-                                <Input placeholder="cédula" onChange={this.handleChange} name='cedula' />
+                                <Input placeholder="Cédula" onChange={this.handleChange} name='cedula' />
                             </InputGroup>
                         </Col>
                         <Col md='6' sm='4' xs='4'>
                             <Button color="primary" onClick={this.buscarEstudiante}>Buscar</Button>
                         </Col>
                     </Row>
-                    {  this.props.administrativoUser.info_usuarios_administrativo.tipo_usuario === 'estudiante' &&
+                    <br />
+                    <br />
+                    { (this.props.administrativoUser.info_usuarios_administrativo.tipo_usuario === 'estudiantes' || this.props.administrativoUser.info_usuarios_administrativo.tipo_usuario === 'docentes') &&
                         <div>
-                            <br/>
-                            <h4>Historial Académico</h4>
-                            <hr />
-                            <br />
-                            <p>Datos del Estudiante</p>
-                            <Table bordered hover responsive striped size="sm" className="text-center">
-                                <thead>
-                                    <tr>
-                                        <th>Promedio General</th>
-                                        <th>Promedio Ponderado</th>
-                                        <th>Aprobadas</th>
-                                        <th>Retiradas</th>
-                                        <th>Reprobadas</th>
-                                        <th>Total</th>
-                                    </tr>
-                                </thead>
-
-                                <tbody className="tabla_usuarios">
-                                    <tr key="1">
-                                        <td>{this.props.administrativoUser.info_usuarios_administrativo.promedio_general}</td>
-                                        <td>{this.props.administrativoUser.info_usuarios_administrativo.promedio_ponderado}</td>
-                                        <td>{this.props.administrativoUser.info_usuarios_administrativo.asignaturas_aprobadas}</td>
-                                        <td>{this.props.administrativoUser.info_usuarios_administrativo.asignaturas_retiradas}</td>
-                                        <td>{this.props.administrativoUser.info_usuarios_administrativo.asignaturas_reprobadas}</td>
-                                        <td>{this.props.administrativoUser.info_usuarios_administrativo.total_asignaturas}</td>
-                                    </tr>
-                                </tbody>
-                            </Table>
-                            <hr />
-
-
-                            <Row>
-
-                                <Col md='2'>
-
+                             <Row>
+                                <Col className="text-center" md='12' sm='12' xs='12'>
+                                    <ModalUsuarioEdit onDismiss={this.onDismiss} usuario={this.props.administrativoUser.info_usuarios_administrativo} is_disabled={true} tipo_usuario={this.props.administrativoUser.info_usuarios_administrativo.tipo_usuario} />
                                 </Col>
-
-
-                                <Col md='8'>
-                                    <Doughnut data={this.state.data} />
-
-                                </Col>
-
-
-                                <Col md='2'>
-
-                                </Col>
-
-
                             </Row>
-
-                            <hr />
-
-
-                            <p>Datos por Periodo</p>
-                            {this.state.periodos}
                         </div>
                     }
 
-                    { this.props.administrativoUser.info_usuarios_administrativo.tipo_usuario === 'docente' &&
+                    {  this.props.administrativoUser.info_usuarios_administrativo.tipo_usuario === 'estudiantes' &&
                         <div>
-                            docente
+                            <hr />
+                            <HistorialAcademico cedula={this.props.administrativoUser.info_usuarios_administrativo.cedula}/>
                         </div>
                     }
+
 
                 </div>
             )

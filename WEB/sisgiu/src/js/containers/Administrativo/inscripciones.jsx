@@ -27,7 +27,7 @@ import { get_estado_periodo } from '../../actions/moduloEstudiantes';
 const KEYS_TO_FILTERS = ['estudiante.first_name', 'estudiante.last_name', 'estudiante.cedula'];
 const estudiantes_por_pagina = 10;
 
-class Estudiantes extends Component{
+class Inscripciones extends Component{
 
 	constructor(props) {
 		super(props);
@@ -335,6 +335,6 @@ const mapDispatchToProps = (dispatch) => {
 }
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(Estudiantes);
+export default connect(mapStateToProps, mapDispatchToProps)(Inscripciones);
 
 

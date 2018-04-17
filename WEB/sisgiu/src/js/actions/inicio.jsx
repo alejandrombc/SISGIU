@@ -128,7 +128,7 @@ export const get_historial = (cedula) =>{
 
 export const get_info_usuario = (cedula) => {
 	let token = localStorage.getItem('user_token');
-	let modulo = localStorage.getItem('modulo');
+	// let modulo = localStorage.getItem('modulo');
 
 	return request
 		.get(host + 'api/informacionUsuariosAdministrativo/' + cedula + '/')

@@ -93,8 +93,13 @@ class HistorialAcademico extends Component{
   	componentDidMount() {
 		let token = localStorage.getItem('user_token');
 		var decoded = jwt_decode(token);
+		if(this.props.cedula !== undefined){
+			this.props.get_historial(this.props.cedula)
+        	.then( () => this.get_listPeriodos() );
+		}else{
     	this.props.get_historial(decoded['username'])
         	.then( () => this.get_listPeriodos() );
+        }
   	}
 
 	render(){

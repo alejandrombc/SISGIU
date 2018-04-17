@@ -629,108 +629,52 @@ class EstudianteAsignaturaDetailAPIView(RetrieveAPIView):
 
     def informacion_usuarios_administrativo(request, cedula):
         if(request.method == "GET"):
-
+            obj_usuario = {}
             if Estudiante.objects.filter(usuario__cedula=cedula).exists():
-                print('ES UN ESTUDIANTE')
-                #region info_historial
-                estudiante_asignatura = EstudianteAsignatura.objects.filter(periodo_estudiante__estudiante__usuario__cedula=cedula)
+                usuario = Estudiante.objects.get(usuario__cedula=cedula)
 
-                lista_estudiante_asignatura = [entry for entry in estudiante_asignatura.values()]
-
-                historial_estudiante = {}
-                periodos = []
-                subPeriodo = []
-                periodo_info = {}
-                promedio_general = 0
-                promedio_ponderado = 0
-                cantidad_materias = 0
-                cantidad_materias_ponderadas = 0
-                cantidad_materias_reprobadas = 0
-                cantidad_materias_retiradas = 0
-
-                for x in lista_estudiante_asignatura:
-                    if subPeriodo == []:
-                        id_periodo_estudiante = x['periodo_estudiante_id']
-
-                    if id_periodo_estudiante != x['periodo_estudiante_id']:
-                        periodos.append(subPeriodo)
-                        subPeriodo = []
-                        id_periodo_estudiante = x['periodo_estudiante_id']
-
-                    periodo_estudiante = PeriodoEstudiante.objects.get(id=id_periodo_estudiante)
-                    periodo = Periodo.objects.get(id=periodo_estudiante.periodo_id)
-                    estado_periodo = EstadoPeriodo.objects.get(id=periodo.estado_periodo_id)
-                    asignatura = Asignatura.objects.get(id=x['asignatura_id'])
-                    tipo_asignatura = TipoAsignatura.objects.get(id=asignatura.tipo_asignatura_id)
-
-                    periodo_info['periodo'] = periodo.descripcion
-                    periodo_info['asignatura_nombre'] = asignatura.nombre
-                    periodo_info['asignatura_codigo'] = asignatura.codigo
-                    periodo_info['unidad_credito'] = asignatura.unidad_credito
-                    periodo_info['nota_definitiva'] = x['nota_definitiva']
-                    if(x['retirado']):
-                        periodo_info['nota_definitiva'] = "RET"
-                        cantidad_materias_retiradas += 1
-
-                    periodo_info['tipo_asignatura'] = tipo_asignatura.nombre
-
-                    if(estado_periodo.estado == "finalizado"):
-                        if(not x['retirado']):
-                            promedio_general += periodo_info['nota_definitiva']
-                            promedio_ponderado += periodo_info['nota_definitiva'] * periodo_info['unidad_credito']
-                            cantidad_materias_ponderadas += periodo_info['unidad_credito']
-                            cantidad_materias += 1
-                            if(periodo_info['nota_definitiva'] < 10):
-                                cantidad_materias_reprobadas += 1
-
-                    if estado_periodo.estado == "activo" or estado_periodo.estado == "en inscripcion":
-                        if not x['retirado']:
-                            periodo_info['nota_definitiva'] = 'SC'
-
-                    subPeriodo.append(periodo_info)  
-                    periodo_info = {}
-
-                periodos.append(subPeriodo)
-
-                historial_estudiante['periodos'] = periodos
-                historial_estudiante['total_asignaturas'] = cantidad_materias+cantidad_materias_retiradas
-                historial_estudiante['asignaturas_reprobadas'] = cantidad_materias_reprobadas
-                historial_estudiante['asignaturas_retiradas'] = cantidad_materias_retiradas
-                historial_estudiante['asignaturas_aprobadas'] = cantidad_materias-cantidad_materias_reprobadas
-                if cantidad_materias == 0:
-                    historial_estudiante['promedio_general'] = 0
-                    historial_estudiante['promedio_ponderado'] = 0
-                else:
-                    historial_estudiante['promedio_general'] = '{0:.2f}'.format(promedio_general/cantidad_materias)
-                    historial_estudiante['promedio_ponderado'] = '{0:.2f}'.format(promedio_ponderado/cantidad_materias_ponderadas)
-                #endregion
-                estudiante = Estudiante.objects.get(usuario__cedula=cedula)
-
-                obj_estudiante = {}
-                obj_estudiante['tipo_postgrado'] = estudiante.id_tipo_postgrado.tipo
-                obj_estudiante['primer_nombre'] = estudiante.usuario.first_name
-                obj_estudiante['primer_apellido'] = estudiante.usuario.last_name
-                obj_estudiante['segundo_nombre'] = estudiante.usuario.segundo_nombre
-                obj_estudiante['segundo_apellido'] = estudiante.usuario.segundo_apellido
-                obj_estudiante['cedula'] = estudiante.usuario.cedula
-                obj_estudiante['email'] = estudiante.usuario.email
-                obj_estudiante['celular'] = estudiante.usuario.celular
-                obj_estudiante['telefono_casa'] = estudiante.usuario.telefono_casa
-                obj_estudiante['telefono_trabajo'] = estudiante.usuario.telefono_trabajo
-                obj_estudiante['sexo'] = estudiante.usuario.sexo
-                obj_estudiante['nacionalidad'] = estudiante.usuario.nacionalidad
-                obj_estudiante['estado_civil'] = estudiante.usuario.estado_civil
-                obj_estudiante['foto'] = request.build_absolute_uri('/') + "media/" + str(estudiante.usuario.foto)
-
-                historial_estudiante['estudiante'] = obj_estudiante
-                historial_estudiante['tipo_usuario'] = 'estudiante'
-
-                print(historial_estudiante)
-
-                return HttpResponse(json.dumps(historial_estudiante), content_type="application/json")
+                obj_usuario = {}
+                obj_usuario['tipo_postgrado'] = usuario.id_tipo_postgrado.tipo
+                obj_usuario['id_tipo_postgrado'] = usuario.id_tipo_postgrado.id
+                obj_usuario['direccion'] = usuario.direccion
+                obj_usuario['estado_estudiante'] = usuario.id_estado_estudiante.estado
+                obj_usuario['id_estado_estudiante'] = usuario.id_estado_estudiante.id
+                obj_usuario['tipo_usuario'] = 'estudiantes'
 
             elif PersonalDocente.objects.filter(usuario__cedula=cedula).exists():
-                print('ES DOCENTE')
+                usuario = PersonalDocente.objects.get(usuario__cedula=cedula)
+                obj_usuario['tipo_usuario'] = 'docentes'
+                obj_usuario['coordinador'] = usuario.coordinador
+                obj_usuario['direccion'] = usuario.direccion
+                obj_usuario['rif'] = request.build_absolute_uri('/')+"media/"+str(usuario.rif)
+                obj_usuario['curriculum'] = request.build_absolute_uri('/')+"media/"+str(usuario.curriculum)
+                obj_usuario['permiso_ingresos'] = (
+                    request.build_absolute_uri('/')+"media/"+str(usuario.permiso_ingresos)
+                )
+
+
+            else:
+                obj_usuario['tipo_usuario'] = 'otro'
+                return HttpResponse(json.dumps(obj_usuario), content_type="application/json", status=400)
+
+
+            obj_usuario['first_name'] = usuario.usuario.first_name
+            obj_usuario['last_name'] = usuario.usuario.last_name
+            obj_usuario['segundo_nombre'] = usuario.usuario.segundo_nombre
+            obj_usuario['segundo_apellido'] = usuario.usuario.segundo_apellido
+            obj_usuario['cedula'] = usuario.usuario.cedula
+            obj_usuario['email'] = usuario.usuario.email
+            obj_usuario['celular'] = usuario.usuario.celular
+            obj_usuario['telefono_casa'] = usuario.usuario.telefono_casa
+            obj_usuario['telefono_trabajo'] = usuario.usuario.telefono_trabajo
+            obj_usuario['sexo'] = usuario.usuario.sexo
+            obj_usuario['nacionalidad'] = usuario.usuario.nacionalidad
+            obj_usuario['fecha_nacimiento'] = str(usuario.usuario.fecha_nacimiento)
+            obj_usuario['estado_civil'] = usuario.usuario.estado_civil
+            obj_usuario['foto'] = request.build_absolute_uri('/') + "media/" + str(usuario.usuario.foto)
+
+            return HttpResponse(json.dumps(obj_usuario), content_type="application/json")
+
 
         response_data = {}
         response_data['Error'] = 'No tiene privilegios para realizar esta acción.'

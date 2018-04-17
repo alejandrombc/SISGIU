@@ -80,6 +80,7 @@ export default function (state=initialState, action) {
 		
 		case "GET_INFO_USUARIOS_ERROR":
 			nuevo_estado['error_info_usuarios'] = true;
+			nuevo_estado['info_usuarios_administrativo'] = {"tipo_usuario":"error"};
 			return nuevo_estado;
 		
 

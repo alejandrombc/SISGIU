@@ -14,7 +14,7 @@ import ModuloAsignaturas from './Administrador/moduloAsignaturas';
 import ModuloPeriodos from './Administrador/moduloPeriodos';
 import HistorialAcademico from './Estudiante/historialAcademico';
 import CargarNotas from './Docente/cargarNotas';
-import Estudiantes from './Administrativo/estudiantes';
+import Inscripciones from './Administrativo/inscripciones';
 import ProgramacionAcademica from './programacionAcademica';
 import UsuariosAdministrativo from './Administrativo/usuariosAdministrativo';
 
@@ -79,8 +79,8 @@ class Content extends Component{
 		                	<CargarNotas/>
 		            	}
 
-		            	{this.props.pestana === "estudiantes" && modulo === "administrativo"&&
-		                	<Estudiantes/>
+		            	{this.props.pestana === "inscripciones" && modulo === "administrativo"&&
+		                	<Inscripciones/>
 		            	}
 
 		              </div>
