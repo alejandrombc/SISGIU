@@ -17,6 +17,8 @@ import CargarNotas from './Docente/cargarNotas';
 import Inscripciones from './Administrativo/inscripciones';
 import ProgramacionAcademica from './programacionAcademica';
 import UsuariosAdministrativo from './Administrativo/usuariosAdministrativo';
+import ConstanciaEstudiante from './Estudiante/constanciasEstudiante';
+import ConstanciaDocente from './Docente/constanciasDocente';
 
 
 
@@ -82,6 +84,15 @@ class Content extends Component{
 		            	{this.props.pestana === "inscripciones" && modulo === "administrativo"&&
 		                	<Inscripciones/>
 		            	}
+
+		            	{this.props.pestana === "constancias" && modulo === "estudiantes"&&
+		            		<ConstanciaEstudiante />
+		            	}
+
+		            	{this.props.pestana === "constancias" && modulo === "docentes"&&
+		            		<ConstanciaDocente />
+		            	}
+		            	
 
 		              </div>
 		      </div>

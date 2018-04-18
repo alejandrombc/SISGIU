@@ -113,7 +113,7 @@ urlpatterns = format_suffix_patterns([
 
 
     # Constancias
-    url(r'^api/reporte/(?P<cedula>[0-9]{6,8})/$',
+    url(r'^api/constancias/estudio/(?P<cedula>[0-9]{6,8})/$',
         Reportes.constancia_estudio, name='reportes'),
 
 

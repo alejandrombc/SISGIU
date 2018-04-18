@@ -6,6 +6,12 @@ import { editarUsuario } from '../actions/perfilUsuario';
 import {bindActionCreators} from 'redux';
 import { PulseLoader } from 'halogenium'; //Spinner
 
+// Components
+import { 
+    cargado,
+    } from '../actions/inicio';
+
+
 class SeccionGeneral extends Component{
 	 
 	constructor(props) {
@@ -37,6 +43,10 @@ class SeccionGeneral extends Component{
 	onDismiss() {
 		this.setState({ visible: false });
 	}
+
+	componentDidMount() {
+		this.props.cargado();
+  	}
 
   	handleChangeUsuario(e) {
         const { name, value } = e.target;
@@ -204,7 +214,7 @@ const mapStateToProps = (state)=> {
 }
 
 const mapDispatchToProps = (dispatch) => {
-	return bindActionCreators({editarUsuario: editarUsuario}, dispatch )
+	return bindActionCreators({editarUsuario: editarUsuario, cargado: cargado}, dispatch )
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(SeccionGeneral);

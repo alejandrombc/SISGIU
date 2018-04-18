@@ -554,6 +554,7 @@ class AdministrativoDeleteAPIView(DestroyAPIView):
 
 class Reportes():
     def constancia_estudio(request, cedula):
+        token =request.META.get('HTTP_AUTHORIZATION')
         if (request.method == "GET"):
             user_information = {}
             user = Usuario.objects.get(cedula=cedula).__dict__
