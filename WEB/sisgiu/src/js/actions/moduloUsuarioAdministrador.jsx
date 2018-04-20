@@ -165,7 +165,7 @@ export const crearUsuario = (user, tipo_usuario) => {
 
 export const eliminarUsuario = (cedula, tipo_usuario) => {
 	let token = localStorage.getItem('user_token');
-	if(tipo_usuario === "administradores") { tipo_usuario = "usuarios"; }
+	// if(tipo_usuario === "administradores") { tipo_usuario = "usuarios"; }
 	return request
 	   .delete(host+'api/usuarios/'+cedula+'/delete/')
 	   .set('Authorization', 'JWT '+token)

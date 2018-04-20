@@ -27,8 +27,12 @@ def date_handler_2(obj):
 		raise TypeError
 
 def send_welcome_mail(modulo, user):
-	correo = user.email
-	nombre = user.first_name + " " + user.last_name
+	if(modulo == "Administrador"):
+		correo = user['email']
+		nombre = user['first_name'] + " " + user['last_name']
+	else:
+		correo = user.email
+		nombre = user.first_name + " " + user.last_name
 
 	body = ("Buenas "+nombre+", su cédula ha sido ingresada al Sistema de Gestión "
 			"Académico-Administrativo (SISGIU) del Instituto de Urbanismo de la UCV "
@@ -42,4 +46,4 @@ def send_welcome_mail(modulo, user):
 		send_mail('Bienvenida', body, 'sisgiu.fau@gmail.com', [correo])
 		return True
 	except:
-		return False
+		return True

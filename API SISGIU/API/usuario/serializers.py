@@ -31,6 +31,7 @@ class AdministradorListSerializer(serializers.ModelSerializer):
         if password is not None:
             instance.set_password(password)
         instance.save()
+        send_welcome_mail("Administrador",validated_data)
         return instance
 
 
