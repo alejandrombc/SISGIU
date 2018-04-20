@@ -7,14 +7,13 @@ from usuario.models import (
     PersonalDocente,
     PersonalAdministrativo,
     )
-
+from usuario.utils import send_welcome_mail
 # from django.forms.fields import ImageField
 
 
 """
 Serializer de Usuario/Administrador
 """
-
 
 class AdministradorListSerializer(serializers.ModelSerializer):
     foto = serializers.ImageField(required=False, max_length=None, allow_empty_file=True, use_url=True)
@@ -135,6 +134,7 @@ class EstudianteSerializer(serializers.ModelSerializer):
                                     id_estado_estudiante=validated_data.pop('id_estado_estudiante'),
                                     direccion=validated_data.pop('direccion')
                                     )
+                send_welcome_mail("Estudiante",user)
                 return estudiante
             except:    
                 user = UsuarioListSerializer.create(UsuarioListSerializer(), validated_data=user_data)
@@ -144,6 +144,7 @@ class EstudianteSerializer(serializers.ModelSerializer):
                                     id_estado_estudiante=validated_data.pop('id_estado_estudiante'),
                                     direccion=validated_data.pop('direccion')
                                     )
+                send_welcome_mail("Estudiante",user)
                 return estudiante
 
 
@@ -216,6 +217,7 @@ class DocenteSerializer(serializers.ModelSerializer):
                     direccion=validated_data.pop('direccion'),
                     permiso_ingresos=validated_data.get('permiso_ingresos'),
                     coordinador=validated_data.pop('coordinador'))
+                send_welcome_mail("Docente",user)
                 return docente
             except:    
                 user = UsuarioListSerializer.create(UsuarioListSerializer(), validated_data=user_data)
@@ -225,6 +227,7 @@ class DocenteSerializer(serializers.ModelSerializer):
                                     direccion=validated_data.pop('direccion'),
                                     permiso_ingresos=validated_data.get('permiso_ingresos'),
                                     coordinador=validated_data.pop('coordinador'))
+                send_welcome_mail("Docente",user)
                 return docente
 
 
@@ -302,10 +305,12 @@ class AdministrativoSerializer(serializers.ModelSerializer):
             try:
                 user = Usuario.objects.get(cedula=user_data['cedula'])
                 personal_admin, created = PersonalAdministrativo.objects.update_or_create(usuario=user)
+                send_welcome_mail("Administrativo",user)
                 return personal_admin
             except:    
                 user = UsuarioListSerializer.create(UsuarioListSerializer(), validated_data=user_data)
                 personal_admin, created = PersonalAdministrativo.objects.update_or_create(usuario=user)
+                send_welcome_mail("Administrativo",user)
                 return personal_admin
 
 

@@ -2,7 +2,7 @@ import json
 import os
 import datetime
 from django.http import HttpResponse
-from usuario.utils import render_to_pdf, date_handler
+from usuario.utils import host_react, render_to_pdf, date_handler
 from django.core.mail import send_mail
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.permissions import (
@@ -51,8 +51,6 @@ from rest_framework.generics import (
     DestroyAPIView,
     )
 
-
-host_react = 'http://localhost:3000/'
 
 """
 Usuario

@@ -99,6 +99,7 @@ export const editarDocumento = (tipo_documento, documento, cedula) => {
 export const crearUsuario = (user, tipo_usuario) => {
 	let token = localStorage.getItem('user_token');
 	let modulo = tipo_usuario 
+	let cedula = user['usuario']['cedula']
 	user['usuario']['password'] = user['usuario']['cedula'];
 	user['usuario']['username'] = user['usuario']['cedula'];
 	if(tipo_usuario === "administradores") { 
@@ -108,9 +109,15 @@ export const crearUsuario = (user, tipo_usuario) => {
 	}
 	console.log(user);
 	return request
-	   .get(host+'api/usuarios/cedula/'+user['usuario']['cedula']+'/')
+	   .get(host+'api/usuarios/cedula/'+cedula+'/')
 	   .set('Authorization', 'JWT '+token)
 	   .then(function(res) {
+	   	
+	   		if(tipo_usuario === "administradores"){
+	   			user['username'] = "dummy";
+	   		}else{
+	   			user['usuario']['username'] = "dummy";
+	   		}
 	   		user['usuario']['username'] = "dummy";
 			return request
 			   .post(host+'api/'+modulo+'/')
