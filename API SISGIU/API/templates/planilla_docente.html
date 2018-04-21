@@ -1,0 +1,119 @@
+<html>
+     <head>
+         <title>Constancia de estudios - {{cedula}}</title>
+         <style type="text/css">
+             body {
+                 font-weight: 200;
+                 font-size: 14px;
+             }
+             .header {
+                 font-size: 20px;
+                 font-weight: 100;
+                 text-align: center;
+             }
+             .title {
+                 font-size: 22px;
+                 font-weight: 100;
+                /* text-align: right;*/
+                padding: 10px 20px 0px 20px;  
+             }
+             .title_child {
+                 font-size: 17px;
+                 font-weight: 100;
+                /* text-align: right;*/
+                padding: 10px 20px 0px 20px;  
+             }
+             .title span {
+                 color: #007cae;
+             }
+             .details {
+                 padding: 10px 20px 0px 20px;
+                 text-align: left !important;
+                 /*margin-left: 40%;*/
+             }
+             .hrItem {
+                 border: none;
+                 height: 1px;
+                 /* Set the hr color */
+                 color: #333; /* old IE */
+                 background-color: #fff; /* Modern Browsers */
+             }
+             .texto{
+             	 font-size: 15px;
+                 font-weight: 100;
+                 text-align:justify;
+				 text-justify:inter-word;
+                /* text-align: right;*/
+             }
+
+            table { 
+                border-collapse: collapse; 
+                margin:50px auto;
+                table-layout: fixed;
+                width: 100%;
+                word-wrap:break-word;
+            }
+
+            tr:nth-of-type(odd) { 
+                background: #eee; 
+            }
+
+            th { 
+                background: #3498db; 
+                color: black; 
+                font-weight: bold; 
+            }
+
+            td, th { 
+                padding: 10px; 
+                border: 1px solid #ccc; 
+                text-align: left; 
+                font-size: 18px;
+            }
+
+        </style>
+     </head>
+     <body>
+     	 <div class='wrapper'>
+			<center><div>
+	     	 	<img width="100px" height="100px" src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9c/UCV.png/250px-UCV.png">
+	     	 	<img width="100px" height="100px" src="https://www.fau.ucv.ve/boletin/i/fau_azul.png">
+     	 	</div></center>
+             <div class='header'>
+				 <div>
+	                 <center><p>UNIVERSIDAD CENTRAL DE VENEZUELA
+	                 <br>FACULTAD DE ARQUITECTURA
+	                 <br>DIVISIÓN DE CONTROL DE ESTUDIOS</p><center>
+                 </div>
+             </div>
+        <br>
+        <div class='wrapper'>
+            <div class='header'>
+             <p class='title_child'><b>PLANILLA DE ESTUDIANTES</b></p>
+            </div>
+            <div class='texto'>
+                <center><p>Estudiantes del docente <b>{{nombre}} {{apellido}}</b> (C.I: {{cedula}}) para la asignatura <b>{{asignatura}}</b> del periodo <b>{{periodo}}</b></p></center>
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Cedula</th>
+                      <th>Nombre</th>
+                      <th>Apellido</th>
+                      <th>Nota</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for estudiante in estudiantes %}
+                    <tr>
+                      <td width="20%" data-column="Cedula">{{estudiante.cedula}}</td>
+                      <td width="40%" data-column="Nombre">{{estudiante.nombre}}</td>
+                      <td width="45%" data-column="Apellido">{{estudiante.apellido}}</td>
+                      <td width="15%" data-column="Calificacion">{{estudiante.nota}}</td>
+                    </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+            </div>
+        </div>
+     </body>
+ </html>

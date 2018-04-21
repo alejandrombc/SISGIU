@@ -1,0 +1,103 @@
+<html>
+     <head>
+         <title>Planilla de Estudiantes - {{cedula}}</title>
+         <style type="text/css">
+             body {
+                 font-weight: 200;
+                 font-size: 14px;
+             }
+             .header {
+                 font-size: 20px;
+                 font-weight: 100;
+                 text-align: center;
+             }
+             .title {
+                 font-size: 22px;
+                 font-weight: 100;
+                /* text-align: right;*/
+                padding: 10px 20px 0px 20px;  
+             }
+             .title_child {
+                 font-size: 17px;
+                 font-weight: 100;
+                /* text-align: right;*/
+                padding: 10px 20px 0px 20px;  
+             }
+             .title span {
+                 color: #007cae;
+             }
+             .details {
+                 padding: 10px 20px 0px 20px;
+                 text-align: left !important;
+                 /*margin-left: 40%;*/
+             }
+             .hrItem {
+                 border: none;
+                 height: 1px;
+                 /* Set the hr color */
+                 color: #333; /* old IE */
+                 background-color: #fff; /* Modern Browsers */
+             }
+             .texto{
+             	 font-size: 15px;
+                 font-weight: 100;
+                 text-align:justify;
+				 text-justify:inter-word;
+                /* text-align: right;*/
+             }
+         </style>
+     </head>
+     <body>
+     	 <div class='wrapper'>
+			<center><div>
+	     	 	<img width="100px" height="100px" src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9c/UCV.png/250px-UCV.png">
+	     	 	<img width="100px" height="100px" src="https://www.fau.ucv.ve/boletin/i/fau_azul.png">
+     	 	</div></center>
+             <div class='header'>
+				 <div>
+	                 <center><p>UNIVERSIDAD CENTRAL DE VENEZUELA
+	                 <br>FACULTAD DE ARQUITECTURA
+	                 <br>DIVISIÓN DE CONTROL DE ESTUDIOS</p><center>
+                 </div>
+             </div>
+         <div>
+         <br>
+         <div class='wrapper'>
+             <div class='header'>
+                 <p class='title_child'><b>CONSTANCIA DE ESTUDIOS</b></p>
+             </div>
+         <div>
+         <div class='texto'>
+			 <p>Quien subscribe, jefe de la División de Control de Estudios de la Facultad de Arquitectura de la Universidad Central de Venezuela, por medio de la presente, hace constar que el Sr(a). <b>{{last_name}} {{first_name}}</b> portador de la cédula de identidad No. <b>{{cedula}}</b> es estudiante de <b>{{tipo_postgrado}}</b> para el período <b>{{periodo}}</b> y cursa un total de <b>{{unidad_creditos}}</b> unidades de crédito en las siguientes asignaturas:</p>
+			<br>
+			<b>
+				<ul>
+                    {% for asignatura in asignaturas %}
+					<li>
+						({{ asignatura.codigo }}) {{ asignatura.nombre }} 
+					</li>
+                    {% endfor %}
+				</ul>
+			</b>
+			<br>
+			<p>Constancia que se expide a solicitud de la parte interesada en Caracas, a los {{dia}} días del mes de {{mes}} del año {{anio}}.</p>
+			<br>
+			<center><p>*** Válida por el período actual ***</p></center>
+			<br>
+			<center><div>
+	     	 	<img width="200px" height="100px" src="https://upload.wikimedia.org/wikipedia/commons/7/7e/Firma_Harriet.png">
+     	 	</div></center>
+			 <div class='wrapper'>
+             <div class='header'>
+                 <p style="font-size:15px" class='title_child'>
+                 	PROF. MARISOL ORTEGA
+					<br>
+					JEFA DE DIVISIÓN DE CONTROL DE ESTUDIOS
+                 </p>
+             </div>
+         <div>
+             <hr class='hrItem' />
+         </div>
+     </div>
+     </body>
+ </html>

@@ -45,7 +45,33 @@
 				 text-justify:inter-word;
                 /* text-align: right;*/
              }
-         </style>
+
+            table { 
+                border-collapse: collapse; 
+                margin:50px auto;
+                table-layout: fixed;
+                width: 100%;
+                word-wrap:break-word;
+            }
+
+            tr:nth-of-type(odd) { 
+                background: #eee; 
+            }
+
+            th { 
+                background: #3498db; 
+                color: black; 
+                font-weight: bold; 
+            }
+
+            td, th { 
+                padding: 10px; 
+                border: 1px solid #ccc; 
+                text-align: left; 
+                font-size: 18px;
+            }
+
+        </style>
      </head>
      <body>
      	 <div class='wrapper'>
@@ -60,44 +86,36 @@
 	                 <br>DIVISIÓN DE CONTROL DE ESTUDIOS</p><center>
                  </div>
              </div>
-         <div>
-         <br>
-         <div class='wrapper'>
-             <div class='header'>
-                 <p class='title_child'><b>CONSTANCIA DE ESTUDIOS</b></p>
-             </div>
-         <div>
-         <div class='texto'>
-			 <p>Quien subscribe, jefe de la División de Control de Estudios de la Facultad de Arquitectura de la Universidad Central de Venezuela, por medio de la presente, hace constar que el Sr(a). <b>{{last_name}} {{first_name}}</b> portador de la cédula de identidad No. <b>{{cedula}}</b> es estudiante de <b>{{tipo_postgrado}}</b> para el período <b>{{periodo}}</b> y cursa un total de <b>{{unidad_creditos}}</b> unidades de crédito en las siguientes asignaturas:</p>
-			<br>
-			<b>
-				<ul>
-                    {% for asignatura in asignaturas %}
-					<li>
-						({{ asignatura.codigo }}) {{ asignatura.nombre }} 
-					</li>
+        <br>
+        <div class='wrapper'>
+            <div class='header'>
+             <p class='title_child'><b>PLANILLA PERIODO {{periodo}} - {{tipo_postgrado}}</b></p>
+            </div>
+            {%for docente in docentes%}
+            <div class='texto'>
+                <center><p>Estudiantes del docente <b>{{docente.nombre}} {{docente.apellido}}</b> (C.I: {{docente.cedula}}) para la asignatura <b>{{docente.asignatura}}</b>.</p></center>
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Cedula</th>
+                      <th>Nombre</th>
+                      <th>Apellido</th>
+                      <th>Nota</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for estudiante in docente.estudiantes %}
+                    <tr>
+                      <td width="20%" data-column="Cedula">{{estudiante.cedula}}</td>
+                      <td width="40%" data-column="Nombre">{{estudiante.nombre}}</td>
+                      <td width="45%" data-column="Apellido">{{estudiante.apellido}}</td>
+                      <td width="15%" data-column="Calificacion">{{estudiante.nota}}</td>
+                    </tr>
                     {% endfor %}
-				</ul>
-			</b>
-			<br>
-			<p>Constancia que se expide a solicitud de la parte interesada en Caracas, a los {{dia}} días del mes de {{mes}} del año {{anio}}.</p>
-			<br>
-			<center><p>*** Válida por el período actual ***</p></center>
-			<br>
-			<center><div>
-	     	 	<img width="200px" height="100px" src="https://upload.wikimedia.org/wikipedia/commons/7/7e/Firma_Harriet.png">
-     	 	</div></center>
-			 <div class='wrapper'>
-             <div class='header'>
-                 <p style="font-size:15px" class='title_child'>
-                 	PROF. MARISOL ORTEGA
-					<br>
-					JEFA DE DIVISIÓN DE CONTROL DE ESTUDIOS
-                 </p>
-             </div>
-         <div>
-             <hr class='hrItem' />
-         </div>
-     </div>
+                  </tbody>
+                </table>
+            </div>
+            {% endfor %}
+        </div>
      </body>
  </html>

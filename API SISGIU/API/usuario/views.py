@@ -21,6 +21,7 @@ from usuario.models import (
     EstadoEstudiante,
     PersonalDocente,
     PersonalAdministrativo,)
+
 from usuario.serializers import (
     AdministradorListSerializer,
     AdministradorDetailSerializer,
@@ -34,7 +35,8 @@ from usuario.serializers import (
     AdministrativoDetailSerializer)
 from relacion.models import (
     EstudianteAsignatura,
-    PeriodoEstudiante,)
+    PeriodoEstudiante,
+    DocenteAsignatura,)
 
 from asignatura.models import (
     Asignatura,)
@@ -595,7 +597,101 @@ class Reportes():
             user_information['anio'] = now.year
 
             content = 'attachment; filename="constancia_'+str(cedula)+'.pdf"'
-            pdf = render_to_pdf('constancia.html', user_information)
+            pdf = render_to_pdf('constancia_estudio.html', user_information)
+            pdf['Content-Disposition'] = content
+            return HttpResponse(pdf, content_type='application/pdf')
+
+        response_data = {}
+        response_data['Error'] = 'No tiene privilegios para realizar esta accion'
+        return HttpResponse(json.dumps(response_data), content_type="application/json", status=401)
+
+
+    def planilla_docente(request, cedula, codigo):
+       # token =request.META.get('HTTP_AUTHORIZATION')
+        if (request.method == "GET"):
+            user_information = {}
+            user = PersonalDocente.objects.get(usuario__cedula=cedula)
+
+            user_information['cedula'] = user.usuario.cedula
+            user_information['nombre'] = user.usuario.first_name
+            user_information['apellido'] = user.usuario.last_name
+            user_information['estudiantes'] = []
+
+            docente_asignatura = DocenteAsignatura.objects.filter(docente=user, asignatura__codigo=codigo,
+                    periodo__estado_periodo__estado="activo").values()[0]
+            
+            periodo = Periodo.objects.get(id=docente_asignatura['periodo_id'])
+            asignatura = Asignatura.objects.get(id=docente_asignatura['asignatura_id'])
+            user_information['periodo'] = periodo.descripcion
+            user_information['asignatura'] = asignatura.nombre
+
+            estudiantes = EstudianteAsignatura.objects.filter(asignatura__codigo=codigo, periodo_estudiante__periodo_id=docente_asignatura['periodo_id'])
+            for estudiante in estudiantes:
+                estudiante_info = {}
+                estudiante_info['nombre'] = estudiante.periodo_estudiante.estudiante.usuario.first_name
+                estudiante_info['apellido'] = estudiante.periodo_estudiante.estudiante.usuario.last_name
+                estudiante_info['cedula'] = estudiante.periodo_estudiante.estudiante.usuario.cedula
+                estudiante_info['nota'] = estudiante.nota_definitiva
+                user_information['estudiantes'].append(estudiante_info)
+
+
+
+            content = 'attachment; filename="planilla'+str(cedula)+'.pdf"'
+            pdf = render_to_pdf('planilla_docente.html', user_information)
+            pdf['Content-Disposition'] = content
+            return HttpResponse(pdf, content_type='application/pdf')
+
+        response_data = {}
+        response_data['Error'] = 'No tiene privilegios para realizar esta accion'
+        return HttpResponse(json.dumps(response_data), content_type="application/json", status=401)
+
+
+    def planilla_periodo(request, periodo):
+       # token =request.META.get('HTTP_AUTHORIZATION')
+        if (request.method == "GET"):
+            periodo_info = {}
+            periodo_completo = Periodo.objects.get(id=periodo)
+            periodo_info['periodo'] = periodo_completo.descripcion
+            periodo_info['tipo_postgrado'] = periodo_completo.tipo_postgrado.tipo
+            periodo_info['docentes'] = []
+
+            cedulas_agregadas = {}
+
+            docente_asignatura = DocenteAsignatura.objects.filter(periodo=periodo_completo)
+            
+            for docentes in docente_asignatura:
+                user = PersonalDocente.objects.get(usuario__cedula=docentes.docente.usuario.cedula)
+                if(user.usuario.cedula not in cedulas_agregadas):
+                    cedulas_agregadas[user.usuario.cedula] = []
+                
+                asignatura = Asignatura.objects.get(id=docentes.asignatura.id)
+                if(asignatura.id not in cedulas_agregadas[user.usuario.cedula]):
+                    cedulas_agregadas[user.usuario.cedula].append(asignatura.id)
+                        
+                    docente = {}
+                    docente['cedula'] = user.usuario.cedula
+                    docente['nombre'] = user.usuario.first_name
+                    docente['apellido'] = user.usuario.last_name
+                    docente['estudiantes'] =[]
+                    asignatura = Asignatura.objects.get(id=docentes.asignatura.id)
+                    
+                    docente['asignatura'] = asignatura.nombre
+                    estudiantes = EstudianteAsignatura.objects.filter(asignatura__codigo=asignatura.codigo, 
+                        periodo_estudiante__periodo_id=periodo)
+
+                    for estudiante in estudiantes:
+                        estudiante_info = {}
+                        estudiante_info['nombre'] = estudiante.periodo_estudiante.estudiante.usuario.first_name
+                        estudiante_info['apellido'] = estudiante.periodo_estudiante.estudiante.usuario.last_name
+                        estudiante_info['cedula'] = estudiante.periodo_estudiante.estudiante.usuario.cedula
+                        estudiante_info['nota'] = estudiante.nota_definitiva
+                        docente['estudiantes'].append(estudiante_info)
+
+
+                    periodo_info['docentes'].append(docente)
+
+            content = 'attachment; filename="planilla'+str(periodo_completo.descripcion)+'.pdf"'
+            pdf = render_to_pdf('planilla_periodo.html', periodo_info)
             pdf['Content-Disposition'] = content
             return HttpResponse(pdf, content_type='application/pdf')
 

@@ -112,9 +112,16 @@ urlpatterns = format_suffix_patterns([
         EstadoEstudianteDeleteAPIView.as_view(), name='estadoEstudiante-delete'),
 
 
-    # Constancias
+    # Constancias y Planillas
     url(r'^api/constancias/estudio/(?P<cedula>[0-9]{6,8})/$',
         Reportes.constancia_estudio, name='reportes'),
+
+
+    url(r'^api/planillas/docente/(?P<cedula>[0-9]{6,8})/(?P<codigo>[\w\-]+)/$',
+        Reportes.planilla_docente, name='reportes'),
+
+    url(r'^api/planillas/administrativo/(?P<periodo>\d+)/$',
+        Reportes.planilla_periodo, name='reportes'),
 
 
     # Lista de estudiantes que cursan una asignatura

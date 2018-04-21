@@ -57,9 +57,7 @@ class ConstanciaDocente extends Component{
 					this.setState({"cargando":false});
 				}
 			)
-		);
-
-		
+		);		
 	};
 	
 

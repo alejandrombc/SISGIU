@@ -1,22 +1,28 @@
 // Dependencies
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import { Row, Col, ListGroup, ListGroupItem, ListGroupItemHeading, ListGroupItemText, Button} from 'reactstrap';
 import '../../../css/moduloUsuarioAdministrador.css'; 
-import {bindActionCreators} from 'redux';
+import { bindActionCreators } from 'redux';
+import { host } from '../../components/globalVariables';
+import request from 'superagent';
 import { connect } from 'react-redux'; 
 import { PulseLoader } from 'halogenium';
 
 // Components
 import { cargado } from '../../actions/inicio';
-import {get_asignaturas_docente, } from '../../actions/inicioDocente';
+import { get_asignaturas_docente, } from '../../actions/inicioDocente';
 
 
 class InicioDocente extends Component{
 
   constructor(props) {
     super(props);
-
+    this.state ={
+        cargando: false,
+      }
     this.get_ListItems = this.get_ListItems.bind(this);
+    this.get_planillas = this.get_planillas.bind(this);
+
   }
 
 
@@ -24,6 +30,37 @@ class InicioDocente extends Component{
     this.props.get_asignaturas_docente(this.props.activeUser['user'])
     .then( () => this.props.cargado() );
   }
+
+  get_file(codigo, cedula, token){
+    return request
+       .get(host+'api/planillas/docente/'+cedula+'/'+codigo+'/')
+       .set('Authorization', 'JWT '+token)
+       .then(function(res) {
+          var blob=new Blob([res.text]);
+          var link=document.createElement('a');
+          link.href=window.URL.createObjectURL(blob);
+          link.download="planilla_"+cedula+".pdf";
+          link.click();
+          
+       })
+       .catch(function(err) {
+          alert("Error al crear la planilla");
+          
+    });
+  }
+
+  // Planillas
+  get_planillas(codigo,cedula) {
+    let token = localStorage.getItem('user_token');
+    this.setState({"cargando":true}, 
+      () => this.get_file(codigo,cedula,token)
+      .then(
+        () => {
+          this.setState({"cargando":false});
+        }
+      )
+    );    
+  };
 
   get_ListItems() 
   {
@@ -37,7 +74,7 @@ class InicioDocente extends Component{
           <ListGroupItem key={index}>
             <ListGroupItemHeading>({valor['codigo']}) {valor['nombre']}</ListGroupItemHeading>
             <ListGroupItemText>
-                <Button className="float-right" color="secondary" size="sm">Descargar Planilla</Button>
+                <Button onClick={() => this.get_planillas(valor['codigo'], this.props.activeUser.user.usuario.cedula)} className="float-right" color="secondary" size="sm">Descargar Planilla</Button>
             </ListGroupItemText>
           </ListGroupItem>
         )
@@ -72,7 +109,9 @@ class InicioDocente extends Component{
               <h5>Asignaturas en Curso</h5>
             </Col>
           </Row>
-
+          {this.state.cargando &&
+            <center><PulseLoader color="#b3b1b0" size="16px" margin="4px"/></center>
+          }
           <br />
 
           <Row>

@@ -2,10 +2,10 @@
 import React, {Component} from 'react';
 import { connect } from 'react-redux';
 import {bindActionCreators} from 'redux';
-import { } from 'reactstrap';
 import { PulseLoader } from 'halogenium';
 import { Row, Col, ListGroup, ListGroupItem, ListGroupItemHeading, ListGroupItemText, Button } from 'reactstrap';
-
+import { host } from '../../components/globalVariables';
+import request from 'superagent';
 
 // Components
 import { cargado } from '../../actions/inicio';
@@ -16,11 +16,46 @@ class InicioAdministrativo extends Component{
 
 	constructor(props) {
     super(props);
+    this.state ={
+        cargando: false,
+      }
 
+    this.get_planillas = this.get_planillas.bind(this);
     this.get_ListItems = this.get_ListItems.bind(this);
     
     // this.get_ListItems = this.get_ListItems.bind(this);
 	}
+
+  get_file(periodo, nombre, token){
+    return request
+       .get(host+'api/planillas/administrativo/'+periodo+'/')
+       .set('Authorization', 'JWT '+token)
+       .then(function(res) {
+          var blob=new Blob([res.text]);
+          var link=document.createElement('a');
+          link.href=window.URL.createObjectURL(blob);
+          link.download="planilla_"+nombre+".pdf";
+          link.click();
+          
+       })
+       .catch(function(err) {
+          alert("Error al crear la planilla");
+          
+    });
+  }
+
+  // Planillas
+  get_planillas(periodo, nombre) {
+    let token = localStorage.getItem('user_token');
+    this.setState({"cargando":true}, 
+      () => this.get_file(periodo,nombre,token)
+      .then(
+        () => {
+          this.setState({"cargando":false});
+        }
+      )
+    );    
+  };
 
   get_ListItems (){
     let listItems = '';
@@ -37,7 +72,7 @@ class InicioAdministrativo extends Component{
 
               <Col md='5' sm='5'>
                 <ListGroupItemText>
-                  <Button className="float-right" color="secondary" size="sm">Descargar Planilla</Button>
+                  <Button onClick={() => this.get_planillas(valor['id'], valor['tipo_postgrado'])} className="float-right" color="secondary" size="sm">Descargar Planilla</Button>
                 </ListGroupItemText>
               </Col>
 
@@ -72,7 +107,9 @@ class InicioAdministrativo extends Component{
 
       return (
         <div>
-          
+          {this.state.cargando &&
+            <center><PulseLoader color="#b3b1b0" size="16px" margin="4px" /></center>
+          }
           <br/>
           <Row className='text-center'>
             <Col md='12'>
