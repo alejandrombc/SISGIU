@@ -6,6 +6,7 @@ from django.core.mail import send_mail
 
 host_react = 'http://localhost:3000/'
 
+
 def render_to_pdf(template_src, context_dict={}):
 	template = get_template(template_src)
 	html = template.render(context_dict)
@@ -26,6 +27,7 @@ def date_handler_2(obj):
 	else:
 		raise TypeError
 
+
 def send_welcome_mail(modulo, user):
 	if(modulo == "Administrador"):
 		correo = user['email']
@@ -34,15 +36,17 @@ def send_welcome_mail(modulo, user):
 		correo = user.email
 		nombre = user.first_name + " " + user.last_name
 
-	body = ("Buenas "+nombre+", su cédula ha sido ingresada al Sistema de Gestión "
-			"Académico-Administrativo (SISGIU) del Instituto de Urbanismo de la UCV "
-			"bajo el módulo de "+modulo+".\n\n"+\
-			"La contraseña para acceder al sistema es su cédula.\n"
-			"Por favor ingrese al siguiente enlace "+host_react+
+	body = (
+			"Hola "+nombre+", has sido registrado en el Sistema de Gestión "
+			"Académico-Administrativo del Instituto de Urbanismo (SISGIU) de la UCV "
+			"bajo el módulo de "+modulo+".\n\n"
+			"La contraseña para acceder al sistema es su número de cédula.\n"
+			"Por favor ingrese al siguiente enlace " + host_react +
 			" y modifiquela a la brevedad dirigiéndose a la seccion 'Perfil'.\n\n\n"
-			"Saludos,\nEquipo SISGIU\n")
+			"Saludos,\nEquipo SISGIU\n"
+			)
 
-	try: 
+	try:
 		send_mail('Bienvenida', body, 'sisgiu.fau@gmail.com', [correo])
 		return True
 	except:

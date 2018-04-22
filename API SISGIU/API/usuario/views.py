@@ -408,6 +408,7 @@ class TipoPostgradoListCreateAPIView(ListCreateAPIView):
     serializer_class = TipoPostgradoSerializer
     permission_classes = [IsListOrCreate, IsAuthenticated]
 
+
 class TipoPostgradoDetailAPIView(RetrieveAPIView):
     queryset = TipoPostgrado.objects.all()
     serializer_class = TipoPostgradoSerializer
@@ -554,7 +555,7 @@ class AdministrativoDeleteAPIView(DestroyAPIView):
 
 class Reportes():
     def constancia_estudio(request, cedula):
-        token =request.META.get('HTTP_AUTHORIZATION')
+        token = request.META.get('HTTP_AUTHORIZATION')
         if (request.method == "GET"):
             user_information = {}
             user = Usuario.objects.get(cedula=cedula).__dict__
@@ -605,9 +606,8 @@ class Reportes():
         response_data['Error'] = 'No tiene privilegios para realizar esta accion'
         return HttpResponse(json.dumps(response_data), content_type="application/json", status=401)
 
-
     def planilla_docente(request, cedula, codigo):
-       # token =request.META.get('HTTP_AUTHORIZATION')
+        # token =request.META.get('HTTP_AUTHORIZATION')
         if (request.method == "GET"):
             user_information = {}
             user = PersonalDocente.objects.get(usuario__cedula=cedula)
@@ -617,9 +617,8 @@ class Reportes():
             user_information['apellido'] = user.usuario.last_name
             user_information['estudiantes'] = []
 
-            docente_asignatura = DocenteAsignatura.objects.filter(docente=user, asignatura__codigo=codigo,
-                    periodo__estado_periodo__estado="activo").values()[0]
-            
+            docente_asignatura = DocenteAsignatura.objects.filter(docente=user, asignatura__codigo=codigo, periodo__estado_periodo__estado="activo").values()[0]
+
             periodo = Periodo.objects.get(id=docente_asignatura['periodo_id'])
             asignatura = Asignatura.objects.get(id=docente_asignatura['asignatura_id'])
             user_information['periodo'] = periodo.descripcion
@@ -634,8 +633,6 @@ class Reportes():
                 estudiante_info['nota'] = estudiante.nota_definitiva
                 user_information['estudiantes'].append(estudiante_info)
 
-
-
             content = 'attachment; filename="planilla'+str(cedula)+'.pdf"'
             pdf = render_to_pdf('planilla_docente.html', user_information)
             pdf['Content-Disposition'] = content
@@ -645,9 +642,7 @@ class Reportes():
         response_data['Error'] = 'No tiene privilegios para realizar esta accion'
         return HttpResponse(json.dumps(response_data), content_type="application/json", status=401)
 
-
     def planilla_periodo(request, periodo):
-       # token =request.META.get('HTTP_AUTHORIZATION')
         if (request.method == "GET"):
             periodo_info = {}
             periodo_completo = Periodo.objects.get(id=periodo)
@@ -658,26 +653,25 @@ class Reportes():
             cedulas_agregadas = {}
 
             docente_asignatura = DocenteAsignatura.objects.filter(periodo=periodo_completo)
-            
+
             for docentes in docente_asignatura:
                 user = PersonalDocente.objects.get(usuario__cedula=docentes.docente.usuario.cedula)
                 if(user.usuario.cedula not in cedulas_agregadas):
                     cedulas_agregadas[user.usuario.cedula] = []
-                
+
                 asignatura = Asignatura.objects.get(id=docentes.asignatura.id)
                 if(asignatura.id not in cedulas_agregadas[user.usuario.cedula]):
                     cedulas_agregadas[user.usuario.cedula].append(asignatura.id)
-                        
+
                     docente = {}
                     docente['cedula'] = user.usuario.cedula
                     docente['nombre'] = user.usuario.first_name
                     docente['apellido'] = user.usuario.last_name
-                    docente['estudiantes'] =[]
+                    docente['estudiantes'] = []
                     asignatura = Asignatura.objects.get(id=docentes.asignatura.id)
-                    
+
                     docente['asignatura'] = asignatura.nombre
-                    estudiantes = EstudianteAsignatura.objects.filter(asignatura__codigo=asignatura.codigo, 
-                        periodo_estudiante__periodo_id=periodo)
+                    estudiantes = EstudianteAsignatura.objects.filter(asignatura__codigo=asignatura.codigo, periodo_estudiante__periodo_id=periodo)
 
                     for estudiante in estudiantes:
                         estudiante_info = {}
@@ -686,7 +680,6 @@ class Reportes():
                         estudiante_info['cedula'] = estudiante.periodo_estudiante.estudiante.usuario.cedula
                         estudiante_info['nota'] = estudiante.nota_definitiva
                         docente['estudiantes'].append(estudiante_info)
-
 
                     periodo_info['docentes'].append(docente)
 

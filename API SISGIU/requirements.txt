@@ -12,3 +12,4 @@ pymongo==3.6.0
 bson==0.5.0
 django-cors-headers==2.1.0
 crypto==1.4.1
+django-import-export==1.0.0

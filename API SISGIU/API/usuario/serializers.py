@@ -15,6 +15,7 @@ from usuario.utils import send_welcome_mail
 Serializer de Usuario/Administrador
 """
 
+
 class AdministradorListSerializer(serializers.ModelSerializer):
     foto = serializers.ImageField(required=False, max_length=None, allow_empty_file=True, use_url=True)
 
@@ -31,7 +32,7 @@ class AdministradorListSerializer(serializers.ModelSerializer):
         if password is not None:
             instance.set_password(password)
         instance.save()
-        send_welcome_mail("Administrador",validated_data)
+        send_welcome_mail("Administrador", validated_data)
         return instance
 
 
@@ -119,7 +120,7 @@ class EstudianteSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Estudiante
-        fields = ('usuario',  'id_tipo_postgrado', 'id_estado_estudiante', 'direccion',)
+        fields = ('usuario', 'id_tipo_postgrado', 'id_estado_estudiante', 'direccion',)
 
     def create(self, validated_data):
         user_data = validated_data.pop('usuario')
@@ -135,9 +136,9 @@ class EstudianteSerializer(serializers.ModelSerializer):
                                     id_estado_estudiante=validated_data.pop('id_estado_estudiante'),
                                     direccion=validated_data.pop('direccion')
                                     )
-                send_welcome_mail("Estudiante",user)
+                send_welcome_mail("Estudiante", user)
                 return estudiante
-            except:    
+            except:
                 user = UsuarioListSerializer.create(UsuarioListSerializer(), validated_data=user_data)
                 estudiante, created = Estudiante.objects.update_or_create(
                                     usuario=user,
@@ -145,7 +146,7 @@ class EstudianteSerializer(serializers.ModelSerializer):
                                     id_estado_estudiante=validated_data.pop('id_estado_estudiante'),
                                     direccion=validated_data.pop('direccion')
                                     )
-                send_welcome_mail("Estudiante",user)
+                send_welcome_mail("Estudiante", user)
                 return estudiante
 
 
@@ -154,7 +155,7 @@ class EstudianteDetailSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Estudiante
-        fields = ('usuario',  'id_tipo_postgrado', 'id_estado_estudiante', 'direccion',)
+        fields = ('usuario', 'id_tipo_postgrado', 'id_estado_estudiante', 'direccion',)
 
     def update(self, instance, validated_data):
         instance.id_tipo_postgrado = validated_data.get('id_tipo_postgrado', instance.id_tipo_postgrado)
@@ -202,7 +203,7 @@ class DocenteSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = PersonalDocente
-        fields = ('usuario',  'curriculum', 'rif', 'direccion', 'permiso_ingresos', 'coordinador')
+        fields = ('usuario', 'curriculum', 'rif', 'direccion', 'permiso_ingresos', 'coordinador')
 
     def create(self, validated_data):
         user_data = validated_data.pop('usuario')
@@ -218,9 +219,9 @@ class DocenteSerializer(serializers.ModelSerializer):
                     direccion=validated_data.pop('direccion'),
                     permiso_ingresos=validated_data.get('permiso_ingresos'),
                     coordinador=validated_data.pop('coordinador'))
-                send_welcome_mail("Docente",user)
+                send_welcome_mail("Docente", user)
                 return docente
-            except:    
+            except:
                 user = UsuarioListSerializer.create(UsuarioListSerializer(), validated_data=user_data)
                 docente, created = PersonalDocente.objects.update_or_create(
                                     usuario=user,
@@ -228,7 +229,7 @@ class DocenteSerializer(serializers.ModelSerializer):
                                     direccion=validated_data.pop('direccion'),
                                     permiso_ingresos=validated_data.get('permiso_ingresos'),
                                     coordinador=validated_data.pop('coordinador'))
-                send_welcome_mail("Docente",user)
+                send_welcome_mail("Docente", user)
                 return docente
 
 
@@ -242,7 +243,7 @@ class DocenteDetailSerializer(serializers.ModelSerializer):
     class Meta:
 
         model = PersonalDocente
-        fields = ('usuario',  'curriculum', 'rif', 'direccion', 'permiso_ingresos', 'coordinador')
+        fields = ('usuario', 'curriculum', 'rif', 'direccion', 'permiso_ingresos', 'coordinador')
 
     def update(self, instance, validated_data):
 
@@ -306,14 +307,13 @@ class AdministrativoSerializer(serializers.ModelSerializer):
             try:
                 user = Usuario.objects.get(cedula=user_data['cedula'])
                 personal_admin, created = PersonalAdministrativo.objects.update_or_create(usuario=user)
-                send_welcome_mail("Administrativo",user)
+                send_welcome_mail("Administrativo", user)
                 return personal_admin
-            except:    
+            except:
                 user = UsuarioListSerializer.create(UsuarioListSerializer(), validated_data=user_data)
                 personal_admin, created = PersonalAdministrativo.objects.update_or_create(usuario=user)
-                send_welcome_mail("Administrativo",user)
+                send_welcome_mail("Administrativo", user)
                 return personal_admin
-
 
 
 class AdministrativoDetailSerializer(serializers.ModelSerializer):

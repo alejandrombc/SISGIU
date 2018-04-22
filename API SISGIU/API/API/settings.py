@@ -59,6 +59,7 @@ INSTALLED_APPS = [
     'allauth.account',
     'rest_auth.registration',
     'corsheaders',
+    'import_export',
 ]
 
 MIDDLEWARE = [
