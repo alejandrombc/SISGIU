@@ -34,6 +34,10 @@ MEDIA_ROOT = (
     BASE_DIR+"/media"
 )
 
+IMPORTS_DB = (
+    BASE_DIR+"/db_imports"
+)
+
 CORS_ORIGIN_ALLOW_ALL = True
 
 MEDIA_URL = '/media/'
@@ -151,6 +155,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
 
 STATIC_URL = '/static/'
+# STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 REST_FRAMEWORK = {
     # Use Django's standard `django.contrib.auth` permissions,

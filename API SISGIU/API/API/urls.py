@@ -5,9 +5,10 @@ from usuario import views
 from asignatura import views
 from tramite import views
 from periodo import views
-from django.contrib.staticfiles.urls import staticfiles_urlpatterns,static
+from django.contrib.staticfiles.urls import staticfiles_urlpatterns, static
 from django.conf import settings
 from rest_framework_jwt.views import refresh_jwt_token
+from .bd_imports_exports import import_bd
 
 
 urlpatterns = [
@@ -17,11 +18,14 @@ urlpatterns = [
     url(r'^', include('tramite.urls')),
     url(r'^', include('periodo.urls')),
     url(r'^', include('relacion.urls')),
-    url(r'^api/', include('rest_auth.urls' )),
+    url(r'^api/', include('rest_auth.urls')),
 
     url(r'^api/registration/', include('rest_auth.registration.urls')),
 
     url(r'^refresh-token/', refresh_jwt_token),
+
+    url(r'^importar/(?P<tipo>[\w\-]+)?/?$', import_bd),
+
 ]
 
 # For image files
