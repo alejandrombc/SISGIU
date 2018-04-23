@@ -23,7 +23,7 @@ class Usuario(AbstractUser):
 	telefono_trabajo = models.CharField(max_length=14, blank=True)
 	fecha_nacimiento = models.DateField(default=timezone.now)
 	sexo = models.CharField(max_length=1, blank=True)
-	nacionalidad = models.CharField(max_length=20, blank=True)
+	nacionalidad = models.CharField(max_length=50, blank=True)
 	estado_civil = models.CharField(max_length=20, blank=True)
 	foto = models.ImageField(upload_to=user_directory_path, default='sisgiu/no_avatar.jpg')
 
