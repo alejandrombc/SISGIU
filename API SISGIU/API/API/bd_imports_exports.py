@@ -6,6 +6,7 @@ from API.settings import IMPORTS_DB
 from asignatura.models import Asignatura, TipoAsignatura
 from usuario.models import Estudiante, TipoPostgrado, EstadoEstudiante, Usuario, PersonalDocente, PersonalAdministrativo
 from django.views.decorators.csrf import csrf_exempt
+from usuario.serializers import UsuarioListSerializer
 
 
 def import_asignaturas(datos):
@@ -44,6 +45,9 @@ def import_estudiantes(datos):
                                 sexo=row[12],
                                 estado_civil=row[13],
                                 )
+
+                objUser.set_password(row[1])
+                objUser.save()
 
                 obj, created = Estudiante.objects.get_or_create(
                     usuario=objUser,

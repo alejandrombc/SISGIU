@@ -65,10 +65,6 @@ class InicioEstudiante extends Component{
     this.setState({ visible: false });
   }
 
-  // retirar_asignaturas(codigo, user, periodo){
-  //   this.props.retirar_estudiante(codigo,user,periodo);
-  // }
-
   retirar_periodo(user, periodo) {
     this.props.retirar_periodo(user, periodo);
   }

@@ -559,7 +559,7 @@ class Reportes():
         if (request.method == "GET"):
             user_information = {}
             user = Usuario.objects.get(cedula=cedula).__dict__
-            estudiante = Estudiante.objects.get(usuario__cedula=cedula).__dict__
+            estudiante = Estudiante.objects.get(usuario__cedula=cedula, estado_estudiante__estado='activo').__dict__
 
             user_information['cedula'] = user['cedula']
             user_information['first_name'] = user['first_name']

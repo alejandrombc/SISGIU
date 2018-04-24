@@ -8,7 +8,6 @@ from usuario.models import (
     PersonalAdministrativo,
     )
 from usuario.utils import send_welcome_mail
-# from django.forms.fields import ImageField
 
 
 """
