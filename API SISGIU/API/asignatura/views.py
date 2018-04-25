@@ -90,22 +90,6 @@ class TipoAsignaturaDeleteAPIView(DestroyAPIView):
 Asignatura
 """
 
-"""
-@api_view(['GET'])
-@permission_classes((IsAuthenticated, isEstudianteOrAdmin))
-def get_asignaturas(request):
-	member = Asignatura.objects.all().values()
-	lista_asignaturas = [entry for entry in member]
-	response_asignaturas = []
-
-	for asignatura in lista_asignaturas:
-		tipo_asignatura = TipoAsignatura.objects.filter(id=asignatura['tipo_asignatura_id']).values()[0]
-		asignatura['tipo_asignatura'] = tipo_asignatura['nombre']
-		response_asignaturas.append(asignatura)
-
-	return Response(response_asignaturas, status=status.HTTP_200_OK)
-"""
-
 
 @api_view(['GET'])
 @permission_classes((IsAuthenticated, isDocenteOrAdmin))
@@ -246,7 +230,6 @@ class AsignaturaDeleteAPIView(DestroyAPIView):
 #endregion
 """
 PrelacionAsignatura
-				Esto solo debe ser tratado por el administrador
 """
 
 
@@ -283,144 +266,96 @@ def get_all_asignaturas_necesarias(request):
 	return Response(lista_asignaturas, status=status.HTTP_200_OK)
 
 
-class PrelacionAsignaturaListCreateAPIView(ListCreateAPIView):
-	queryset = PrelacionAsignatura.objects.all()
-	serializer_class = PrelacionAsignaturaListSerializer
+@api_view(['GET'])
+@permission_classes((IsAuthenticated, isEstudianteOrAdmin))
+def get_asignaturas_a_inscribir(request, cedula):
 
-	@csrf_exempt
-	def delete_asignaturas_necesarias(request, codigo):
-		if (request.method == "DELETE"):
+	# Lista de todas las asignaturas en el sistema
+	asignaturas = Asignatura.objects.all()
 
-			asignaturas = PrelacionAsignatura.objects.filter(asignatura_objetivo=codigo).delete()
+	# Estudiante al cual se le buscan las asignaturas
+	estudiante = Estudiante.objects.get(usuario__cedula=cedula)
 
-			response_data = {}
-			response_data['status'] = 'Eliminacion exitosa'
-			return HttpResponse(json.dumps(response_data), content_type="application/json")
+	# Lista de todos los periodos que ha cursado el estudiante
+	periodo_estudiante = PeriodoEstudiante.objects.filter(estudiante=estudiante)
 
-		response_data = {}
-		response_data['error'] = 'No tiene privilegios para realizar esta acción'
-		return HttpResponse(json.dumps(response_data), content_type="application/json", status=401)
+	# Lista de todos los codigos de las asignaturas que ya se cursaron
+	lista_asignaturas_cursadas = []
+	for x in periodo_estudiante:
+		estudiante_asignatura = EstudianteAsignatura.objects.filter(periodo_estudiante=x, nota_definitiva__gte=10, retirado=False)
+		for y in estudiante_asignatura:
+			lista_asignaturas_cursadas.append(y.asignatura.codigo)
 
-	@csrf_exempt
-	def delete_all_asignaturas_necesarias(request):
-		if (request.method == "DELETE"):
-			asignaturas = PrelacionAsignatura.objects.all().delete()
+	# Convierto el QuerySet de Asignaturas en un JSON
+	asignaturas = [entry for entry in asignaturas.values()]
 
-			response_data = {}
-			response_data['status'] = 'Eliminacion exitosa'
-			return HttpResponse(json.dumps(response_data), content_type="application/json")
+	lista_codigos_asignaturas = []
 
-		response_data = {}
-		response_data['error'] = 'No tiene privilegios para realizar esta acción'
-		return HttpResponse(json.dumps(response_data), content_type="application/json", status=401)
+	for x in asignaturas:
+		# Si la asignatura no se ha cursado, se agrega a la lista
+		if (x['codigo'] not in lista_asignaturas_cursadas):
+			lista_codigos_asignaturas.append(x['codigo'])
 
-	def get_asignaturas_a_inscribir(request, cedula):
+	# Busco en la lista las asignaturas que aun no pueden verse porque estan preladas por otras
+	lista_eliminar = []
+	lista_codigo_asignaturas_a_inscribir = []
 
-		if (request.method == 'GET'):
+	for x in lista_codigos_asignaturas:
+		aux = PrelacionAsignatura.objects.filter(asignatura_prela__codigo=x)
+		aux = [entry for entry in aux.values()]
 
-			# Lista de todas las asignaturas en el sistema
-			asignaturas = Asignatura.objects.all()
+		for y in aux:
+			lista_eliminar.append(y['asignatura_objetivo_id'])
 
-			# Estudiante al cual se le buscan las asignaturas
-			estudiante = Estudiante.objects.get(usuario__cedula=cedula)
+	# Construyo la lista final
+	for x in lista_codigos_asignaturas:
+		if (x not in lista_eliminar):
+			lista_codigo_asignaturas_a_inscribir.append(x)
 
-			# Lista de todos los periodos que ha cursado el estudiante
-			periodo_estudiante = PeriodoEstudiante.objects.filter(estudiante=estudiante)
-			# print(periodo_estudiante, '\n')
+	periodo = Periodo.objects.get(estado_periodo_id__estado='en inscripcion', tipo_postgrado_id__tipo=estudiante.id_tipo_postgrado)
+	asignaturas_id = DocenteAsignatura.objects.filter(periodo=periodo).values('asignatura')
+	lista_codigos_en_periodo_a_inscribir = []
 
-			# Lista de todos los codigos de las asignaturas que ya se cursaron
-			lista_asignaturas_cursadas = []
-			for x in periodo_estudiante:
-				estudiante_asignatura = EstudianteAsignatura.objects.filter(periodo_estudiante=x, nota_definitiva__gte=10, retirado=False)
-				for y in estudiante_asignatura:
-					lista_asignaturas_cursadas.append(y.asignatura.codigo)
+	for x in asignaturas_id:
+		asignatura = Asignatura.objects.get(id=x['asignatura'])
+		if (asignatura.codigo in lista_codigo_asignaturas_a_inscribir):
+			lista_codigos_en_periodo_a_inscribir.append(asignatura.codigo)
 
-			# Convierto el QuerySet de Asignaturas en un JSON
-			asignaturas = [entry for entry in asignaturas.values()]
+	n = len(asignaturas)
+	lista_asignaturas_a_inscribir = []
 
-			lista_codigos_asignaturas = []
+	for i in range(0, n):
+		if (asignaturas[i]['codigo'] in lista_codigos_en_periodo_a_inscribir):
+			lista_asignaturas_a_inscribir.append(asignaturas[i])
 
-			for x in asignaturas:
-				# Si la asignatura no se ha cursado, se agrega a la lista
-				if (x['codigo'] not in lista_asignaturas_cursadas):
-					lista_codigos_asignaturas.append(x['codigo'])
+	return Response(lista_asignaturas_a_inscribir, status=status.HTTP_200_OK)
 
-			# Busco en la lista las asignaturas que aun no pueden verse porque estan preladas por otras
-			lista_eliminar = []
-			lista_codigo_asignaturas_a_inscribir = []
 
-			for x in lista_codigos_asignaturas:
-				aux = PrelacionAsignatura.objects.filter(asignatura_prela__codigo=x)
-				aux = [entry for entry in aux.values()]
+@api_view(['GET'])
+@permission_classes((IsAuthenticated, isEstudianteOrAdmin))
+def get_asignaturas_actuales_estudiante(request, cedula):
 
-				for y in aux:
-					lista_eliminar.append(y['asignatura_objetivo_id'])
+	estudiante = Estudiante.objects.get(usuario__cedula=cedula)
+	periodo_estudiante = PeriodoEstudiante.objects.get(Q(estudiante=estudiante) & (Q(periodo__estado_periodo__estado='activo') | Q(periodo__estado_periodo__estado='en inscripcion')))
 
-			# Construyo la lista final
-			for x in lista_codigos_asignaturas:
-				if (x not in lista_eliminar):
-					lista_codigo_asignaturas_a_inscribir.append(x)
+	estudiante_asignatura = EstudianteAsignatura.objects.filter(periodo_estudiante_id=periodo_estudiante.id).values()
+	lista_asignaturas = []
+	for x in estudiante_asignatura:
+		asignatura = Asignatura.objects.filter(id=x['asignatura_id']).values()[0]
+		lista_asignaturas.append(asignatura)
 
-			periodo = Periodo.objects.get(estado_periodo_id__estado='en inscripcion', tipo_postgrado_id__tipo=estudiante.id_tipo_postgrado)
+	return Response(lista_asignaturas, status=status.HTTP_200_OK)
 
-			asignaturas_id = DocenteAsignatura.objects.filter(periodo=periodo).values('asignatura')
 
-			lista_codigos_en_periodo_a_inscribir = []
+@api_view(['GET'])
+@permission_classes((IsAuthenticated, isEstudianteOrAdmin))
+def get_asignaturas_actuales(request, periodo):
 
-			for x in asignaturas_id:
-				asignatura = Asignatura.objects.get(id=x['asignatura'])
-				if (asignatura.codigo in lista_codigo_asignaturas_a_inscribir):
-					lista_codigos_en_periodo_a_inscribir.append(asignatura.codigo)
+	docente_asignatura = DocenteAsignatura.objects.filter(periodo_id=periodo).values()
 
-			n = len(asignaturas)
-			lista_asignaturas_a_inscribir = []
+	lista_asignaturas = []
+	for x in docente_asignatura:
+		asignatura = Asignatura.objects.filter(id=x['asignatura_id']).values()[0]
+		lista_asignaturas.append(asignatura)
 
-			for i in range(0, n):
-				if (asignaturas[i]['codigo'] in lista_codigos_en_periodo_a_inscribir):
-					lista_asignaturas_a_inscribir.append(asignaturas[i])
-
-			return HttpResponse(json.dumps(lista_asignaturas_a_inscribir), content_type="application/json", status=200)
-
-		response_data = {}
-		response_data['error'] = 'No tiene privilegios para realizar esta acción'
-		return HttpResponse(json.dumps(response_data), content_type="application/json", status=401)
-
-	def get_asignaturas_actuales_estudiante(request, cedula):
-
-		if (request.method == 'GET'):
-
-			# Estudiante al cual se le buscan las asignaturas
-			estudiante = Estudiante.objects.get(usuario__cedula=cedula)
-
-			# El PeriodoEstudiante actual
-			periodo_estudiante = PeriodoEstudiante.objects.get(Q(estudiante=estudiante) & (Q(periodo__estado_periodo__estado='activo') | Q(periodo__estado_periodo__estado='en inscripcion')))
-
-			estudiante_asignatura = EstudianteAsignatura.objects.filter(periodo_estudiante_id=periodo_estudiante.id).values()
-			lista_asignaturas = []
-			for x in estudiante_asignatura:
-				asignatura = Asignatura.objects.filter(id=x['asignatura_id']).values()[0]
-				lista_asignaturas.append(asignatura)
-
-			return HttpResponse(json.dumps(lista_asignaturas), content_type="application/json", status=200)
-
-		response_data = {}
-		response_data['error'] = 'No tiene privilegios para realizar esta acción'
-		return HttpResponse(json.dumps(response_data), content_type="application/json", status=401)
-
-	def get_asignaturas_actuales(request, periodo):
-
-		if (request.method == 'GET'):
-
-			# El DocenteAsignaturas del periodo actual
-			docente_asignatura = DocenteAsignatura.objects.filter(periodo_id=periodo).values()
-
-			lista_asignaturas = []
-			for x in docente_asignatura:
-				asignatura = Asignatura.objects.filter(id=x['asignatura_id']).values()[0]
-				lista_asignaturas.append(asignatura)
-
-			return HttpResponse(json.dumps(lista_asignaturas), content_type="application/json", status=200)
-
-		response_data = {}
-		response_data['error'] = 'No tiene privilegios para realizar esta acción'
-		return HttpResponse(json.dumps(response_data), content_type="application/json", status=401)
+	return Response(lista_asignaturas, status=status.HTTP_200_OK)
