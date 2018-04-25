@@ -1,6 +1,5 @@
 #region imports
 from django.shortcuts import render
-from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 import json
 from django.db.models import Q
@@ -55,9 +54,6 @@ from rest_framework import status
 from rest_framework.response import Response
 #endregion
 
-"""
-TipoAsignatura
-"""
 
 #region TipoAsignatura
 
@@ -86,9 +82,40 @@ class TipoAsignaturaDeleteAPIView(DestroyAPIView):
 	permission_classes = [IsAdminUser]
 #endregion
 
-"""
-Asignatura
-"""
+
+#region Asignatura
+
+
+class AsignaturaListCreateAPIView(ListCreateAPIView):
+	queryset = Asignatura.objects.all()
+	serializer_class = AsignaturaListSerializer
+	permission_classes = [IsAuthenticatedOrReadOnly, IsListOrCreate]
+
+
+class AsignaturaDetailAPIView(RetrieveAPIView):
+	queryset = Asignatura.objects.all()
+	serializer_class = AsignaturaDetailSerializer
+	permission_classes = [IsAuthenticated]
+	lookup_field = 'codigo'
+
+
+class AsignaturaUpdateAPIView(RetrieveUpdateAPIView):
+	queryset = Asignatura.objects.all()
+	serializer_class = AsignaturaDetailSerializer
+	permission_classes = [IsAdminUser]
+	lookup_field = 'codigo'
+
+
+class AsignaturaDeleteAPIView(DestroyAPIView):
+	queryset = Asignatura.objects.all()
+	serializer_class = AsignaturaDetailSerializer
+	permission_classes = [IsAdminUser]
+	lookup_field = 'codigo'
+
+#endregion
+
+
+#region Otros
 
 
 @api_view(['GET'])
@@ -198,73 +225,6 @@ def retirar_periodo_estudiante(request, cedula, periodo):
 
 	return Response(status=status.HTTP_200_OK)
 
-#region Asignatura
-
-
-class AsignaturaListCreateAPIView(ListCreateAPIView):
-	queryset = Asignatura.objects.all()
-	serializer_class = AsignaturaListSerializer
-	permission_classes = [IsAuthenticatedOrReadOnly, IsListOrCreate]
-
-
-class AsignaturaDetailAPIView(RetrieveAPIView):
-	queryset = Asignatura.objects.all()
-	serializer_class = AsignaturaDetailSerializer
-	permission_classes = [IsAuthenticated]
-	lookup_field = 'codigo'
-
-
-class AsignaturaUpdateAPIView(RetrieveUpdateAPIView):
-	queryset = Asignatura.objects.all()
-	serializer_class = AsignaturaDetailSerializer
-	permission_classes = [IsAdminUser]
-	lookup_field = 'codigo'
-
-
-class AsignaturaDeleteAPIView(DestroyAPIView):
-	queryset = Asignatura.objects.all()
-	serializer_class = AsignaturaDetailSerializer
-	permission_classes = [IsAdminUser]
-	lookup_field = 'codigo'
-
-#endregion
-"""
-PrelacionAsignatura
-"""
-
-
-@csrf_exempt
-@api_view(['POST'])
-@permission_classes((IsAuthenticated, IsAdminUser))
-def post_prelacion(request):
-	codigos = json.loads(request.body.decode("utf-8"))
-	PrelacionAsignatura.objects.filter(asignatura_objetivo=codigos['codigo']).delete()
-	prelacion = []
-	for code in codigos['prelaciones']:
-		prelacion = PrelacionAsignatura.objects.create(
-			asignatura_objetivo=Asignatura.objects.get(codigo=codigos['codigo']),
-			asignatura_prela=Asignatura.objects.get(codigo=code))
-
-	return Response(status=status.HTTP_201_CREATED)
-
-
-@api_view(['GET'])
-@permission_classes((IsAuthenticated, IsAdminUser))
-def get_all_asignaturas_necesarias(request):
-
-	asignaturas = PrelacionAsignatura.objects.all().values()
-	lista_prelaciones = [entry for entry in asignaturas]
-	lista_asignaturas = []
-
-	for prelacion in lista_prelaciones:
-		asignatura = Asignatura.objects.filter(codigo=prelacion['asignatura_objetivo_id']).values()[0]
-		prelacion['nombre_asignatura_objetivo'] = asignatura['nombre']
-		asignatura = Asignatura.objects.filter(codigo=prelacion['asignatura_prela_id']).values()[0]
-		prelacion['nombre_asignatura_prela'] = asignatura['nombre']
-		lista_asignaturas.append(prelacion)
-
-	return Response(lista_asignaturas, status=status.HTTP_200_OK)
-
 
 @api_view(['GET'])
 @permission_classes((IsAuthenticated, isEstudianteOrAdmin))
@@ -359,3 +319,39 @@ def get_asignaturas_actuales(request, periodo):
 		lista_asignaturas.append(asignatura)
 
 	return Response(lista_asignaturas, status=status.HTTP_200_OK)
+
+
+@csrf_exempt
+@api_view(['POST'])
+@permission_classes((IsAuthenticated, IsAdminUser))
+def post_prelacion(request):
+	codigos = json.loads(request.body.decode("utf-8"))
+	PrelacionAsignatura.objects.filter(asignatura_objetivo=codigos['codigo']).delete()
+	prelacion = []
+	for code in codigos['prelaciones']:
+		prelacion = PrelacionAsignatura.objects.create(
+			asignatura_objetivo=Asignatura.objects.get(codigo=codigos['codigo']),
+			asignatura_prela=Asignatura.objects.get(codigo=code))
+
+	return Response(status=status.HTTP_201_CREATED)
+
+
+@api_view(['GET'])
+@permission_classes((IsAuthenticated, IsAdminUser))
+def get_all_asignaturas_necesarias(request):
+
+	asignaturas = PrelacionAsignatura.objects.all().values()
+	lista_prelaciones = [entry for entry in asignaturas]
+	lista_asignaturas = []
+
+	for prelacion in lista_prelaciones:
+		asignatura = Asignatura.objects.filter(codigo=prelacion['asignatura_objetivo_id']).values()[0]
+		prelacion['nombre_asignatura_objetivo'] = asignatura['nombre']
+		asignatura = Asignatura.objects.filter(codigo=prelacion['asignatura_prela_id']).values()[0]
+		prelacion['nombre_asignatura_prela'] = asignatura['nombre']
+		lista_asignaturas.append(prelacion)
+
+	return Response(lista_asignaturas, status=status.HTTP_200_OK)
+
+
+#endregion

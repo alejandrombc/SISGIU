@@ -1,7 +1,7 @@
+#region imports
 from django.conf.urls import url
 from rest_framework.urlpatterns import format_suffix_patterns
 from asignatura.views import (
-    # get_asignaturas,
     TipoAsignaturaListCreateAPIView,
     TipoAsignaturaDetailAPIView,
     TipoAsignaturaUpdateAPIView,
@@ -20,6 +20,7 @@ from asignatura.views import (
     get_asignaturas_actuales_estudiante,
     get_asignaturas_actuales,
     )
+#endregion
 
 urlpatterns = format_suffix_patterns([
     #region tipoAsignatura
@@ -46,7 +47,6 @@ urlpatterns = format_suffix_patterns([
     # Estudiantes de un docente en un tipo de postgrado
     url(r'^api/asignaturas/(?P<codigo>[\w\-]+)/tipo_postgrado/(?P<tipo_postgrado>[\w\s]+)/$', get_estudiantes_docente, name='estudiantes-por-docente'),
 
-
     # Asignaturas cursadas por un estudiante
     url(r'^api/asignaturas/estudiante/(?P<cedula>[0-9]{6,8})/$', get_asignaturas_por_estudiante, name='asignaturas-por-estudiante'),
 
@@ -56,14 +56,11 @@ urlpatterns = format_suffix_patterns([
     # Asignaturas que puede inscribir un estudiante
     url(r'^api/asignaturas_a_inscribir/estudiante/(?P<cedula>[0-9]{6,8})/$', get_asignaturas_a_inscribir, name='asignaturas-a-inscribir'),
 
-
     # Crear las prelaciones de una asignatura
     url(r'^api/asignaturas_necesarias/$', post_prelacion, name='PrelacionAsignatura-create'),
 
-
     # Retirar Periodo
-    url(r'^api/retirar/estudiante/(?P<cedula>[0-9]{6,8})/periodo/(?P<periodo>\d+)/$',
-        retirar_periodo_estudiante, name='retirar-periodo'),
+    url(r'^api/retirar/estudiante/(?P<cedula>[0-9]{6,8})/periodo/(?P<periodo>\d+)/$', retirar_periodo_estudiante, name='retirar-periodo'),
 
     # Asignaturas que tiene un estudiante en el periodo actual
     url(r'^api/asignaturas_actuales/estudiante/(?P<cedula>[0-9]{6,8})/$', get_asignaturas_actuales_estudiante, name='asignaturas-actuales'),
