@@ -1,13 +1,13 @@
 from django.conf.urls import url
 from rest_framework.urlpatterns import format_suffix_patterns
 from relacion.views import (
-
+    # get_all_estudiantes,
+    # get_docente,
+    # get_periodo_docente_asignatura,
     PeriodoEstudianteListCreateAPIView,
-    PeriodoEstudianteDetailAPIView,
     PeriodoEstudianteUpdateAPIView,
     PeriodoEstudianteDeleteAPIView,
     DocenteAsignaturaListCreateAPIView,
-    DocenteAsignaturaDetailAPIView,
     DocenteAsignaturaUpdateAPIView,
     DocenteAsignaturaDeleteAPIView,
     EstudianteAsignaturaListCreateAPIView,
@@ -22,39 +22,43 @@ from relacion.views import (
     AsignaturaTipoPostgradoDetailAPIView,
     AsignaturaTipoPostgradoUpdateAPIView,
     AsignaturaTipoPostgradoDeleteAPIView,
+    get_estudiantes_por_periodo,
+    get_periodo,
+    programacion_academica,
+    get_all_docentes,
+    crearDocenteAsignatura,
     )
 
 
 urlpatterns = format_suffix_patterns([
 
     # PeriodoEstudiante
-    url(r'^api/periodoEstudiante/all/$',
-        PeriodoEstudianteListCreateAPIView.as_view(), name='PeriodoEstudiante-list-create'),
-    url(r'^api/periodoEstudiante/$',
-        PeriodoEstudianteListCreateAPIView.get_all_estudiantes, name='PeriodoEstudiante-list-all'),
-    url(r'^api/periodoEstudiante/periodo/(?P<periodo_id>\d+)/$',
-        PeriodoEstudianteListCreateAPIView.get_estudiantes_por_periodo, name='estudiante-list-periodo'),
-    url(r'^api/periodoEstudiante/(?P<cedula>[0-9]{6,8})/periodo/(?P<periodo>[\w\s]+)/$',
-        PeriodoEstudianteDetailAPIView.get_periodo, name='PeriodoEstudiante-detail'),
+    url(r'^api/periodoEstudiante/all/$', PeriodoEstudianteListCreateAPIView.as_view(), name='PeriodoEstudiante-list-create'),
+
+    # url(r'^api/periodoEstudiante/$', get_all_estudiantes, name='PeriodoEstudiante-list-all'),
+
+    # Obtiene los estudiantes que cursan cierto periodo para el Personal Administrativo
+    url(r'^api/periodoEstudiante/periodo/(?P<periodo_id>\d+)/$', get_estudiantes_por_periodo, name='estudiante-list-periodo'),
+
+    # Obtiene la informacion de un estudiante en un periodo determinado
+    url(r'^api/periodoEstudiante/(?P<cedula>[0-9]{6,8})/periodo/(?P<periodo>[\w\s]+)/$', get_periodo, name='PeriodoEstudiante-detail'),
+
     url(r'^api/periodoEstudiante/(?P<pk>\d+)/edit/$',
         PeriodoEstudianteUpdateAPIView.as_view(), name='PeriodoEstudiante-update'),
     url(r'^api/periodoEstudiante/(?P<pk>\d+)/delete/$',
         PeriodoEstudianteDeleteAPIView.as_view(), name='PeriodoEstudiante-delete'),
 
 
-
-
     # DocenteAsignatura
-    url(r'^api/docenteAsignatura/$',
-        DocenteAsignaturaListCreateAPIView.as_view(), name='DocenteAsignatura-list-create'),
-    url(r'^api/docenteAsignatura/periodo/(?P<periodo>[\w\s]+)/tipo/(?P<tipo_postgrado>[\w\-]+)/$',
-        DocenteAsignaturaDetailAPIView.get_all_docentes, name='DocenteAsignatura-detail'),
-    url(r'^api/docenteAsignatura/(?P<cedula>[0-9]{6,8})/periodo/(?P<periodo>[\w\s]+)/$',
-        DocenteAsignaturaDetailAPIView.get_periodo, name='DocenteAsignatura-detail'),
-    url(r'^api/docenteAsignatura/(?P<asignatura>[\w\-]+)/periodo/(?P<periodo>[\w\s]+)/$',
-        DocenteAsignaturaDetailAPIView.get_docente, name='DocenteAsignatura-detail'),
-    url(r'^api/docenteAsignatura/periodo/(?P<periodo_id>\d+)/$',
-        DocenteAsignaturaDetailAPIView.crearDocenteAsignatura, name='DocenteAsignatura-crear'),
+    url(r'^api/docenteAsignatura/$', DocenteAsignaturaListCreateAPIView.as_view(), name='DocenteAsignatura-list-create'),
+
+    # Obtiene toda la informacion de docenteAsignatura de un periodo y tipo de postgrado especificado
+    url(r'^api/docenteAsignatura/periodo/(?P<periodo>[\w\s]+)/tipo/(?P<tipo_postgrado>[\w\-]+)/$', get_all_docentes, name='DocenteAsignatura-detail'),
+
+    # url(r'^api/docenteAsignatura/(?P<cedula>[0-9]{6,8})/periodo/(?P<periodo>[\w\s]+)/$', get_periodo_docente_asignatura, name='DocenteAsignatura-detail'),
+    # url(r'^api/docenteAsignatura/(?P<asignatura>[\w\-]+)/periodo/(?P<periodo>[\w\s]+)/$', get_docente, name='DocenteAsignatura-detail'),
+
+    url(r'^api/docenteAsignatura/periodo/(?P<periodo_id>\d+)/$', crearDocenteAsignatura, name='DocenteAsignatura-crear'),
     url(r'^api/docenteAsignatura/(?P<pk>\d+)/edit/$',
         DocenteAsignaturaUpdateAPIView.as_view(), name='DocenteAsignatura-update'),
     url(r'^api/docenteAsignatura/(?P<pk>\d+)/delete/$',
@@ -98,7 +102,6 @@ urlpatterns = format_suffix_patterns([
 
 
     # Programacion Academica
-    url(r'^api/programacionAcademica/$',
-        DocenteAsignaturaListCreateAPIView.programacion_academica, name='programacion-academica'),
+    url(r'^api/programacionAcademica/$', programacion_academica, name='programacion-academica'),
 
 ])
