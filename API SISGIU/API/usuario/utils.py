@@ -36,6 +36,15 @@ def send_welcome_mail(modulo, user):
 		correo = user.email
 		nombre = user.first_name + " " + user.last_name
 
+	template = get_template("email_template_welcome.html")
+	html = template.render(
+        {
+            "modulo":modulo,
+            "nombre":nombre,
+            "host_react":host_react,
+        }
+    )
+
 	body = (
 			"Hola "+nombre+", has sido registrado en el Sistema de Gestión "
 			"Académico-Administrativo del Instituto de Urbanismo (SISGIU) de la UCV "
@@ -47,7 +56,7 @@ def send_welcome_mail(modulo, user):
 			)
 
 	try:
-		send_mail('Bienvenida', body, 'sisgiu.fau@gmail.com', [correo])
+		send_mail('Bienvenida', body, 'sisgiu.fau@gmail.com', [correo], html_message=html)
 		return True
 	except:
 		return True
