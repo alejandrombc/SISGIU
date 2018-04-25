@@ -1,6 +1,6 @@
+#region imports
 from django.shortcuts import render
 from usuario.utils import date_handler
-from django.http import HttpResponse
 import json
 from periodo.models import (
 	EstadoPeriodo,
@@ -35,20 +35,36 @@ from rest_framework.permissions import (
 	)
 
 from .permissions import (
-	isOwnerOrReadOnly,
 	IsListOrCreate,
 	)
 
 from django.views.decorators.csrf import csrf_exempt
 from django.db.models import Q
 from collections import OrderedDict
+from rest_framework.decorators import permission_classes, api_view
 from rest_framework.exceptions import ParseError
+from usuario.permissions import isDocenteOrAdmin, isEstudianteOrAdmin, isAdministrativoOrAdmin
+from rest_framework import status
+from rest_framework.response import Response
+#endregion
+
 
 """
 EstadoPeriodo
 	Esto solo debe ser tratado por el administrador
 """
 
+@api_view(['GET'])
+@permission_classes((IsAuthenticated, ))
+def get_estado_periodo(request, periodo_id):
+    response_data = {}
+    estado_periodo = EstadoPeriodo.objects.get(periodo__id=periodo_id)
+
+    response_data['estado'] = estado_periodo.estado
+
+    return Response(response_data, status=status.HTTP_200_OK)
+
+#region EstadoPeriodo
 
 class EstadoPeriodoListCreateAPIView(ListCreateAPIView):
 	queryset = EstadoPeriodo.objects.all()
@@ -72,104 +88,114 @@ class EstadoPeriodoDeleteAPIView(DestroyAPIView):
 	queryset = EstadoPeriodo.objects.all()
 	serializer_class = EstadoPeriodoDetailSerializer
 	permission_classes = [IsAdminUser]
-
+#endregion
 
 """
 Periodo
 Esto solo debe ser tratado por el administrador
 """
 
+@api_view(['GET'])
+@permission_classes((IsAuthenticated, ))
+def get_periodos_by_filter(request, filtro):
+    
+    filtro = filtro.replace("%20", " ")
+    if (filtro == 'todos'):
+        member = Periodo.objects.all()
+    elif (filtro == 'actuales'):
+        member = Periodo.objects.filter(Q(estado_periodo_id__estado='activo') | Q(estado_periodo_id__estado='en inscripcion'))
+    else:
+        member = Periodo.objects.filter(estado_periodo_id__estado=filtro)
 
+    list_result = [entry for entry in member.values()]
+
+    for periodo in list_result:
+        estado_periodo = EstadoPeriodo.objects.filter(id=periodo['estado_periodo_id']).values()[0]
+        tipo_postgrado = TipoPostgrado.objects.filter(id=periodo['tipo_postgrado_id']).values()[0]
+
+        periodo['estado_periodo'] = estado_periodo['estado']
+        periodo['tipo_postgrado'] = tipo_postgrado['tipo']
+
+    list_result = sorted(list_result, key=lambda k: k['tipo_postgrado'])
+
+    # return HttpResponse(json.dumps(list_result, default=date_handler), content_type="application/json")
+    return Response(list_result, status=status.HTTP_200_OK)
+
+
+
+@api_view(['GET'])
+@permission_classes((IsAuthenticated, isEstudianteOrAdmin,))
+def get_periodos_by_tipo_postgrado(request, filtro, tipo_postgrado):
+
+    filtro = filtro.replace("%20", " ")
+    member = Periodo.objects.filter(estado_periodo_id__estado=filtro, tipo_postgrado_id=tipo_postgrado)
+    list_result = [entry for entry in member.values()]
+
+    return Response(list_result, status=status.HTTP_200_OK)
+
+
+@api_view(['POST'])
+@permission_classes((IsAuthenticated, IsAdminUser,))
+@csrf_exempt
+def activar_periodo(request, periodo_id):
+    response_data = {}
+    periodo = Periodo.objects.get(id=periodo_id)
+    estado_periodo = EstadoPeriodo.objects.get(id=periodo.estado_periodo_id)
+
+    # Validamos si el periodo seleccionado ya esta activo
+    if(estado_periodo.estado == "en inscripcion" or estado_periodo.estado == "activo"):
+        response_data['error'] = 'El periodo seleccionado ya se encuentra en inscripción o activo.'
+        return Response(response_data, status=status.HTTP_409_CONFLICT)
+
+    # Validamos que no exista otro "tipo de postgrado" en inscripcion
+    periodo_postgrado = Periodo.objects.filter(tipo_postgrado_id=periodo.tipo_postgrado_id, estado_periodo_id__estado="en inscripcion")
+    if periodo_postgrado:
+        response_data['error'] = 'Ya existe un periodo en inscripción para este tipo de postgrado.'
+        return Response(response_data, status=status.HTTP_409_CONFLICT)
+    
+    # Validamos que no exista otro "tipo de postgrado" activo
+    periodo_postgrado = Periodo.objects.filter(tipo_postgrado_id=periodo.tipo_postgrado_id, estado_periodo_id__estado="activo")
+    if periodo_postgrado:
+        response_data['error'] = 'Ya existe un periodo activo para este tipo de postgrado.'
+        return Response(response_data, status=status.HTTP_409_CONFLICT)
+    
+    # Actualizo el periodo a "en inscripcion"
+    else:
+        estado_periodo = EstadoPeriodo.objects.get(estado="en inscripcion")
+        Periodo.objects.filter(id=periodo_id).update(estado_periodo=estado_periodo.id)
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+@api_view(['PUT'])
+@permission_classes((IsAuthenticated, IsAdminUser,))
+@csrf_exempt
+def cambiar_estado_periodo(request, periodo, filtro):
+    if filtro == "activo":
+        # Borro todos los alumnos con estado "no pagado" del periodo actual
+        PeriodoEstudiante.objects.filter(periodo_id=periodo, pagado=False).delete()
+
+    # Actualizar el estado periodo del periodo indicado
+    estado_periodo = EstadoPeriodo.objects.get(estado=filtro)
+    Periodo.objects.filter(id=periodo).update(estado_periodo=estado_periodo.id)
+
+    return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+#region Periodo
 class PeriodoListCreateAPIView(ListCreateAPIView):
 	queryset = Periodo.objects.all()
 	serializer_class = PeriodoListSerializer
 	permission_classes = [IsAuthenticated, IsListOrCreate]
 
 	def perform_create(self, serializer):
-		print(serializer.data)
 
 		periodo = Periodo.objects.filter(estado_periodo__id=serializer.data['estado_periodo'], tipo_postgrado__id=serializer.data['tipo_postgrado'])
-		print(periodo)
 		if (len(periodo) != 0):
 			raise ParseError('Ya existe un periodo con el estatus "No Iniciado" para el tipo de postgrado seleccionado')
 
 		nuevo_periodo = PeriodoListSerializer(data=serializer.data)
 		nuevo_periodo.is_valid()
 		nuevo_periodo.save()
-
-	def get_periodos_by_filter(request, filtro):
-		if (request.method == "GET"):
-			filtro = filtro.replace("%20", " ")
-			if (filtro == 'todos'):
-				member = Periodo.objects.all()
-			elif (filtro == 'actuales'):
-				member = Periodo.objects.filter(Q(estado_periodo_id__estado='activo') | Q(estado_periodo_id__estado='en inscripcion'))
-			else:
-				member = Periodo.objects.filter(estado_periodo_id__estado=filtro)
-
-			list_result = [entry for entry in member.values()]
-
-			for periodo in list_result:
-				estado_periodo = EstadoPeriodo.objects.filter(id=periodo['estado_periodo_id']).values()[0]
-				tipo_postgrado = TipoPostgrado.objects.filter(id=periodo['tipo_postgrado_id']).values()[0]
-
-				periodo['estado_periodo'] = estado_periodo['estado']
-				periodo['tipo_postgrado'] = tipo_postgrado['tipo']
-
-			list_result = sorted(list_result, key=lambda k: k['tipo_postgrado'])
-
-			return HttpResponse(json.dumps(list_result, default=date_handler), content_type="application/json")
-
-		response_data = {}
-		response_data['error'] = 'No tiene privilegios para realizar esta accion'
-		return HttpResponse(json.dumps(response_data), content_type="application/json", status=401)
-
-	def get_periodos_by_tipo_postgrado(request, filtro, tipo_postgrado):
-		if (request.method == "GET"):
-			filtro = filtro.replace("%20", " ")
-			member = Periodo.objects.filter(estado_periodo_id__estado=filtro, tipo_postgrado_id=tipo_postgrado)
-
-			list_result = [entry for entry in member.values()]
-
-			return HttpResponse(json.dumps(list_result, default=date_handler), content_type="application/json")
-
-		response_data = {}
-		response_data['error'] = 'No tiene privilegios para realizar esta accion'
-		return HttpResponse(json.dumps(response_data), content_type="application/json", status=401)
-
-	@csrf_exempt
-	def activar_periodo(request, periodo_id):
-		response_data = {}
-		if(request.method == "POST"):
-			periodo = Periodo.objects.get(id=periodo_id)
-			estado_periodo = EstadoPeriodo.objects.get(id=periodo.estado_periodo_id)
-
-			# Validamos si el periodo seleccionado ya esta activo
-			if(estado_periodo.estado == "en inscripcion" or estado_periodo.estado == "activo"):
-				response_data['error'] = 'El periodo seleccionado ya se encuentra en inscripción o activo.'
-				return HttpResponse(json.dumps(response_data), content_type="application/json", status=409)
-
-			# Validamos que no exista otro "tipo de postgrado" en inscripcion
-			periodo_postgrado = Periodo.objects.filter(tipo_postgrado_id=periodo.tipo_postgrado_id, estado_periodo_id__estado="en inscripcion")
-			if periodo_postgrado:
-				response_data['error'] = 'Ya existe un periodo en inscripción para este tipo de postgrado.'
-				return HttpResponse(json.dumps(response_data), content_type="application/json", status=409)
-
-			# Validamos que no exista otro "tipo de postgrado" activo
-			periodo_postgrado = Periodo.objects.filter(tipo_postgrado_id=periodo.tipo_postgrado_id, estado_periodo_id__estado="activo")
-			if periodo_postgrado:
-				response_data['error'] = 'Ya existe un periodo activo para este tipo de postgrado.'
-				return HttpResponse(json.dumps(response_data), content_type="application/json", status=409)
-
-			# Actualizo el periodo a "en inscripcion"
-			else:
-				estado_periodo = EstadoPeriodo.objects.get(estado="en inscripcion")
-				Periodo.objects.filter(id=periodo_id).update(estado_periodo=estado_periodo.id)
-				response_data['message'] = 'Periodo iniciado correctamente.'
-				return HttpResponse(json.dumps(response_data), content_type="application/json")
-
-		response_data['error'] = 'No tiene privilegios para realizar esta acción'
-		return HttpResponse(json.dumps(response_data), content_type="application/json", status=405)
 
 
 class PeriodoCreateAPIView(CreateAPIView):
@@ -183,52 +209,15 @@ class PeriodoDetailAPIView(RetrieveAPIView):
 	serializer_class = PeriodoDetailSerializer
 	permission_classes = [IsAuthenticated]
 
-	def get_estado_periodo(request, periodo_id):
-		response_data = {}
-		if (request.method == "GET"):
-			estado_periodo = EstadoPeriodo.objects.get(periodo__id=periodo_id)
-			print(estado_periodo.estado)
-
-			response_data['estado'] = estado_periodo.estado
-
-			return HttpResponse(json.dumps(response_data), content_type="application/json")
-
-		response_data['error'] = 'No tiene privilegios para realizar esta acción'
-		return HttpResponse(json.dumps(response_data), content_type="application/json", status=401)
-
 
 class PeriodoUpdateAPIView(RetrieveUpdateAPIView):
 	queryset = Periodo.objects.all()
 	serializer_class = PeriodoDetailSerializer
 	# permission_classes = [IsAdminUser]
 
-	@csrf_exempt
-	def cambiar_estado_periodo(request, periodo, filtro):
-		if (request.method == "PUT"):
-
-			if filtro == "activo":
-				# Borro todos los alumnos con estado "no pagado" del periodo actual
-				print("Activo")
-				PeriodoEstudiante.objects.filter(periodo_id=periodo, pagado=False).delete()
-
-			elif filtro == "finalizado":
-				# Actualizo la tabla de Estudiante Asignatura con las notas cargadas
-				print("Finalizado")
-
-			# Actualizar el estado periodo del periodo indicado
-			estado_periodo = EstadoPeriodo.objects.get(estado=filtro)
-			Periodo.objects.filter(id=periodo).update(estado_periodo=estado_periodo.id)
-
-			response_data = {}
-			response_data['status'] = 'OK'
-			return HttpResponse(json.dumps(response_data, default=date_handler), content_type="application/json")
-
-		response_data = {}
-		response_data['error'] = 'No tiene privilegios para realizar esta accion'
-		return HttpResponse(json.dumps(response_data), content_type="application/json", status=401)
-
 
 class PeriodoDeleteAPIView(DestroyAPIView):
 	queryset = Periodo.objects.all()
 	serializer_class = PeriodoDetailSerializer
 	permission_classes = [IsAdminUser]
+#endregion
