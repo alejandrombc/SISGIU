@@ -2,6 +2,7 @@ import json
 import os
 import datetime
 from django.http import HttpResponse
+from django.template.loader import get_template
 from usuario.utils import host_react, render_to_pdf, date_handler
 from django.core.mail import send_mail
 from django.views.decorators.csrf import csrf_exempt
@@ -272,9 +273,17 @@ class AdministradorDetailAPIView(RetrieveAPIView):
             password = member['password']
 
             url = host_react + "recuperarContrasena/"+cedula+"/"+password
+
+            template = get_template("email_template_lost.html")
+            html = template.render(
+                {
+                    "url":url
+                }
+            )
+
             body = "Haga click en el siguiente enlace " + url + " para restablecer su contraseña"
 
-            send_mail('Recuperación de contraseña', body, 'sisgiu.fau@gmail.com', [correo])
+            send_mail('Recuperación de contraseña', body, 'sisgiu.fau@gmail.com', [correo], html_message=html)
 
             response_data = {}
             response_data['status'] = 'Correo enviado'
