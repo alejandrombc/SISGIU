@@ -1,6 +1,7 @@
 from django.conf.urls import url
 from rest_framework.urlpatterns import format_suffix_patterns
 from asignatura.views import (
+    # get_asignaturas,
     TipoAsignaturaListCreateAPIView,
     TipoAsignaturaDetailAPIView,
     TipoAsignaturaUpdateAPIView,
@@ -10,6 +11,12 @@ from asignatura.views import (
     AsignaturaUpdateAPIView,
     AsignaturaDeleteAPIView,
     PrelacionAsignaturaListCreateAPIView,
+    get_estudiantes_docente,
+    get_asignaturas_por_docente,
+    get_asignaturas_por_estudiante,
+    retirar_periodo_estudiante,
+    post_prelacion,
+    get_all_asignaturas_necesarias,
     )
 
 urlpatterns = format_suffix_patterns([
@@ -26,44 +33,34 @@ urlpatterns = format_suffix_patterns([
     #endregion
 
     # Asignatura
-    url(r'^api/asignaturas/$',
-        AsignaturaListCreateAPIView.as_view(), name='Asignatura-list-create'),
-    url(r'^api/asignaturas/all/$',
-        AsignaturaListCreateAPIView.get_asignaturas, name='Asignatura-list'),
-    url(r'^api/asignaturas/(?P<codigo>[\w\-]+)/$',
-        AsignaturaDetailAPIView.as_view(), name='Asignatura-detail'),
-    url(r'^api/asignaturas/(?P<codigo>[\w\-]+)/edit/$',
-        AsignaturaUpdateAPIView.as_view(), name='Asignatura-update'),
-    url(r'^api/asignaturas/(?P<codigo>[\w\-]+)/delete/$',
-        AsignaturaDeleteAPIView.as_view(), name='Asignatura-delete'),
+    url(r'^api/asignaturas/$', AsignaturaListCreateAPIView.as_view(), name='Asignatura-list-create'),
+
+    # Obtener la lista de todas las asignaturas
+    # url(r'^api/asignaturas/all/$', get_asignaturas, name='Asignatura-list'),
+    url(r'^api/asignaturas/(?P<codigo>[\w\-]+)/$', AsignaturaDetailAPIView.as_view(), name='Asignatura-detail'),
+    url(r'^api/asignaturas/(?P<codigo>[\w\-]+)/edit/$', AsignaturaUpdateAPIView.as_view(), name='Asignatura-update'),
+    url(r'^api/asignaturas/(?P<codigo>[\w\-]+)/delete/$', AsignaturaDeleteAPIView.as_view(), name='Asignatura-delete'),
 
     # Asignaturas dictadas por un docente
-    url(r'^api/asignaturas/docente/(?P<cedula>[0-9]{6,8})/$',
-        AsignaturaListCreateAPIView.get_asignaturas_por_docente, name='asignaturas-por-docente'),
+    url(r'^api/asignaturas/docente/(?P<cedula>[0-9]{6,8})/$', get_asignaturas_por_docente, name='asignaturas-por-docente'),
 
     # Estudiantes de un docente en un tipo de postgrado
-    url(r'^api/asignaturas/(?P<codigo>[\w\-]+)/tipo_postgrado/(?P<tipo_postgrado>[\w\s]+)/$',
-        AsignaturaListCreateAPIView.get_estudiantes_docente, name='asignaturas-por-docente'),
+    url(r'^api/asignaturas/(?P<codigo>[\w\-]+)/tipo_postgrado/(?P<tipo_postgrado>[\w\s]+)/$', get_estudiantes_docente, name='estudiantes-por-docente'),
 
 
     # Asignaturas cursadas por un estudiante
-    url(r'^api/asignaturas/estudiante/(?P<cedula>[0-9]{6,8})/$',
-        AsignaturaListCreateAPIView.get_asignaturas_por_estudiante, name='asignaturas-por-estudiante'),
+    url(r'^api/asignaturas/estudiante/(?P<cedula>[0-9]{6,8})/$', get_asignaturas_por_estudiante, name='asignaturas-por-estudiante'),
 
     # Lista de todas las asignaturas que tienen prelaciones
-    url(r'^api/asignaturas_necesarias/all/$',
-        PrelacionAsignaturaListCreateAPIView.get_all_asignaturas_necesarias, name='PrelacionAsignatura-all'),
+    url(r'^api/asignaturas_necesarias/all/$', get_all_asignaturas_necesarias, name='PrelacionAsignatura-all'),
 
     # Asignaturas que puede inscribir un estudiante
     url(r'^api/asignaturas_a_inscribir/estudiante/(?P<cedula>[0-9]{6,8})/$',
         PrelacionAsignaturaListCreateAPIView.get_asignaturas_a_inscribir, name='asignaturas-a-inscribir'),
 
-    # Asignaturas preladas
-    url(r'^api/asignaturas_necesarias/codigo/(?P<codigo>[\w\-]+)/$',
-        PrelacionAsignaturaListCreateAPIView.get_asignaturas_necesarias, name='PrelacionAsignatura-detail'),
 
-    url(r'^api/asignaturas_necesarias/$',
-        PrelacionAsignaturaListCreateAPIView.post_prelacion, name='PrelacionAsignatura-create'),
+    # Crear las prelaciones de una asignatura
+    url(r'^api/asignaturas_necesarias/$', post_prelacion, name='PrelacionAsignatura-create'),
 
     url(r'^api/asignaturas_necesarias/delete/codigo/(?P<codigo>[\w\-]+)/$',
         PrelacionAsignaturaListCreateAPIView.delete_asignaturas_necesarias,
@@ -75,7 +72,7 @@ urlpatterns = format_suffix_patterns([
 
     # Retirar Periodo
     url(r'^api/retirar/estudiante/(?P<cedula>[0-9]{6,8})/periodo/(?P<periodo>\d+)/$',
-        AsignaturaListCreateAPIView.retirar_periodo_estudiante, name='retirar-periodo'),
+        retirar_periodo_estudiante, name='retirar-periodo'),
 
     # Asignaturas que tiene un estudiante en el periodo actual
     url(r'^api/asignaturas_actuales/estudiante/(?P<cedula>[0-9]{6,8})/$',

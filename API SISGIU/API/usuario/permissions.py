@@ -1,5 +1,5 @@
 from rest_framework.permissions import BasePermission
-from .models import Usuario
+from .models import Usuario, PersonalDocente, Estudiante, PersonalAdministrativo
 
 
 class IsListOrCreate(BasePermission):
@@ -23,3 +23,24 @@ class isOwnerOrReadOnly(BasePermission):
 		if member.is_superuser:
 			return True
 		return obj.usuario == request.user
+
+
+class isDocenteOrAdmin(BasePermission):
+	message = "El usuario debe pertenecer al personal docente."
+
+	def has_permission(self, request, view):
+		return request.user.is_superuser or PersonalDocente.objects.filter(usuario=request.user).exists()
+
+
+class isEstudianteOrAdmin(BasePermission):
+	message = "El usuario debe ser un estudiante."
+
+	def has_permission(self, request, view):
+		return request.user.is_superuser or Estudiante.objects.filter(usuario=request.user).exists()
+
+
+class isAdministrativoOrAdmin(BasePermission):
+	message = "El usuario debe pertenecer al personal administrativo."
+
+	def has_permission(self, request, view):
+		return request.user.is_superuser or PersonalAdministrativo.objects.filter(usuario=request.user).exists()
