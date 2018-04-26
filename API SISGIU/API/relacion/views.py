@@ -1,10 +1,6 @@
 #region imports
 from django.http import HttpResponse
 import json
-from tramite.models import (
-	Tramite,
-	EstadoTramite
-	)
 
 from usuario.models import (
 	Usuario,
@@ -27,7 +23,6 @@ from relacion.models import (
 	PeriodoEstudiante,
 	DocenteAsignatura,
 	EstudianteAsignatura,
-	EstudianteTramite,
 	AsignaturaTipoPostgrado,
 	)
 
@@ -38,8 +33,6 @@ from relacion.serializers import (
 	DocenteAsignaturaDetailSerializer,
 	EstudianteAsignaturaListSerializer,
 	EstudianteAsignaturaDetailSerializer,
-	EstudianteTramiteListSerializer,
-	EstudianteTramiteDetailSerializer,
 	AsignaturaTipoPostgradoListSerializer,
 	AsignaturaTipoPostgradoDetailSerializer,
 
@@ -72,34 +65,101 @@ from rest_framework import status
 from rest_framework.response import Response
 #endregion
 
-"""
-@api_view(['GET'])
-@permission_classes((IsAuthenticated, isEstudianteOrAdmin))
-def get_all_estudiantes(request):
-	member = PeriodoEstudiante.objects.filter(periodo__estado_periodo__estado="activo")
-	list_result = [entry for entry in member.values()]
-	lista_estudiantes = []
 
-	for estudiante_periodo in list_result:
-		estudiante = Usuario.objects.filter(id=estudiante_periodo['estudiante_id']).values()[0]
-		periodo = Periodo.objects.filter(id=estudiante_periodo['periodo_id']).values()[0]
-		tipo_postgrado = TipoPostgrado.objects.filter(id=periodo['tipo_postgrado_id']).values()[0]
-
-		estudiante_periodo['usuario'] = {}
-		estudiante_periodo['tipo_postgrado'] = tipo_postgrado['tipo']
-		estudiante_periodo['usuario']['first_name'] = estudiante['first_name']
-		estudiante_periodo['usuario']['last_name'] = estudiante['last_name']
-		estudiante_periodo['usuario']['cedula'] = estudiante['cedula']
-
-		del estudiante_periodo['estudiante_id']
-		del estudiante_periodo['periodo_id']
-
-		lista_estudiantes.append(estudiante_periodo)
-
-	return Response(lista_estudiantes, status=status.HTTP_200_OK)
-"""
+#region PeriodoEstudiante
+class PeriodoEstudianteListCreateAPIView(ListCreateAPIView):
+	queryset = PeriodoEstudiante.objects.all()
+	serializer_class = PeriodoEstudianteListSerializer
+	permission_classes = [isEstudianteOrAdmin]
 
 
+class PeriodoEstudianteUpdateAPIView(RetrieveUpdateAPIView):
+	queryset = PeriodoEstudiante.objects.all()
+	serializer_class = PeriodoEstudianteDetailSerializer
+	permission_classes = [isAdministrativoOrAdmin]
+
+
+class PeriodoEstudianteDeleteAPIView(DestroyAPIView):
+	queryset = PeriodoEstudiante.objects.all()
+	serializer_class = PeriodoEstudianteDetailSerializer
+	permission_classes = [IsAdminUser]
+#endregion
+
+
+#region DocenteAsignatura
+class DocenteAsignaturaListCreateAPIView(ListCreateAPIView):
+	queryset = DocenteAsignatura.objects.all()
+	serializer_class = DocenteAsignaturaListSerializer
+	permission_classes = [IsAdminUser]
+
+
+class DocenteAsignaturaUpdateAPIView(RetrieveUpdateAPIView):
+	queryset = DocenteAsignatura.objects.all()
+	serializer_class = DocenteAsignaturaDetailSerializer
+	permission_classes = [IsAdminUser]
+
+
+class DocenteAsignaturaDeleteAPIView(DestroyAPIView):
+	queryset = DocenteAsignatura.objects.all()
+	serializer_class = DocenteAsignaturaDetailSerializer
+	permission_classes = [IsAdminUser]
+#endregion
+
+
+#region EstudianteAsignatura
+class EstudianteAsignaturaListCreateAPIView(ListCreateAPIView):
+	queryset = EstudianteAsignatura.objects.all()
+	serializer_class = EstudianteAsignaturaListSerializer
+	permission_classes = [EsEstudianteOAdministrador]
+
+
+class EstudianteAsignaturaDetailAPIView(RetrieveAPIView):
+	queryset = EstudianteAsignatura.objects.all()
+	serializer_class = EstudianteAsignaturaDetailSerializer
+	lookup_field = 'estudiante__usuario__cedula'
+
+
+class EstudianteAsignaturaUpdateAPIView(RetrieveUpdateAPIView):
+	queryset = EstudianteAsignatura.objects.all()
+	serializer_class = EstudianteAsignaturaDetailSerializer
+	permission_classes = [EsDocenteOAdministrador]
+
+
+class EstudianteAsignaturaDeleteAPIView(DestroyAPIView):
+	queryset = EstudianteAsignatura.objects.all()
+	serializer_class = EstudianteAsignaturaDetailSerializer
+	permission_classes = [IsAdminUser]
+#endregion
+
+
+#region AsignaturaTipoPostgrado
+class AsignaturaTipoPostgradoListCreateAPIView(ListCreateAPIView):
+	queryset = AsignaturaTipoPostgrado.objects.all()
+	serializer_class = AsignaturaTipoPostgradoListSerializer
+	permission_classes = [IsListOrCreate]
+
+
+class AsignaturaTipoPostgradoDetailAPIView(RetrieveAPIView):
+	queryset = AsignaturaTipoPostgrado.objects.all()
+	serializer_class = AsignaturaTipoPostgradoDetailSerializer
+	lookup_field = 'estudiante__usuario__cedula'
+	permission_classes = [IsAuthenticated]
+
+
+class AsignaturaTipoPostgradoUpdateAPIView(RetrieveUpdateAPIView):
+	queryset = AsignaturaTipoPostgrado.objects.all()
+	serializer_class = AsignaturaTipoPostgradoDetailSerializer
+	permission_classes = [IsAdminUser]
+
+
+class AsignaturaTipoPostgradoDeleteAPIView(DestroyAPIView):
+	queryset = AsignaturaTipoPostgrado.objects.all()
+	serializer_class = AsignaturaTipoPostgradoDetailSerializer
+	permission_classes = [IsAdminUser]
+#endregion
+
+
+#region Otros
 @api_view(['GET'])
 @permission_classes((IsAuthenticated, isAdministrativoOrAdmin))
 def get_estudiantes_por_periodo(request, periodo_id):
@@ -181,7 +241,7 @@ def programacion_academica(request):
 	for x in docente_asignatura:
 		periodo = Periodo.objects.get(id=x.periodo_id)
 		asignatura_codigo = Asignatura.objects.get(id=x.asignatura_id).codigo
-		if str(x.periodo_id) not in aux_doc_asig:        
+		if str(x.periodo_id) not in aux_doc_asig:
 			if(asignaturas):
 				aux_doc_asig[str(last_period)].append(asignaturas)
 
@@ -212,7 +272,7 @@ def programacion_academica(request):
 		temp['tipo_postgrado'] = TipoPostgrado.objects.get(id=periodo.tipo_postgrado_id).tipo
 		temp['descripcion'] = periodo.descripcion
 		temp['periodo_id'] = x
-		temp[x] = []              
+		temp[x] = []
 		for asignaturas in aux_doc_asig[x]:
 			for codigo in asignaturas:
 				asignatura = Asignatura.objects.get(codigo=codigo)
@@ -227,79 +287,6 @@ def programacion_academica(request):
 
 	return Response(programacion_academica, status=status.HTTP_200_OK)
 
-""" 
-@api_view(['GET'])
-@permission_classes((IsAuthenticated,))
-def get_periodo_docente_asignatura(request, cedula, periodo):
-	member = DocenteAsignatura.objects.filter(docente__usuario__cedula=cedula, periodo__estado_periodo__estado=periodo)
-	list_result = [entry for entry in member.values()]
-
-	lista_docentes = []
-
-	for docente_periodo in list_result:
-		docente = Usuario.objects.filter(id=docente_periodo['docente_id']).values()[0]
-		asignatura = Asignatura.objects.filter(id=docente_periodo['asignatura_id']).values()[0]
-		periodo = Periodo.objects.filter(id=docente_periodo['periodo_id']).values()[0]
-		tipo_postgrado = TipoPostgrado.objects.filter(id=periodo['tipo_postgrado_id']).values()[0]
-		tipo_asignatura = TipoAsignatura.objects.filter(
-			id=asignatura["tipo_asignatura_id"]).values()[0]
-
-		docente_periodo['usuario'] = {}
-		docente_periodo['asignatura'] = {}
-		docente_periodo['tipo_postgrado'] = tipo_postgrado['tipo']
-		docente_periodo['usuario']['first_name'] = docente['first_name']
-		docente_periodo['usuario']['last_name'] = docente['last_name']
-		docente_periodo['usuario']['cedula'] = docente['cedula']
-		docente_periodo['asignatura']['codigo'] = asignatura['codigo']
-		docente_periodo['asignatura']['nombre'] = asignatura['nombre']
-		docente_periodo['asignatura']['unidad_credito'] = asignatura['unidad_credito']
-		docente_periodo['asignatura']['tipo_asignatura'] = tipo_asignatura['nombre']
-
-		del docente_periodo['docente_id']
-		del docente_periodo['periodo_id']
-		del docente_periodo['asignatura_id']
-
-		lista_docentes.append(docente_periodo)
-
-	return Response(lista_docentes, status=status.HTTP_200_OK)
-"""
-
-"""
-@api_view(['GET'])
-@permission_classes((IsAuthenticated,))
-def get_docente(request, asignatura, periodo):
-	periodo = periodo.replace("%20", " ")
-	member = DocenteAsignatura.objects.filter(asignatura__codigo=asignatura, periodo__estado_periodo__estado=periodo)
-	list_result = [entry for entry in member.values()]
-
-	lista_docentes = []
-
-	for docente_periodo in list_result:
-		docente = Usuario.objects.filter(id=docente_periodo['docente_id']).values()[0]
-		asignatura = Asignatura.objects.filter(id=docente_periodo['asignatura_id']).values()[0]
-		periodo = Periodo.objects.filter(id=docente_periodo['periodo_id']).values()[0]
-		tipo_postgrado = TipoPostgrado.objects.filter(id=periodo['tipo_postgrado_id']).values()[0]
-
-		docente_periodo['usuario'] = {}
-		docente_periodo['asignatura'] = {}
-		docente_periodo['tipo_postgrado'] = tipo_postgrado['tipo']
-		docente_periodo['usuario']['first_name'] = docente['first_name']
-		docente_periodo['usuario']['last_name'] = docente['last_name']
-		docente_periodo['usuario']['cedula'] = docente['cedula']
-		docente_periodo['asignatura']['codigo'] = asignatura['codigo']
-		docente_periodo['asignatura']['nombre'] = asignatura['nombre']
-		docente_periodo['asignatura']['unidad_credito'] = asignatura['unidad_credito']
-		docente_periodo['asignatura']['tipo_asignatura'] = tipo_asignatura['nombre']
-
-		del docente_periodo['docente_id']
-		del docente_periodo['periodo_id']
-		del docente_periodo['asignatura_id']
-
-		lista_docentes.append(docente_periodo)
-
-	return Response(lista_docentes, status=status.HTTP_200_OK)
-"""
-
 
 @api_view(['GET'])
 @permission_classes((IsAuthenticated, IsAdminUser))
@@ -312,7 +299,7 @@ def get_all_docentes(request, periodo, tipo_postgrado):
 		member = DocenteAsignatura.objects.filter(periodo__estado_periodo__estado=periodo)
 	list_result = [entry for entry in member.values()]
 
-	lista_docentes = [] 
+	lista_docentes = []
 
 	for docente_periodo in list_result:
 		docente = Usuario.objects.filter(id=docente_periodo['docente_id']).values()[0]
@@ -381,46 +368,6 @@ def crearDocenteAsignatura(request, periodo_id):
 	return Response(status=status.HTTP_201_CREATED)
 
 
-#region PeriodoEstudiante
-class PeriodoEstudianteListCreateAPIView(ListCreateAPIView):
-	queryset = PeriodoEstudiante.objects.all()
-	serializer_class = PeriodoEstudianteListSerializer
-	permission_classes = [isEstudianteOrAdmin]
-
-
-class PeriodoEstudianteUpdateAPIView(RetrieveUpdateAPIView):
-	queryset = PeriodoEstudiante.objects.all()
-	serializer_class = PeriodoEstudianteDetailSerializer
-	permission_classes = [isAdministrativoOrAdmin]
-
-
-class PeriodoEstudianteDeleteAPIView(DestroyAPIView):
-	queryset = PeriodoEstudiante.objects.all()
-	serializer_class = PeriodoEstudianteDetailSerializer
-	permission_classes = [IsAdminUser]
-#endregion
-
-
-#region DocenteAsignatura
-class DocenteAsignaturaListCreateAPIView(ListCreateAPIView):
-	queryset = DocenteAsignatura.objects.all()
-	serializer_class = DocenteAsignaturaListSerializer
-	permission_classes = [IsAdminUser]
-
-
-class DocenteAsignaturaUpdateAPIView(RetrieveUpdateAPIView):
-	queryset = DocenteAsignatura.objects.all()
-	serializer_class = DocenteAsignaturaDetailSerializer
-	permission_classes = [IsAdminUser]
-
-
-class DocenteAsignaturaDeleteAPIView(DestroyAPIView):
-	queryset = DocenteAsignatura.objects.all()
-	serializer_class = DocenteAsignaturaDetailSerializer
-	permission_classes = [IsAdminUser]
-#endregion
-
-
 @csrf_exempt
 @api_view(['POST'])
 @permission_classes((IsAuthenticated, isEstudianteOrAdmin))
@@ -431,28 +378,22 @@ def crear_estudiante_asignatura(request, cedula):
 
 	# En el list 'value' se encuentran los IDs de las asignaturas a agregar
 	asignaturas_id = body['value']
-	# print(asignaturas_id)
-
 	estudiante = Estudiante.objects.get(usuario__cedula=cedula)
-	# print(estudiante.id_tipo_postgrado)
-
-	periodo = Periodo.objects.get(estado_periodo_id__estado='en inscripcion',
-								  tipo_postgrado_id__tipo=estudiante.id_tipo_postgrado)
-	# print(periodo)
+	periodo = Periodo.objects.get(estado_periodo_id__estado='en inscripcion', tipo_postgrado_id__tipo=estudiante.id_tipo_postgrado)
 
 	periodo_estudiante = PeriodoEstudiante(periodo=periodo, estudiante=estudiante, pagado=False)
 	periodo_estudiante.save()
 
 	for x in asignaturas_id:
 		asignatura = Asignatura.objects.get(id=x)
-		# print(asignatura)
-		estudiante_asignatura = EstudianteAsignatura(periodo_estudiante=periodo_estudiante,
-													 asignatura=asignatura,
-													 nota_definitiva=0)
-		# print(estudiante_asignatura)
+		estudiante_asignatura = EstudianteAsignatura(
+													periodo_estudiante=periodo_estudiante,
+													asignatura=asignatura,
+													nota_definitiva=0)
 		estudiante_asignatura.save()
 
 	return Response(status=status.HTTP_201_CREATED)
+
 
 @api_view(['POST'])
 @permission_classes((IsAuthenticated, isAdministrativoOrAdmin))
@@ -466,8 +407,9 @@ def modificar_estudiante_asignatura(request, cedula):
 
 	estudiante = Estudiante.objects.get(usuario__cedula=cedula)
 
-	periodo = Periodo.objects.get(estado_periodo_id__estado='en inscripcion',
-								  tipo_postgrado_id__tipo=estudiante.id_tipo_postgrado)
+	periodo = Periodo.objects.get(
+									estado_periodo_id__estado='en inscripcion',
+									tipo_postgrado_id__tipo=estudiante.id_tipo_postgrado)
 
 	# Si ya existe no hago nada, sino lo creo.
 	if not PeriodoEstudiante.objects.filter(periodo=periodo, estudiante=estudiante).exists():
@@ -480,12 +422,14 @@ def modificar_estudiante_asignatura(request, cedula):
 
 	for x in asignaturas_id:
 		asignatura = Asignatura.objects.get(id=x)
-		estudiante_asignatura = EstudianteAsignatura(periodo_estudiante=periodo_estudiante,
-													 asignatura=asignatura,
-													 nota_definitiva=0)
+		estudiante_asignatura = EstudianteAsignatura(
+														periodo_estudiante=periodo_estudiante,
+														asignatura=asignatura,
+														nota_definitiva=0)
 		estudiante_asignatura.save()
 
 	return Response(status=status.HTTP_204_NO_CONTENT)
+
 
 @api_view(['GET'])
 @permission_classes((IsAuthenticated, isEstudianteOrAdmin))
@@ -545,7 +489,7 @@ def obtener_informacion_historial(request, cedula):
 			if not x['retirado']:
 				periodo_info['nota_definitiva'] = 'SC'
 
-		subPeriodo.append(periodo_info)  
+		subPeriodo.append(periodo_info)
 		periodo_info = {}
 
 	periodos.append(subPeriodo)
@@ -564,10 +508,11 @@ def obtener_informacion_historial(request, cedula):
 
 	return Response(historial_estudiante, status=status.HTTP_200_OK)
 
+
 @api_view(['GET'])
 @permission_classes((IsAuthenticated, isAdministrativoOrAdmin))
 def informacion_usuarios_administrativo(request, cedula):
-	
+
 	obj_usuario = {}
 	if Estudiante.objects.filter(usuario__cedula=cedula).exists():
 		usuario = Estudiante.objects.get(usuario__cedula=cedula)
@@ -612,6 +557,7 @@ def informacion_usuarios_administrativo(request, cedula):
 
 	return Response(obj_usuario, status=status.HTTP_200_OK)
 
+
 @api_view(['POST'])
 @permission_classes((IsAuthenticated, isDocenteOrAdmin))
 @csrf_exempt
@@ -629,101 +575,4 @@ def cargar_notas(request):
 		estudiante_asignatura.update(nota_definitiva=estudiante['nota_definitiva'])
 
 	return Response(status=status.HTTP_200_OK)
-
-
-#region EstudianteAsignatura 
-class EstudianteAsignaturaListCreateAPIView(ListCreateAPIView):
-	queryset = EstudianteAsignatura.objects.all()
-	serializer_class = EstudianteAsignaturaListSerializer
-	permission_classes = [EsEstudianteOAdministrador]
-
-
-class EstudianteAsignaturaDetailAPIView(RetrieveAPIView):
-	queryset = EstudianteAsignatura.objects.all()
-	serializer_class = EstudianteAsignaturaDetailSerializer
-	lookup_field = 'estudiante__usuario__cedula'
-
-
-
-class EstudianteAsignaturaUpdateAPIView(RetrieveUpdateAPIView):
-	queryset = EstudianteAsignatura.objects.all()
-	serializer_class = EstudianteAsignaturaDetailSerializer
-	permission_classes = [EsDocenteOAdministrador]
-
-
-class EstudianteAsignaturaDeleteAPIView(DestroyAPIView):
-	queryset = EstudianteAsignatura.objects.all()
-	serializer_class = EstudianteAsignaturaDetailSerializer
-	permission_classes = [IsAdminUser]
-#endregion
-
-
-#region EstudianteTramite 
-class EstudianteTramiteListCreateAPIView(ListCreateAPIView):
-	queryset = EstudianteTramite.objects.all()
-	serializer_class = EstudianteTramiteListSerializer
-	permission_classes = [EsEstudianteOAdministrador]
-
-	def get_tramites(request):
-		if (request.user.is_anonymous == False):
-			tramites = EstudianteTramite.objects.all().values()
-
-			lista_estudiante_tramite = [entry for entry in tramites]
-
-			lista_tramites = []
-			for estudiante_tramite in lista_estudiante_tramite:
-				tramite = Tramite.objects.filter(id=estudiante_tramite['tramite_id']).values()[0]
-				tramite['estado_valor'] = EstadoTramite.objects.filter(id=estudiante_tramite['estado_tramite_id']).values()[0]
-				tramite['fecha_creacion'] = str(estudiante_tramite['fecha_creacion'])
-				tramite['fecha_tope'] = str(estudiante_tramite['fecha_tope'])
-				tramite['mensaje_tramite'] = estudiante_tramite['mensaje']
-
-				del tramite['estado_valor']['id']
-				lista_tramites.append(tramite)
-
-			return HttpResponse(json.dumps(lista_tramites) , content_type="application/json")
-		response_data = {}
-		response_data['Error'] = 'No tiene privilegios para realizar esta accion'      
-		return HttpResponse(json.dumps(response_data), content_type="application/json")
-
-
-class EstudianteTramiteDetailAPIView(RetrieveAPIView):
-	queryset = EstudianteTramite.objects.all()
-	serializer_class = EstudianteTramiteDetailSerializer
-	lookup_field = 'estudiante__usuario__cedula'
-	permission_classes = [IsAuthenticated]
-
-class EstudianteTramiteUpdateAPIView(RetrieveUpdateAPIView):
-	queryset = EstudianteTramite.objects.all()
-	serializer_class = EstudianteTramiteDetailSerializer
-	permission_classes = [EsAdministrativoOAdministrador]
-
-class EstudianteTramiteDeleteAPIView(DestroyAPIView):
-	queryset = EstudianteTramite.objects.all()
-	serializer_class = EstudianteTramiteDetailSerializer
-	permission_classes = [EsAdministrativoOAdministrador]
-#endregion
-
-
-#region AsignaturaTipoPostgrado 
-class AsignaturaTipoPostgradoListCreateAPIView(ListCreateAPIView):
-	queryset = AsignaturaTipoPostgrado.objects.all()
-	serializer_class = AsignaturaTipoPostgradoListSerializer
-	permission_classes = [IsListOrCreate]
-
-class AsignaturaTipoPostgradoDetailAPIView(RetrieveAPIView):
-	queryset = AsignaturaTipoPostgrado.objects.all()
-	serializer_class = AsignaturaTipoPostgradoDetailSerializer
-	lookup_field = 'estudiante__usuario__cedula'
-	permission_classes = [IsAuthenticated]
-
-class AsignaturaTipoPostgradoUpdateAPIView(RetrieveUpdateAPIView):
-	queryset = AsignaturaTipoPostgrado.objects.all()
-	serializer_class = AsignaturaTipoPostgradoDetailSerializer
-	permission_classes = [IsAdminUser]
-
-class AsignaturaTipoPostgradoDeleteAPIView(DestroyAPIView):
-	queryset = AsignaturaTipoPostgrado.objects.all()
-	serializer_class = AsignaturaTipoPostgradoDetailSerializer
-	permission_classes = [IsAdminUser]
 #endregion
