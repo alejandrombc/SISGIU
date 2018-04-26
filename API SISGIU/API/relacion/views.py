@@ -44,10 +44,7 @@ from rest_framework.generics import (
 	DestroyAPIView,
 	)
 
-from rest_framework.permissions import (
-	IsAdminUser,
-	IsAuthenticated,
-	)
+from rest_framework.permissions import IsAdminUser
 
 from .permissions import (
 	IsListOrCreate,
@@ -143,7 +140,7 @@ class AsignaturaTipoPostgradoDetailAPIView(RetrieveAPIView):
 	queryset = AsignaturaTipoPostgrado.objects.all()
 	serializer_class = AsignaturaTipoPostgradoDetailSerializer
 	lookup_field = 'estudiante__usuario__cedula'
-	permission_classes = [IsAuthenticated]
+	permission_classes = []
 
 
 class AsignaturaTipoPostgradoUpdateAPIView(RetrieveUpdateAPIView):
@@ -161,7 +158,7 @@ class AsignaturaTipoPostgradoDeleteAPIView(DestroyAPIView):
 
 #region Otros
 @api_view(['GET'])
-@permission_classes((IsAuthenticated, isAdministrativoOrAdmin))
+@permission_classes((isAdministrativoOrAdmin, ))
 def get_estudiantes_por_periodo(request, periodo_id):
 
 	periodo_estudiante = PeriodoEstudiante.objects.filter(periodo__id=periodo_id)
@@ -201,7 +198,7 @@ def get_estudiantes_por_periodo(request, periodo_id):
 
 
 @api_view(['GET'])
-@permission_classes((IsAuthenticated, isEstudianteOrAdmin))
+@permission_classes((isEstudianteOrAdmin, ))
 def get_periodo(request, cedula, periodo):
 	periodo = periodo.replace("%20", " ")
 	member = PeriodoEstudiante.objects.filter(estudiante__usuario__cedula=cedula, periodo__estado_periodo__estado=periodo)
@@ -229,7 +226,6 @@ def get_periodo(request, cedula, periodo):
 
 
 @api_view(['GET'])
-@permission_classes((IsAuthenticated,))
 def programacion_academica(request):
 	docente_asignatura = DocenteAsignatura.objects.filter(Q(periodo__estado_periodo__estado='activo') | Q(periodo__estado_periodo__estado='en inscripcion')).order_by('periodo_id')
 
@@ -289,7 +285,7 @@ def programacion_academica(request):
 
 
 @api_view(['GET'])
-@permission_classes((IsAuthenticated, IsAdminUser))
+@permission_classes((IsAdminUser, ))
 def get_all_docentes(request, periodo, tipo_postgrado):
 	periodo = periodo.replace("%20", " ")
 	tipo_postgrado = tipo_postgrado.replace("%20", " ")
@@ -331,7 +327,7 @@ def get_all_docentes(request, periodo, tipo_postgrado):
 
 @csrf_exempt
 @api_view(['POST'])
-@permission_classes((IsAuthenticated, IsAdminUser))
+@permission_classes((IsAdminUser, ))
 def crearDocenteAsignatura(request, periodo_id):
 	body_unicode = request.body.decode('utf-8')
 	body = json.loads(body_unicode)
@@ -370,7 +366,7 @@ def crearDocenteAsignatura(request, periodo_id):
 
 @csrf_exempt
 @api_view(['POST'])
-@permission_classes((IsAuthenticated, isEstudianteOrAdmin))
+@permission_classes((isEstudianteOrAdmin, ))
 def crear_estudiante_asignatura(request, cedula):
 
 	body_unicode = request.body.decode('utf-8')
@@ -396,7 +392,7 @@ def crear_estudiante_asignatura(request, cedula):
 
 
 @api_view(['POST'])
-@permission_classes((IsAuthenticated, isAdministrativoOrAdmin))
+@permission_classes((isAdministrativoOrAdmin, ))
 @csrf_exempt
 def modificar_estudiante_asignatura(request, cedula):
 	body_unicode = request.body.decode('utf-8')
@@ -432,7 +428,7 @@ def modificar_estudiante_asignatura(request, cedula):
 
 
 @api_view(['GET'])
-@permission_classes((IsAuthenticated, isEstudianteOrAdmin))
+@permission_classes((isEstudianteOrAdmin, ))
 def obtener_informacion_historial(request, cedula):
 
 	estudiante_asignatura = EstudianteAsignatura.objects.filter(periodo_estudiante__estudiante__usuario__cedula=cedula)
@@ -510,7 +506,7 @@ def obtener_informacion_historial(request, cedula):
 
 
 @api_view(['GET'])
-@permission_classes((IsAuthenticated, isAdministrativoOrAdmin))
+@permission_classes((isAdministrativoOrAdmin, ))
 def informacion_usuarios_administrativo(request, cedula):
 
 	obj_usuario = {}
@@ -559,7 +555,7 @@ def informacion_usuarios_administrativo(request, cedula):
 
 
 @api_view(['POST'])
-@permission_classes((IsAuthenticated, isDocenteOrAdmin))
+@permission_classes((isDocenteOrAdmin, ))
 @csrf_exempt
 def cargar_notas(request):
 

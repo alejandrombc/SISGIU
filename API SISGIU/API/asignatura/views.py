@@ -119,7 +119,7 @@ class AsignaturaDeleteAPIView(DestroyAPIView):
 
 
 @api_view(['GET'])
-@permission_classes((IsAuthenticated, isDocenteOrAdmin))
+@permission_classes((isDocenteOrAdmin, ))
 def get_estudiantes_docente(request, codigo, tipo_postgrado):
 	tipo_postgrado = tipo_postgrado.replace("%20", " ")
 	member = EstudianteAsignatura.objects.filter(asignatura__codigo=codigo, periodo_estudiante__periodo__tipo_postgrado__tipo=tipo_postgrado, periodo_estudiante__periodo__estado_periodo__estado="activo").values()
@@ -142,7 +142,7 @@ def get_estudiantes_docente(request, codigo, tipo_postgrado):
 
 
 @api_view(['GET'])
-@permission_classes((IsAuthenticated, isDocenteOrAdmin))
+@permission_classes((isDocenteOrAdmin, ))
 def get_asignaturas_por_docente(request, cedula):
 	member = DocenteAsignatura.objects.filter(docente__usuario__cedula=cedula, periodo__estado_periodo__estado="activo").values()
 	lista_docente_asignatura = [entry for entry in member]
@@ -168,7 +168,7 @@ def get_asignaturas_por_docente(request, cedula):
 
 
 @api_view(['GET'])
-@permission_classes((IsAuthenticated, isEstudianteOrAdmin))
+@permission_classes((isEstudianteOrAdmin, ))
 def get_asignaturas_por_estudiante(request, cedula):
 
 	estudiante = Estudiante.objects.get(usuario__cedula=cedula)
@@ -216,7 +216,7 @@ def get_asignaturas_por_estudiante(request, cedula):
 
 @csrf_exempt
 @api_view(['POST'])
-@permission_classes((IsAuthenticated, isEstudianteOrAdmin))
+@permission_classes((isEstudianteOrAdmin, ))
 def retirar_periodo_estudiante(request, cedula, periodo):
 
 	member = EstudianteAsignatura.objects.filter(
@@ -227,7 +227,7 @@ def retirar_periodo_estudiante(request, cedula, periodo):
 
 
 @api_view(['GET'])
-@permission_classes((IsAuthenticated, isEstudianteOrAdmin))
+@permission_classes((isEstudianteOrAdmin, ))
 def get_asignaturas_a_inscribir(request, cedula):
 
 	# Lista de todas las asignaturas en el sistema
@@ -292,7 +292,7 @@ def get_asignaturas_a_inscribir(request, cedula):
 
 
 @api_view(['GET'])
-@permission_classes((IsAuthenticated, isAdministrativoOrAdmin))
+@permission_classes((isAdministrativoOrAdmin, ))
 def get_asignaturas_actuales_estudiante(request, cedula):
 
 	estudiante = Estudiante.objects.get(usuario__cedula=cedula)
@@ -308,7 +308,7 @@ def get_asignaturas_actuales_estudiante(request, cedula):
 
 
 @api_view(['GET'])
-@permission_classes((IsAuthenticated, isAdministrativoOrAdmin))
+@permission_classes((isAdministrativoOrAdmin, ))
 def get_asignaturas_actuales(request, periodo):
 
 	docente_asignatura = DocenteAsignatura.objects.filter(periodo_id=periodo).values()
@@ -323,7 +323,7 @@ def get_asignaturas_actuales(request, periodo):
 
 @csrf_exempt
 @api_view(['POST'])
-@permission_classes((IsAuthenticated, IsAdminUser))
+@permission_classes((IsAdminUser, ))
 def post_prelacion(request):
 	codigos = json.loads(request.body.decode("utf-8"))
 	PrelacionAsignatura.objects.filter(asignatura_objetivo=codigos['codigo']).delete()
@@ -337,7 +337,7 @@ def post_prelacion(request):
 
 
 @api_view(['GET'])
-@permission_classes((IsAuthenticated, IsAdminUser))
+@permission_classes((IsAdminUser, ))
 def get_all_asignaturas_necesarias(request):
 
 	asignaturas = PrelacionAsignatura.objects.all().values()
