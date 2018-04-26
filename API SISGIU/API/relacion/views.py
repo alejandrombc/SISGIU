@@ -421,86 +421,221 @@ class DocenteAsignaturaDeleteAPIView(DestroyAPIView):
 #endregion
 
 
+@csrf_exempt
+@api_view(['POST'])
+@permission_classes((IsAuthenticated, isEstudianteOrAdmin))
+def crear_estudiante_asignatura(request, cedula):
+
+	body_unicode = request.body.decode('utf-8')
+	body = json.loads(body_unicode)
+
+	# En el list 'value' se encuentran los IDs de las asignaturas a agregar
+	asignaturas_id = body['value']
+	# print(asignaturas_id)
+
+	estudiante = Estudiante.objects.get(usuario__cedula=cedula)
+	# print(estudiante.id_tipo_postgrado)
+
+	periodo = Periodo.objects.get(estado_periodo_id__estado='en inscripcion',
+								  tipo_postgrado_id__tipo=estudiante.id_tipo_postgrado)
+	# print(periodo)
+
+	periodo_estudiante = PeriodoEstudiante(periodo=periodo, estudiante=estudiante, pagado=False)
+	periodo_estudiante.save()
+
+	for x in asignaturas_id:
+		asignatura = Asignatura.objects.get(id=x)
+		# print(asignatura)
+		estudiante_asignatura = EstudianteAsignatura(periodo_estudiante=periodo_estudiante,
+													 asignatura=asignatura,
+													 nota_definitiva=0)
+		# print(estudiante_asignatura)
+		estudiante_asignatura.save()
+
+	return Response(status=status.HTTP_201_CREATED)
+
+@api_view(['POST'])
+@permission_classes((IsAuthenticated, isAdministrativoOrAdmin))
+@csrf_exempt
+def modificar_estudiante_asignatura(request, cedula):
+	body_unicode = request.body.decode('utf-8')
+	body = json.loads(body_unicode)
+
+	# En el list 'value' se encuentran los IDs de las asignaturas a agregar
+	asignaturas_id = body['value']
+
+	estudiante = Estudiante.objects.get(usuario__cedula=cedula)
+
+	periodo = Periodo.objects.get(estado_periodo_id__estado='en inscripcion',
+								  tipo_postgrado_id__tipo=estudiante.id_tipo_postgrado)
+
+	# Si ya existe no hago nada, sino lo creo.
+	if not PeriodoEstudiante.objects.filter(periodo=periodo, estudiante=estudiante).exists():
+		periodo_estudiante = PeriodoEstudiante(periodo=periodo, estudiante=estudiante, pagado=False)
+		periodo_estudiante.save()
+	else:
+		periodo_estudiante = PeriodoEstudiante.objects.get(periodo=periodo, estudiante=estudiante)
+
+	EstudianteAsignatura.objects.filter(periodo_estudiante=periodo_estudiante).delete()
+
+	for x in asignaturas_id:
+		asignatura = Asignatura.objects.get(id=x)
+		estudiante_asignatura = EstudianteAsignatura(periodo_estudiante=periodo_estudiante,
+													 asignatura=asignatura,
+													 nota_definitiva=0)
+		estudiante_asignatura.save()
+
+	return Response(status=status.HTTP_204_NO_CONTENT)
+
+@api_view(['GET'])
+@permission_classes((IsAuthenticated, isEstudianteOrAdmin))
+def obtener_informacion_historial(request, cedula):
+
+	estudiante_asignatura = EstudianteAsignatura.objects.filter(periodo_estudiante__estudiante__usuario__cedula=cedula)
+
+	lista_estudiante_asignatura = [entry for entry in estudiante_asignatura.values()]
+
+	historial_estudiante = {}
+	periodos = []
+	subPeriodo = []
+	periodo_info = {}
+	promedio_general = 0
+	promedio_ponderado = 0
+	cantidad_materias = 0
+	cantidad_materias_ponderadas = 0
+	cantidad_materias_reprobadas = 0
+	cantidad_materias_retiradas = 0
+
+	for x in lista_estudiante_asignatura:
+		if subPeriodo == []:
+			id_periodo_estudiante = x['periodo_estudiante_id']
+
+		if id_periodo_estudiante != x['periodo_estudiante_id']:
+			periodos.append(subPeriodo)
+			subPeriodo = []
+			id_periodo_estudiante = x['periodo_estudiante_id']
+
+		periodo_estudiante = PeriodoEstudiante.objects.get(id=id_periodo_estudiante)
+		periodo = Periodo.objects.get(id=periodo_estudiante.periodo_id)
+		estado_periodo = EstadoPeriodo.objects.get(id=periodo.estado_periodo_id)
+		asignatura = Asignatura.objects.get(id=x['asignatura_id'])
+		tipo_asignatura = TipoAsignatura.objects.get(id=asignatura.tipo_asignatura_id)
+
+		periodo_info['periodo'] = periodo.descripcion
+		periodo_info['asignatura_nombre'] = asignatura.nombre
+		periodo_info['asignatura_codigo'] = asignatura.codigo
+		periodo_info['unidad_credito'] = asignatura.unidad_credito
+		periodo_info['nota_definitiva'] = x['nota_definitiva']
+		if(x['retirado']):
+			periodo_info['nota_definitiva'] = "RET"
+			cantidad_materias_retiradas += 1
+
+		periodo_info['tipo_asignatura'] = tipo_asignatura.nombre
+
+		if(estado_periodo.estado == "finalizado"):
+			if(not x['retirado']):
+				promedio_general += periodo_info['nota_definitiva']
+				promedio_ponderado += periodo_info['nota_definitiva'] * periodo_info['unidad_credito']
+				cantidad_materias_ponderadas += periodo_info['unidad_credito']
+				cantidad_materias += 1
+				if(periodo_info['nota_definitiva'] < 10):
+					cantidad_materias_reprobadas += 1
+
+		if estado_periodo.estado == "activo" or estado_periodo.estado == "en inscripcion":
+			if not x['retirado']:
+				periodo_info['nota_definitiva'] = 'SC'
+
+		subPeriodo.append(periodo_info)  
+		periodo_info = {}
+
+	periodos.append(subPeriodo)
+
+	historial_estudiante['periodos'] = periodos
+	historial_estudiante['total_asignaturas'] = cantidad_materias+cantidad_materias_retiradas
+	historial_estudiante['asignaturas_reprobadas'] = cantidad_materias_reprobadas
+	historial_estudiante['asignaturas_retiradas'] = cantidad_materias_retiradas
+	historial_estudiante['asignaturas_aprobadas'] = cantidad_materias-cantidad_materias_reprobadas
+	if cantidad_materias == 0:
+		historial_estudiante['promedio_general'] = 0
+		historial_estudiante['promedio_ponderado'] = 0
+	else:
+		historial_estudiante['promedio_general'] = '{0:.2f}'.format(promedio_general/cantidad_materias)
+		historial_estudiante['promedio_ponderado'] = '{0:.2f}'.format(promedio_ponderado/cantidad_materias_ponderadas)
+
+	return Response(historial_estudiante, status=status.HTTP_200_OK)
+
+@api_view(['GET'])
+@permission_classes((IsAuthenticated, isAdministrativoOrAdmin))
+def informacion_usuarios_administrativo(request, cedula):
+	
+	obj_usuario = {}
+	if Estudiante.objects.filter(usuario__cedula=cedula).exists():
+		usuario = Estudiante.objects.get(usuario__cedula=cedula)
+
+		obj_usuario = {}
+		obj_usuario['tipo_postgrado'] = usuario.id_tipo_postgrado.tipo
+		obj_usuario['id_tipo_postgrado'] = usuario.id_tipo_postgrado.id
+		obj_usuario['direccion'] = usuario.direccion
+		obj_usuario['estado_estudiante'] = usuario.id_estado_estudiante.estado
+		obj_usuario['id_estado_estudiante'] = usuario.id_estado_estudiante.id
+		obj_usuario['tipo_usuario'] = 'estudiantes'
+
+	elif PersonalDocente.objects.filter(usuario__cedula=cedula).exists():
+		usuario = PersonalDocente.objects.get(usuario__cedula=cedula)
+		obj_usuario['tipo_usuario'] = 'docentes'
+		obj_usuario['coordinador'] = usuario.coordinador
+		obj_usuario['direccion'] = usuario.direccion
+		obj_usuario['rif'] = request.build_absolute_uri('/')+"media/"+str(usuario.rif)
+		obj_usuario['curriculum'] = request.build_absolute_uri('/')+"media/"+str(usuario.curriculum)
+		obj_usuario['permiso_ingresos'] = (
+			request.build_absolute_uri('/')+"media/"+str(usuario.permiso_ingresos)
+		)
+
+	else:
+		obj_usuario['tipo_usuario'] = 'otro'
+		return Response(obj_usuario, status=status.HTTP_400_BAD_REQUEST)
+
+	obj_usuario['first_name'] = usuario.usuario.first_name
+	obj_usuario['last_name'] = usuario.usuario.last_name
+	obj_usuario['segundo_nombre'] = usuario.usuario.segundo_nombre
+	obj_usuario['segundo_apellido'] = usuario.usuario.segundo_apellido
+	obj_usuario['cedula'] = usuario.usuario.cedula
+	obj_usuario['email'] = usuario.usuario.email
+	obj_usuario['celular'] = usuario.usuario.celular
+	obj_usuario['telefono_casa'] = usuario.usuario.telefono_casa
+	obj_usuario['telefono_trabajo'] = usuario.usuario.telefono_trabajo
+	obj_usuario['sexo'] = usuario.usuario.sexo
+	obj_usuario['nacionalidad'] = usuario.usuario.nacionalidad
+	obj_usuario['fecha_nacimiento'] = str(usuario.usuario.fecha_nacimiento)
+	obj_usuario['estado_civil'] = usuario.usuario.estado_civil
+	obj_usuario['foto'] = request.build_absolute_uri('/') + "media/" + str(usuario.usuario.foto)
+
+	return Response(obj_usuario, status=status.HTTP_200_OK)
+
+@api_view(['POST'])
+@permission_classes((IsAuthenticated, isDocenteOrAdmin))
+@csrf_exempt
+def cargar_notas(request):
+
+	body_unicode = request.body.decode('utf-8')
+	body = json.loads(body_unicode)
+
+	"""Body contiene un array con todos los estudiantes y su respectiva nota y la cedula del docente """
+
+	for estudiante in body['estudiantes']:
+		periodo_estudiante = PeriodoEstudiante.objects.get(periodo__tipo_postgrado__tipo=body['tipo_postgrado'], periodo__estado_periodo__estado='activo', estudiante__usuario__cedula=estudiante['cedula'])
+		estudiante_asignatura = EstudianteAsignatura.objects.filter(periodo_estudiante=periodo_estudiante, asignatura__codigo=body['asignatura'])
+
+		estudiante_asignatura.update(nota_definitiva=estudiante['nota_definitiva'])
+
+	return Response(status=status.HTTP_200_OK)
+
+
 #region EstudianteAsignatura 
 class EstudianteAsignaturaListCreateAPIView(ListCreateAPIView):
 	queryset = EstudianteAsignatura.objects.all()
 	serializer_class = EstudianteAsignaturaListSerializer
 	permission_classes = [EsEstudianteOAdministrador]
-
-	@csrf_exempt
-	def crear_estudiante_asignatura(request, cedula):
-		response_data = {}
-		if (request.method == 'POST'):
-
-			body_unicode = request.body.decode('utf-8')
-			body = json.loads(body_unicode)
-
-			# En el list 'value' se encuentran los IDs de las asignaturas a agregar
-			asignaturas_id = body['value']
-			# print(asignaturas_id)
-
-			estudiante = Estudiante.objects.get(usuario__cedula=cedula)
-			# print(estudiante.id_tipo_postgrado)
-
-			periodo = Periodo.objects.get(estado_periodo_id__estado='en inscripcion',
-										  tipo_postgrado_id__tipo=estudiante.id_tipo_postgrado)
-			# print(periodo)
-
-			periodo_estudiante = PeriodoEstudiante(periodo=periodo, estudiante=estudiante, pagado=False)
-			periodo_estudiante.save()
-
-			for x in asignaturas_id:
-				asignatura = Asignatura.objects.get(id=x)
-				# print(asignatura)
-				estudiante_asignatura = EstudianteAsignatura(periodo_estudiante=periodo_estudiante,
-															 asignatura=asignatura,
-															 nota_definitiva=0)
-				# print(estudiante_asignatura)
-				estudiante_asignatura.save()
-
-			response_data['mensaje'] = 'Inscripción realizada exitosamente.'
-			return HttpResponse(json.dumps(response_data), content_type="application/json", status=200)
-
-		response_data['Error'] = 'No tiene privilegios para realizar esta acción'
-		return HttpResponse(json.dumps(response_data), content_type="application/json", status=401)
-
-	@csrf_exempt
-	def modificar_estudiante_asignatura(request, cedula):
-		response_data = {}
-		if (request.method == 'POST'):
-
-			body_unicode = request.body.decode('utf-8')
-			body = json.loads(body_unicode)
-
-			# En el list 'value' se encuentran los IDs de las asignaturas a agregar
-			asignaturas_id = body['value']
-
-			estudiante = Estudiante.objects.get(usuario__cedula=cedula)
-
-			periodo = Periodo.objects.get(estado_periodo_id__estado='en inscripcion',
-										  tipo_postgrado_id__tipo=estudiante.id_tipo_postgrado)
-
-			# Si ya existe no hago nada, sino lo creo.
-			if not PeriodoEstudiante.objects.filter(periodo=periodo, estudiante=estudiante).exists():
-				periodo_estudiante = PeriodoEstudiante(periodo=periodo, estudiante=estudiante, pagado=False)
-				periodo_estudiante.save()
-			else:
-				periodo_estudiante = PeriodoEstudiante.objects.get(periodo=periodo, estudiante=estudiante)
-
-			EstudianteAsignatura.objects.filter(periodo_estudiante=periodo_estudiante).delete()
-
-			for x in asignaturas_id:
-				asignatura = Asignatura.objects.get(id=x)
-				estudiante_asignatura = EstudianteAsignatura(periodo_estudiante=periodo_estudiante,
-															 asignatura=asignatura,
-															 nota_definitiva=0)
-				estudiante_asignatura.save()
-
-			response_data['mensaje'] = 'Inscripción realizada exitosamente.'
-			return HttpResponse(json.dumps(response_data), content_type="application/json", status=200)
-
-		response_data['Error'] = 'No tiene privilegios para realizar esta acción'
-		return HttpResponse(json.dumps(response_data), content_type="application/json", status=401)
 
 
 class EstudianteAsignaturaDetailAPIView(RetrieveAPIView):
@@ -508,138 +643,6 @@ class EstudianteAsignaturaDetailAPIView(RetrieveAPIView):
 	serializer_class = EstudianteAsignaturaDetailSerializer
 	lookup_field = 'estudiante__usuario__cedula'
 
-	def obtener_informacion_historial(request, cedula):
-		if(request.method == "GET"):
-
-			estudiante_asignatura = EstudianteAsignatura.objects.filter(periodo_estudiante__estudiante__usuario__cedula=cedula)
-
-			lista_estudiante_asignatura = [entry for entry in estudiante_asignatura.values()]
-
-			historial_estudiante = {}
-			periodos = []
-			subPeriodo = []
-			periodo_info = {}
-			promedio_general = 0
-			promedio_ponderado = 0
-			cantidad_materias = 0
-			cantidad_materias_ponderadas = 0
-			cantidad_materias_reprobadas = 0
-			cantidad_materias_retiradas = 0
-
-			for x in lista_estudiante_asignatura:
-				if subPeriodo == []:
-					id_periodo_estudiante = x['periodo_estudiante_id']
-
-				if id_periodo_estudiante != x['periodo_estudiante_id']:
-					periodos.append(subPeriodo)
-					subPeriodo = []
-					id_periodo_estudiante = x['periodo_estudiante_id']
-
-				periodo_estudiante = PeriodoEstudiante.objects.get(id=id_periodo_estudiante)
-				periodo = Periodo.objects.get(id=periodo_estudiante.periodo_id)
-				estado_periodo = EstadoPeriodo.objects.get(id=periodo.estado_periodo_id)
-				asignatura = Asignatura.objects.get(id=x['asignatura_id'])
-				tipo_asignatura = TipoAsignatura.objects.get(id=asignatura.tipo_asignatura_id)
-
-				periodo_info['periodo'] = periodo.descripcion
-				periodo_info['asignatura_nombre'] = asignatura.nombre
-				periodo_info['asignatura_codigo'] = asignatura.codigo
-				periodo_info['unidad_credito'] = asignatura.unidad_credito
-				periodo_info['nota_definitiva'] = x['nota_definitiva']
-				if(x['retirado']):
-					periodo_info['nota_definitiva'] = "RET"
-					cantidad_materias_retiradas += 1
-
-				periodo_info['tipo_asignatura'] = tipo_asignatura.nombre
-
-				if(estado_periodo.estado == "finalizado"):
-					if(not x['retirado']):
-						promedio_general += periodo_info['nota_definitiva']
-						promedio_ponderado += periodo_info['nota_definitiva'] * periodo_info['unidad_credito']
-						cantidad_materias_ponderadas += periodo_info['unidad_credito']
-						cantidad_materias += 1
-						if(periodo_info['nota_definitiva'] < 10):
-							cantidad_materias_reprobadas += 1
-
-				if estado_periodo.estado == "activo" or estado_periodo.estado == "en inscripcion":
-					if not x['retirado']:
-						periodo_info['nota_definitiva'] = 'SC'
-
-				subPeriodo.append(periodo_info)  
-				periodo_info = {}
-
-			periodos.append(subPeriodo)
-
-			historial_estudiante['periodos'] = periodos
-			historial_estudiante['total_asignaturas'] = cantidad_materias+cantidad_materias_retiradas
-			historial_estudiante['asignaturas_reprobadas'] = cantidad_materias_reprobadas
-			historial_estudiante['asignaturas_retiradas'] = cantidad_materias_retiradas
-			historial_estudiante['asignaturas_aprobadas'] = cantidad_materias-cantidad_materias_reprobadas
-			if cantidad_materias == 0:
-				historial_estudiante['promedio_general'] = 0
-				historial_estudiante['promedio_ponderado'] = 0
-			else:
-				historial_estudiante['promedio_general'] = '{0:.2f}'.format(promedio_general/cantidad_materias)
-				historial_estudiante['promedio_ponderado'] = '{0:.2f}'.format(promedio_ponderado/cantidad_materias_ponderadas)
-
-			return HttpResponse(json.dumps(historial_estudiante), content_type="application/json")
-
-		response_data = {}
-		response_data['Error'] = 'No tiene privilegios para realizar esta acción.'
-		return HttpResponse(json.dumps(response_data), content_type="application/json", status=401)
-
-	def informacion_usuarios_administrativo(request, cedula):
-		if(request.method == "GET"):
-			obj_usuario = {}
-			if Estudiante.objects.filter(usuario__cedula=cedula).exists():
-				usuario = Estudiante.objects.get(usuario__cedula=cedula)
-
-				obj_usuario = {}
-				obj_usuario['tipo_postgrado'] = usuario.id_tipo_postgrado.tipo
-				obj_usuario['id_tipo_postgrado'] = usuario.id_tipo_postgrado.id
-				obj_usuario['direccion'] = usuario.direccion
-				obj_usuario['estado_estudiante'] = usuario.id_estado_estudiante.estado
-				obj_usuario['id_estado_estudiante'] = usuario.id_estado_estudiante.id
-				obj_usuario['tipo_usuario'] = 'estudiantes'
-
-			elif PersonalDocente.objects.filter(usuario__cedula=cedula).exists():
-				usuario = PersonalDocente.objects.get(usuario__cedula=cedula)
-				obj_usuario['tipo_usuario'] = 'docentes'
-				obj_usuario['coordinador'] = usuario.coordinador
-				obj_usuario['direccion'] = usuario.direccion
-				obj_usuario['rif'] = request.build_absolute_uri('/')+"media/"+str(usuario.rif)
-				obj_usuario['curriculum'] = request.build_absolute_uri('/')+"media/"+str(usuario.curriculum)
-				obj_usuario['permiso_ingresos'] = (
-					request.build_absolute_uri('/')+"media/"+str(usuario.permiso_ingresos)
-				)
-
-
-			else:
-				obj_usuario['tipo_usuario'] = 'otro'
-				return HttpResponse(json.dumps(obj_usuario), content_type="application/json", status=400)
-
-
-			obj_usuario['first_name'] = usuario.usuario.first_name
-			obj_usuario['last_name'] = usuario.usuario.last_name
-			obj_usuario['segundo_nombre'] = usuario.usuario.segundo_nombre
-			obj_usuario['segundo_apellido'] = usuario.usuario.segundo_apellido
-			obj_usuario['cedula'] = usuario.usuario.cedula
-			obj_usuario['email'] = usuario.usuario.email
-			obj_usuario['celular'] = usuario.usuario.celular
-			obj_usuario['telefono_casa'] = usuario.usuario.telefono_casa
-			obj_usuario['telefono_trabajo'] = usuario.usuario.telefono_trabajo
-			obj_usuario['sexo'] = usuario.usuario.sexo
-			obj_usuario['nacionalidad'] = usuario.usuario.nacionalidad
-			obj_usuario['fecha_nacimiento'] = str(usuario.usuario.fecha_nacimiento)
-			obj_usuario['estado_civil'] = usuario.usuario.estado_civil
-			obj_usuario['foto'] = request.build_absolute_uri('/') + "media/" + str(usuario.usuario.foto)
-
-			return HttpResponse(json.dumps(obj_usuario), content_type="application/json")
-
-
-		response_data = {}
-		response_data['Error'] = 'No tiene privilegios para realizar esta acción.'
-		return HttpResponse(json.dumps(response_data), content_type="application/json", status=401)
 
 
 class EstudianteAsignaturaUpdateAPIView(RetrieveUpdateAPIView):
@@ -647,27 +650,6 @@ class EstudianteAsignaturaUpdateAPIView(RetrieveUpdateAPIView):
 	serializer_class = EstudianteAsignaturaDetailSerializer
 	permission_classes = [EsDocenteOAdministrador]
 
-	@csrf_exempt
-	def cargar_notas(request):
-		response_data = {}
-
-		if(request.method == "POST"):
-
-			body_unicode = request.body.decode('utf-8')
-			body = json.loads(body_unicode)
-
-			"""Body contiene un array con todos los estudiantes y su respectiva nota y la cedula del docente """
-
-			for estudiante in body['estudiantes']:
-				periodo_estudiante = PeriodoEstudiante.objects.get(periodo__tipo_postgrado__tipo=body['tipo_postgrado'], periodo__estado_periodo__estado='activo', estudiante__usuario__cedula=estudiante['cedula'])
-				estudiante_asignatura = EstudianteAsignatura.objects.filter(periodo_estudiante=periodo_estudiante, asignatura__codigo=body['asignatura'])
-
-				estudiante_asignatura.update(nota_definitiva=estudiante['nota_definitiva'])
-
-			return HttpResponse(json.dumps({"status": "OK"}), content_type="application/json", status=200)
-
-		response_data['Error'] = 'No tiene privilegios para realizar esta accion'      
-		return HttpResponse(json.dumps(response_data), content_type="application/json", status=405)
 
 class EstudianteAsignaturaDeleteAPIView(DestroyAPIView):
 	queryset = EstudianteAsignatura.objects.all()
@@ -739,7 +721,6 @@ class AsignaturaTipoPostgradoUpdateAPIView(RetrieveUpdateAPIView):
 	queryset = AsignaturaTipoPostgrado.objects.all()
 	serializer_class = AsignaturaTipoPostgradoDetailSerializer
 	permission_classes = [IsAdminUser]
-
 
 class AsignaturaTipoPostgradoDeleteAPIView(DestroyAPIView):
 	queryset = AsignaturaTipoPostgrado.objects.all()

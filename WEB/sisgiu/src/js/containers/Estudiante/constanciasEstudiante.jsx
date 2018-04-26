@@ -1,7 +1,7 @@
 //Dependencies
 import React,{Component} from 'react';
 import { connect } from 'react-redux';
-import { Card, Button, CardTitle, CardText, Row, Col, Alert } from 'reactstrap';
+import { Card, Button, CardTitle, Row, Col } from 'reactstrap';
 import {host} from '../../components/globalVariables';
 import request from 'superagent';
 import {bindActionCreators} from 'redux';

@@ -292,7 +292,7 @@ def get_asignaturas_a_inscribir(request, cedula):
 
 
 @api_view(['GET'])
-@permission_classes((IsAuthenticated, isEstudianteOrAdmin))
+@permission_classes((IsAuthenticated, isAdministrativoOrAdmin))
 def get_asignaturas_actuales_estudiante(request, cedula):
 
 	estudiante = Estudiante.objects.get(usuario__cedula=cedula)
@@ -308,7 +308,7 @@ def get_asignaturas_actuales_estudiante(request, cedula):
 
 
 @api_view(['GET'])
-@permission_classes((IsAuthenticated, isEstudianteOrAdmin))
+@permission_classes((IsAuthenticated, isAdministrativoOrAdmin))
 def get_asignaturas_actuales(request, periodo):
 
 	docente_asignatura = DocenteAsignatura.objects.filter(periodo_id=periodo).values()

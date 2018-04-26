@@ -277,7 +277,8 @@ class AdministradorDetailAPIView(RetrieveAPIView):
             template = get_template("email_template_lost.html")
             html = template.render(
                 {
-                    "url":url
+                    "url":url,
+                    "nombre": member['first_name']
                 }
             )
 

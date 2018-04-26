@@ -52,7 +52,7 @@ def send_welcome_mail(modulo, user):
 			"La contraseña para acceder al sistema es su número de cédula.\n"
 			"Por favor ingrese al siguiente enlace " + host_react +
 			" y modifiquela a la brevedad dirigiéndose a la seccion 'Perfil'.\n\n\n"
-			"Saludos,\nEquipo SISGIU\n"
+			"Saludos,\nGrupo SISGIU\n"
 			)
 
 	try:

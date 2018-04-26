@@ -27,6 +27,12 @@ from relacion.views import (
     programacion_academica,
     get_all_docentes,
     crearDocenteAsignatura,
+    crear_estudiante_asignatura,
+    modificar_estudiante_asignatura,
+    obtener_informacion_historial,
+    informacion_usuarios_administrativo,
+    cargar_notas,
+
     )
 
 
@@ -67,14 +73,25 @@ urlpatterns = format_suffix_patterns([
 
     # EstudianteAsignatura
     url(r'^api/estudianteAsignatura/$', EstudianteAsignaturaListCreateAPIView.as_view(), name='EstudianteAsignatura-list-create'),
-    url(r'^api/estudianteAsignatura/inscribir/(?P<cedula>[0-9]{6,8})/$', EstudianteAsignaturaListCreateAPIView.crear_estudiante_asignatura, name='EstudianteAsignatura-create'),
-    url(r'^api/estudianteAsignatura/modificarInscripcion/(?P<cedula>[0-9]{6,8})/$', EstudianteAsignaturaListCreateAPIView.modificar_estudiante_asignatura, name='EstudianteAsignatura-update'),
     url(r'^api/estudianteAsignatura/(?P<estudiante__usuario__cedula>\d+)/$', EstudianteAsignaturaDetailAPIView.as_view(), name='EstudianteAsignatura-detail'),
-    url(r'^api/estudianteAsignatura/(?P<cedula>[0-9]{6,8})/historial/$', EstudianteAsignaturaDetailAPIView.obtener_informacion_historial, name='historial-academico-info'),
-    url(r'^api/informacionUsuariosAdministrativo/(?P<cedula>[0-9]{6,8})/$', EstudianteAsignaturaDetailAPIView.informacion_usuarios_administrativo, name='usuarios-administrativo-info'),
     url(r'^api/estudianteAsignatura/(?P<pk>\d+)/edit/$', EstudianteAsignaturaUpdateAPIView.as_view(), name='EstudianteAsignatura-update'),
-    url(r'^api/estudianteAsignatura/cargarNotas/$', EstudianteAsignaturaUpdateAPIView.cargar_notas, name='EstudianteAsignatura-cargar-notas'),
     url(r'^api/estudianteAsignatura/(?P<pk>\d+)/delete/$', EstudianteAsignaturaDeleteAPIView.as_view(), name='EstudianteAsignatura-delete'),
+
+
+    #Inscribe un estudiante en el periodo "en inscripcion" de su tipo de postgrado
+    url(r'^api/estudianteAsignatura/inscribir/(?P<cedula>[0-9]{6,8})/$', crear_estudiante_asignatura, name='inscribir'),
+    
+    #Permite al personal administrativo editar las asignaturas inscritas por un docente
+    url(r'^api/estudianteAsignatura/modificarInscripcion/(?P<cedula>[0-9]{6,8})/$', modificar_estudiante_asignatura, name='modificar-asignaturas'),
+    
+    #Obtiene el historial academico de un estudiante tomando en cuenta retirados y materias SC
+    url(r'^api/estudianteAsignatura/(?P<cedula>[0-9]{6,8})/historial/$', obtener_informacion_historial, name='historial-academico-info'),
+    
+    # Muestra toda la informacion disponible de un usuario (docente o estudiante), incluido el historial. 
+    url(r'^api/informacionUsuariosAdministrativo/(?P<cedula>[0-9]{6,8})/$', informacion_usuarios_administrativo, name='usuarios-administrativo-info'),
+    
+    #Actualiza la calificacion de todos los estudiantes de un docente para una asignatura
+    url(r'^api/estudianteAsignatura/cargarNotas/$', cargar_notas, name='EstudianteAsignatura-cargar-notas'),
 
 
     # EstudianteTramite
