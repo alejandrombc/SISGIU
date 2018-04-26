@@ -25,6 +25,10 @@ from usuario.views import (
     AdministrativoUpdateAPIView,
     AdministrativoDeleteAPIView,
     Reportes,
+    get_usuarios,
+    send_mail_forgot,
+    get_usr_cedula,
+    update_photo
     )
 
 
@@ -32,22 +36,32 @@ urlpatterns = format_suffix_patterns([
 
     # Usuarios
     url(r'^api/usuarios/$', AdministradorListCreateAPIView.as_view(), name='usuario-list-create'),
-    url(r'^api/usuarios/(?P<modulo>[\w\-]+)/$',
-        AdministradorListCreateAPIView.get_usuarios, name='usuario-list'),
     url(r'^api/usuarios/cedula/(?P<cedula>\d+)/$',
         AdministradorDetailAPIView.as_view(), name='usuario-detail'),
-    url(r'^api/usuarios/id/(?P<id_usr>[0-9]{1})/$',
-        AdministradorDetailAPIView.get_usr_id, name='usuario-detail'),
     url(r'^api/usuarios/(?P<cedula>\d+])/edit/$',
         AdministradorUpdateAPIView.as_view(), name='usuario-update'),
     url(r'^api/usuarios/(?P<username>[\w\-]+)/delete/$',
         AdministradorDeleteAPIView.as_view(), name='usuario-delete'),
+
+    #Obtiene una lista de usuarios dependiendo su modulo
+    url(r'^api/usuarios/(?P<modulo>[\w\-]+)/$',
+        get_usuarios, name='usuario-list'),
+    
+
+    # url(r'^api/usuarios/id/(?P<id_usr>[0-9]{1})/$',
+    #     AdministradorDetailAPIView.get_usr_id, name='usuario-detail'),
+    
+    #Envia un correo para restablecer contrasena
     url(r'^api/usuarios/(?P<cedula>\d+)/recuperarContrasena/$',
-        AdministradorDetailAPIView.send_mail, name='usuario-olvido'),
+        send_mail_forgot, name='usuario-olvido'),
+
+    #Permite cambiar la contrasena usando el link de restablecimiento
     url(r'^api/usuarios/(?P<cedula>\d+)/cambiarContrasena/$',
-        AdministradorDetailAPIView.get_usr_cedula, name='usuario-detail'),
+        get_usr_cedula, name='usuario-detail'),
+
+    #Actualiza la foto de un usuario autenticado
     url(r'^api/usuarios/(?P<cedula>\d+)/cambiarFoto/$',
-        AdministradorDetailAPIView.update_photo, name='usuario-detail'),
+        update_photo, name='usuario-detail'),
 
     # Admin
     url(r'^api/administradores/$',

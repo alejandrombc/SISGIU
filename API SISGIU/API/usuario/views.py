@@ -1,3 +1,4 @@
+#region imports
 import json
 import os
 import datetime
@@ -9,11 +10,13 @@ from django.views.decorators.csrf import csrf_exempt
 from rest_framework.permissions import (
     IsAdminUser,
     IsAuthenticated,
-    IsAuthenticatedOrReadOnly,)
+    IsAuthenticatedOrReadOnly,
+    AllowAny)
 
 from .permissions import (
     isOwnerOrReadOnly,
-    IsListOrCreate,)
+    IsListOrCreate,
+    )
 
 from usuario.models import (
     Usuario,
@@ -34,6 +37,7 @@ from usuario.serializers import (
     DocenteDetailSerializer,
     AdministrativoSerializer,
     AdministrativoDetailSerializer)
+
 from relacion.models import (
     EstudianteAsignatura,
     PeriodoEstudiante,
@@ -53,99 +57,189 @@ from rest_framework.generics import (
     RetrieveUpdateAPIView,
     DestroyAPIView,
     )
+from rest_framework.decorators import permission_classes, api_view
+from usuario.permissions import isDocenteOrAdmin, isEstudianteOrAdmin, isAdministrativoOrAdmin
+from rest_framework import status
+from rest_framework.response import Response
+#endregion
 
 
-"""
-Usuario
-"""
+@api_view(['GET'])
+@permission_classes((IsAuthenticated, IsAdminUser))
+def get_usuarios(request, modulo):
+
+    try:
+        response_data = []
+        if (modulo == 'estudiantes'):
+            member = Estudiante.objects.all().values()
+            lista_estudiantes = [entry for entry in member]
+
+            for estudiante in lista_estudiantes:
+                usuario = Usuario.objects.filter(id=estudiante['usuario_id']).values()[0]
+                tipo_postgrado = TipoPostgrado.objects.filter(
+                    id=estudiante['id_tipo_postgrado_id']).values()[0]
+                estado_estudiante = EstadoEstudiante.objects.filter(
+                    id=estudiante['id_estado_estudiante_id']).values()[0]
+
+                usuario['tipo_postgrado'] = tipo_postgrado['tipo']
+                usuario['estado_estudiante'] = estado_estudiante['estado']
+                usuario['id_tipo_postgrado'] = tipo_postgrado['id']
+                usuario['id_estado_estudiante'] = estado_estudiante['id']
+                usuario['direccion'] = estudiante['direccion']
+                usuario['foto'] = request.build_absolute_uri('/')+"media/"+usuario['foto']
+
+                response_data.append(usuario)
+
+        elif modulo == 'docentes':
+            member = PersonalDocente.objects.all().values()
+            lista_docentes = [entry for entry in member]
+
+            for docente in lista_docentes:
+                usuario = Usuario.objects.filter(id=docente['usuario_id']).values()[0]
+
+                usuario['direccion'] = docente['direccion']
+                usuario['rif'] = request.build_absolute_uri('/')+"media/"+docente['rif']
+                usuario['curriculum'] = request.build_absolute_uri('/')+"media/"+docente['curriculum']
+                usuario['permiso_ingresos'] = (
+                    request.build_absolute_uri('/')+"media/"+docente['permiso_ingresos']
+                )
+                usuario['coordinador'] = docente['coordinador']
+                usuario['foto'] = request.build_absolute_uri('/')+"media/"+usuario['foto']
+
+                response_data.append(usuario)
+
+        elif modulo == 'administradores':
+            member = Usuario.objects.filter(is_superuser=True).values()
+            lista_usuarios = [entry for entry in member]
+
+            for usuario in lista_usuarios:
+                usuario['foto'] = request.build_absolute_uri('/')+"media/"+usuario['foto']
+                response_data.append(usuario)
+
+        elif modulo == 'administrativo':
+            member = PersonalAdministrativo.objects.all().values()
+            lista_estudiantes = [entry for entry in member]
+
+            for administrativo in lista_estudiantes:
+                usuario = Usuario.objects.filter(id=administrativo['usuario_id']).values()[0]
+                usuario['foto'] = request.build_absolute_uri('/')+"media/"+usuario['foto']
+
+                response_data.append(usuario)
+
+        else:
+            response_data = {}
+            response_data['Error'] = "No existe el modulo especificado."
+            return Response(response_data, status=status.HTTP_400_BAD_REQUEST)
+
+        for usuario in response_data:
+            del usuario['is_staff']
+            del usuario['is_superuser']
+            del usuario['date_joined']
+            del usuario['id']
+            del usuario['is_active']
+
+        return Response(response_data, status=status.HTTP_200_OK)
+
+    except:
+        response_data = {}
+        response_data['Error'] = "Ha ocurrido un error obteniendo la lista de usuarios."
+        return Response(response_data, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+@api_view(['GET'])
+@permission_classes((IsAuthenticated, IsAdminUser))
+def get_usr_id(request, id_usr):
+    member = Usuario.objects.filter(id=id_usr)
+    list_result = [entry for entry in member.values()]
+
+    # Codigo para cambiar el username de un administrador.
+    """
+    user = Usuario.objects.get(id=id_usr)
+    user.username = <cedula>
+    user.cedula = <cedula>
+    user.save()
+    """
+    return Response(list_result, status=status.HTTP_200_OK)
 
 
+@api_view(['GET'])
+@permission_classes((AllowAny, ))
+def send_mail_forgot(request, cedula):
+
+    member = Usuario.objects.filter(username=cedula)
+    if member:
+        member = member.values()[0]
+        correo = member['email']
+        password = member['password']
+
+        url = host_react + "recuperarContrasena/"+cedula+"/"+password
+
+        template = get_template("email_template_lost.html")
+        html = template.render(
+            {
+                "url":url,
+                "nombre": member['first_name']
+            }
+        )
+
+        body = "Haga click en el siguiente enlace " + url + " para restablecer su contraseña"
+        send_mail('Recuperación de contraseña', body, 'sisgiu.fau@gmail.com', [correo], html_message=html)
+
+        return Response(status=status.HTTP_200_OK)
+
+
+    return Response(status=status.HTTP_404_NOT_FOUND)
+
+@api_view(['POST', 'GET'])
+@permission_classes((AllowAny, ))
+@csrf_exempt
+def get_usr_cedula(request, cedula):
+
+    if(request.method == "POST"):
+        body_unicode = request.body.decode('utf-8')
+        body = json.loads(body_unicode)
+        cedula = body['cedula']
+        password = body['password']
+        nueva_contrasena = body['nueva_contrasena']
+
+        user = Usuario.objects.get(cedula=cedula)
+        if(user):
+            if(password == user.password):
+                user.set_password(nueva_contrasena)
+                user.save()
+                status_msg = status.HTTP_200_OK
+            else:
+                status_msg = status.HTTP_404_NOT_FOUND
+        else:
+            status_msg = status.HTTP_404_NOT_FOUND
+
+        return Response(status=status_msg)
+
+    member = Usuario.objects.filter(username=cedula)
+    list_result = {"password": member.values()[0]['password']}
+
+    return Response(list_result, status=status.HTTP_200_OK)
+
+@api_view(['POST'])
+@permission_classes((IsAuthenticated, ))
+@csrf_exempt
+def update_photo(request, cedula):
+    username = request.POST.get("username")
+    user = Usuario.objects.get(username=username)
+    foto = request.FILES['foto']
+    # Replace old photo with new one,
+    if "sisgiu" not in user.foto.path and "no_avatar" not in user.foto.path:
+        os.remove(user.foto.path)
+    user.foto = foto
+    user.save()
+    return Response(status=status.HTTP_200_OK)
+
+
+
+#region Administrador
 class AdministradorListCreateAPIView(ListCreateAPIView):
     queryset = Usuario.objects.all()
     serializer_class = AdministradorListSerializer
     permission_classes = [IsAdminUser]
-
-    def get_usuarios(request, modulo):
-
-        try:
-            response_data = []
-            if (modulo == 'estudiantes'):
-                member = Estudiante.objects.all().values()
-                lista_estudiantes = [entry for entry in member]
-
-                for estudiante in lista_estudiantes:
-                    usuario = Usuario.objects.filter(id=estudiante['usuario_id']).values()[0]
-                    tipo_postgrado = TipoPostgrado.objects.filter(
-                        id=estudiante['id_tipo_postgrado_id']).values()[0]
-                    estado_estudiante = EstadoEstudiante.objects.filter(
-                        id=estudiante['id_estado_estudiante_id']).values()[0]
-
-                    usuario['tipo_postgrado'] = tipo_postgrado['tipo']
-                    usuario['estado_estudiante'] = estado_estudiante['estado']
-                    usuario['id_tipo_postgrado'] = tipo_postgrado['id']
-                    usuario['id_estado_estudiante'] = estado_estudiante['id']
-                    usuario['direccion'] = estudiante['direccion']
-                    usuario['foto'] = request.build_absolute_uri('/')+"media/"+usuario['foto']
-
-                    response_data.append(usuario)
-
-            elif modulo == 'docentes':
-                member = PersonalDocente.objects.all().values()
-                lista_docentes = [entry for entry in member]
-
-                for docente in lista_docentes:
-                    usuario = Usuario.objects.filter(id=docente['usuario_id']).values()[0]
-
-                    usuario['direccion'] = docente['direccion']
-                    usuario['rif'] = request.build_absolute_uri('/')+"media/"+docente['rif']
-                    usuario['curriculum'] = request.build_absolute_uri('/')+"media/"+docente['curriculum']
-                    usuario['permiso_ingresos'] = (
-                        request.build_absolute_uri('/')+"media/"+docente['permiso_ingresos']
-                    )
-                    usuario['coordinador'] = docente['coordinador']
-                    usuario['foto'] = request.build_absolute_uri('/')+"media/"+usuario['foto']
-
-                    response_data.append(usuario)
-
-            elif modulo == 'administradores':
-                member = Usuario.objects.filter(is_superuser=True).values()
-                lista_usuarios = [entry for entry in member]
-
-                for usuario in lista_usuarios:
-                    usuario['foto'] = request.build_absolute_uri('/')+"media/"+usuario['foto']
-                    response_data.append(usuario)
-
-            elif modulo == 'administrativo':
-                member = PersonalAdministrativo.objects.all().values()
-                lista_estudiantes = [entry for entry in member]
-
-                for administrativo in lista_estudiantes:
-                    usuario = Usuario.objects.filter(id=administrativo['usuario_id']).values()[0]
-                    usuario['foto'] = request.build_absolute_uri('/')+"media/"+usuario['foto']
-
-                    response_data.append(usuario)
-
-            else:
-                response_data = {}
-                response_data['Error'] = "No existe el modulo especificado."
-                return HttpResponse(json.dumps(response_data, default=date_handler),
-                                    content_type="application/json", status=400)
-
-            for usuario in response_data:
-                del usuario['is_staff']
-                del usuario['is_superuser']
-                del usuario['date_joined']
-                del usuario['id']
-                del usuario['is_active']
-
-            return HttpResponse(json.dumps(response_data, default=date_handler),
-                                content_type="application/json", status=200)
-
-        except:
-            response_data = {}
-            response_data['Error'] = "Ha ocurrido un error obteniendo la lista de usuarios."
-            return HttpResponse(json.dumps(response_data, default=date_handler),
-                                content_type="application/json", status=500)
 
 
 class AdministradorDetailAPIView(RetrieveAPIView):
@@ -153,54 +247,6 @@ class AdministradorDetailAPIView(RetrieveAPIView):
     serializer_class = AdministradorDetailSerializer
     lookup_field = 'cedula'
     permission_classes = [IsAdminUser]
-
-    def get_usr_id(request, id_usr):
-        if not request.user.is_anonymous:
-            member = Usuario.objects.filter(id=id_usr)
-            list_result = [entry for entry in member.values()]
-
-            # Codigo para cambiar el username de un administrador.
-            """
-            user = Usuario.objects.get(id=id_usr)
-            user.username = 24635907
-            user.cedula = 24635907
-            user.save()
-            """
-
-            return HttpResponse(json.dumps(list_result, default=date_handler),
-                                content_type="application/json")
-        response_data = {}
-        response_data['Error'] = 'No tiene privilegios para realizar esta accion'
-        return HttpResponse(json.dumps(response_data), content_type="application/json", status=401)
-
-    @csrf_exempt
-    def get_usr_cedula(request, cedula):
-
-        if(request.method == "POST"):
-            body_unicode = request.body.decode('utf-8')
-            body = json.loads(body_unicode)
-            cedula = body['cedula']
-            password = body['password']
-            nueva_contrasena = body['nueva_contrasena']
-
-            user = Usuario.objects.get(cedula=cedula)
-            if(user):
-                if(password == user.password):
-                    user.set_password(nueva_contrasena)
-                    user.save()
-                    status = 200
-                else:
-                    status = 404
-            else:
-                status = 404
-
-            return HttpResponse(json.dumps({"Recuperacion": "OK"}, default=date_handler),
-                                content_type="application/json", status=status)
-
-        member = Usuario.objects.filter(username=cedula)
-        list_result = {"password": member.values()[0]['password']}
-
-        return HttpResponse(json.dumps(list_result, default=date_handler), content_type="application/json")
 
     def get_admin(request, cedula):
         member = Usuario.objects.filter(username=cedula, is_superuser=True)
@@ -236,65 +282,10 @@ class AdministradorDetailAPIView(RetrieveAPIView):
         return HttpResponse(json.dumps({"Error": "Ese usuario no es un administrador"}, default=date_handler),
                             content_type="application/json", status=404)
 
-    @csrf_exempt
-    def update_photo(request, cedula):
-        if(request.method == "POST"):
-            username = request.POST.get("username")
-            user = Usuario.objects.get(username=username)
-            if(username == cedula or user['is_superuser']):
-                foto = request.FILES['foto']
-                if(user):
-                    # Replace old video with new one,
-                    # and remove original unconverted video and original copy of new video.
-                    if "sisgiu" not in user.foto.path and "no_avatar" not in user.foto.path:
-                        os.remove(user.foto.path)
-                    user.foto = foto
-                    user.save()
-                    return HttpResponse(json.dumps({"Estatus": "OK"}, default=date_handler),
-                                        content_type="application/json", status=200)
-
-            return HttpResponse(json.dumps({"Error": "No tiene privilegios para realizar esta accion"},
-                                default=date_handler), content_type="application/json", status=403)
-
-        return HttpResponse(json.dumps({"Error": "Metodo no permitido"}, default=date_handler),
-                            content_type="application/json", status=405)
-
     def get_all_admin(request):
         member = Usuario.objects.filter(is_superuser=True)
         list_result = member.values()[0]
         return HttpResponse(json.dumps(list_result, default=date_handler), content_type="application/json")
-
-    def send_mail(request, cedula):
-
-        member = Usuario.objects.filter(username=cedula)
-        if member:
-            member = member.values()[0]
-            correo = member['email']
-            password = member['password']
-
-            url = host_react + "recuperarContrasena/"+cedula+"/"+password
-
-            template = get_template("email_template_lost.html")
-            html = template.render(
-                {
-                    "url":url,
-                    "nombre": member['first_name']
-                }
-            )
-
-            body = "Haga click en el siguiente enlace " + url + " para restablecer su contraseña"
-
-            send_mail('Recuperación de contraseña', body, 'sisgiu.fau@gmail.com', [correo], html_message=html)
-
-            response_data = {}
-            response_data['status'] = 'Correo enviado'
-
-            return HttpResponse(json.dumps(response_data), content_type="application/json", status=200)
-
-        response_data = {}
-        response_data['Error'] = 'Cedula no encontrada'
-
-        return HttpResponse(json.dumps(response_data), content_type="application/json", status=404)
 
 
 class AdministradorUpdateAPIView(RetrieveUpdateAPIView):
@@ -309,13 +300,10 @@ class AdministradorDeleteAPIView(DestroyAPIView):
     serializer_class = AdministradorDetailSerializer
     lookup_field = 'username'
     permission_classes = [IsAdminUser]
+#endregion
 
 
-"""
-Estudiante
-"""
-
-
+#region Estudiante
 class EstudianteListCreateAPIView(ListCreateAPIView):
     queryset = Estudiante.objects.all()
     serializer_class = EstudianteSerializer
@@ -407,12 +395,10 @@ class EstudianteDeleteAPIView(DestroyAPIView):
     serializer_class = EstudianteDetailSerializer
     permission_classes = [IsAdminUser]
     lookup_field = 'usuario__cedula'
-
-"""
-TipoPostgrado
-"""
+#endregion
 
 
+#region TipoPostgrado
 class TipoPostgradoListCreateAPIView(ListCreateAPIView):
     queryset = TipoPostgrado.objects.all()
     serializer_class = TipoPostgradoSerializer
@@ -435,13 +421,10 @@ class TipoPostgradoDeleteAPIView(DestroyAPIView):
     queryset = TipoPostgrado.objects.all()
     serializer_class = TipoPostgradoSerializer
     permission_classes = [IsAdminUser]
+#endregion
 
 
-"""
-EstadoEstudiante
-"""
-
-
+#region EstadoEstudiante
 class EstadoEstudianteListCreateAPIView(ListCreateAPIView):
     queryset = EstadoEstudiante.objects.all()
     serializer_class = EstadoEstudianteSerializer
@@ -458,13 +441,10 @@ class EstadoEstudianteDeleteAPIView(DestroyAPIView):
     queryset = EstadoEstudiante.objects.all()
     serializer_class = EstadoEstudianteSerializer
     permission_classes = [IsAdminUser]
+#endregion
 
 
-"""
-Docente
-"""
-
-
+#region Docente
 class DocenteListCreateAPIView(ListCreateAPIView):
     queryset = PersonalDocente.objects.all()
     serializer_class = DocenteSerializer
@@ -529,13 +509,10 @@ class DocenteDeleteAPIView(DestroyAPIView):
     serializer_class = DocenteDetailSerializer
     permission_classes = [IsAdminUser]
     lookup_field = 'usuario__cedula'
+#endregion
 
 
-"""
-Personal Administrativo
-"""
-
-
+#region Administrativo
 class AdministrativoListCreateAPIView(ListCreateAPIView):
     queryset = PersonalAdministrativo.objects.all()
     serializer_class = AdministrativoSerializer
@@ -561,8 +538,10 @@ class AdministrativoDeleteAPIView(DestroyAPIView):
     serializer_class = AdministrativoDetailSerializer
     permission_classes = [IsAdminUser]
     lookup_field = 'usuario__cedula'
+#endregion
 
 
+#region Reportes
 class Reportes():
     def constancia_estudio(request, cedula):
         token = request.META.get('HTTP_AUTHORIZATION')
@@ -701,3 +680,4 @@ class Reportes():
         response_data = {}
         response_data['Error'] = 'No tiene privilegios para realizar esta accion'
         return HttpResponse(json.dumps(response_data), content_type="application/json", status=401)
+#endregion
