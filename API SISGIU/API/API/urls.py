@@ -19,14 +19,15 @@ urlpatterns = [
     url(r'^', include('tramite.urls')),
     url(r'^', include('periodo.urls')),
     url(r'^', include('relacion.urls')),
+
     url(r'^api/', include('rest_auth.urls')),
-
     url(r'^api/registration/', include('rest_auth.registration.urls')),
-
     url(r'^refresh-token/', refresh_jwt_token),
 
-    url(r'^importar/(?P<tipo>[\w\-]+)?/?$', import_bd),
-    url(r'^docs/', include_docs_urls(title='SISGIU API'))
+    url(r'^importar/(?P<tipo>[\w\-]+)?/?$', import_bd),  # BD Imports
+    url(r'^docs/', include_docs_urls(title='SISGIU API')),  # API Documentation
+
+    url(r'^api-auth/', include('rest_framework.urls')),  # Basic authentication
 
 ]
 
