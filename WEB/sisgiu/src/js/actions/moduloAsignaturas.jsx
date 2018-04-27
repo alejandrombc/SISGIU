@@ -137,7 +137,6 @@ export function crear_asignatura (asignatura) {
 
 export const editar_asignatura = (asignatura) => {
 	let token = localStorage.getItem('user_token');
-	console.log(asignatura);
 	if (asignatura.prelaciones && asignatura.prelaciones.length > 0) {
 		asignatura.prelaciones = asignatura.prelaciones.split(',');
 	} else {

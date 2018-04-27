@@ -44,7 +44,6 @@ export function get_tipo_postgrado () {
 	   .get(host+'api/tipoPostgrado/')
 	   .set('Authorization', 'JWT '+token)
 	   .then(function(res) {
-		   console.log(res.body);
 			return {
 				type: "GET_TIPOS_POSTGRADO_EXITOSO",
 				payload: {lista_postgrados: res.body}

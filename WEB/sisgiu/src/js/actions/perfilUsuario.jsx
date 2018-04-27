@@ -14,7 +14,6 @@ export const editarUsuario = (cambios, user) => {
 	delete result.rif;
 	delete result.curriculum;
 	delete result.permiso_ingresos;
-	console.log(modulo);
 	return request
 	   .put(host+'api/'+modulo+'/'+user['usuario']['cedula']+'/edit/')
 	   .set('Authorization', 'JWT '+token)
@@ -48,7 +47,6 @@ export const cambiarContrasena = (password, user) => {
 	   .set('Content-Type', 'application/json')
 	   .send(user)
 	   .then(function(res) {
-	   	console.log(res.body);
 		      return {
 					type: "EDIT_USER_PASSWORD_SUCCESS",
 					payload: {user: res.body }
@@ -56,7 +54,6 @@ export const cambiarContrasena = (password, user) => {
 
 	   })
 	   .catch(function(err) {
-	   	console.log(err);
 	      	return {
 				type: "EDIT_USER_PASSWORD_ERROR"
 			}
@@ -80,7 +77,6 @@ export const cambiarFoto = (foto, user) => {
 				}
 	   })
 	   .catch(function(err) {
-	   	console.log(err);
 	      	return {
 				type: "EDIT_USER_PHOTO_ERROR"
 			}

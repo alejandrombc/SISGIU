@@ -76,49 +76,6 @@ class AdministradorDetailAPIView(RetrieveAPIView):
 	serializer_class = AdministradorDetailSerializer
 	lookup_field = 'cedula'
 	permission_classes = [IsAdminUser]
-"""
-	def get_admin(request, cedula):
-		member = Usuario.objects.filter(username=cedula, is_superuser=True)
-		if(member):
-			user = member.values()[0]
-			user['foto'] = request.build_absolute_uri('/')+"media/"+user['foto']
-			list_result = {"usuario": user}
-			return HttpResponse(json.dumps(list_result, default=date_handler),
-								content_type="application/json", status=200)
-
-		return HttpResponse(json.dumps({"Error": "Usuario no es administrador"},
-							default=date_handler), content_type="application/json", status=404)
-"""
-
-"""
-	@csrf_exempt
-	def edit_admin(request, cedula):
-		if(request.method == "PUT"):
-			body_unicode = request.body.decode('utf-8')
-			body = json.loads(body_unicode)
-
-			user = Usuario.objects.get(username=cedula)
-			if(user):
-				user.first_name = body['usuario']['first_name']
-				user.last_name = body['usuario']['last_name']
-				user.estado_civil = body['usuario']['estado_civil']
-				user.email = body['usuario']['email']
-				user.celular = body['usuario']['celular']
-				user.telefono_trabajo = body['usuario']['telefono_trabajo']
-				user.telefono_casa = body['usuario']['telefono_casa']
-				user.save()
-				return HttpResponse(json.dumps({"Estatus": "OK"}, default=date_handler),
-									content_type="application/json", status=200)
-
-		return HttpResponse(json.dumps({"Error": "Ese usuario no es un administrador"}, default=date_handler),
-							content_type="application/json", status=404)
-"""
-"""
-	def get_all_admin(request):
-		member = Usuario.objects.filter(is_superuser=True)
-		list_result = member.values()[0]
-		return HttpResponse(json.dumps(list_result, default=date_handler), content_type="application/json")
-"""
 
 
 class AdministradorUpdateAPIView(RetrieveUpdateAPIView):
@@ -270,48 +227,40 @@ class AdministrativoDeleteAPIView(DestroyAPIView):
 
 
 #region Otros
-"""
-def get_estudiantes_asignatura(request, codigo_asignatura):
-	if not request.user.is_anonymous:
-		member = EstudianteAsignatura.objects.filter(
-			asignatura__codigo=codigo_asignatura,
-			periodo_estudiante__periodo__estado_periodo__estado="activo").values()
 
-		lista_estudiante_asignatura = [entry for entry in member]
 
-		for estudiante_asignatura in lista_estudiante_asignatura:
-			periodo_estudiante = PeriodoEstudiante.objects.filter(
-				id=estudiante_asignatura['periodo_estudiante_id']).values()[0]
-			estudiante = Usuario.objects.filter(id=periodo_estudiante['estudiante_id']).values()[0]
-			estudiante_asignatura['periodo_estudiante'] = periodo_estudiante
-			estudiante_asignatura['estudiante'] = estudiante
+@api_view(['GET'])
+@permission_classes((AllowAny, ))
+def get_admin(request, cedula):
+	member = Usuario.objects.filter(username=cedula, is_superuser=True)
 
-		for element in lista_estudiante_asignatura:
-			del element['estudiante']['sexo']
-			del element['estudiante']['username']
-			del element['estudiante']['date_joined']
-			del element['estudiante']['last_login']
-			del element['estudiante']['correo_alternativo']
-			del element['estudiante']['is_active']
-			del element['estudiante']['is_staff']
-			del element['estudiante']['nacionalidad']
-			del element['estudiante']['foto']
-			del element['estudiante']['telefono_trabajo']
-			del element['estudiante']['password']
-			del element['estudiante']['estado_civil']
-			del element['estudiante']['celular']
-			del element['estudiante']['is_superuser']
-			del element['estudiante']['email']
-			del element['estudiante']['telefono_casa']
-			del element['estudiante']['fecha_nacimiento']
+	if member:
+		user = member.values()[0]
+		user['foto'] = request.build_absolute_uri('/')+"media/"+user['foto']
+		list_result = {"usuario": user}
+		return Response(list_result, status=status.HTTP_200_OK)
 
-		return HttpResponse(json.dumps(lista_estudiante_asignatura, default=date_handler),
-							content_type="application/json")
+	return Response(response_data, status=status.HTTP_404_NOT_FOUND)
 
-	response_data = {}
-	response_data['Error'] = 'No tiene privilegios para realizar esta accion'
-	return HttpResponse(json.dumps(response_data), content_type="application/json", status=401)
-"""
+
+@csrf_exempt
+@api_view(['PUT'])
+@permission_classes((IsAdminUser, ))
+def edit_admin(request, cedula):
+	body_unicode = request.body.decode('utf-8')
+	body = json.loads(body_unicode)
+
+	user = Usuario.objects.get(username=cedula)
+	if(user):
+		user.first_name = body['usuario']['first_name']
+		user.last_name = body['usuario']['last_name']
+		user.estado_civil = body['usuario']['estado_civil']
+		user.email = body['usuario']['email']
+		user.celular = body['usuario']['celular']
+		user.telefono_trabajo = body['usuario']['telefono_trabajo']
+		user.telefono_casa = body['usuario']['telefono_casa']
+		user.save()
+		return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 @api_view(['GET'])
@@ -394,15 +343,6 @@ def get_usuarios(request, modulo):
 		response_data = {}
 		response_data['Error'] = "Ha ocurrido un error obteniendo la lista de usuarios."
 		return Response(response_data, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
-
-@api_view(['GET'])
-@permission_classes((IsAdminUser, ))
-def get_usr_id(request, id_usr):
-	member = Usuario.objects.filter(id=id_usr)
-	list_result = [entry for entry in member.values()]
-
-	return Response(list_result, status=status.HTTP_200_OK)
 
 
 @api_view(['GET'])

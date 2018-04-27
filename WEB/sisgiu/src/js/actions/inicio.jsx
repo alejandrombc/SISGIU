@@ -100,7 +100,6 @@ export function get_tipo_postgrado (periodo) {
 export const get_historial = (cedula) =>{
 	let token = localStorage.getItem('user_token');
 	let modulo = localStorage.getItem('modulo');
-	console.log(modulo);
 	return request
 	   .get(host+'api/estudianteAsignatura/'+cedula+'/historial/')
 	   .set('Authorization', 'JWT '+token)

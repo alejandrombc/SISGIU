@@ -34,6 +34,8 @@ from usuario.views import (
     constancia_estudio,
     planilla_docente,
     planilla_periodo,
+    get_admin,
+    edit_admin,
     )
 #endregion
 
@@ -48,9 +50,6 @@ urlpatterns = format_suffix_patterns([
     #Obtiene una lista de usuarios dependiendo su modulo
     url(r'^api/usuarios/(?P<modulo>[\w\-]+)/$', get_usuarios, name='usuario-list'),
 
-
-    # url(r'^api/usuarios/id/(?P<id_usr>[0-9]{1})/$', AdministradorDetailAPIView.get_usr_id, name='usuario-detail'),
-
     #Envia un correo para restablecer contrasena
     url(r'^api/usuarios/(?P<cedula>\d+)/recuperarContrasena/$', send_mail_forgot, name='usuario-olvido'),
 
@@ -61,9 +60,8 @@ urlpatterns = format_suffix_patterns([
     url(r'^api/usuarios/(?P<cedula>\d+)/cambiarFoto/$', update_photo, name='usuario-detail'),
 
     # Admin
-    # url(r'^api/administradores/$', AdministradorDetailAPIView.get_all_admin, name='admin-all'),
-    # url(r'^api/administradores/(?P<cedula>\d+)/edit/$', AdministradorDetailAPIView.edit_admin, name='admin-edit'),
-    # url(r'^api/administradores/(?P<cedula>\d+)/$', AdministradorDetailAPIView.get_admin, name='admin-detail'),
+    url(r'^api/administradores/(?P<cedula>\d+)/edit/$', edit_admin, name='admin-edit'),
+    url(r'^api/administradores/(?P<cedula>\d+)/$', get_admin, name='admin-detail'),
 
 
     # Estudiantes
@@ -105,10 +103,6 @@ urlpatterns = format_suffix_patterns([
     url(r'^api/planillas/docente/(?P<cedula>[0-9]{6,8})/(?P<codigo>[\w\-]+)/$', planilla_docente, name='reportes'),
 
     url(r'^api/planillas/administrativo/(?P<periodo>\d+)/$', planilla_periodo, name='reportes'),
-
-
-    # Lista de estudiantes que cursan una asignatura
-    # url(r'^api/estudiantes/asignatura/(?P<codigo_asignatura>\d+)/$', EstudianteDetailAPIView.get_estudiantes_asignatura, name='estudiantes-asignatura'),
 
 
 ])
