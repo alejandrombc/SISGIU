@@ -106,7 +106,6 @@ class ModalUsuarioEdit extends React.Component {
       
       case 'rif':
         documento = this.state.rif_file
-        console.log(documento);
         break;
 
       case 'curriculum':

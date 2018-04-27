@@ -50,7 +50,6 @@ class ModalAsignaturaNew extends React.Component {
     e.preventDefault();
     
     this.props.triggerParentUpdate();
-    console.log(this.state);
     this.props.crear_asignatura(this.state);
     
     this.setState({

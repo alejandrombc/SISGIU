@@ -107,6 +107,8 @@ export default function (state=initialState, action) {
 			nuevo_estado['lista_periodos'] = action.payload['lista_periodos'];
 			nuevo_estado['bad_input'] = true;
 			nuevo_estado['loading'] = false;
+			nuevo_estado['edit'] = false;
+
 			return nuevo_estado;
 
 		case "GET_ESTADO_PERIODO_EXITOSO":

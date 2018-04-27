@@ -126,7 +126,6 @@ class NuevaContrasenaForm extends Component{
 					</div>
 				)
 			} else if ( this.props.status['check_url'] === false ) {
-				console.log('jdkakdnadkjANDKnak');
 				return (<Redirect to={"/login"} />)
 			} else {
 				return (

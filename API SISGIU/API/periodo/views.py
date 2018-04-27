@@ -1,6 +1,5 @@
 #region imports
 from django.shortcuts import render
-from usuario.utils import date_handler
 import json
 from periodo.models import (
 	EstadoPeriodo,

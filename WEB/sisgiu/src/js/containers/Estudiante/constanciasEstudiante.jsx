@@ -83,7 +83,7 @@ class ConstanciaEstudiante extends Component{
 			      <Col sm="6">
 			        <Card body>
 			          <CardTitle className="text-center">Constancia de culminación</CardTitle>
-								<a href={host + 'media/sisgiu/constancias/constancia_culminacion.pdf'} class="btn btn-secondary" target="_blank">Descargar</a>
+								<a href={host + 'media/sisgiu/constancias/constancia_culminacion.pdf'} className="btn btn-secondary" target="_blank">Descargar</a>
 			        </Card>
 			      </Col>
 			    </Row>
@@ -92,13 +92,13 @@ class ConstanciaEstudiante extends Component{
 						<Col sm="6">
 							<Card body>
 								<CardTitle className="text-center">Constancia de Maestría Diseño Urbano</CardTitle>
-								<a href={host + 'media/sisgiu/constancias/constancia_maestria_diseno_urbano.pdf'} class="btn btn-secondary" target="_blank">Descargar</a>
+								<a href={host + 'media/sisgiu/constancias/constancia_maestria_diseno_urbano.pdf'} className="btn btn-secondary" target="_blank">Descargar</a>
 							</Card>
 						</Col>
 						<Col sm="6">
 							<Card body>
 								<CardTitle className="text-center">Constancia de Maestría en Planificación Urbana</CardTitle>
-								<a href={host + 'media/sisgiu/constancias/constancia_maestria_planificacion_urbana.pdf'} class="btn btn-secondary" target="_blank">Descargar</a>
+								<a href={host + 'media/sisgiu/constancias/constancia_maestria_planificacion_urbana.pdf'} className="btn btn-secondary" target="_blank">Descargar</a>
 							</Card>
 						</Col>
 			    </Row>
@@ -107,13 +107,13 @@ class ConstanciaEstudiante extends Component{
 						<Col sm="6">
 							<Card body>
 								<CardTitle className="text-center">Planilla de Curso de Extensión</CardTitle>
-								<a href={host + 'media/sisgiu/constancias/planilla_curso_extension.pdf'} class="btn btn-secondary" target="_blank">Descargar</a>
+								<a href={host + 'media/sisgiu/constancias/planilla_curso_extension.pdf'} className="btn btn-secondary" target="_blank">Descargar</a>
 							</Card>
 						</Col>
 						<Col sm="6">
 							<Card body>
 								<CardTitle className="text-center">Requisitos de Entrega de Proyecto</CardTitle>
-								<a href={host + 'media/sisgiu/constancias/requisitos_entrega_proyecto.pdf'} class="btn btn-secondary" target="_blank">Descargar</a>
+								<a href={host + 'media/sisgiu/constancias/requisitos_entrega_proyecto.pdf'} className="btn btn-secondary" target="_blank">Descargar</a>
 							</Card>
 						</Col>
 					</Row>
@@ -122,13 +122,13 @@ class ConstanciaEstudiante extends Component{
 						<Col sm="6">
 							<Card body>
 								<CardTitle className="text-center">Planilla de Inscripción de Postgrado</CardTitle>
-								<a href={host + 'media/sisgiu/constancias/planilla_inscripcion_postgrado.pdf'} class="btn btn-secondary" target="_blank">Descargar</a>
+								<a href={host + 'media/sisgiu/constancias/planilla_inscripcion_postgrado.pdf'} className="btn btn-secondary" target="_blank">Descargar</a>
 							</Card>
 						</Col>
 						<Col sm="6">
 							<Card body>
 								<CardTitle className="text-center">Planilla de Inscripción de Proyecto</CardTitle>
-								<a href={host + 'media/sisgiu/constancias/planilla_inscripcion_proyecto.pdf'} class="btn btn-secondary" target="_blank">Descargar</a>
+								<a href={host + 'media/sisgiu/constancias/planilla_inscripcion_proyecto.pdf'} className="btn btn-secondary" target="_blank">Descargar</a>
 							</Card>
 						</Col>
 					</Row>
@@ -137,13 +137,13 @@ class ConstanciaEstudiante extends Component{
 						<Col sm="6">
 							<Card body>
 								<CardTitle className="text-center">Recaudos Pre Postgrado</CardTitle>
-								<a href={host + 'media/sisgiu/constancias/recaudos_pre_postgrado.pdf'} class="btn btn-secondary" target="_blank">Descargar</a>
+								<a href={host + 'media/sisgiu/constancias/recaudos_pre_postgrado.pdf'} className="btn btn-secondary" target="_blank">Descargar</a>
 							</Card>
 						</Col>
 						<Col sm="6">
 							<Card body>
 								<CardTitle className="text-center">Planilla de Inscripción CAC</CardTitle>
-								<a href={host + 'media/sisgiu/constancias/planilla_inscripcion_cac.pdf'} class="btn btn-secondary" target="_blank">Descargar</a>
+								<a href={host + 'media/sisgiu/constancias/planilla_inscripcion_cac.pdf'} className="btn btn-secondary" target="_blank">Descargar</a>
 							</Card>
 						</Col>
 					</Row>

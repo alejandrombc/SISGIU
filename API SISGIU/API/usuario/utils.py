@@ -17,17 +17,6 @@ def render_to_pdf(template_src, context_dict={}):
 	return None
 
 
-def date_handler(obj):
-	return obj.isoformat() if hasattr(obj, 'isoformat') else obj
-
-
-def date_handler_2(obj):
-	if hasattr(obj, 'isoformat'):
-		return obj.isoformat()
-	else:
-		raise TypeError
-
-
 def send_welcome_mail(modulo, user):
 	if(modulo == "Administrador"):
 		correo = user['email']
@@ -38,12 +27,12 @@ def send_welcome_mail(modulo, user):
 
 	template = get_template("email_template_welcome.html")
 	html = template.render(
-        {
-            "modulo":modulo,
-            "nombre":nombre,
-            "host_react":host_react,
-        }
-    )
+							{
+								"modulo": modulo,
+								"nombre": nombre,
+								"host_react": host_react,
+							}
+						)
 
 	body = (
 			"Hola "+nombre+", has sido registrado en el Sistema de Gestión "

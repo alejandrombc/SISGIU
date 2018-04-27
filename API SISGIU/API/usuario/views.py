@@ -4,7 +4,7 @@ import os
 import datetime
 from django.http import HttpResponse
 from django.template.loader import get_template
-from usuario.utils import host_react, render_to_pdf, date_handler
+from usuario.utils import host_react, render_to_pdf
 from django.core.mail import send_mail
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.permissions import (
@@ -481,11 +481,15 @@ def update_file(request, cedula, tipo_documento):
 @api_view(['GET'])
 @permission_classes((isEstudianteOrAdmin, ))
 def constancia_estudio(request, cedula):
-	token = request.META.get('HTTP_AUTHORIZATION')
 
 	user_information = {}
 	user = Usuario.objects.get(cedula=cedula).__dict__
-	estudiante = Estudiante.objects.get(usuario__cedula=cedula, estado_estudiante__estado='activo').__dict__
+	try:
+		estudiante = Estudiante.objects.get(usuario__cedula=cedula, id_estado_estudiante__estado='activo').__dict__
+	except Exception as ex:
+		response = {}
+		response['mensaje'] = str(ex)
+		return Response(response, status=status.HTTP_404_NOT_FOUND)
 
 	user_information['cedula'] = user['cedula']
 	user_information['first_name'] = user['first_name']
@@ -495,9 +499,14 @@ def constancia_estudio(request, cedula):
 
 	user_information['tipo_postgrado'] = tipo_postgrado['tipo']
 
-	periodo = Periodo.objects.get(
-		estado_periodo__estado="activo",
-		tipo_postgrado__id=tipo_postgrado['id']).__dict__
+	try:
+		periodo = Periodo.objects.get(
+			estado_periodo__estado="activo",
+			tipo_postgrado__id=tipo_postgrado['id']).__dict__
+	except Exception as ex:
+		response = {}
+		response['mensaje'] = str(ex)
+		return Response(response, status=status.HTTP_404_NOT_FOUND)
 
 	user_information['periodo'] = periodo['descripcion']
 
@@ -541,7 +550,12 @@ def planilla_docente(request, cedula, codigo):
 	user_information['apellido'] = user.usuario.last_name
 	user_information['estudiantes'] = []
 
-	docente_asignatura = DocenteAsignatura.objects.filter(docente=user, asignatura__codigo=codigo, periodo__estado_periodo__estado="activo").values()[0]
+	try:
+		docente_asignatura = DocenteAsignatura.objects.filter(docente=user, asignatura__codigo=codigo, periodo__estado_periodo__estado="activo").values()[0]
+	except Exception as ex:
+		response = {}
+		response['mensaje'] = str(ex)
+		return Response(response, status=status.HTTP_404_NOT_FOUND)
 
 	periodo = Periodo.objects.get(id=docente_asignatura['periodo_id'])
 	asignatura = Asignatura.objects.get(id=docente_asignatura['asignatura_id'])

@@ -54,7 +54,6 @@ from .permissions import (
 	)
 
 from django.views.decorators.csrf import csrf_exempt
-from usuario.utils import date_handler
 from django.db.models import Q
 from rest_framework.decorators import permission_classes, api_view
 from usuario.permissions import isDocenteOrAdmin, isEstudianteOrAdmin, isAdministrativoOrAdmin

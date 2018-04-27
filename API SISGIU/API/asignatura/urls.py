@@ -67,5 +67,5 @@ urlpatterns = format_suffix_patterns([
 
     # Asignaturas de un periodo
     url(r'^api/asignaturas_actuales/periodo/(?P<periodo>\d+)/$', get_asignaturas_actuales, name='asignaturas-actuales'),
-  
+
 ])

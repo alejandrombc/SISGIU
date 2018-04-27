@@ -91,7 +91,6 @@ def import_docentes(datos):
                     coordinador=row[15],
                 )
     except Exception as ex:
-        print(ex)
         response['detail'] = 'Ha ocurrido un error importando personal docente en la base de datos.'
         return HttpResponse(json.dumps(response), content_type="application/json", status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
@@ -122,7 +121,6 @@ def import_administrativo(datos):
                                 )
                 obj, created = PersonalAdministrativo.objects.get_or_create(usuario=objUser)
     except Exception as ex:
-        print(ex)
         response['detail'] = 'Ha ocurrido un error importando personal administrativo en la base de datos.'
         return HttpResponse(json.dumps(response), content_type="application/json", status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
