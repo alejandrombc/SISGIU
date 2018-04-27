@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 import {Collapse, Navbar, NavbarToggler, NavbarBrand} from 'reactstrap';
 
 // Components
-import NavBarInicio from '../components/navBarInicio';
 import NavBarEstudiante from '../components/navBarEstudiante';
 import NavBarDocente from '../components/navBarDocente';
 import NavBarAdministrativo from '../components/navBarAdministrativo';
@@ -28,7 +27,6 @@ class NavigationBar extends Component {
 
   logout() {
     localStorage.removeItem('user_token');
-    // DEBERIA CAMBIAR ESTO POR ALGO RELACIONADO A REACT-ROUTER-DOM
     window.location.reload();
   }
 
@@ -62,9 +60,7 @@ class NavigationBar extends Component {
         break;
 
       }
-    } else {
-      navigationBar = ( <NavBarInicio /> )
-    }
+    } 
 
 
 
@@ -82,13 +78,6 @@ class NavigationBar extends Component {
                 
                
             { navigationBar }
-
-            {/* !this.props.token['loggedIn'] ? 
-              <NavItem>
-                <NavLink onClick={this.logout} href='#' >Logout</NavLink>
-              </NavItem>
-              : ''
-            */}
 
           </Collapse>
         </Navbar>
