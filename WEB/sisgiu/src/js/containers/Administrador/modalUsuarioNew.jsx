@@ -42,11 +42,12 @@ class ModalUsuarioNew extends React.Component {
     this.handleChangeUsuario = this.handleChangeUsuario.bind(this);
     this.handleChangeExtraData = this.handleChangeExtraData.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
-
-    
-
-    
+    this.get_today = this.get_today.bind(this);
   }
+
+
+
+
 
   toggle() {
     this.setState({
@@ -98,6 +99,22 @@ class ModalUsuarioNew extends React.Component {
 
     this.props.triggerParentUpdate();
     this.toggle();
+  }
+
+  get_today(){
+    var today = new Date();
+    var dd = today.getDate();
+    var mm = today.getMonth()+1; //January is 0!
+    var yyyy = today.getFullYear();
+     if(dd<10){
+            dd='0'+dd
+        } 
+        if(mm<10){
+            mm='0'+mm
+        } 
+
+    today = yyyy+'-'+mm+'-'+dd;
+    return today;
   }
 
 
@@ -165,7 +182,7 @@ class ModalUsuarioNew extends React.Component {
                           <FormGroup row>
                             <Label for="fecha_nacimiento" sm={4}>F. Nacimiento</Label>
                             <Col sm={8}>
-                              <Input bsSize="sm" type="date" name="fecha_nacimiento" id="fecha_nacimiento" onChange={this.handleChangeUsuario} defaultValue={this.state.usuario['fecha_nacimiento']} required/>
+                              <Input max={this.get_today()} min="1930-01-01" bsSize="sm" type="date" name="fecha_nacimiento" id="fecha_nacimiento" onChange={this.handleChangeUsuario} defaultValue={this.state.usuario['fecha_nacimiento']} required/>
                             </Col>
                           </FormGroup>
                           <FormGroup row>
@@ -177,19 +194,19 @@ class ModalUsuarioNew extends React.Component {
                           <FormGroup row>
                             <Label for="Celular" sm={4}>Celular</Label>
                             <Col sm={8}>
-                              <Input max={14} bsSize="sm" type="number" name="celular" id="celular" onChange={this.handleChangeUsuario} value={this.state.usuario['celular']} />
+                              <Input min={1000000000} max={999999999999} bsSize="sm" type="number" name="celular" id="celular" onChange={this.handleChangeUsuario} value={this.state.usuario['celular']} />
                             </Col>
                           </FormGroup>
                           <FormGroup row>
                             <Label for="telefono_casa" sm={4}>Tlf. Casa</Label>
                             <Col sm={8}>
-                              <Input max={14} bsSize="sm" type="number" name="telefono_casa" id="telefono_casa" onChange={this.handleChangeUsuario} value={this.state.usuario['telefono_casa']} />
+                              <Input min={1000000000} max={999999999999} bsSize="sm" type="number" name="telefono_casa" id="telefono_casa" onChange={this.handleChangeUsuario} value={this.state.usuario['telefono_casa']} />
                             </Col>
                           </FormGroup>
                           <FormGroup row>
                             <Label for="telefono_trabajo" sm={4}>Tlf. Trabajo</Label>
                             <Col sm={8}>
-                              <Input max={14} bsSize="sm" type="number" name="telefono_trabajo" id="telefono_trabajo" onChange={this.handleChangeUsuario} value={this.state.usuario['telefono_trabajo']} />
+                              <Input min={1000000000} max={999999999999} bsSize="sm" type="number" name="telefono_trabajo" id="telefono_trabajo" onChange={this.handleChangeUsuario} value={this.state.usuario['telefono_trabajo']} />
                             </Col>
                           </FormGroup>
                           <FormGroup row>
