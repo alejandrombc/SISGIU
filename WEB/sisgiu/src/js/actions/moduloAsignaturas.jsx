@@ -97,12 +97,21 @@ export function get_tipo_postgrado () {
 
 export function crear_asignatura (asignatura) {
 	let token = localStorage.getItem('user_token');
-
 	if (asignatura.prelaciones.length > 0) {
 		asignatura.prelaciones = asignatura.prelaciones.split(',');
 	} else {
 		asignatura.prelaciones = [];
 	}
+
+	if (asignatura.tipos_postgrado.length > 0) {
+		asignatura.tipos_postgrado = asignatura.tipos_postgrado.split(',');
+	} else {
+		asignatura.tipos_postgrado = [];
+	}
+
+	let asignatura_tipo_postgrado = {};
+	asignatura_tipo_postgrado.asignatura_codigo = asignatura.codigo;
+	asignatura_tipo_postgrado.tipos_postgrado = asignatura.tipos_postgrado;
 
 	return request
 	   .post(host+'api/asignaturas/')
@@ -115,10 +124,20 @@ export function crear_asignatura (asignatura) {
 			   .set('Authorization', 'JWT '+token)
 			   .send(asignatura)
 			   .then(function(res) {
-
-					return function (dispatch) {
-					    dispatch(get_asignaturas(1));
-					}
+				   return request
+					   .post(host + 'api/asignatura/tiposPostgrado/')
+					   .set('Authorization', 'JWT ' + token)
+					   .send(asignatura_tipo_postgrado)
+					   .then(function (res) {
+						   return function (dispatch) {
+							   dispatch(get_asignaturas(1));
+						   }
+					   })
+					   .catch(function (err) {
+						   return function (dispatch) {
+							   dispatch(get_asignaturas(2));
+						   }
+						});
 			   })
 			   .catch(function(err) {
 			      	return function (dispatch) {

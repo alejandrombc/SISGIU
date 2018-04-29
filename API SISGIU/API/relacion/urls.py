@@ -25,7 +25,7 @@ from relacion.views import (
     obtener_informacion_historial,
     informacion_usuarios_administrativo,
     cargar_notas,
-
+    post_asignatura_tipo_postgrado,
     )
 
 
@@ -83,4 +83,6 @@ urlpatterns = format_suffix_patterns([
     # Programacion Academica
     url(r'^api/programacionAcademica/$', programacion_academica, name='programacion-academica'),
 
+    # Agregar los tipos de postgrado de una asignatura
+    url(r'^api/asignatura/tiposPostgrado/$', post_asignatura_tipo_postgrado, name='asignatura-tipo-postgrado'),
 ])

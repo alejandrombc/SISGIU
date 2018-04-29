@@ -11,9 +11,7 @@ import { PulseLoader } from 'halogenium'; //Spinner
 import ModalAsignaturaNew from './modalAsignaturaNew';
 import ModalAsignaturaEdit from './modalAsignaturaEdit';
 import ModalAsignaturaDelete from './modalAsignaturaDelete';
-import {get_asignaturas} from '../../actions/moduloAsignaturas';
-// import {get_prelacion} from '../../actions/moduloAsignaturas';
-import { get_tipo_asignatura } from '../../actions/moduloAsignaturas';
+import { get_asignaturas, get_tipo_postgrado, get_tipo_asignatura} from '../../actions/moduloAsignaturas';
 import { cargado } from '../../actions/inicio';
 import Paginacion from '../../components/pagination';
 
@@ -41,7 +39,8 @@ class ListaAsignaturas extends Component{
   componentDidMount() {
     this.props.get_asignaturas(false)
     .then( ()=> this.props.get_tipo_asignatura()
-      .then( () => this.props.cargado() )
+      .then(() => this.props.get_tipo_postgrado()
+      .then( () => this.props.cargado() ))
     );
     
   }
@@ -222,7 +221,12 @@ const mapStateToProps = (state)=> {
 
 
 const mapDispatchToProps = (dispatch) => {
-  return bindActionCreators({get_tipo_asignatura: get_tipo_asignatura, get_asignaturas: get_asignaturas, cargado: cargado}, dispatch )
+  return bindActionCreators({
+    get_tipo_asignatura: get_tipo_asignatura,
+    get_asignaturas: get_asignaturas,
+    cargado: cargado,
+    get_tipo_postgrado: get_tipo_postgrado,
+  }, dispatch )
 }
 
 
