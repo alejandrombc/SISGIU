@@ -18,7 +18,7 @@ class ModalAsignaturaEdit extends React.Component {
       codigo: this.props.asignatura['codigo'],
       nombre: this.props.asignatura['nombre'],
       unidad_credito: this.props.asignatura['unidad_credito'],
-      tipo_asignatura: this.props.asignatura['tipo_asignatura'],
+      tipo_asignatura: this.props.asignatura['tipo_asignatura_id'],
       prelaciones: this.props.prelacion,
       tipos_postgrado: this.props.asignatura['tipos_postgrado'],
     };
@@ -61,7 +61,6 @@ class ModalAsignaturaEdit extends React.Component {
   }
 
   render() {
-
     const { prelaciones, tipos_postgrado } = this.state;
     var options = JSON.parse(JSON.stringify(this.props.adminUser['lista_asignaturas']).split('"codigo":').join('"value":')); //Rename key 
     options = JSON.parse(JSON.stringify(options).split('"nombre":').join('"label":')); //Rename key 
@@ -150,6 +149,7 @@ class ModalAsignaturaEdit extends React.Component {
                                 removeSelected={true}
                                 simpleValue
                                 value={tipos_postgrado}
+                                required
                               />
                             </Col>
                           </FormGroup>

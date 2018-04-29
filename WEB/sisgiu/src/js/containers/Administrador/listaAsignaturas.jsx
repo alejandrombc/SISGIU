@@ -99,7 +99,9 @@ class ListaAsignaturas extends Component{
           for (var code_asig in filteredAsignaturas) {
               for (var code_pre in this.props.adminUser['lista_prelacion']) {
                  if (this.props.adminUser['lista_prelacion'][code_pre]['asignatura_objetivo_id'] === filteredAsignaturas[code_asig]['codigo']) {
-                    if(prelacion[filteredAsignaturas[code_asig]['codigo']] == null){ prelacion[filteredAsignaturas[code_asig]['codigo']] = []; }
+                    if(prelacion[filteredAsignaturas[code_asig]['codigo']] == null) {
+                      prelacion[filteredAsignaturas[code_asig]['codigo']] = []; 
+                    }
                     prelacion[filteredAsignaturas[code_asig]['codigo']].push(this.props.adminUser['lista_prelacion'][code_pre]['asignatura_prela_id']);
                  }
               }
@@ -112,7 +114,6 @@ class ListaAsignaturas extends Component{
               <td>  
                 <Row >
                   <Col md={{ size: 'auto', offset: 3 }} className='botones'>
-                    
                     <ModalAsignaturaEdit onDismiss={this.onDismiss} triggerParentUpdate={this.updateLoading} asignatura={asignatura} prelacion={prelacion[asignatura['codigo']]} />
                     <ModalAsignaturaDelete onDismiss={this.onDismiss} triggerParentUpdate={this.updateLoading} asignatura={asignatura} prelacion={prelacion[asignatura['codigo']]} />
 

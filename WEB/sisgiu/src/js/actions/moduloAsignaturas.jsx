@@ -148,12 +148,20 @@ export const editar_asignatura = (asignatura) => {
 		} else {
 			asignatura.prelaciones = [];
 		}
+	} else {
+		if (asignatura.prelaciones === undefined) {
+			asignatura.prelaciones = [];
+		}
 	}
 
 	if (typeof asignatura.tipos_postgrado === 'string') {
 		if (asignatura.tipos_postgrado && asignatura.tipos_postgrado.length > 0) {
 			asignatura.tipos_postgrado = asignatura.tipos_postgrado.split(',');
 		} else {
+			asignatura.tipos_postgrado = [];
+		}
+	} else {
+		if (asignatura.tipos_postgrado === undefined) {
 			asignatura.tipos_postgrado = [];
 		}
 	}

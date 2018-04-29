@@ -96,9 +96,18 @@ class AgregarDocenteAsignatura extends React.Component {
 
   get_listAsignaturas() {
     let listAsignaturas;
+    let asignaturas_periodo_actual = [];
     if (this.props.adminUser.lista_asignaturas && this.props.adminUser.lista_asignaturas.length > 0) {
-      listAsignaturas = this.props.adminUser.lista_asignaturas.map((tipo_asignatura) =>
-        <option key={tipo_asignatura['codigo']} value={tipo_asignatura['codigo']} name={tipo_asignatura['nombre']}> {tipo_asignatura['nombre']} </option>
+      this.props.adminUser.lista_asignaturas.forEach(element => {
+        if (element.tipos_postgrado.includes(this.props.periodo.tipo_postgrado_id)) {
+          asignaturas_periodo_actual.push(element);
+        }
+      });
+    }
+
+    if (asignaturas_periodo_actual.length > 0) {
+      listAsignaturas = asignaturas_periodo_actual.map((tipo_asignatura) =>
+          <option key={tipo_asignatura['codigo']} value={tipo_asignatura['codigo']} name={tipo_asignatura['nombre']}> {tipo_asignatura['nombre']} </option>
       ); 
     }
 

@@ -167,6 +167,7 @@ class ModalAsignaturaNew extends React.Component {
                                 rtl={false}
                                 simpleValue
                                 value={tipos_postgrado}
+                                required
                               />
                             </Col>
                           </FormGroup>

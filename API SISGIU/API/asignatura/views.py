@@ -92,9 +92,6 @@ class AsignaturaListCreateAPIView(ListCreateAPIView):
 	permission_classes = [IsAuthenticatedOrReadOnly, IsListOrCreate]
 
 	def get(self, request, format=None):
-		asignaturas_aux = Asignatura.objects.all()
-		serializer = AsignaturaListSerializer(asignaturas_aux, many=True)
-
 		asignaturas = Asignatura.objects.all().values()
 		asignaturas = [entry for entry in asignaturas]
 
@@ -346,9 +343,8 @@ def get_asignaturas_actuales(request, periodo):
 def post_prelacion(request):
 	body = json.loads(request.body.decode("utf-8"))
 	PrelacionAsignatura.objects.filter(asignatura_objetivo=body['codigo']).delete()
-	prelacion = []
 	for code in body['prelaciones']:
-		prelacion = PrelacionAsignatura.objects.create(
+		PrelacionAsignatura.objects.create(
 			asignatura_objetivo=Asignatura.objects.get(codigo=body['codigo']),
 			asignatura_prela=Asignatura.objects.get(codigo=code))
 
