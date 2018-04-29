@@ -135,7 +135,7 @@ class ModalUsuarioNew extends React.Component {
                           <FormGroup row>
                             <Label for="cedula" sm={4}>Cedula</Label>
                             <Col sm={8}>
-                              <Input bsSize="sm" type="text" name="cedula" id="cedula" onChange={this.handleChangeUsuario} defaultValue={this.state.usuario['cedula']} required/>
+                              <Input maxLength={8} minLength={6} bsSize="sm" type="text" name="cedula" id="cedula" onChange={this.handleChangeUsuario} defaultValue={this.state.usuario['cedula']} required/>
                             </Col>
                           </FormGroup>
                           <FormGroup row>
