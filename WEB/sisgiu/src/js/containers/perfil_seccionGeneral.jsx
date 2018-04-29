@@ -111,7 +111,7 @@ class SeccionGeneral extends Component{
 		                    <FormGroup row>
 		                      <Label for="email" sm={2}>Correo</Label>
 		                      <Col sm={10}>
-		                        <Input type="email" name="email" id="email"  onChange={this.handleChangeUsuario} value={this.state.usuario.email} />
+														<Input type="email" name="email" id="email" onChange={this.handleChangeUsuario} value={this.state.usuario.email} required/>
 		                      </Col>
 		                    </FormGroup>
 		                    <FormGroup row>

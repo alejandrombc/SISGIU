@@ -141,25 +141,25 @@ class ModalUsuarioNew extends React.Component {
                           <FormGroup row>
                             <Label for="first_name" sm={4}>Primer Nombre</Label>
                             <Col sm={8}>
-                              <Input bsSize="sm" type="text" name="first_name" id="first_name" onChange={this.handleChangeUsuario} defaultValue={this.state.usuario['first_name']} required/>
+                              <Input maxLength={50} bsSize="sm" type="text" name="first_name" id="first_name" onChange={this.handleChangeUsuario} defaultValue={this.state.usuario['first_name']} required/>
                             </Col>
                           </FormGroup>
                           <FormGroup row>
                             <Label for="segundo_nombre" sm={4}>Segundo Nombre</Label>
                             <Col sm={8}>
-                              <Input bsSize="sm" type="text" name="segundo_nombre" id="segundo_nombre" onChange={this.handleChangeUsuario} defaultValue={this.state.usuario['segundo_nombre']} />
+                              <Input maxLength={50} bsSize="sm" type="text" name="segundo_nombre" id="segundo_nombre" onChange={this.handleChangeUsuario} defaultValue={this.state.usuario['segundo_nombre']} />
                             </Col>
                           </FormGroup>
                           <FormGroup row>
                             <Label for="last_name" sm={4}>Primer Apellido</Label>
                             <Col sm={8}>
-                              <Input bsSize="sm" type="text" name="last_name" id="last_name" onChange={this.handleChangeUsuario} defaultValue={this.state.usuario['last_name']} required/>
+                              <Input maxLength={50} bsSize="sm" type="text" name="last_name" id="last_name" onChange={this.handleChangeUsuario} defaultValue={this.state.usuario['last_name']} required/>
                             </Col>
                           </FormGroup>
                           <FormGroup row>
                             <Label for="segundo_apellido" sm={4}>Segundo Apellido</Label>
                             <Col sm={8}>
-                              <Input bsSize="sm" type="text" name="segundo_apellido" id="segundo_apellido" onChange={this.handleChangeUsuario} defaultValue={this.state.usuario['segundo_apellido']} required/>
+                              <Input maxLength={50} bsSize="sm" type="text" name="segundo_apellido" id="segundo_apellido" onChange={this.handleChangeUsuario} defaultValue={this.state.usuario['segundo_apellido']} required/>
                             </Col>
                           </FormGroup>
                           <FormGroup row>
@@ -177,19 +177,19 @@ class ModalUsuarioNew extends React.Component {
                           <FormGroup row>
                             <Label for="Celular" sm={4}>Celular</Label>
                             <Col sm={8}>
-                              <Input bsSize="sm" type="number" name="celular" id="celular" onChange={this.handleChangeUsuario} value={this.state.usuario['celular']} />
+                              <Input max={14} bsSize="sm" type="number" name="celular" id="celular" onChange={this.handleChangeUsuario} value={this.state.usuario['celular']} />
                             </Col>
                           </FormGroup>
                           <FormGroup row>
                             <Label for="telefono_casa" sm={4}>Tlf. Casa</Label>
                             <Col sm={8}>
-                              <Input bsSize="sm" type="number" name="telefono_casa" id="telefono_casa" onChange={this.handleChangeUsuario} value={this.state.usuario['telefono_casa']} />
+                              <Input max={14} bsSize="sm" type="number" name="telefono_casa" id="telefono_casa" onChange={this.handleChangeUsuario} value={this.state.usuario['telefono_casa']} />
                             </Col>
                           </FormGroup>
                           <FormGroup row>
                             <Label for="telefono_trabajo" sm={4}>Tlf. Trabajo</Label>
                             <Col sm={8}>
-                              <Input bsSize="sm" type="number" name="telefono_trabajo" id="telefono_trabajo" onChange={this.handleChangeUsuario} value={this.state.usuario['telefono_trabajo']} />
+                              <Input max={14} bsSize="sm" type="number" name="telefono_trabajo" id="telefono_trabajo" onChange={this.handleChangeUsuario} value={this.state.usuario['telefono_trabajo']} />
                             </Col>
                           </FormGroup>
                           <FormGroup row>
