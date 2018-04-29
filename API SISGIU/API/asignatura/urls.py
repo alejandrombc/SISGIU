@@ -56,7 +56,7 @@ urlpatterns = format_suffix_patterns([
     # Asignaturas que puede inscribir un estudiante
     url(r'^api/asignaturas_a_inscribir/estudiante/(?P<cedula>[0-9]{6,8})/$', get_asignaturas_a_inscribir, name='asignaturas-a-inscribir'),
 
-    # Crear las prelaciones de una asignatura
+    # Crear las prelaciones de una asignatura y asigna los tipos de postgrado
     url(r'^api/asignaturas_necesarias/$', post_prelacion, name='PrelacionAsignatura-create'),
 
     # Retirar Periodo

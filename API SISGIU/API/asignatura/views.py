@@ -325,13 +325,20 @@ def get_asignaturas_actuales(request, periodo):
 @api_view(['POST'])
 @permission_classes((IsAdminUser, ))
 def post_prelacion(request):
-	codigos = json.loads(request.body.decode("utf-8"))
-	PrelacionAsignatura.objects.filter(asignatura_objetivo=codigos['codigo']).delete()
+	body = json.loads(request.body.decode("utf-8"))
+	PrelacionAsignatura.objects.filter(asignatura_objetivo=body['codigo']).delete()
 	prelacion = []
-	for code in codigos['prelaciones']:
+	for code in body['prelaciones']:
 		prelacion = PrelacionAsignatura.objects.create(
-			asignatura_objetivo=Asignatura.objects.get(codigo=codigos['codigo']),
+			asignatura_objetivo=Asignatura.objects.get(codigo=body['codigo']),
 			asignatura_prela=Asignatura.objects.get(codigo=code))
+
+	asignatura = Asignatura.objects.get(codigo=body['codigo'])
+
+	for id_tipo_postgrado in body['tipos_postgrado']:
+		AsignaturaTipoPostgrado.objects.create(
+			asignatura=asignatura,
+			tipo_postgrado=TipoPostgrado.objects.get(id=id_tipo_postgrado))
 
 	return Response(status=status.HTTP_201_CREATED)
 

@@ -570,19 +570,4 @@ def cargar_notas(request):
 		estudiante_asignatura.update(nota_definitiva=estudiante['nota_definitiva'])
 
 	return Response(status=status.HTTP_200_OK)
-
-
-@csrf_exempt
-@api_view(['POST'])
-@permission_classes((IsAdminUser, ))
-def post_asignatura_tipo_postgrado(request):
-	body = json.loads(request.body.decode("utf-8"))
-	asignatura = Asignatura.objects.get(codigo=body['asignatura_codigo'])
-
-	for id_tipo_postgrado in body['tipos_postgrado']:
-		AsignaturaTipoPostgrado.objects.create(
-			asignatura=asignatura,
-			tipo_postgrado=TipoPostgrado.objects.get(id=id_tipo_postgrado))
-
-	return Response(status=status.HTTP_201_CREATED)
 #endregion
