@@ -20,16 +20,17 @@ class ModalAsignaturaEdit extends React.Component {
       unidad_credito: this.props.asignatura['unidad_credito'],
       tipo_asignatura: this.props.asignatura['tipo_asignatura'],
       prelaciones: this.props.prelacion,
+      tipos_postgrado: this.props.asignatura['tipos_postgrado'],
     };
 
     this.toggle = this.toggle.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.handleSelectChange = this.handleSelectChange.bind(this);
+    this.handleSelectChangeTipoPostgrado = this.handleSelectChangeTipoPostgrado.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
 
   }
 
-    
   toggle() {
     this.setState({
       modal: !this.state.modal
@@ -39,6 +40,10 @@ class ModalAsignaturaEdit extends React.Component {
 
   handleSelectChange (prelaciones) {
     this.setState({ prelaciones });
+  }
+
+  handleSelectChangeTipoPostgrado(tipos_postgrado) {
+    this.setState({ tipos_postgrado });
   }
 
   handleChange(e) {
@@ -56,9 +61,13 @@ class ModalAsignaturaEdit extends React.Component {
   }
 
   render() {
-    const { prelaciones } = this.state;
+
+    const { prelaciones, tipos_postgrado } = this.state;
     var options = JSON.parse(JSON.stringify(this.props.adminUser['lista_asignaturas']).split('"codigo":').join('"value":')); //Rename key 
     options = JSON.parse(JSON.stringify(options).split('"nombre":').join('"label":')); //Rename key 
+
+    var options_tipo_postgrado = JSON.parse(JSON.stringify(this.props.adminUser['lista_postgrados']).split('"id":').join('"value":')); //Rename key 
+    options_tipo_postgrado = JSON.parse(JSON.stringify(options_tipo_postgrado).split('"tipo":').join('"label":')); //Rename key 
 
     let listTipoAsignaturas = '';
 
@@ -126,6 +135,22 @@ class ModalAsignaturaEdit extends React.Component {
                                   simpleValue
                                   value={prelaciones}
                                 />
+                            </Col>
+                          </FormGroup>
+
+                          <FormGroup row>
+                            <Label for="tipos_postgrado" sm={5}>Tipo de Postgrado</Label>
+                            <Col sm={7}>
+                              <Select
+                                closeOnSelect={true}
+                                multi
+                                onChange={this.handleSelectChangeTipoPostgrado}
+                                options={options_tipo_postgrado}
+                                placeholder="Tipos de postgrado"
+                                removeSelected={true}
+                                simpleValue
+                                value={tipos_postgrado}
+                              />
                             </Col>
                           </FormGroup>
                           

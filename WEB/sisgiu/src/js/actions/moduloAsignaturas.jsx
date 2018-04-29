@@ -109,10 +109,6 @@ export function crear_asignatura (asignatura) {
 		asignatura.tipos_postgrado = [];
 	}
 
-	/* let asignatura_tipo_postgrado = {};
-	asignatura_tipo_postgrado.asignatura_codigo = asignatura.codigo;
-	asignatura_tipo_postgrado.tipos_postgrado = asignatura.tipos_postgrado; */
-
 	return request
 	   .post(host+'api/asignaturas/')
 	   .set('Authorization', 'JWT '+token)
@@ -151,6 +147,14 @@ export const editar_asignatura = (asignatura) => {
 			asignatura.prelaciones = asignatura.prelaciones.split(',');
 		} else {
 			asignatura.prelaciones = [];
+		}
+	}
+
+	if (typeof asignatura.tipos_postgrado === 'string') {
+		if (asignatura.tipos_postgrado && asignatura.tipos_postgrado.length > 0) {
+			asignatura.tipos_postgrado = asignatura.tipos_postgrado.split(',');
+		} else {
+			asignatura.tipos_postgrado = [];
 		}
 	}
 

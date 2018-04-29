@@ -29,8 +29,6 @@ class ListaAsignaturas extends Component{
         loading: false,
       }
       
-      // this.props.get_prelacion(false);
-
       this.updateLoading = this.updateLoading.bind(this);
       this.onDismiss = this.onDismiss.bind(this);
       this.searchUpdated = this.searchUpdated.bind(this)

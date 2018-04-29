@@ -91,6 +91,25 @@ class AsignaturaListCreateAPIView(ListCreateAPIView):
 	serializer_class = AsignaturaListSerializer
 	permission_classes = [IsAuthenticatedOrReadOnly, IsListOrCreate]
 
+	def get(self, request, format=None):
+		asignaturas_aux = Asignatura.objects.all()
+		serializer = AsignaturaListSerializer(asignaturas_aux, many=True)
+
+		asignaturas = Asignatura.objects.all().values()
+		asignaturas = [entry for entry in asignaturas]
+
+		for asignatura in asignaturas:
+			tipos_postgrado = AsignaturaTipoPostgrado.objects.filter(asignatura=Asignatura.objects.get(id=asignatura['id'])).values('id', 'tipo_postgrado_id')
+			aux = [entry for entry in tipos_postgrado]
+
+			lista_ids = []
+			for tipo_postgrado in tipos_postgrado:
+				lista_ids.append(tipo_postgrado['tipo_postgrado_id'])
+
+			asignatura['tipos_postgrado'] = lista_ids
+
+		return Response(asignaturas)
+
 
 class AsignaturaDetailAPIView(RetrieveAPIView):
 	queryset = Asignatura.objects.all()
@@ -334,7 +353,7 @@ def post_prelacion(request):
 			asignatura_prela=Asignatura.objects.get(codigo=code))
 
 	asignatura = Asignatura.objects.get(codigo=body['codigo'])
-
+	AsignaturaTipoPostgrado.objects.filter(asignatura=asignatura).delete()
 	for id_tipo_postgrado in body['tipos_postgrado']:
 		AsignaturaTipoPostgrado.objects.create(
 			asignatura=asignatura,
