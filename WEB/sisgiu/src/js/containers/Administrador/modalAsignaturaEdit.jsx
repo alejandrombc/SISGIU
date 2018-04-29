@@ -82,7 +82,7 @@ class ModalAsignaturaEdit extends React.Component {
         <Button color="success" size='sm' onClick={this.toggle} data-toggle="tooltip" title="Editar"><FontAwesomeIcon name="edit"/></Button>
         <Modal isOpen={this.state.modal} toggle={this.toggle} className={this.props.className}>
           <ModalHeader toggle={this.toggle}> 
-                Editar materia
+                Editar asignatura
           </ModalHeader>
           <Form onSubmit={this.handleSubmit}>
             <ModalBody>
@@ -129,7 +129,7 @@ class ModalAsignaturaEdit extends React.Component {
                                   multi
                                   onChange={this.handleSelectChange}
                                   options={options}
-                                  placeholder="Seleccione alguna materia"
+                                  placeholder="Seleccione alguna asignatura"
                                   removeSelected={true}
                                   simpleValue
                                   value={prelaciones}

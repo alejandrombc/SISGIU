@@ -1,27 +1,49 @@
 import json
 from rest_framework import status
-from django.http import HttpResponse
 import csv, sys, os
 from API.settings import IMPORTS_DB
-from asignatura.models import Asignatura, TipoAsignatura
+from asignatura.models import Asignatura, TipoAsignatura, PrelacionAsignatura
+from relacion.models import AsignaturaTipoPostgrado
 from usuario.models import Estudiante, TipoPostgrado, EstadoEstudiante, Usuario, PersonalDocente, PersonalAdministrativo
 from django.views.decorators.csrf import csrf_exempt
 from usuario.serializers import UsuarioListSerializer
+from rest_framework.decorators import permission_classes, api_view
+from rest_framework.permissions import IsAdminUser
+from rest_framework.response import Response
 
 
 def import_asignaturas(datos):
 
     for row in datos:
         if row[0] != 'codigo':
-            obj, created = Asignatura.objects.get_or_create(
-                codigo=row[0],
-                nombre=row[1],
-                tipo_asignatura=TipoAsignatura.objects.get(id=row[2]),
-                unidad_credito=row[3],
-            )
-    response = {}
-    response['detail'] = 'OK'
-    return HttpResponse(json.dumps(response), content_type="application/json", status=status.HTTP_200_OK)
+            try:
+                obj, created = Asignatura.objects.get_or_create(
+                    codigo=row[0],
+                    nombre=row[1],
+                    tipo_asignatura=TipoAsignatura.objects.get(id=row[2]),
+                    unidad_credito=row[3],
+                )
+
+                codigos = row[4].split(';')
+                if len(codigos) > 1 or codigos[0] != '':
+                    for codigo in codigos:
+                        PrelacionAsignatura.objects.get_or_create(
+                            asignatura_objetivo=Asignatura.objects.get(codigo=codigo),
+                            asignatura_prela=obj
+                        )
+
+                tipos_postgrado = row[5].split(';')
+                if len(tipos_postgrado) > 1 or tipos_postgrado[0] != '':
+                    for tipo_postgrado in tipos_postgrado:
+                        AsignaturaTipoPostgrado.objects.get_or_create(
+                            asignatura=obj,
+                            tipo_postgrado=TipoPostgrado.objects.get(id=tipo_postgrado)
+                        )
+
+            except Exception as ex:
+                pass
+
+    return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 def import_estudiantes(datos):
@@ -59,8 +81,7 @@ def import_estudiantes(datos):
         response['detail'] = 'Ha ocurrido un error importando estudiantes en la base de datos.'
         return HttpResponse(json.dumps(response), content_type="application/json", status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-    response['detail'] = 'OK'
-    return HttpResponse(json.dumps(response), content_type="application/json", status=status.HTTP_200_OK)
+    return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 def import_docentes(datos):
@@ -94,8 +115,7 @@ def import_docentes(datos):
         response['detail'] = 'Ha ocurrido un error importando personal docente en la base de datos.'
         return HttpResponse(json.dumps(response), content_type="application/json", status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-    response['detail'] = 'OK'
-    return HttpResponse(json.dumps(response), content_type="application/json", status=status.HTTP_200_OK)
+    return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 def import_administrativo(datos):
@@ -124,11 +144,12 @@ def import_administrativo(datos):
         response['detail'] = 'Ha ocurrido un error importando personal administrativo en la base de datos.'
         return HttpResponse(json.dumps(response), content_type="application/json", status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-    response['detail'] = 'OK'
-    return HttpResponse(json.dumps(response), content_type="application/json", status=status.HTTP_200_OK)
+    return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 @csrf_exempt
+@api_view(['POST'])
+@permission_classes((IsAdminUser, ))
 def import_bd(request, tipo):
 
     body_unicode = request.body.decode('utf-8')
@@ -150,6 +171,4 @@ def import_bd(request, tipo):
     elif tipo == 'asignaturas':
         return import_asignaturas(datos)
 
-    response = {}
-    response['detail'] = 'hola'
-    return HttpResponse(json.dumps(response), content_type="application/json", status=status.HTTP_200_OK)
+    return Response(status=status.HTTP_204_NO_CONTENT)
