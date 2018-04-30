@@ -79,7 +79,7 @@ def import_estudiantes(datos):
                 )
     except Exception as ex:
         response['detail'] = 'Ha ocurrido un error importando estudiantes en la base de datos.'
-        return HttpResponse(json.dumps(response), content_type="application/json", status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        return Response(response, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     return Response(status=status.HTTP_204_NO_CONTENT)
 
@@ -113,8 +113,8 @@ def import_docentes(datos):
                 )
     except Exception as ex:
         response['detail'] = 'Ha ocurrido un error importando personal docente en la base de datos.'
-        return HttpResponse(json.dumps(response), content_type="application/json", status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
+        return Response(response, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    
     return Response(status=status.HTTP_204_NO_CONTENT)
 
 
@@ -142,8 +142,8 @@ def import_administrativo(datos):
                 obj, created = PersonalAdministrativo.objects.get_or_create(usuario=objUser)
     except Exception as ex:
         response['detail'] = 'Ha ocurrido un error importando personal administrativo en la base de datos.'
-        return HttpResponse(json.dumps(response), content_type="application/json", status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
+        return Response(response, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    
     return Response(status=status.HTTP_204_NO_CONTENT)
 
 
@@ -160,8 +160,8 @@ def import_bd(request, tipo):
     except Exception as ex:
         response = {}
         response['detail'] = 'El nombre de archivo especificado no existe.'
-        return HttpResponse(json.dumps(response), content_type="application/json", status=status.HTTP_200_OK)
-
+        return Response(response, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
     if tipo == 'estudiantes':
         return import_estudiantes(datos)
     elif tipo == 'docentes':
