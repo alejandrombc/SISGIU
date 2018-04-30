@@ -33,7 +33,7 @@ export function get_usuarios (tipo_usuario, edit) {
 	   		localStorage.removeItem('user_token');
 	   		localStorage.removeItem('modulo');
 	      	return {
-				type: "ERROR_naednkAJND;kna"
+				type: "ERROR"
 			}
 	   });
 
@@ -106,6 +106,7 @@ export const crearUsuario = (user, tipo_usuario) => {
 		modulo = "usuarios"; 
 		user = user['usuario'];
 		user['is_superuser'] = true;
+		user['is_staff'] = true;
 	}
 	return request
 	   .get(host+'api/usuarios/cedula/'+cedula+'/')
