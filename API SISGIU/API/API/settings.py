@@ -42,6 +42,8 @@ CORS_ORIGIN_ALLOW_ALL = True
 
 MEDIA_URL = '/media/'
 
+host_react = 'http://199.192.17.43:3000/'
+
 # Application definition
 
 INSTALLED_APPS = [

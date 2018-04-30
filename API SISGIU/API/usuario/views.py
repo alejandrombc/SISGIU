@@ -4,7 +4,8 @@ import os
 import datetime
 from django.http import HttpResponse
 from django.template.loader import get_template
-from usuario.utils import host_react, render_to_pdf
+from usuario.utils import render_to_pdf
+from API.settings import host_react
 from django.core.mail import send_mail
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.permissions import (

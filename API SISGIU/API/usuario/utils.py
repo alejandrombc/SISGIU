@@ -3,8 +3,7 @@ from django.http import HttpResponse
 from django.template.loader import get_template
 from xhtml2pdf import pisa
 from django.core.mail import send_mail
-
-host_react = 'http://localhost:3000/'
+from API.settings import host_react
 
 
 def render_to_pdf(template_src, context_dict={}):

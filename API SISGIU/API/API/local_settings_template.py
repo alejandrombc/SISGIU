@@ -22,3 +22,5 @@ REST_FRAMEWORK = {
     ),
     'TEST_REQUEST_DEFAULT_FORMAT': 'json',
 }
+
+host_react = 'http://localhost:3000/'
