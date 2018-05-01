@@ -37,10 +37,16 @@ class SeccionFoto extends Component{
 
 	changePhotoSubmit(e) {
 		e.preventDefault() // Stop form submit
-		this.setState({ begin: false, visible: true , loading: true});
-		this.props.edit['bad_photo_request'] = false;
-		this.props.cambiarFoto(this.state.foto, this.props.token['user']);
-		this.setState({ loading: false});
+		let extension = this.state.foto.name.split('.')[1];
+		let size = this.state.foto.size;
+		if((extension == "jpg" || extension == "png") && size <= 5242880 ){
+			this.setState({ begin: false, visible: true , loading: true});
+			this.props.edit['bad_photo_request'] = false;
+			this.props.cambiarFoto(this.state.foto, this.props.token['user']);
+			this.setState({ loading: false});
+		}else{
+			alert("La imagen debe ser png o jpg. Además no debe superar 1 MB de tamaño.");
+		}
 
 	}
 
@@ -83,7 +89,7 @@ class SeccionFoto extends Component{
 									</li>
 									<li>
 										El archivo debe pesar menos de {' '}
-										<b>500 kB</b>{' '}
+										<b>5 MB</b>{' '}
 										y estar en formato {' '}
 										<b>JPG o PNG</b>.
 									</li>
@@ -108,7 +114,7 @@ class SeccionFoto extends Component{
 									</tbody>
 								</table>
 							<br /><br /><br />
-	                        <Input className="form-control" accept="image/png image/jpg" type="file" name="foto" id="foto" onChange={this.handleChange} />
+	                        <Input className="form-control" accept="image/*"  type="file" name="foto" id="foto" onChange={this.handleChange} />
 	                      </Col>
 	                    </FormGroup>
 	                    <center><Button type="submit" color="primary" >Guardar</Button></center>
@@ -139,6 +145,7 @@ const mapDispatchToProps = (dispatch) => {
 
 
 export default connect(mapStateToProps, mapDispatchToProps)(SeccionFoto);
+
 
 
 

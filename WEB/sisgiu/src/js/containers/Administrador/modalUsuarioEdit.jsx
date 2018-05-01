@@ -121,10 +121,16 @@ class ModalUsuarioEdit extends React.Component {
         break;
     }
     if (documento) {
-      this.props.triggerParentUpdate();
-      this.props.editarDocumento(tipo_documento, documento, this.state.usuario.cedula);
-      this.props.triggerParentUpdate();
-      this.toggle();
+      let extension = documento.name.split('.')[1];
+      let size = documento.size;
+      if((extension == "pdf" || extension == "doc" || extension == "docx") && size <= 52428800){
+        this.props.triggerParentUpdate();
+        this.props.editarDocumento(tipo_documento, documento, this.state.usuario.cedula);
+        this.props.triggerParentUpdate();
+        this.toggle();
+      }else{
+        alert('El archivo debe ser doc, docx o pdf. Además no debe superar los 50 MB');
+      }
     } else {
       alert('No ha subido ningún archivo');
     }
@@ -420,3 +426,4 @@ const mapDispatchToProps = (dispatch) => {
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(ModalUsuarioEdit);
+
