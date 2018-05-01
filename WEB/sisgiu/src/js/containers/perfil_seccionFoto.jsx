@@ -45,7 +45,7 @@ class SeccionFoto extends Component{
 			this.props.cambiarFoto(this.state.foto, this.props.token['user']);
 			this.setState({ loading: false});
 		}else{
-			alert("La imagen debe ser png o jpg. Además no debe superar 1 MB de tamaño.");
+			alert("La imagen debe ser png o jpg. Además no debe superar 5 MB de tamaño.");
 		}
 
 	}
