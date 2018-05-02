@@ -3,7 +3,6 @@ from django.urls import path
 from django.conf.urls import url, include
 from usuario import views
 from asignatura import views
-from tramite import views
 from periodo import views
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns, static
 from django.conf import settings
@@ -16,7 +15,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     url(r'^', include('usuario.urls')),
     url(r'^', include('asignatura.urls')),
-    url(r'^', include('tramite.urls')),
     url(r'^', include('periodo.urls')),
     url(r'^', include('relacion.urls')),
 

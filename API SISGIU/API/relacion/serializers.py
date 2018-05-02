@@ -3,7 +3,6 @@ from relacion.models import (
     PeriodoEstudiante,
     DocenteAsignatura,
     EstudianteAsignatura,
-    EstudianteTramite,
     AsignaturaTipoPostgrado,
     )
 
@@ -58,21 +57,6 @@ class EstudianteAsignaturaDetailSerializer(serializers.ModelSerializer):
         model = EstudianteAsignatura
         fields = ('__all__')
 
-"""
-Serializer de Estudiante Tramite
-"""
-
-
-class EstudianteTramiteListSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = EstudianteTramite
-        fields = ('__all__')
-
-
-class EstudianteTramiteDetailSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = EstudianteTramite
-        fields = ('__all__')
 
 """
 Serializer de Asignatura TipoPostgrado

@@ -49,7 +49,6 @@ host_react = 'http://199.192.17.43:3000/'
 INSTALLED_APPS = [
     'usuario.apps.UsuarioConfig',
     'periodo.apps.PeriodoConfig',
-    'tramite.apps.TramiteConfig',
     'asignatura.apps.AsignaturaConfig',
     'relacion.apps.RelacionConfig',
     'django.contrib.admin',

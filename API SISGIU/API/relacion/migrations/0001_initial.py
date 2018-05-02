@@ -45,18 +45,6 @@ class Migration(migrations.Migration):
             },
         ),
         migrations.CreateModel(
-            name='EstudianteTramite',
-            fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('fecha_creacion', models.DateField(auto_now_add=True)),
-                ('fecha_tope', models.DateField()),
-                ('mensaje', models.TextField()),
-            ],
-            options={
-                'db_table': 'estudiante_tramite',
-            },
-        ),
-        migrations.CreateModel(
             name='PeriodoEstudiante',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),

@@ -2,7 +2,6 @@ from django.db import models
 from usuario.models import *
 from asignatura.models import *
 from periodo.models import *
-from tramite.models import *
 
 
 # Todas las relaciones entre tablas principales
@@ -63,19 +62,6 @@ class EstudianteAsignatura(models.Model):
 		return str(self.periodo_estudiante) + ', ' + str(self.asignatura)
 
 
-# Tabla intermedia entre Estudiante y Tramite
-class EstudianteTramite(models.Model):
-	estudiante = models.ForeignKey(Estudiante, on_delete=models.CASCADE)
-	tramite = models.ForeignKey(Tramite, on_delete=models.CASCADE)
-	fecha_creacion = models.DateField(auto_now_add=True)
-	fecha_tope = models.DateField()
-	estado_tramite = models.ForeignKey(EstadoTramite, on_delete=models.CASCADE)
-	mensaje = models.TextField()
-
-	class Meta:
-		db_table = 'estudiante_tramite'
-
-
 # Tabla intermedia entre Asignatura y TipoPostgrado
 class AsignaturaTipoPostgrado(models.Model):
 	asignatura = models.ForeignKey(Asignatura, on_delete=models.CASCADE)
@@ -83,3 +69,6 @@ class AsignaturaTipoPostgrado(models.Model):
 
 	class Meta:
 		db_table = 'asignatura_tipoPostgrado'
+
+	def __str__(self):
+		return '(' + str(self.asignatura.codigo) + ') ' + str(self.asignatura.nombre) + ' - ' + str(self.tipo_postgrado.tipo)

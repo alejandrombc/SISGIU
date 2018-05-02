@@ -34,3 +34,6 @@ class PrelacionAsignatura(models.Model):
 
 	class Meta:
 		db_table = 'prelacion_asignatura'
+
+	def __str__(self):
+		return '(' + self.asignatura_objetivo.codigo + ') ' + self.asignatura_objetivo.nombre + ' - (' + self.asignatura_prela.codigo + ') ' + self.asignatura_prela.nombre

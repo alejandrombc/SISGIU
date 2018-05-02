@@ -5,5 +5,4 @@ from .models import *
 admin.site.register(PeriodoEstudiante)
 admin.site.register(DocenteAsignatura)
 admin.site.register(EstudianteAsignatura)
-admin.site.register(EstudianteTramite)
 admin.site.register(AsignaturaTipoPostgrado)

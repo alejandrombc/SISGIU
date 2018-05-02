@@ -11,7 +11,6 @@ class Migration(migrations.Migration):
     dependencies = [
         ('relacion', '0001_initial'),
         ('usuario', '0001_initial'),
-        ('tramite', '0001_initial'),
         ('periodo', '0002_periodo_tipo_postgrado'),
         ('asignatura', '0001_initial'),
     ]
@@ -26,21 +25,6 @@ class Migration(migrations.Migration):
             model_name='periodoestudiante',
             name='periodo',
             field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='periodo.Periodo'),
-        ),
-        migrations.AddField(
-            model_name='estudiantetramite',
-            name='estado_tramite',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='tramite.EstadoTramite'),
-        ),
-        migrations.AddField(
-            model_name='estudiantetramite',
-            name='estudiante',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='usuario.Estudiante'),
-        ),
-        migrations.AddField(
-            model_name='estudiantetramite',
-            name='tramite',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='tramite.Tramite'),
         ),
         migrations.AddField(
             model_name='estudianteasignatura',
