@@ -232,56 +232,57 @@ def programacion_academica(request):
 	aux_doc_asig = {}
 	programacion_academica = []
 	asignaturas = {}
+	if(docente_asignatura):
+		for x in docente_asignatura:
+			periodo = Periodo.objects.get(id=x.periodo_id)
+			asignatura_codigo = Asignatura.objects.get(id=x.asignatura_id).codigo
+			if str(x.periodo_id) not in aux_doc_asig:
+				if(asignaturas):
+					aux_doc_asig[str(last_period)].append(asignaturas)
 
-	for x in docente_asignatura:
-		periodo = Periodo.objects.get(id=x.periodo_id)
-		asignatura_codigo = Asignatura.objects.get(id=x.asignatura_id).codigo
-		if str(x.periodo_id) not in aux_doc_asig:
-			if(asignaturas):
-				aux_doc_asig[str(last_period)].append(asignaturas)
+				aux_doc_asig[str(x.periodo_id)] = []
+				last_period = x.periodo_id
+				asignaturas = {}
 
-			aux_doc_asig[str(x.periodo_id)] = []
-			last_period = x.periodo_id
-			asignaturas = {}
+			if asignatura_codigo not in asignaturas:
+				asignaturas[asignatura_codigo] = []
 
-		if asignatura_codigo not in asignaturas:
-			asignaturas[asignatura_codigo] = []
+			docente = Usuario.objects.get(id=x.docente_id)
+			asignatura_info = {}
+			asignatura_info['first_name'] = docente.first_name
+			asignatura_info['last_name'] = docente.last_name
+			asignatura_info['hora'] = x.horario_hora
+			asignatura_info['dia'] = x.horario_dia
+			asignatura_info['aula'] = x.aula
 
-		docente = Usuario.objects.get(id=x.docente_id)
-		asignatura_info = {}
-		asignatura_info['first_name'] = docente.first_name
-		asignatura_info['last_name'] = docente.last_name
-		asignatura_info['hora'] = x.horario_hora
-		asignatura_info['dia'] = x.horario_dia
-		asignatura_info['aula'] = x.aula
+			asignaturas[asignatura_codigo].append(asignatura_info)
 
-		asignaturas[asignatura_codigo].append(asignatura_info)
+		#Append del ultimo periodo
+		aux_doc_asig[str(last_period)].append(asignaturas)
 
-	#Append del ultimo periodo
-	aux_doc_asig[str(last_period)].append(asignaturas)
+		# Agregar tipo de postgrado y descripcion para colocarlo en el arreglo final
+		for x in aux_doc_asig:
+			temp = {}
+			periodo = Periodo.objects.get(id=x)
+			temp['tipo_postgrado'] = TipoPostgrado.objects.get(id=periodo.tipo_postgrado_id).tipo
+			temp['descripcion'] = periodo.descripcion
+			temp['periodo_id'] = x
+			temp[x] = []
+			for asignaturas in aux_doc_asig[x]:
+				for codigo in asignaturas:
+					asignatura = Asignatura.objects.get(codigo=codigo)
+					temp_asignatura = {}
+					temp_asignatura[codigo] = asignaturas[codigo]
+					temp_asignatura['nombre'] = asignatura.nombre
+					temp_asignatura['unidad_credito'] = asignatura.unidad_credito
+					temp_asignatura['codigo'] = codigo
+					temp[x].append(temp_asignatura)
 
-	# Agregar tipo de postgrado y descripcion para colocarlo en el arreglo final
-	for x in aux_doc_asig:
-		temp = {}
-		periodo = Periodo.objects.get(id=x)
-		temp['tipo_postgrado'] = TipoPostgrado.objects.get(id=periodo.tipo_postgrado_id).tipo
-		temp['descripcion'] = periodo.descripcion
-		temp['periodo_id'] = x
-		temp[x] = []
-		for asignaturas in aux_doc_asig[x]:
-			for codigo in asignaturas:
-				asignatura = Asignatura.objects.get(codigo=codigo)
-				temp_asignatura = {}
-				temp_asignatura[codigo] = asignaturas[codigo]
-				temp_asignatura['nombre'] = asignatura.nombre
-				temp_asignatura['unidad_credito'] = asignatura.unidad_credito
-				temp_asignatura['codigo'] = codigo
-				temp[x].append(temp_asignatura)
+			programacion_academica.append(temp)
 
-		programacion_academica.append(temp)
-
-	return Response(programacion_academica, status=status.HTTP_200_OK)
-
+		return Response(programacion_academica, status=status.HTTP_200_OK)
+	else:
+		return Response(["empty"], status=status.HTTP_200_OK)
 
 @api_view(['GET'])
 @permission_classes((IsAdminUser, ))

@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import {bindActionCreators} from 'redux';
 import { Alert, Form, FormGroup, Input, Button, Row, Col} from 'reactstrap';
 import { PulseLoader } from 'halogenium'; //Spinner
+import {host} from '../components/globalVariables';
 
 // Components
 import { cambiarFoto } from '../actions/perfilUsuario';
@@ -105,10 +106,10 @@ class SeccionFoto extends Component{
 									<tbody>
 										<tr>
 											<td align="center">
-												<img alt="Foto mujer" src="http://conest.ciens.ucv.ve/webapp/assets/foto_mujer-2012fa4fc80b0be0d01176448c02f014.png" width="80" />
+												<img alt="Foto mujer" src={host + 'media/sisgiu/foto_mujer.png'} width="80" />
 											</td>
 											<td align="center">
-												<img alt="Foto hombre" src="http://conest.ciens.ucv.ve/webapp/assets/foto_hombre-414066f3e0555344aacab8c43575b281.png" width="80" />
+												<img alt="Foto hombre" src={host + 'media/sisgiu/foto_hombre.png'} width="80" />
 											</td>
 										</tr>
 									</tbody>

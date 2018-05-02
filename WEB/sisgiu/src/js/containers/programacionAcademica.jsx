@@ -41,8 +41,7 @@ class ProgramacionAcademica extends Component {
             "5": "Sabado",
             "6": "Domingo",
         }
-
-        if(postgrado !== ''){
+        if(postgrado !== '-1'){
             var listItems = "";
             //Validamos que exista el arreglo y sea mayor a cero
             if(this.props.activeUser['programacionAcademica'] && this.props.activeUser['programacionAcademica'].length > 0){
@@ -79,6 +78,7 @@ class ProgramacionAcademica extends Component {
                 return (<center><h6>Este periodo no tiene asignaturas</h6></center>);
             }
         }
+	return (<center><h6>Seleccione un tipo de postgrado</h6></center>);
     }
     
 
