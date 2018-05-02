@@ -31,6 +31,9 @@ class Usuario(AbstractUser):
 		ordering = ['last_name', 'segundo_apellido']
 		db_table = 'usuario'
 
+	def __str__(self):
+		return str(self.cedula) + ' ' + str(self.first_name) + ' ' + str(self.last_name)
+
 
 class Estudiante(models.Model):
 	usuario = models.OneToOneField(
@@ -57,7 +60,7 @@ class Estudiante(models.Model):
 		db_table = 'estudiante'
 
 	def __str__(self):
-		return str(self.usuario)
+		return str(self.usuario) + ' ' + str(self.usuario.first_name) + ' ' + str(self.usuario.last_name)
 
 
 class TipoPostgrado(models.Model):
@@ -109,3 +112,6 @@ class PersonalAdministrativo(models.Model):
 	class Meta:
 		ordering = ['usuario__last_name', 'usuario__segundo_apellido']
 		db_table = 'personal_administrativo'
+
+	def __str__(self):
+		return str(self.usuario) + ' ' + str(self.usuario.first_name) + ' ' + str(self.usuario.last_name)

@@ -172,7 +172,7 @@ REST_FRAMEWORK = {
 
 # Configure the JWTs to expire after 1 hour, and allow users to refresh near-expiration tokens
 JWT_AUTH = {
-    'JWT_EXPIRATION_DELTA': datetime.timedelta(hours=5),
+    'JWT_EXPIRATION_DELTA': datetime.timedelta(hours=3),
     'JWT_ALLOW_REFRESH': True,
 }
 
