@@ -39,7 +39,7 @@ class SeccionFoto extends Component{
 		e.preventDefault() // Stop form submit
 		let extension = this.state.foto.name.split('.')[1];
 		let size = this.state.foto.size;
-		if((extension == "jpg" || extension == "png") && size <= 5242880 ){
+		if((extension === "jpg" || extension === "png") && size <= 5242880 ){
 			this.setState({ begin: false, visible: true , loading: true});
 			this.props.edit['bad_photo_request'] = false;
 			this.props.cambiarFoto(this.state.foto, this.props.token['user']);

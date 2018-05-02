@@ -123,7 +123,7 @@ class ModalUsuarioEdit extends React.Component {
     if (documento) {
       let extension = documento.name.split('.')[1];
       let size = documento.size;
-      if((extension == "pdf" || extension == "doc" || extension == "docx") && size <= 52428800){
+      if((extension === "pdf" || extension === "doc" || extension === "docx") && size <= 52428800){
         this.props.triggerParentUpdate();
         this.props.editarDocumento(tipo_documento, documento, this.state.usuario.cedula);
         this.props.triggerParentUpdate();

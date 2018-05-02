@@ -21,9 +21,6 @@ class ProgramacionAcademica extends Component {
         this.get_tipos_postgrados = this.get_tipos_postgrados.bind(this);
         this.handleChange = this.handleChange.bind(this);
         this.get_items = this.get_items.bind(this);
-        // this.mostrar_programacion_academica = this.mostrar_programacion_academica.bind(this);
-        // this.get_ListItems = this.get_ListItems.bind(this);
-
     }
 
     componentDidMount() {
@@ -45,7 +42,7 @@ class ProgramacionAcademica extends Component {
             "6": "Domingo",
         }
 
-        if(postgrado !== '-1'){
+        if(postgrado !== ''){
             var listItems = "";
             //Validamos que exista el arreglo y sea mayor a cero
             if(this.props.activeUser['programacionAcademica'] && this.props.activeUser['programacionAcademica'].length > 0){
@@ -82,7 +79,6 @@ class ProgramacionAcademica extends Component {
                 return (<center><h6>Este periodo no tiene asignaturas</h6></center>);
             }
         }
-        return (<center><h6>Seleccione un tipo de postgrado</h6></center>);
     }
     
 
@@ -104,7 +100,6 @@ class ProgramacionAcademica extends Component {
     }
 
     render() {
-
         if (!this.props.activeUser.cargado) {
             return (<center><PulseLoader color="#b3b1b0" size="16px" margin="4px" /></center>);
         } else {
@@ -133,10 +128,7 @@ class ProgramacionAcademica extends Component {
                     <br/>
                     <Row>
                         <Col md='12'>
-                            <center><h5>Asignaturas</h5></center>
-                            <br />
                             <ListGroup>
-                                {/* {this.get_ListItems(dias)} */}
                                 {this.get_items(this.state.postgrado)}
                             </ListGroup>
                         </Col>

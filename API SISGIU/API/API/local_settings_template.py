@@ -24,3 +24,5 @@ REST_FRAMEWORK = {
 }
 
 host_react = 'http://localhost:3000/'
+
+ALLOWED_HOSTS = ['localhost']
