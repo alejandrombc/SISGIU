@@ -13,9 +13,9 @@ import { Link } from 'react-router-dom'
 class Usuario extends Component{
 
   render(){
-      var user = this.props.token['user'];
+      var user = this.props.activeUser['user'];
       var nombre = user.usuario.first_name + ' ' + user.usuario.last_name;
-      var modulo = this.props.token['modulo'];
+      var modulo = this.props.activeUser['modulo'];
       if(modulo === "estudiantes"){
         modulo = "Módulo Estudiante";
       }else if(modulo === "docentes"){
@@ -44,8 +44,8 @@ class Usuario extends Component{
                 </div>
               </div>
               <div className="profile-userbuttons">
-                <Link to="perfil"><button type="button" className="btn btn-success btn-sm">Perfil</button></Link>{' '}
-                <button onClick={this.props.logout} type="button" className="btn btn-danger btn-sm">Cerrar Sesión</button>
+                <Link to="perfil"><button type="button" className="btn btn-success btn-sm" disabled={!this.props.activeUser.cargado}>Perfil</button></Link>{' '}
+                <button onClick={this.props.logout} type="button" className="btn btn-danger btn-sm" disabled={!this.props.activeUser.cargado}>Cerrar Sesión</button>
               </div>
             </div>
           </div>
@@ -56,7 +56,7 @@ class Usuario extends Component{
 
 const mapStateToProps = (state)=> {
   return{
-    token: state.activeUser
+    activeUser: state.activeUser
   };
 }
 
