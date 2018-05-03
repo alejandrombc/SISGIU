@@ -18,7 +18,7 @@ export default function (state=initialState, action) {
 			nuevo_estado['edit'] = true;
 			return nuevo_estado;
 
-		case "EDIT_USER_INFO_ERROR":
+		case "EDIT_USER_INFORMATION_ERROR":
 			nuevo_estado['bad_input'] = true;
 			return nuevo_estado;
 

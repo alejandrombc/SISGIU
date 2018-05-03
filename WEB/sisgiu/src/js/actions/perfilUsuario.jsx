@@ -28,7 +28,7 @@ export const editarUsuario = (cambios, user) => {
 	   })
 	   .catch(function(err) {
 	      	return {
-				type: "EDIT_USER_INFO_ERROR"
+				type: "EDIT_USER_INFORMATION_ERROR"
 			}
 	   });
 }
