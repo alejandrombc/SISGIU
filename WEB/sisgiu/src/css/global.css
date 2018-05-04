@@ -50,3 +50,16 @@
   margin-top: 20px!important;
 }
 
+
+/*EYES PASSWORD*/
+.eyes {
+  color: #0099cc;
+  padding: 1em 1.5em;
+  position: relative;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+
+.eyes:hover {
+  cursor: pointer;
+}

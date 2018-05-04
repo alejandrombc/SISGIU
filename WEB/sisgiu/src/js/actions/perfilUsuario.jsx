@@ -41,6 +41,12 @@ export const cambiarContrasena = (password, user) => {
 	user.usuario.password = password;
 	delete user.usuario.foto;
 
+	if(modulo === "docentes"){
+		delete user.rif;
+		delete user.permiso_ingresos;
+		delete user.curriculum;
+	}
+
 	return request
 	   .put(host+'api/'+modulo+'/'+user.usuario.cedula+'/edit/')
 	   .set('Authorization', 'JWT '+token)

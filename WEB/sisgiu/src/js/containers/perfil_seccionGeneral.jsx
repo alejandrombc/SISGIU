@@ -123,19 +123,19 @@ class SeccionGeneral extends Component{
 		                    <FormGroup row>
 		                      <Label for="Celular" sm={2}>Celular</Label>
 		                      <Col sm={10}>
-		                        <Input type="number" name="celular" id="celular" onChange={this.handleChangeUsuario} value={this.state.usuario.celular} />
+		                        <Input min={1000000000} max={999999999999} type="number" name="celular" id="celular" onChange={this.handleChangeUsuario} value={this.state.usuario.celular} />
 		                      </Col>
 		                    </FormGroup>
 		                    <FormGroup row>
 		                      <Label for="telefono_casa" sm={2}>Tlf. Casa</Label>
 		                      <Col sm={10}>
-		                        <Input type="number" name="telefono_casa" id="telefono_casa" onChange={this.handleChangeUsuario} value={this.state.usuario.telefono_casa} />
+		                        <Input min={1000000000} max={999999999999} type="number" name="telefono_casa" id="telefono_casa" onChange={this.handleChangeUsuario} value={this.state.usuario.telefono_casa} />
 		                      </Col>
 		                    </FormGroup>
 		                    <FormGroup row>
 		                      <Label for="telefono_trabajo" sm={2}>Tlf. Trabajo</Label>
 		                      <Col sm={10}>
-		                        <Input type="number" name="telefono_trabajo" id="telefono_trabajo" onChange={this.handleChangeUsuario} value={this.state.usuario.telefono_trabajo} />
+		                        <Input min={1000000000} max={999999999999} type="number" name="telefono_trabajo" id="telefono_trabajo" onChange={this.handleChangeUsuario} value={this.state.usuario.telefono_trabajo} />
 		                      </Col>
 		                    </FormGroup>
 		                    <FormGroup row>

@@ -6,13 +6,7 @@ class IsListOrCreate(BasePermission):
 	message = "No posee permiso para realizar esta accion."
 
 	def has_permission(self, request, view):
-		if (request.method == 'POST'):
-			member = Usuario.objects.get(username=request.user)
-			if(member.is_superuser):
-				return True
-			else:
-				return False
-		return True
+		return (request.method == 'POST' and request.user.is_superuser) or request.method == 'GET'
 
 
 class EsEstudianteOAdministrador(BasePermission):
@@ -22,9 +16,7 @@ class EsEstudianteOAdministrador(BasePermission):
 		if (request.method == 'GET'):
 			return True
 		else:
-			admin = Usuario.objects.get(username=request.user)
-			member = Estudiante.objects.filter(usuario_id=request.user.id)
-			if(not member and not admin.is_superuser):
+			if(not Estudiante.objects.filter(usuario_id=request.user.id).exists() and not request.user.is_superuser):
 				return False
 			else:
 				return True
@@ -38,9 +30,7 @@ class EsAdministrativoOAdministrador(BasePermission):
 		if (request.method == 'GET'):
 			return True
 		else:
-			admin = Usuario.objects.get(username=request.user)
-			member = PersonalAdministrativo.objects.filter(usuario_id=request.user.id)
-			if(not member and not admin.is_superuser):
+			if(not PersonalAdministrativo.objects.filter(usuario_id=request.user.id).exists() and not request.user.is_superuser):
 				return False
 			else:
 				return True
@@ -54,9 +44,7 @@ class EsDocenteOAdministrador(BasePermission):
 		if (request.method == 'GET'):
 			return True
 		else:
-			admin = Usuario.objects.get(username=request.user)
-			member = PersonalDocente.objects.filter(usuario_id=request.user.id)
-			if(not member and not admin.is_superuser):
+			if(not PersonalDocente.objects.filter(usuario_id=request.user.id).exists() and not request.user.is_superuser):
 				return False
 			else:
 				return True
@@ -67,7 +55,6 @@ class isOwnerOrReadOnly(BasePermission):
 	message = "Debe ser el usuario iniciado para editar este objeto."
 
 	def has_object_permission(self, request, view, obj):
-		member = Usuario.objects.get(username=request.user)
-		if(member.is_superuser):
+		if(request.user.is_superuser):
 			return True
 		return obj.usuario == request.user

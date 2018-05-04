@@ -260,6 +260,7 @@ def edit_admin(request, cedula):
 		user.celular = body['usuario']['celular']
 		user.telefono_trabajo = body['usuario']['telefono_trabajo']
 		user.telefono_casa = body['usuario']['telefono_casa']
+		user.set_password(body['usuario']['password'])
 		user.save()
 		return Response(status=status.HTTP_204_NO_CONTENT)
 
