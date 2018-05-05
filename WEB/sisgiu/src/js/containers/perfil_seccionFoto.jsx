@@ -38,17 +38,20 @@ class SeccionFoto extends Component{
 
 	changePhotoSubmit(e) {
 		e.preventDefault() // Stop form submit
-		let extension = this.state.foto.name.split('.')[1];
-		let size = this.state.foto.size;
-		if((extension === "jpg" || extension === "png") && size <= 5242880 ){
-			this.setState({ begin: false, visible: true , loading: true});
-			this.props.edit['bad_photo_request'] = false;
-			this.props.cambiarFoto(this.state.foto, this.props.token['user']);
-			this.setState({ loading: false});
+		if(this.state.foto){
+			let extension = this.state.foto.name.split('.')[1];
+			let size = this.state.foto.size;
+			if((extension === "jpg" || extension === "png") && size <= 5242880 ){
+				this.setState({ begin: false, visible: true , loading: true});
+				this.props.edit['bad_photo_request'] = false;
+				this.props.cambiarFoto(this.state.foto, this.props.token['user']);
+				this.setState({ loading: false});
+			}else{
+				alert("La imagen debe ser png o jpg. Además no debe superar 5 MB de tamaño.");
+			}
 		}else{
-			alert("La imagen debe ser png o jpg. Además no debe superar 5 MB de tamaño.");
+			alert("Seleccione alguna imagen");
 		}
-
 	}
 
 
