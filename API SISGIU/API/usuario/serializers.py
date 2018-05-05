@@ -20,7 +20,7 @@ class AdministradorListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Usuario
-        fields = ('id', 'is_superuser', 'is_superuser', 'cedula', 'first_name', 'segundo_nombre',
+        fields = ('id', 'is_staff', 'is_superuser', 'cedula', 'first_name', 'segundo_nombre',
                   'last_name', 'segundo_apellido', 'last_name', 'email',
                   'correo_alternativo', 'celular', 'telefono_casa', 'telefono_trabajo',
                   'fecha_nacimiento', 'sexo', 'nacionalidad', 'estado_civil', 'foto', 'username', 'password')
@@ -41,7 +41,7 @@ class AdministradorDetailSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Usuario
-        fields = ('cedula', 'is_superuser', 'first_name', 'segundo_nombre',
+        fields = ('cedula', 'is_staff', 'is_superuser', 'first_name', 'segundo_nombre',
                   'last_name', 'segundo_apellido', 'last_name', 'email',
                   'correo_alternativo', 'celular', 'telefono_casa', 'telefono_trabajo',
                   'fecha_nacimiento', 'sexo', 'nacionalidad', 'estado_civil', 'foto', 'username', 'password')
