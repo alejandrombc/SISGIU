@@ -15,6 +15,7 @@ class ModalUsuarioEdit extends React.Component {
     this.state = {
       modal: false,
       usuario: {
+        tipo_documento: this.props.usuario['tipo_documento'],
         cedula: this.props.usuario['cedula'],
         first_name: this.props.usuario['first_name'],
         segundo_nombre: this.props.usuario['segundo_nombre'],
@@ -197,9 +198,9 @@ class ModalUsuarioEdit extends React.Component {
                     <Row>
                       <Col sm="12">
                           <FormGroup row>
-                            <Label for="cedula" sm={4}>Cedula</Label>
+                            <Label for="identificacion" sm={4}>Identificación</Label>
                             <Col sm={8}>
-                              <Input  bsSize="sm" type="text" name="cedula" id="cedula" defaultValue={this.state.usuario['cedula']} readOnly required/>
+                              <Input bsSize="sm" type="text" name="cedula" id="identificacion" defaultValue={this.state.usuario['tipo_documento'] + '-' + this.state.usuario['cedula']} readOnly required/>
                             </Col>
                           </FormGroup>
                           <FormGroup row>

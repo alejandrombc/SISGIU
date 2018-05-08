@@ -35,7 +35,7 @@ urlpatterns = format_suffix_patterns([
     # Obtiene los estudiantes que cursan cierto periodo para el Personal Administrativo
     url(r'^api/periodoEstudiante/periodo/(?P<periodo_id>\d+)/$', get_estudiantes_por_periodo, name='estudiante-list-periodo'),
     # Obtiene la informacion de un estudiante en un periodo determinado
-    url(r'^api/periodoEstudiante/(?P<cedula>[0-9]{6,8})/periodo/(?P<periodo>[\w\s]+)/$', get_periodo, name='PeriodoEstudiante-detail'),
+    url(r'^api/periodoEstudiante/(?P<cedula>[\w\-]+)/periodo/(?P<periodo>[\w\s]+)/$', get_periodo, name='PeriodoEstudiante-detail'),
     url(r'^api/periodoEstudiante/(?P<pk>\d+)/edit/$', PeriodoEstudianteUpdateAPIView.as_view(), name='PeriodoEstudiante-update'),
     url(r'^api/periodoEstudiante/(?P<pk>\d+)/delete/$', PeriodoEstudianteDeleteAPIView.as_view(), name='PeriodoEstudiante-delete'),
 
@@ -51,22 +51,22 @@ urlpatterns = format_suffix_patterns([
 
     # EstudianteAsignatura
     url(r'^api/estudianteAsignatura/$', EstudianteAsignaturaListCreateAPIView.as_view(), name='EstudianteAsignatura-list-create'),
-    url(r'^api/estudianteAsignatura/(?P<estudiante__usuario__cedula>\d+)/$', EstudianteAsignaturaDetailAPIView.as_view(), name='EstudianteAsignatura-detail'),
+    url(r'^api/estudianteAsignatura/(?P<estudiante__usuario__cedula>[\w\-]+)/$', EstudianteAsignaturaDetailAPIView.as_view(), name='EstudianteAsignatura-detail'),
     url(r'^api/estudianteAsignatura/(?P<pk>\d+)/edit/$', EstudianteAsignaturaUpdateAPIView.as_view(), name='EstudianteAsignatura-update'),
     url(r'^api/estudianteAsignatura/(?P<pk>\d+)/delete/$', EstudianteAsignaturaDeleteAPIView.as_view(), name='EstudianteAsignatura-delete'),
 
 
     #Inscribe un estudiante en el periodo "en inscripcion" de su tipo de postgrado
-    url(r'^api/estudianteAsignatura/inscribir/(?P<cedula>[0-9]{6,8})/$', crear_estudiante_asignatura, name='inscribir'),
+    url(r'^api/estudianteAsignatura/inscribir/(?P<cedula>[\w\-]+)/$', crear_estudiante_asignatura, name='inscribir'),
 
     #Permite al personal administrativo editar las asignaturas inscritas por un docente
-    url(r'^api/estudianteAsignatura/modificarInscripcion/(?P<cedula>[0-9]{6,8})/$', modificar_estudiante_asignatura, name='modificar-asignaturas'),
+    url(r'^api/estudianteAsignatura/modificarInscripcion/(?P<cedula>[\w\-]+)/$', modificar_estudiante_asignatura, name='modificar-asignaturas'),
 
     #Obtiene el historial academico de un estudiante tomando en cuenta retirados y materias SC
-    url(r'^api/estudianteAsignatura/(?P<cedula>[0-9]{6,8})/historial/$', obtener_informacion_historial, name='historial-academico-info'),
+    url(r'^api/estudianteAsignatura/(?P<cedula>[\w\-]+)/historial/$', obtener_informacion_historial, name='historial-academico-info'),
 
     # Muestra toda la informacion disponible de un usuario (docente o estudiante), incluido el historial.
-    url(r'^api/informacionUsuariosAdministrativo/(?P<cedula>[0-9]{6,8})/$', informacion_usuarios_administrativo, name='usuarios-administrativo-info'),
+    url(r'^api/informacionUsuariosAdministrativo/(?P<cedula>[\w\-]+)/$', informacion_usuarios_administrativo, name='usuarios-administrativo-info'),
 
     #Actualiza la calificacion de todos los estudiantes de un docente para una asignatura
     url(r'^api/estudianteAsignatura/cargarNotas/$', cargar_notas, name='EstudianteAsignatura-cargar-notas'),
@@ -74,7 +74,7 @@ urlpatterns = format_suffix_patterns([
 
     # AsignaturaTipoPostgrado
     url(r'^api/asignaturaTipoPostgrado/$', AsignaturaTipoPostgradoListCreateAPIView.as_view(), name='AsignaturaTipoPostgrado-list-create'),
-    url(r'^api/asignaturaTipoPostgrado/(?P<estudiante__usuario__cedula>\d+)/$', AsignaturaTipoPostgradoDetailAPIView.as_view(), name='AsignaturaTipoPostgrado-detail'),
+    url(r'^api/asignaturaTipoPostgrado/(?P<estudiante__usuario__cedula>[\w\-]+)/$', AsignaturaTipoPostgradoDetailAPIView.as_view(), name='AsignaturaTipoPostgrado-detail'),
     url(r'^api/asignaturaTipoPostgrado/(?P<pk>\d+)/edit/$', AsignaturaTipoPostgradoUpdateAPIView.as_view(), name='AsignaturaTipoPostgrado-update'),
     url(r'^api/asignaturaTipoPostgrado/(?P<pk>\d+)/delete/$', AsignaturaTipoPostgradoDeleteAPIView.as_view(), name='AsignaturaTipoPostgrado-delete'),
 

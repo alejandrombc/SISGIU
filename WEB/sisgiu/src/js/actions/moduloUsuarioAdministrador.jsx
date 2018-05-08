@@ -108,6 +108,7 @@ export const crearUsuario = (user, tipo_usuario) => {
 		user['is_superuser'] = true;
 		user['is_staff'] = true;
 	}
+	console.log(user);
 	return request
 	   .get(host+'api/usuarios/cedula/'+cedula+'/')
 	   .set('Authorization', 'JWT '+token)
@@ -118,19 +119,21 @@ export const crearUsuario = (user, tipo_usuario) => {
 	   		}else{
 	   			user['usuario']['username'] = "dummy";
 	   		}
-	   		user['usuario']['username'] = "dummy";
+			user['usuario']['username'] = "dummy";
+		   	console.log(user);
 			return request
 			   .post(host+'api/'+modulo+'/')
 			   .set('Authorization', 'JWT '+token)
 			   .set('Content-Type', 'application/json')
 			   .send(user)
 			   .then(function(res) {
-				   	  	return function (dispatch) {
-						    dispatch(get_usuarios(tipo_usuario ,1));
-						}
+					return function (dispatch) {
+						dispatch(get_usuarios(tipo_usuario ,1));
+					}
 
 			   })
 			   .catch(function(err) {
+				   console.log(err);
 			   	  	return function (dispatch) {
 					    dispatch(get_usuarios(tipo_usuario ,2));
 					}

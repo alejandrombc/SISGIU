@@ -42,28 +42,28 @@ urlpatterns = format_suffix_patterns([
     url(r'^api/asignaturas/(?P<codigo>[\w\-]+)/delete/$', AsignaturaDeleteAPIView.as_view(), name='Asignatura-delete'),
 
     # Asignaturas dictadas por un docente
-    url(r'^api/asignaturas/docente/(?P<cedula>[0-9]{6,8})/$', get_asignaturas_por_docente, name='asignaturas-por-docente'),
+    url(r'^api/asignaturas/docente/(?P<cedula>[\w\-]+)/$', get_asignaturas_por_docente, name='asignaturas-por-docente'),
 
     # Estudiantes de un docente en un tipo de postgrado
     url(r'^api/asignaturas/(?P<codigo>[\w\-]+)/tipo_postgrado/(?P<tipo_postgrado>[\w\s]+)/$', get_estudiantes_docente, name='estudiantes-por-docente'),
 
     # Asignaturas cursadas por un estudiante
-    url(r'^api/asignaturas/estudiante/(?P<cedula>[0-9]{6,8})/$', get_asignaturas_por_estudiante, name='asignaturas-por-estudiante'),
+    url(r'^api/asignaturas/estudiante/(?P<cedula>[\w\-]+)/$', get_asignaturas_por_estudiante, name='asignaturas-por-estudiante'),
 
     # Lista de todas las asignaturas que tienen prelaciones
     url(r'^api/asignaturas_necesarias/all/$', get_all_asignaturas_necesarias, name='PrelacionAsignatura-all'),
 
     # Asignaturas que puede inscribir un estudiante
-    url(r'^api/asignaturas_a_inscribir/estudiante/(?P<cedula>[0-9]{6,8})/$', get_asignaturas_a_inscribir, name='asignaturas-a-inscribir'),
+    url(r'^api/asignaturas_a_inscribir/estudiante/(?P<cedula>[\w\-]+)/$', get_asignaturas_a_inscribir, name='asignaturas-a-inscribir'),
 
     # Crear las prelaciones de una asignatura y asigna los tipos de postgrado
     url(r'^api/asignaturas_necesarias/$', post_prelacion, name='PrelacionAsignatura-create'),
 
     # Retirar Periodo
-    url(r'^api/retirar/estudiante/(?P<cedula>[0-9]{6,8})/periodo/(?P<periodo>\d+)/$', retirar_periodo_estudiante, name='retirar-periodo'),
+    url(r'^api/retirar/estudiante/(?P<cedula>[\w\-]+)/periodo/(?P<periodo>\d+)/$', retirar_periodo_estudiante, name='retirar-periodo'),
 
     # Asignaturas que tiene un estudiante en el periodo actual
-    url(r'^api/asignaturas_actuales/estudiante/(?P<cedula>[0-9]{6,8})/$', get_asignaturas_actuales_estudiante, name='asignaturas-actuales'),
+    url(r'^api/asignaturas_actuales/estudiante/(?P<cedula>[\w\-]+)/$', get_asignaturas_actuales_estudiante, name='asignaturas-actuales'),
 
     # Asignaturas de un periodo
     url(r'^api/asignaturas_actuales/periodo/(?P<periodo>\d+)/$', get_asignaturas_actuales, name='asignaturas-actuales'),

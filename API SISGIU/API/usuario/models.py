@@ -14,7 +14,8 @@ def user_directory_path_subuser(instance, filename):
 
 
 class Usuario(AbstractUser):
-	cedula = models.IntegerField(null=True)
+	tipo_documento = models.CharField(max_length=1)
+	cedula = models.CharField(max_length=25, default='')
 	segundo_nombre = models.CharField(max_length=50, null=True, blank=True)
 	segundo_apellido = models.CharField(max_length=50, null=True, blank=True)
 	correo_alternativo = models.EmailField(max_length=60, blank=True)
@@ -32,7 +33,7 @@ class Usuario(AbstractUser):
 		db_table = 'usuario'
 
 	def __str__(self):
-		return str(self.cedula) + ' ' + str(self.first_name) + ' ' + str(self.last_name)
+		return str(self.tipo_documento) + ' ' + str(self.cedula) + ' ' + str(self.first_name) + ' ' + str(self.last_name)
 
 
 class Estudiante(models.Model):
