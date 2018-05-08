@@ -126,7 +126,7 @@ class ListaEstudiantes extends Component{
 
     listItems = filteredUsuarios.map((usuario) =>
       <tr key={usuario['cedula']}>
-        <td>{usuario['cedula']}</td>
+        <td>{usuario['tipo_documento']+ '-' +usuario['cedula']}</td>
         <td>{usuario['first_name']} {usuario['last_name']}</td>
         <td>  
           <Row >
@@ -187,7 +187,7 @@ class ListaEstudiantes extends Component{
             <Table bordered hover responsive striped size="sm">
               <thead>
                 <tr>
-                  <th>Cédula</th>
+                  <th>Identificación</th>
                   <th>Nombre</th>
                   <th>Calificación</th>
                 </tr>

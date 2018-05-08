@@ -103,9 +103,9 @@ class ModalEstudianteEdit extends React.Component {
                     <Row>
                       <Col sm="12">
                         <Row>
-                          <Label for="cedula" sm={4}>Cedula</Label>
+                          <Label for="cedula" sm={4}>Identificación</Label>
                           <Col sm={8}>
-                            <Input  bsSize="sm" type="text" name="cedula" id="cedula" defaultValue={this.props.data.estudiante.cedula} readOnly/>
+                            <Input  bsSize="sm" type="text" name="cedula" id="cedula" defaultValue={this.props.data.estudiante.tipo_documento + '-' + this.props.data.estudiante.cedula} readOnly/>
                           </Col>
                         </Row>
                         <Row>

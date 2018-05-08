@@ -56,7 +56,7 @@ from .permissions import (
 from django.views.decorators.csrf import csrf_exempt
 from django.db.models import Q
 from rest_framework.decorators import permission_classes, api_view
-from usuario.permissions import isDocenteOrAdmin, isEstudianteOrAdmin, isAdministrativoOrAdmin
+from usuario.permissions import isAdministrativoOrEstudianteOrAdmin, isDocenteOrAdmin, isEstudianteOrAdmin, isAdministrativoOrAdmin
 from rest_framework import status
 from rest_framework.response import Response
 #endregion
@@ -428,7 +428,7 @@ def modificar_estudiante_asignatura(request, cedula):
 
 
 @api_view(['GET'])
-@permission_classes((isEstudianteOrAdmin, ))
+@permission_classes((isAdministrativoOrEstudianteOrAdmin, ))
 def obtener_informacion_historial(request, cedula):
 
 	estudiante_asignatura = EstudianteAsignatura.objects.filter(periodo_estudiante__estudiante__usuario__cedula=cedula)
@@ -537,6 +537,7 @@ def informacion_usuarios_administrativo(request, cedula):
 		return Response(obj_usuario, status=status.HTTP_400_BAD_REQUEST)
 
 	obj_usuario['first_name'] = usuario.usuario.first_name
+	obj_usuario['tipo_documento'] = usuario.usuario.tipo_documento
 	obj_usuario['last_name'] = usuario.usuario.last_name
 	obj_usuario['segundo_nombre'] = usuario.usuario.segundo_nombre
 	obj_usuario['segundo_apellido'] = usuario.usuario.segundo_apellido

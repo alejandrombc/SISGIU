@@ -93,8 +93,8 @@ class Login extends Component{
 							          </select>
 							        </FormGroup>
 							        <FormGroup>
-							          <Label for="username">Cédula</Label>
-							          <Input type="text" name="cedula" id="cedula" value={cedula} required onChange={this.handleChange} placeholder="Ej: 11122233"/> 
+							          <Label for="username">Cédula o Pasaporte</Label>
+							          <Input type="text" name="cedula" id="cedula" value={cedula} required onChange={this.handleChange} placeholder="Ej: 10987658"/> 
 							        </FormGroup>
 							        <FormGroup>
 							          <Label for="password">Contraseña</Label>

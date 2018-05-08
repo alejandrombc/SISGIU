@@ -37,7 +37,7 @@ class Usuario extends Component{
                   {nombre}
                 </div>
                 <div className="profile-usertitle-job">
-                  V-{user['usuario']['cedula']}
+                  {user['usuario']['tipo_documento']}-{user['usuario']['cedula']}
                 </div>
                 <div className="profile-usertitle-job">
                   {modulo}

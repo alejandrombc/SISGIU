@@ -105,7 +105,7 @@ class UsuariosAdministrativo extends Component {
                     <Row>
                         <Col md='6' sm='8' xs='8'>
                             <InputGroup>
-                                <Input placeholder="Cédula" onChange={this.handleChange} name='cedula' />
+                                <Input placeholder="Identificación" onChange={this.handleChange} name='cedula' />
                             </InputGroup>
                         </Col>
                         <Col md='6' sm='4' xs='4'>

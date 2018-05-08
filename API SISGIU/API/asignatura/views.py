@@ -151,6 +151,7 @@ def get_estudiantes_docente(request, codigo, tipo_postgrado):
 		estudiante_asignatura['first_name'] = estudiante['first_name']
 		estudiante_asignatura['last_name'] = estudiante['last_name']
 		estudiante_asignatura['cedula'] = estudiante['cedula']
+		estudiante_asignatura['tipo_documento'] = estudiante['tipo_documento']
 
 		lista_estudiantes.append(estudiante_asignatura)
 

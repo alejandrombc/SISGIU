@@ -66,7 +66,7 @@ class RecuperarContrasenaForm extends Component{
 
 							      	{this.props.status['bad_input'] &&
 	                    		      <Alert color="danger" isOpen={this.state.visible} toggle={this.onDismiss}>
-								        Cédula errónea
+								        Identificación errónea
 								      </Alert>
                     				}
                     				{this.props.status['correo_enviado'] &&
@@ -77,8 +77,8 @@ class RecuperarContrasenaForm extends Component{
 
                     				<hr />
 							        <FormGroup>
-							          <Label for="cedula">Cédula</Label>
-							          <Input type="text" name="cedula" id="cedula" value={cedula} required onChange={this.handleChange} placeholder="Ej: 11122233"/> 
+							          <Label for="cedula">Cédula o Pasaporte</Label>
+							          <Input type="text" name="cedula" id="cedula" value={cedula} required onChange={this.handleChange} placeholder="Ej: 10657835"/> 
 							          <font size="1">Se le enviará un correo electronico con un link para poder restablecer su contraseña</font>
 							        </FormGroup>
 									
