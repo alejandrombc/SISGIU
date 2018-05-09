@@ -83,10 +83,22 @@ export function get_estado_periodo () {
 
 
 
-export function crear_periodo (periodo, id_estado_periodo) {
+export function crear_periodo (periodo, id_estado_periodo, descripcion) {
 	let token = localStorage.getItem('user_token');
 
 	periodo['estado_periodo'] = id_estado_periodo;
+	periodo.descripcion = descripcion;
+
+	let meses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+	
+	var date_inicio = new Date(periodo.fecha_inicio);
+	var date_fin = new Date(periodo.fecha_fin);
+
+	periodo.mes_inicio = meses[ date_inicio.getUTCMonth() ];
+	periodo.mes_fin = meses[ date_fin.getUTCMonth() ];
+	periodo.anio_inicio = date_inicio.getUTCFullYear();
+	periodo.anio_fin = date_fin.getUTCFullYear();
+
 
 	return request
 	   .post(host+'api/periodo/')

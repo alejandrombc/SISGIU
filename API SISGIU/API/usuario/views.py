@@ -511,6 +511,11 @@ def constancia_estudio(request, cedula):
 		return Response(response, status=status.HTTP_404_NOT_FOUND)
 
 	user_information['periodo'] = periodo['descripcion']
+	user_information['anio_inicio'] = periodo['anio_inicio']
+	user_information['anio_fin'] = periodo['anio_fin']
+	user_information['mes_inicio'] = periodo['mes_inicio']
+	user_information['mes_fin'] = periodo['mes_fin']
+	user_information['numero_periodo'] = periodo['numero_periodo']
 
 	asignaturas = EstudianteAsignatura.objects.filter(
 		periodo_estudiante__periodo_id=periodo['id'],
@@ -562,6 +567,11 @@ def planilla_docente(request, cedula, codigo):
 	periodo = Periodo.objects.get(id=docente_asignatura['periodo_id'])
 	asignatura = Asignatura.objects.get(id=docente_asignatura['asignatura_id'])
 	user_information['periodo'] = periodo.descripcion
+	user_information['anio_inicio'] = periodo['anio_inicio']
+	user_information['anio_fin'] = periodo['anio_fin']
+	user_information['mes_inicio'] = periodo['mes_inicio']
+	user_information['mes_fin'] = periodo['mes_fin']
+	user_information['numero_periodo'] = periodo['numero_periodo']
 	user_information['asignatura'] = asignatura.nombre
 
 	estudiantes = EstudianteAsignatura.objects.filter(asignatura__codigo=codigo, periodo_estudiante__periodo_id=docente_asignatura['periodo_id'])
@@ -586,6 +596,12 @@ def planilla_periodo(request, periodo):
 	periodo_info = {}
 	periodo_completo = Periodo.objects.get(id=periodo)
 	periodo_info['periodo'] = periodo_completo.descripcion
+	periodo_info['anio_inicio'] = periodo_completo.anio_inicio
+	periodo_info['anio_fin'] = periodo_completo.anio_fin
+	periodo_info['mes_inicio'] = periodo_completo.mes_inicio
+	periodo_info['mes_fin'] = periodo_completo.mes_fin
+	periodo_info['numero_periodo'] = periodo_completo.numero_periodo
+
 	periodo_info['tipo_postgrado'] = periodo_completo.tipo_postgrado.tipo
 	periodo_info['docentes'] = []
 

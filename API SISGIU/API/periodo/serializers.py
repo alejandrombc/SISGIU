@@ -31,4 +31,4 @@ class PeriodoListSerializer(serializers.ModelSerializer):
 class PeriodoDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = Periodo
-        fields = ('estado_periodo', 'tipo_postgrado')
+        fields = ('estado_periodo', 'tipo_postgrado', 'anio_inicio', 'anio_fin', 'mes_inicio', 'mes_fin', 'numero_periodo')

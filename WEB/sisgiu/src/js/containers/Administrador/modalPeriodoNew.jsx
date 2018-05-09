@@ -14,8 +14,10 @@ class ModalPeriodoNew extends React.Component {
     super(props);
     this.state = {
       modal: false,
-      descripcion: null,
-      tipo_postgrado: null
+      tipo_postgrado: null,
+      numero_periodo: 1,
+      fecha_inicio: null,
+      fecha_fin: null,
     };
 
     this.toggle = this.toggle.bind(this);
@@ -39,24 +41,40 @@ class ModalPeriodoNew extends React.Component {
   handleSubmit(e) {
     e.preventDefault();
     
-    this.props.cargando();
+    var date_inicio = new Date(this.state.fecha_inicio);
+    date_inicio.setHours(0, 0, 0, 0);
+    var date_fin = new Date(this.state.fecha_fin);
+    date_fin.setHours(0, 0, 0, 0);
+    let mes_inicio = parseInt(date_inicio.getUTCMonth(), 10)+1 ;
+    let mes_fin = parseInt(date_fin.getUTCMonth(), 10) + 1;
 
-    var n = this.props.adminUser.lista_estadoPeriodo.length ;
-    var id_estado_periodo;
-    for (var i = 0; i<n ; i++){
-      if ( this.props.adminUser.lista_estadoPeriodo[i]['estado'] === 'no iniciado' ) {
-        id_estado_periodo = this.props.adminUser.lista_estadoPeriodo[i]['id'];
-        break;
+    if (date_inicio >= date_fin) {
+      alert('La fecha de inicio debe ser menor a la fecha fin');
+    } else {
+      this.props.cargando();
+
+      var n = this.props.adminUser.lista_estadoPeriodo.length;
+      var id_estado_periodo;
+      for (var i = 0; i < n; i++) {
+        if (this.props.adminUser.lista_estadoPeriodo[i]['estado'] === 'no iniciado') {
+          id_estado_periodo = this.props.adminUser.lista_estadoPeriodo[i]['id'];
+          break;
+        }
       }
+
+      let descripcion = 'Periodo ' + this.state.numero_periodo + ' ' + date_inicio.getUTCDate() + '/' + mes_inicio + '/' + date_fin.getUTCFullYear() + ' - ' + + date_fin.getUTCDate() + '/' + mes_fin + '/' + date_fin.getUTCFullYear();
+  
+      this.props.crear_periodo(this.state, id_estado_periodo, descripcion).then(()=> this.props.cargado());
+      
+      this.setState({
+        tipo_postgrado: null,
+        numero_periodo: 1,
+        fecha_inicio: null,
+        fecha_fin: null,
+      });
+      this.toggle();
     }
 
-    this.props.crear_periodo(this.state, id_estado_periodo).then(()=> this.props.cargado());
-    
-    this.setState({
-      descripcion: null,
-      tipo_postgrado: null
-    });
-    this.toggle();
 
 
   }
@@ -64,9 +82,6 @@ class ModalPeriodoNew extends React.Component {
 
   render() {
 
-
-    
-    
     let listPostgrados = '';
     
     if (this.props.adminUser.lista_postgrados && this.props.adminUser.lista_postgrados.length > 0) {
@@ -89,26 +104,42 @@ class ModalPeriodoNew extends React.Component {
                     <Row>
                       <Col sm="12">
 
-
-                          <FormGroup row>
-                            <Label for="tipo_postgrado" sm={4}>Postgrado</Label>
-                            <Col sm={8}>
-                              <Input bsSize="sm" value={this.state.value} defaultValue={this.state['tipo_postgrado']} onChange={this.handleChange} type="select" name="tipo_postgrado" id="tipo_postgrado" required>
-                                <option value={null} name={-1}> {' '} </option>
-                                {listPostgrados}
-                              </Input>
-                            </Col>
-                          </FormGroup>
-
-                          <FormGroup row>
-                            <Label for="descripcion" sm={4}>Descripción</Label>
-                            <Col sm={8}>
-                              <Input bsSize="sm" type="text" name="descripcion" id="descripcion" onChange={this.handleChange} defaultValue={this.state['descripcion']} required/>
-                            </Col>
-                          </FormGroup>
-
+                        <FormGroup row>
+                          <Label for="tipo_postgrado" sm={4}>Postgrado</Label>
+                          <Col sm={8}>
+                            <Input bsSize="sm" value={this.state.value} defaultValue={this.state['tipo_postgrado']} onChange={this.handleChange} type="select" name="tipo_postgrado" id="tipo_postgrado" required>
+                              <option value={null} name={-1}> {' '} </option>
+                              {listPostgrados}
+                            </Input>
+                          </Col>
+                        </FormGroup>
                           
-                          
+                        <FormGroup row>
+                          <Label for="numero_periodo" sm={4}>Periodo N°</Label>
+                          <Col sm={8}>
+                            <Input bsSize="sm" defaultValue={this.state.numero_periodo} onChange={this.handleChange} type="select" name="numero_periodo" id="numero_periodo" required>
+                              <option value={1} name={1}> 1 </option>
+                              <option value={2} name={2}> 2 </option>
+                              <option value={3} name={3}> 3 </option>
+                              <option value={4} name={4}> 4 </option>
+                            </Input>
+                          </Col>
+                        </FormGroup>
+
+                        <FormGroup row>
+                          <Label for="fecha_inicio" sm={4}>Fecha Inicio</Label>
+                          <Col sm={8}>
+                          <Input bsSize="sm" format="dd/mm/yyyy" type="date" name="fecha_inicio" id="fecha_inicio" onChange={this.handleChange} defaultValue={this.state.fecha_inicio} required />
+                          </Col>
+                        </FormGroup>
+
+                        <FormGroup row>
+                          <Label for="fecha_fin" sm={4}>Fecha Fin</Label>
+                          <Col sm={8}>
+                            <Input bsSize="sm" format="dd/mm/yyyy" type="date" name="fecha_fin" id="fecha_fin" onChange={this.handleChange} defaultValue={this.state.fecha_fin} required />
+                          </Col>
+                        </FormGroup>
+
                       </Col>
                     </Row>
 

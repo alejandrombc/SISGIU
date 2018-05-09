@@ -266,6 +266,12 @@ def programacion_academica(request):
 			periodo = Periodo.objects.get(id=x)
 			temp['tipo_postgrado'] = TipoPostgrado.objects.get(id=periodo.tipo_postgrado_id).tipo
 			temp['descripcion'] = periodo.descripcion
+			temp['anio_inicio'] = periodo.anio_inicio
+			temp['anio_fin'] = periodo.anio_fin
+			temp['mes_inicio'] = periodo.mes_inicio
+			temp['mes_fin'] = periodo.mes_fin
+			temp['numero_periodo'] = periodo.numero_periodo
+
 			temp['periodo_id'] = x
 			temp[x] = []
 			for asignaturas in aux_doc_asig[x]:
@@ -283,6 +289,7 @@ def programacion_academica(request):
 		return Response(programacion_academica, status=status.HTTP_200_OK)
 	else:
 		return Response(["empty"], status=status.HTTP_200_OK)
+
 
 @api_view(['GET'])
 @permission_classes((IsAdminUser, ))
@@ -462,6 +469,11 @@ def obtener_informacion_historial(request, cedula):
 		tipo_asignatura = TipoAsignatura.objects.get(id=asignatura.tipo_asignatura_id)
 
 		periodo_info['periodo'] = periodo.descripcion
+		periodo_info['anio_inicio'] = periodo.anio_inicio
+		periodo_info['anio_fin'] = periodo.anio_fin
+		periodo_info['mes_inicio'] = periodo.mes_inicio
+		periodo_info['mes_fin'] = periodo.mes_fin
+		periodo_info['numero_periodo'] = periodo.numero_periodo
 		periodo_info['asignatura_nombre'] = asignatura.nombre
 		periodo_info['asignatura_codigo'] = asignatura.codigo
 		periodo_info['unidad_credito'] = asignatura.unidad_credito

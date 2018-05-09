@@ -11,6 +11,7 @@ import ConfirmButton from 'react-confirm-button';
 
 // Components
 import ModalPeriodoNew from './modalPeriodoNew';
+import ModalPeriodoDelete from './modalPeriodoDelete';
 import PeriodoEdit from './periodoEdit';
 import { get_asignaturas } from '../../actions/moduloAsignaturas';
 import {get_usuarios} from '../../actions/moduloUsuarioAdministrador';
@@ -43,8 +44,8 @@ class ListaPeriodos extends Component{
         docente_asignatura: "",
         asignaturas: "",
         tipo_postgrado: "",
-        col_lg_trash_button: 2,
-        col_md_trash_button: 2,
+        col_lg_trash_button: 4,
+        col_md_trash_button: 4,
 
       }
       
@@ -231,29 +232,21 @@ class ListaPeriodos extends Component{
 
       listItems = filteredPeriodos.map((periodo, index) =>
         <tr key={periodo['id']}>
-          <td>No iniciado</td>
           <td>{periodo['tipo_postgrado'] + ': ' + periodo['descripcion']}</td>
           <td>  
             <Row >
-              <Col lg='2' md='2' sm='4' className='botones'>
+              <Col lg='2' md='2' sm='2' className='botones'>
 
                 <Button onClick={() => this.handleChange(periodo, item[index], asignaturas[index], periodo['tipo_postgrado'])} color="success" size='sm' data-toggle="tooltip" title="Editar"><FontAwesomeIcon name="edit"/></Button>
               </Col>
 
-              <Col lg={this.state.col_lg_trash_button} md={this.state.col_md_trash_button} sm='4' >
-                <ConfirmButton
-                  onClick={() => this.cambiarTamanoCol()}
-                  onConfirm={() => this.eliminar_periodo( periodo['id'] ) }
-                  text= {<FontAwesomeIcon name="trash-alt"/>}
-                  className="btn btn-danger btn-sm"
-                  confirming={{
-                    text: '¿Está Seguro?',
-                    className: 'btn btn-danger btn-sm',
-                  }}
-                />
+              
+              <Col lg='2' md='2' sm='2' className='botones'>
+                <ModalPeriodoDelete onDismiss={this.onDismiss} triggerParentUpdate={() => this.eliminar_periodo(periodo['id'])} />
               </Col>
 
-              <Col lg='2' md='2' sm='4'>
+
+              <Col lg='2' md='2' sm='8'>
                 <ConfirmButton 
                     
                     onConfirm={() => this.activar_periodo( periodo['id'] ) }
@@ -330,7 +323,6 @@ class ListaPeriodos extends Component{
                   <Table bordered hover responsive striped size="sm">
                     <thead>
                       <tr>
-                        <th>Periodo</th>
                         <th>Postgrado</th>
                         <th>Acción</th>
                       </tr>
