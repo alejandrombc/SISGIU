@@ -2,7 +2,7 @@
 import React, {Component} from 'react';
 import { connect } from 'react-redux';
 import {bindActionCreators} from 'redux';
-import { Alert, Row, Col, ListGroup, ListGroupItem, ListGroupItemHeading} from 'reactstrap';
+import { Alert, Row, Col, ListGroup, ListGroupItem, ListGroupItemHeading, ListGroupItemText} from 'reactstrap';
 import { PulseLoader } from 'halogenium'; //Spinner
 import ConfirmButton from 'react-confirm-button';
 
@@ -53,7 +53,8 @@ class InicioAdministrador extends Component{
               
               <Row>
                 <Col md='7' sm='7'>
-                  <ListGroupItemHeading>{valor['tipo_postgrado']}</ListGroupItemHeading>
+                  <ListGroupItemHeading>{valor.tipo_postgrado}: </ListGroupItemHeading>
+                  <ListGroupItemText>Periodo {valor.numero_periodo + ' ' + valor.mes_inicio + ' ' + valor.anio_inicio + ' - ' + valor.mes_fin + ' ' + valor.anio_fin}</ListGroupItemText>
                 </Col>
                 { valor.estado_periodo === 'activo' ?
                   
