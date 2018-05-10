@@ -30,6 +30,7 @@ class ModalUsuarioNew extends React.Component {
         estado_civil: 'Soltero',
         password: '',
         username: '',
+        tipo_documento: 'V',
       },
       direccion: '',
       coordinador: false,
