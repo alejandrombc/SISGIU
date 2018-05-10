@@ -201,7 +201,7 @@ def get_asignaturas_por_estudiante(request, cedula):
 		docente_asignatura = DocenteAsignatura.objects.filter(Q(asignatura_id=asignatura['id']) & (Q(periodo__estado_periodo__estado='activo') | Q(periodo__estado_periodo__estado='en inscripcion')) & Q(periodo__tipo_postgrado__tipo=estudiante.id_tipo_postgrado)).values()
 		horarios_dia = []
 		horarios_hora = []
-		aulas = []
+		pisos = []
 
 		lista_docente_asignatura = [entry for entry in docente_asignatura]
 		asignatura['docente'] = {}
@@ -213,11 +213,11 @@ def get_asignaturas_por_estudiante(request, cedula):
 		for docente in lista_docente_asignatura:
 			horarios_dia.append(docente['horario_dia'])
 			horarios_hora.append(docente['horario_hora'])
-			aulas.append(docente['aula'])
+			pisos.append(docente['piso'])
 
 		asignatura['docente']['horario_dia'] = horarios_dia
 		asignatura['docente']['horario_hora'] = horarios_hora
-		asignatura['docente']['aula'] = aulas
+		asignatura['docente']['piso'] = pisos
 
 		asignatura['retirado'] = estudiante_asignatura['retirado']
 

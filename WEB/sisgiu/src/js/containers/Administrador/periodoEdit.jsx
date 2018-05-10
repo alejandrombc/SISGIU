@@ -46,7 +46,7 @@ class PeriodoEdit extends React.Component {
   }
 
   get_listItemsFinales(days) {
-    // Esta es la lista de todas las asignaturas con horarios, aulas, etc que se mostrara en el paso final al editar un periodo. 
+    // Esta es la lista de todas las asignaturas con horarios, pisos, etc que se mostrara en el paso final al editar un periodo. 
     let listItemsFinales = this.state.docente_asignatura.map((docente, index) =>
       <tr key={index}>
         <td> 
@@ -60,7 +60,7 @@ class PeriodoEdit extends React.Component {
           {docente.horario_hora}
         </td>
         <td>        
-          {docente.aula}
+          {docente.piso}
         </td>
         <td>
           <ConfirmButton
@@ -127,7 +127,7 @@ class PeriodoEdit extends React.Component {
                 <th>Asignatura</th>
                 <th>Dia</th>
                 <th>Hora</th>
-                <th>Aula</th>
+                <th>Piso</th>
                 <th>Acción</th>
               </tr>
             </thead>

@@ -35,7 +35,7 @@ class DocenteAsignatura(models.Model):
 	docente = models.ForeignKey(PersonalDocente, on_delete=models.CASCADE)
 	asignatura = models.ForeignKey(Asignatura, on_delete=models.CASCADE)
 	periodo = models.ForeignKey(Periodo, on_delete=models.CASCADE)
-	aula = models.IntegerField()
+	piso = models.IntegerField()
 	horario_dia = models.CharField(max_length=1, choices=DIAS_DE_LA_SEMANA)
 	horario_hora = models.CharField(max_length=15)
 

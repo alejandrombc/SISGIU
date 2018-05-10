@@ -28,13 +28,9 @@ from relacion.models import (
 
 from relacion.serializers import (
 	PeriodoEstudianteListSerializer,
-	PeriodoEstudianteDetailSerializer,
 	DocenteAsignaturaListSerializer,
-	DocenteAsignaturaDetailSerializer,
 	EstudianteAsignaturaListSerializer,
-	EstudianteAsignaturaDetailSerializer,
 	AsignaturaTipoPostgradoListSerializer,
-	AsignaturaTipoPostgradoDetailSerializer,
 
 	)
 from rest_framework.generics import (
@@ -71,13 +67,13 @@ class PeriodoEstudianteListCreateAPIView(ListCreateAPIView):
 
 class PeriodoEstudianteUpdateAPIView(RetrieveUpdateAPIView):
 	queryset = PeriodoEstudiante.objects.all()
-	serializer_class = PeriodoEstudianteDetailSerializer
+	serializer_class = PeriodoEstudianteListSerializer
 	permission_classes = [isAdministrativoOrAdmin]
 
 
 class PeriodoEstudianteDeleteAPIView(DestroyAPIView):
 	queryset = PeriodoEstudiante.objects.all()
-	serializer_class = PeriodoEstudianteDetailSerializer
+	serializer_class = PeriodoEstudianteListSerializer
 	permission_classes = [IsAdminUser]
 #endregion
 
@@ -91,13 +87,13 @@ class DocenteAsignaturaListCreateAPIView(ListCreateAPIView):
 
 class DocenteAsignaturaUpdateAPIView(RetrieveUpdateAPIView):
 	queryset = DocenteAsignatura.objects.all()
-	serializer_class = DocenteAsignaturaDetailSerializer
+	serializer_class = DocenteAsignaturaListSerializer
 	permission_classes = [IsAdminUser]
 
 
 class DocenteAsignaturaDeleteAPIView(DestroyAPIView):
 	queryset = DocenteAsignatura.objects.all()
-	serializer_class = DocenteAsignaturaDetailSerializer
+	serializer_class = DocenteAsignaturaListSerializer
 	permission_classes = [IsAdminUser]
 #endregion
 
@@ -111,19 +107,19 @@ class EstudianteAsignaturaListCreateAPIView(ListCreateAPIView):
 
 class EstudianteAsignaturaDetailAPIView(RetrieveAPIView):
 	queryset = EstudianteAsignatura.objects.all()
-	serializer_class = EstudianteAsignaturaDetailSerializer
+	serializer_class = EstudianteAsignaturaListSerializer
 	lookup_field = 'estudiante__usuario__cedula'
 
 
 class EstudianteAsignaturaUpdateAPIView(RetrieveUpdateAPIView):
 	queryset = EstudianteAsignatura.objects.all()
-	serializer_class = EstudianteAsignaturaDetailSerializer
+	serializer_class = EstudianteAsignaturaListSerializer
 	permission_classes = [EsDocenteOAdministrador]
 
 
 class EstudianteAsignaturaDeleteAPIView(DestroyAPIView):
 	queryset = EstudianteAsignatura.objects.all()
-	serializer_class = EstudianteAsignaturaDetailSerializer
+	serializer_class = EstudianteAsignaturaListSerializer
 	permission_classes = [IsAdminUser]
 #endregion
 
@@ -137,20 +133,20 @@ class AsignaturaTipoPostgradoListCreateAPIView(ListCreateAPIView):
 
 class AsignaturaTipoPostgradoDetailAPIView(RetrieveAPIView):
 	queryset = AsignaturaTipoPostgrado.objects.all()
-	serializer_class = AsignaturaTipoPostgradoDetailSerializer
+	serializer_class = AsignaturaTipoPostgradoListSerializer
 	lookup_field = 'estudiante__usuario__cedula'
 	permission_classes = []
 
 
 class AsignaturaTipoPostgradoUpdateAPIView(RetrieveUpdateAPIView):
 	queryset = AsignaturaTipoPostgrado.objects.all()
-	serializer_class = AsignaturaTipoPostgradoDetailSerializer
+	serializer_class = AsignaturaTipoPostgradoListSerializer
 	permission_classes = [IsAdminUser]
 
 
 class AsignaturaTipoPostgradoDeleteAPIView(DestroyAPIView):
 	queryset = AsignaturaTipoPostgrado.objects.all()
-	serializer_class = AsignaturaTipoPostgradoDetailSerializer
+	serializer_class = AsignaturaTipoPostgradoListSerializer
 	permission_classes = [IsAdminUser]
 #endregion
 
@@ -253,7 +249,7 @@ def programacion_academica(request):
 			asignatura_info['last_name'] = docente.last_name
 			asignatura_info['hora'] = x.horario_hora
 			asignatura_info['dia'] = x.horario_dia
-			asignatura_info['aula'] = x.aula
+			asignatura_info['piso'] = x.piso
 
 			asignaturas[asignatura_codigo].append(asignatura_info)
 
@@ -342,7 +338,7 @@ def crearDocenteAsignatura(request, periodo_id):
 
 	for x in body:
 		try:
-			aux = DocenteAsignatura.objects.filter(docente__usuario__cedula=x['usuario']['cedula'], asignatura__codigo=x['asignatura']['codigo'], periodo__id=x['periodo'], aula=x['aula'], horario_dia=x['horario_dia'], horario_hora=x['horario_hora'])
+			aux = DocenteAsignatura.objects.filter(docente__usuario__cedula=x['usuario']['cedula'], asignatura__codigo=x['asignatura']['codigo'], periodo__id=x['periodo'], piso=x['piso'], horario_dia=x['horario_dia'], horario_hora=x['horario_hora'])
 		except:
 			response_data = {}
 			response_data['Error'] = 'Petición Incorrecta.'
@@ -353,7 +349,7 @@ def crearDocenteAsignatura(request, periodo_id):
 			asignatura = Asignatura.objects.get(codigo=x['asignatura']['codigo'])  # obtengo asignatura
 			periodo = Periodo.objects.get(id=x['periodo'])  # obtengo periodo
 			# Creo el nuevo objeto
-			obj = DocenteAsignatura.objects.create(docente=docente, asignatura=asignatura, periodo=periodo, aula=x['aula'], horario_dia=x['horario_dia'], horario_hora=x['horario_hora'])
+			obj = DocenteAsignatura.objects.create(docente=docente, asignatura=asignatura, periodo=periodo, piso=x['piso'], horario_dia=x['horario_dia'], horario_hora=x['horario_hora'])
 			array_docente_asignatura.append(obj)
 		else:
 			array_docente_asignatura.append(aux.first())

@@ -71,13 +71,15 @@ class InicioEstudiante extends Component{
   }
 
   get_ListItems(dias) {
+    
+    const pisos = ['Aula Digital', 'Piso 1','Piso 2', 'Piso 3', 'Piso 4'];
     var listItems = "";
     if(this.props.estudianteUser['materias'] && this.props.estudianteUser['materias'].length > 0){
       listItems = this.props.estudianteUser['materias'].map((valor, index) =>{
         var lista_docentes = [];
         for (var i = 0; i < valor['docente']['horario_dia'].length; i++) {
 
-            lista_docentes[i] = <font key={i}> {dias[valor['docente']['horario_dia'][i]]} {valor['docente']['horario_hora'][i]} | Aula: {valor['docente']['aula'][i]}<br /></font>
+          lista_docentes[i] = <font key={i}> {dias[valor['docente']['horario_dia'][i]]} {valor['docente']['horario_hora'][i]} | {pisos[valor['docente']['piso'][i]]}<br /></font>
         }
         return (
           <ListGroupItem key={index}>

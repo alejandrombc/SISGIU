@@ -42,6 +42,7 @@ class ProgramacionAcademica extends Component {
             "5": "Sabado",
             "6": "Domingo",
         }
+        const pisos = ['Aula Digital', 'Piso 1', 'Piso 2', 'Piso 3', 'Piso 4'];
         if(postgrado !== '-1'){
             var listItems = "";
             //Validamos que exista el arreglo y sea mayor a cero
@@ -57,9 +58,11 @@ class ProgramacionAcademica extends Component {
                         listItems = this.props.activeUser['programacionAcademica'][j][periodo].map((valor, index) =>{
                             var lista_docentes = [];
                             var codigo_asignatura = valor.codigo; //Obtengo el codigo de la asignatura
+                            
+                            
                             //Parseo cada informacion de la asignatura (horario dia y horario hora)
                             for (var i = 0; i < valor[codigo_asignatura].length; i++) {
-                                lista_docentes[i] = <font key={i}> {dias[valor[codigo_asignatura][i]['dia']]} {valor[codigo_asignatura][i]['hora']} | Aula: {valor[codigo_asignatura][i]['aula']} <br /></font>
+                                lista_docentes[i] = <font key={i}> {dias[valor[codigo_asignatura][i]['dia']]} {valor[codigo_asignatura][i]['hora']} | {pisos[valor[codigo_asignatura][i]['piso']]} <br /></font>
                             }
                             //Creo la lista de retorno por cada asignatura
                             return (

@@ -25,7 +25,7 @@ class AgregarDocenteAsignatura extends React.Component {
       horario_dia_nuevo: 0,
       horario_hora_nuevo_inicio: '',
       horario_hora_nuevo_fin: '',
-      aula_nuevo: '',
+      piso_nuevo: '',
 
     };
 
@@ -75,13 +75,12 @@ class AgregarDocenteAsignatura extends React.Component {
       horario_dia_nuevo: 0,
       horario_hora_nuevo_inicio: '',
       horario_hora_nuevo_fin: '',
-      aula_nuevo: '',  });
+      piso_nuevo: '',  });
   }
 
   handleChangeExtraData(e){
     const { name, value } = e.target;
     this.setState({ [name] : value });
-
   }
 
   handleChangeTimePickerInicio(e) {
@@ -114,7 +113,7 @@ class AgregarDocenteAsignatura extends React.Component {
     return listAsignaturas;
   }
 
-  get_listItems(days) {
+  get_listItems(days, pisos) {
     // Esta es la lista de todos los horarios que posee una asignatura en especifico.
     let listItems = this.state.docente_asignatura_tabla.map((docente, index) =>
         <tr key={index}>
@@ -129,7 +128,7 @@ class AgregarDocenteAsignatura extends React.Component {
             {docente.horario_hora}
           </td>
           <td>        
-            {docente.aula}
+            {pisos[docente.piso]}
           </td>
         </tr>
     );
@@ -172,7 +171,7 @@ class AgregarDocenteAsignatura extends React.Component {
     
 
 
-    if( index !== -1 && this.state.aula_nuevo !== '' && horario_hora_nuevo_inicio !== '' && horario_hora_nuevo_fin!== '' ) 
+    if( index !== -1 && this.state.piso_nuevo !== '' && horario_hora_nuevo_inicio !== '' && horario_hora_nuevo_fin!== '' ) 
     {
       
       if (parseInt(horario_hora_nuevo_inicio.split(':')[0], 10) > parseInt(horario_hora_nuevo_fin.split(':')[0], 10) || 
@@ -188,7 +187,7 @@ class AgregarDocenteAsignatura extends React.Component {
           'nombre': this.state.asignatura.nombre,
           'id': this.state.asignatura.id
         };
-        nueva_asignatura['aula'] = this.state.aula_nuevo;
+        nueva_asignatura['piso'] = this.state.piso_nuevo;
         nueva_asignatura['docente'] = docente_asignatura_nuevo;
         nueva_asignatura['usuario'] = {
             'first_name': this.props.adminUser.lista_usuarios[index].first_name,
@@ -199,7 +198,7 @@ class AgregarDocenteAsignatura extends React.Component {
         nueva_asignatura['horario_dia'] = this.state.horario_dia_nuevo;
         nueva_asignatura['horario_hora'] = horario_hora_nuevo_inicio + ' - ' + horario_hora_nuevo_fin;
         nueva_asignatura['periodo'] = this.props.periodo.id;
-        nueva_asignatura['aula'] = this.state.aula_nuevo;
+        nueva_asignatura['piso'] = this.state.piso_nuevo;
         nueva_asignatura['tipo_postgrado'] = this.props.tipo_postgrado;
 
 
@@ -224,7 +223,7 @@ class AgregarDocenteAsignatura extends React.Component {
           horario_dia_nuevo: 0,
           horario_hora_nuevo_inicio: '',
           horario_hora_nuevo_fin: '',
-          aula_nuevo: '',
+          piso_nuevo: '',
         });
 
         this.props.trigger_actualizar_docente_asignatura(new_docente_asignatura);
@@ -269,12 +268,11 @@ class AgregarDocenteAsignatura extends React.Component {
   }
 
   render() {
-
     const days = ['Lunes', 'Martes', 'Miercoles','Jueves', 'Viernes', 'Sabado', 'Domingo'];
-
+    const pisos = ['Aula Digital', 'Piso 1', 'Piso 2', 'Piso 3', 'Piso 4'];
     let listAsignaturas = this.get_listAsignaturas();
     let lista_docentes = this.get_lista_docentes();
-    let listItems = this.get_listItems(days);
+    let listItems = this.get_listItems(days, pisos);
     
 
     return (
@@ -322,7 +320,7 @@ class AgregarDocenteAsignatura extends React.Component {
                 <th>Asignatura</th>
                 <th>Dia</th>
                 <th>Hora</th>
-                <th>Aula</th>
+                <th>Piso</th>
               </tr>
             </thead>
             <tbody className="tabla_usuarios">
@@ -331,7 +329,7 @@ class AgregarDocenteAsignatura extends React.Component {
                 
                 { this.state.asignatura_codigo !== '' &&
                   <tr>
-                    <td id='docente_asignatura_nuevo'> 
+                    <td width="20%" id='docente_asignatura_nuevo'> 
                       <FormGroup>
                         <Input bsSize="sm" value={this.state.docente_asignatura_nuevo} onChange={this.handleChangeExtraData}  type="select" name="docente_asignatura_nuevo" id="docente_asignatura_nuevo" required>
                           <option value={null} name={-1}> {' '} </option>
@@ -339,8 +337,8 @@ class AgregarDocenteAsignatura extends React.Component {
                         </Input>
                       </FormGroup>
                     </td>
-                    <td> {this.state.asignatura.nombre}</td>
-                    <td> 
+                    <td width="30%" > {this.state.asignatura.nombre}</td>
+                    <td width="15%" > 
                       <FormGroup>
                         <Input bsSize="sm" value={this.state.horario_dia_nuevo} onChange={this.handleChangeExtraData} required type="select" name="horario_dia_nuevo" id="horario_dia_nuevo">
                           <option key="0" value="0" name="Lunes"> Lunes </option>
@@ -353,18 +351,21 @@ class AgregarDocenteAsignatura extends React.Component {
                         </Input>
                       </FormGroup>
                     </td>
-                    <td> 
-                      
-
+                    <td width="20%" > 
                       <FormGroup>
                         <TimePicker placeholder="Inicio" showMinute={false} name="horario_hora_nuevo_inicio" ref="horario_hora_nuevo_inicio" onChange={this.handleChangeTimePickerInicio}/>
                         <TimePicker placeholder="Fin" showMinute={false} name="horario_hora_nuevo_fin" ref="horario_hora_nuevo_fin" onChange={this.handleChangeTimePickerFin} />
                       </FormGroup>
-                                      
                     </td>
-                    <td>
+
+                    <td width="15%" >
                       <FormGroup>
-                        <Input type="number" value={this.state.aula_nuevo} name="aula_nuevo" onChange={this.handleChangeExtraData} required />
+                        <Input bsSize="sm" value={this.state.piso_nuevo} onChange={this.handleChangeExtraData} required type="select" name="piso_nuevo">
+                          <option value='' name="sin_piso"> </option>
+                          <option value="0" name="piso0"> Aula Digital </option>
+                          <option value="1" name="piso1"> Piso 1 </option>
+                          <option value="4" name="piso4"> Piso 4 </option>
+                        </Input>
                       </FormGroup>
                     </td>
                   </tr> 
