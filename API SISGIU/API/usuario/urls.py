@@ -65,7 +65,7 @@ urlpatterns = format_suffix_patterns([
 
 
     # Estudiantes
-    
+
     url(r'^api/estudiantes/$', EstudianteListCreateAPIView.as_view(), name='estudiante-list-create'),
     url(r'^api/estudiantes/pagoInscripcion/periodo/(?P<periodo_id>\d+)/$', estudiante_pago_inscripcion, name='estudiante-pago-inscripcion'),
     url(r'^api/estudiantes/(?P<usuario__cedula>[\w\-]+)/$', EstudianteDetailAPIView.as_view(), name='estudiante-detail'),

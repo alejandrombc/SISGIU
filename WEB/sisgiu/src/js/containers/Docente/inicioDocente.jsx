@@ -73,9 +73,21 @@ class InicioDocente extends Component{
         return (
           <ListGroupItem key={index}>
             <ListGroupItemHeading>({valor['codigo']}) {valor['nombre']}</ListGroupItemHeading>
-            <ListGroupItemText>
-                <Button onClick={() => this.get_planillas(valor['codigo'], this.props.activeUser.user.usuario.cedula)} className="float-right" color="secondary" size="sm">Descargar Planilla</Button>
-            </ListGroupItemText>
+              <Row>
+                <Col md='8'>
+                  <ListGroupItemText>
+                    {valor['tipo_postgrado']}
+                  </ListGroupItemText>
+                </Col>
+
+                <Col md='4'>
+                  <ListGroupItemText>
+                    <Button onClick={() => this.get_planillas(valor['codigo'], this.props.activeUser.user.usuario.cedula)} className="float-right" color="secondary" size="sm">Descargar Planilla</Button>
+                  </ListGroupItemText>
+                </Col>
+                
+              </Row>
+                
           </ListGroupItem>
         )
       });

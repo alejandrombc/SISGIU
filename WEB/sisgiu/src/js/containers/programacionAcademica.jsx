@@ -21,6 +21,7 @@ class ProgramacionAcademica extends Component {
         this.get_tipos_postgrados = this.get_tipos_postgrados.bind(this);
         this.handleChange = this.handleChange.bind(this);
         this.get_items = this.get_items.bind(this);
+        this.mostrar_descripcion_periodo = this.mostrar_descripcion_periodo.bind(this);
     }
 
     componentDidMount() {
@@ -99,6 +100,20 @@ class ProgramacionAcademica extends Component {
         return '';
     }
 
+    mostrar_descripcion_periodo(postgrado) {
+            let N = this.props.activeUser.programacionAcademica.length;
+            let index = -1;
+            for (let i = 0; i < N; i++) {
+                if (this.props.activeUser.programacionAcademica[i].tipo_postgrado === postgrado) {
+                    index = i;
+                    i = N;
+                }
+            }
+            if (index === -1) return '';
+            let periodo = this.props.activeUser.programacionAcademica[index];
+            return 'Periodo: ' + periodo.numero_periodo + ' (' + periodo.mes_inicio + ' ' + periodo.anio_inicio + ' - ' + periodo.mes_fin + ' ' + periodo.anio_fin + ')';
+    }
+
     render() {
         if (!this.props.activeUser.cargado) {
             return (<center><PulseLoader color="#b3b1b0" size="16px" margin="4px" /></center>);
@@ -125,6 +140,9 @@ class ProgramacionAcademica extends Component {
             
             {this.state.postgrado !== '' &&
                 <div>
+                    <h6 className="text-center">
+                        {this.mostrar_descripcion_periodo(this.state.postgrado)}
+                    </h6>
                     <br/>
                     <Row>
                         <Col md='12'>

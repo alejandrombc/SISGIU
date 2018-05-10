@@ -40,15 +40,22 @@ class HistorialAcademico extends Component{
 				}]
    			}
    		}
-   		this.get_listPeriodos = this.get_listPeriodos.bind(this);
-    }
+		this.get_listPeriodos = this.get_listPeriodos.bind(this);
+		this.mostrar_descripcion_periodo = this.mostrar_descripcion_periodo.bind(this);
+	}
+	
+	mostrar_descripcion_periodo(data) {
+		return 'Periodo: ' + data.numero_periodo + ' (' + data.mes_inicio + ' ' + data.anio_inicio + ' - ' + data.mes_fin + ' ' + data.anio_fin + ')';
+	}
 
   	get_listPeriodos(){
   		if(this.props.estudianteUser.historial_academico.periodos && this.props.estudianteUser.historial_academico.periodos[0].length>0){
 	  		let listItems = this.props.estudianteUser.historial_academico.periodos.map((historial, i) => {
 	        return (
 	        <div key={i}>
-				<center><h6>Periodo: {historial[0].periodo}</h6></center>
+				<h6 className="text-center">
+					{this.mostrar_descripcion_periodo(historial[0])}
+				</h6>
 				<Table bordered hover responsive striped size="sm">
 	              <thead>
 	                <tr className="text-center">

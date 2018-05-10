@@ -113,7 +113,7 @@ class Inscripciones extends Component{
 
     if ( this.props.administrativoUser.lista_periodos.length > 0) {
       return this.props.administrativoUser.lista_periodos.map((periodo, index) =>
-        <option key={index} value={periodo.id} name='periodo'> {periodo.tipo_postgrado}: {periodo.descripcion} </option>
+        <option key={index} value={periodo.id} name='periodo'> {periodo.tipo_postgrado}: Periodo {periodo.numero_periodo + ' (' + periodo.mes_inicio + ' ' + periodo.anio_inicio + ' - ' + periodo.mes_fin + ' ' + periodo.anio_fin + ')'} </option>
       ); 
     }
 

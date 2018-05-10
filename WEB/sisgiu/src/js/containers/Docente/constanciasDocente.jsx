@@ -118,7 +118,7 @@ class ConstanciaDocente extends Component{
 					<Row>
 						<Col sm="6">
 							<Card body>
-								<CardTitle className="text-center">Recaudos Pre Postgrado</CardTitle>
+							  <CardTitle className="text-center">Recaudos Pre-Inscripción de Postgrado</CardTitle>
 								<a href={host + 'media/sisgiu/constancias/recaudos_pre_postgrado.pdf'} className="btn btn-secondary" target="_blank">Descargar</a>
 							</Card>
 						</Col>

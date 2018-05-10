@@ -42,9 +42,7 @@ class ModalPeriodoNew extends React.Component {
     e.preventDefault();
     
     var date_inicio = new Date(this.state.fecha_inicio);
-    date_inicio.setHours(0, 0, 0, 0);
     var date_fin = new Date(this.state.fecha_fin);
-    date_fin.setHours(0, 0, 0, 0);
     let mes_inicio = parseInt(date_inicio.getUTCMonth(), 10)+1 ;
     let mes_fin = parseInt(date_fin.getUTCMonth(), 10) + 1;
 

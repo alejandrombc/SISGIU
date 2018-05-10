@@ -22,9 +22,8 @@ class InicioAdministrativo extends Component{
 
     this.get_planillas = this.get_planillas.bind(this);
     this.get_ListItems = this.get_ListItems.bind(this);
-    
-    // this.get_ListItems = this.get_ListItems.bind(this);
-	}
+    this.mostrar_descripcion_periodo = this.mostrar_descripcion_periodo.bind(this);
+  }
 
   get_file(periodo, nombre, token){
     return request
@@ -57,6 +56,10 @@ class InicioAdministrativo extends Component{
     );    
   };
 
+  mostrar_descripcion_periodo(periodo) {
+    return 'Periodo: ' + periodo.numero_periodo + ' (' + periodo.mes_inicio + ' ' + periodo.anio_inicio + ' - ' + periodo.mes_fin + ' ' + periodo.anio_fin + ')';
+  }
+
   get_ListItems (){
     let listItems = '';
     if (this.props.administrativoUser['lista_periodos'] && this.props.administrativoUser['lista_periodos'].length > 0) {
@@ -68,6 +71,7 @@ class InicioAdministrativo extends Component{
 
               <Col md='7' sm='7'>
                 <ListGroupItemHeading>{valor['tipo_postgrado']}</ListGroupItemHeading>
+                <ListGroupItemText>{this.mostrar_descripcion_periodo(valor)}</ListGroupItemText>
               </Col>
 
               <Col md='5' sm='5'>

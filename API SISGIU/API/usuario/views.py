@@ -567,11 +567,11 @@ def planilla_docente(request, cedula, codigo):
 	periodo = Periodo.objects.get(id=docente_asignatura['periodo_id'])
 	asignatura = Asignatura.objects.get(id=docente_asignatura['asignatura_id'])
 	user_information['periodo'] = periodo.descripcion
-	user_information['anio_inicio'] = periodo['anio_inicio']
-	user_information['anio_fin'] = periodo['anio_fin']
-	user_information['mes_inicio'] = periodo['mes_inicio']
-	user_information['mes_fin'] = periodo['mes_fin']
-	user_information['numero_periodo'] = periodo['numero_periodo']
+	user_information['anio_inicio'] = periodo.anio_inicio
+	user_information['anio_fin'] = periodo.anio_fin
+	user_information['mes_inicio'] = periodo.mes_inicio
+	user_information['mes_fin'] = periodo.mes_fin
+	user_information['numero_periodo'] = periodo.numero_periodo
 	user_information['asignatura'] = asignatura.nombre
 
 	estudiantes = EstudianteAsignatura.objects.filter(asignatura__codigo=codigo, periodo_estudiante__periodo_id=docente_asignatura['periodo_id'])

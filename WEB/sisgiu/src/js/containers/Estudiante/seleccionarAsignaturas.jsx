@@ -15,11 +15,9 @@ class SeleccionarAsignaturas extends React.Component {
     this.state = {
       options: this.props.asignaturas,
       value: [],
-      // creditos: 0,
       cantidad_max_asignaturas: this.props.estudianteUser.postgrado.asignaturas_maximas,
 
     }
-    // this.setCreditos = this.setCreditos.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.inscribirse = this.inscribirse.bind(this);
 
@@ -28,27 +26,9 @@ class SeleccionarAsignaturas extends React.Component {
   componentWillReceiveProps(nextProps) {
     this.setState({options: nextProps.asignaturas});
   }
- 
-  //Limite por creditos
-  // setCreditos(value){
-  //   var j = 0;
-  //   var creditos = 0;
-  //   while(j < value.length){
-  //     for (let i = 0; i < this.state.options.length; i++) {
-  //       if (this.state.options[i].value === value[j]){
-  //           creditos+=this.state.options[i].unidad_credito;
-  //           j++;
-  //       }
-  //     }
-  //   }
-
-  //   this.setState({creditos: creditos});
-  // }
 
   handleChange (value) {
     this.setState({ value: value }); //another array
-    // this.setCreditos(value);
-
   }
 
   inscribirse() {
@@ -67,7 +47,6 @@ class SeleccionarAsignaturas extends React.Component {
           className="msts_theme_example"
           onChange={this.handleChange}
           availableHeader="Asignaturas Disponibles"
-          // availableFooter={`Available: ${availableCount}`}
           selectedHeader="Asignaturas Seleccionadas"
           selectedFooter={`Cantidad: ${total}`}
           labelKey="nombre"

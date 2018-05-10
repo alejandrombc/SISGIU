@@ -35,6 +35,7 @@ class InicioEstudiante extends Component{
       this.buscarInformacionAsignaturas = this.buscarInformacionAsignaturas.bind(this);
       this.retirar_periodo = this.retirar_periodo.bind(this);
       this.get_titulo = this.get_titulo.bind(this);
+      this.mostrar_descripcion_periodo = this.mostrar_descripcion_periodo.bind(this);
 
   }
 
@@ -124,6 +125,18 @@ class InicioEstudiante extends Component{
     }
   }
 
+  mostrar_descripcion_periodo() {
+    let periodo;
+    if (this.props.estudianteUser.lista_periodos.length > 0) {
+      periodo = this.props.estudianteUser.lista_periodos[0];
+    } else if (this.props.estudianteUser.lista_periodo_activo.length > 0) {
+      periodo = this.props.estudianteUser.lista_periodo_activo[0];
+    } else {
+      return '';
+    }
+    return 'Periodo: ' + periodo.numero_periodo + ' (' + periodo.mes_inicio + ' ' + periodo.anio_inicio + ' - ' + periodo.mes_fin + ' ' + periodo.anio_fin + ')';
+  }
+
   render(){
     const dias = {
       "0":"Lunes",
@@ -180,6 +193,9 @@ class InicioEstudiante extends Component{
 
                 { this.props.estudianteUser['tiene_asignaturas'] &&
                   <div>
+                    <h6 className="text-center">
+                      {this.mostrar_descripcion_periodo()}
+                    </h6>
                     <br />
                     <Row>
                       <Col md='12'>

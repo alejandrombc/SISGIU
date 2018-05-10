@@ -23,6 +23,7 @@ class InicioAdministrador extends Component{
       this.onDismiss = this.onDismiss.bind(this);
       this.cambiarEstadoPeriodo = this.cambiarEstadoPeriodo.bind(this);
       this.get_listItems = this.get_listItems.bind(this);
+      this.mostrar_descripcion_periodo = this.mostrar_descripcion_periodo.bind(this);
   }
 
   onDismiss() {
@@ -42,6 +43,10 @@ class InicioAdministrador extends Component{
     this.props.cambiarEstadoPeriodo(periodo).then( () => this.props.cargado() );
   }
 
+  mostrar_descripcion_periodo(periodo) {
+    return 'Periodo: ' + periodo.numero_periodo + ' (' + periodo.mes_inicio + ' ' + periodo.anio_inicio + ' - ' + periodo.mes_fin + ' ' + periodo.anio_fin + ')';
+  }
+
 
   get_listItems() {
 
@@ -54,7 +59,7 @@ class InicioAdministrador extends Component{
               <Row>
                 <Col md='7' sm='7'>
                   <ListGroupItemHeading>{valor.tipo_postgrado}: </ListGroupItemHeading>
-                  <ListGroupItemText>Periodo {valor.numero_periodo + ' ' + valor.mes_inicio + ' ' + valor.anio_inicio + ' - ' + valor.mes_fin + ' ' + valor.anio_fin}</ListGroupItemText>
+                  <ListGroupItemText>{this.mostrar_descripcion_periodo(valor)}</ListGroupItemText>
                 </Col>
                 { valor.estado_periodo === 'activo' ?
                   

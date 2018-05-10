@@ -10,6 +10,7 @@ class Inscripcion extends Component{
 	constructor(props) {
    		super(props);
    		this.get_asignaturas = this.get_asignaturas.bind(this);
+   		this.mostrar_descripcion_periodo = this.mostrar_descripcion_periodo.bind(this);
     }
 
     componentDidMount() {
@@ -33,7 +34,12 @@ class Inscripcion extends Component{
     	}
 
     	return asignaturas;
-    }
+	}
+	
+	mostrar_descripcion_periodo() {
+		let periodo = this.props.estudianteUser.lista_periodos[0];
+		return 'Periodo: ' + periodo.numero_periodo + ' (' + periodo.mes_inicio + ' ' + periodo.anio_inicio + ' - ' + periodo.mes_fin + ' ' + periodo.anio_fin + ')';
+	}
 
 
 	render(){
@@ -43,6 +49,9 @@ class Inscripcion extends Component{
 				<h4 className="text-center">
 					Seleccione las asignaturas
 				</h4>
+				<h6 className="text-center">
+					{this.mostrar_descripcion_periodo()}
+				</h6>
 				<br />
 				<SeleccionarAsignaturas triggerBuscarInformacionAsignaturas={()=>this.props.triggerBuscarInformacionAsignaturas()} asignaturas={this.get_asignaturas()} cedula={this.props.usuario_activo.user.usuario.cedula} triggerInscripcion={() => this.props.triggerInscripcion()}/>
 			</div>
