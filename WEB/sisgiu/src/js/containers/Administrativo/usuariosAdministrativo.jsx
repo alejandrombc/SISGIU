@@ -16,7 +16,8 @@ class UsuariosAdministrativo extends Component {
         super(props);
         this.state = {
             visible: true,
-            cedula: '',   
+            cedula: '',
+            tipo_documento: 'V',
         }
         this.handleChange = this.handleChange.bind(this);
         this.buscarEstudiante = this.buscarEstudiante.bind(this);
@@ -32,6 +33,10 @@ class UsuariosAdministrativo extends Component {
         this.props.cargado();
     }
 
+    componentWillReceiveProps(props) {
+        this.setState({tipo_documento: 'V'});
+    }
+
     handleChange(e) {
         const { name, value } = e.target;
         this.setState({ [name]: value });
@@ -39,7 +44,7 @@ class UsuariosAdministrativo extends Component {
 
     buscarEstudiante() {
         this.props.cargando();
-        this.props.get_info_usuario(this.state.cedula).then(() => this.get_listPeriodos() );
+        this.props.get_info_usuario(this.state.tipo_documento+this.state.cedula).then(() => this.get_listPeriodos() );
     }
 
     get_listPeriodos() {
@@ -101,14 +106,20 @@ class UsuariosAdministrativo extends Component {
                             Ha ocurrido un error. Asegurese de que el número de cédula es válido
                         </Alert>
                     }
-
                     <Row>
-                        <Col md='6' sm='8' xs='8'>
+                        <Col md='2' sm='3' xs='2'>
+                            <select name="tipo_documento" className="form-control" onChange={this.handleChange} >
+                                <option value="V">V</option>
+                                <option value="E">E</option>
+                                <option value="P">P</option>
+                            </select>
+                        </Col>
+                        <Col md='5' sm='7' xs='7'>
                             <InputGroup>
                                 <Input placeholder="Cédula o Pasaporte" onChange={this.handleChange} name='cedula' />
                             </InputGroup>
                         </Col>
-                        <Col md='6' sm='4' xs='4'>
+                        <Col md='5' sm='2' xs='3'>
                             <Button color="primary" onClick={this.buscarEstudiante}>Buscar</Button>
                         </Col>
                     </Row>

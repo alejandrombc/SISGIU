@@ -3,6 +3,7 @@ import {host} from '../components/globalVariables';
 
 
 export const login = (cedula, password, modulo) => {
+	console.log(cedula);
 	return request
 		.post(host+'api/login/')
 		.set('Content-Type', 'application/json')

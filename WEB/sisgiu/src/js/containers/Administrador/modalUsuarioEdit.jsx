@@ -198,9 +198,9 @@ class ModalUsuarioEdit extends React.Component {
                     <Row>
                       <Col sm="12">
                           <FormGroup row>
-                            <Label for="identificacion" sm={4}>Identificación</Label>
+                            <Label for="identificacion" sm={4}>Cédula o Pasaporte</Label>
                             <Col sm={8}>
-                              <Input bsSize="sm" type="text" name="cedula" id="identificacion" defaultValue={this.state.usuario['tipo_documento'] + '-' + this.state.usuario['cedula']} readOnly required/>
+                              <Input bsSize="sm" type="text" name="cedula" id="identificacion" defaultValue={this.state.usuario['cedula']} readOnly required/>
                             </Col>
                           </FormGroup>
                           <FormGroup row>

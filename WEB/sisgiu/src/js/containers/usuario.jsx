@@ -7,9 +7,6 @@ import '../../css/usuario.css';
 import { Link } from 'react-router-dom'
 
 
-// Components
-//import CerrarSesion from './cerrarSesion';
-
 class Usuario extends Component{
 
   render(){
@@ -37,7 +34,7 @@ class Usuario extends Component{
                   {nombre}
                 </div>
                 <div className="profile-usertitle-job">
-                  {user['usuario']['tipo_documento']}-{user['usuario']['cedula']}
+                  {user['usuario']['cedula']}
                 </div>
                 <div className="profile-usertitle-job">
                   {modulo}

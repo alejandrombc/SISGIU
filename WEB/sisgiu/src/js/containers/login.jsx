@@ -17,7 +17,8 @@ class Login extends Component{
         	this.state = {
             	cedula: '',
             	password: '',
-            	modulo: 'estudiantes',
+				modulo: 'estudiantes',
+				tipo_documento: 'V',
             	loading: false,
             	visible: true,
         	};
@@ -40,8 +41,9 @@ class Login extends Component{
     handleSubmit(e) {
         e.preventDefault();
 
-        // this.setState({ submitted: true });
-        const { cedula, password, modulo } = this.state;
+		let { cedula, password, modulo, tipo_documento } = this.state;
+
+		cedula = tipo_documento+cedula;
 
         if (cedula && password && modulo) {
         	this.props.token['bad_input'] = false;
@@ -93,8 +95,20 @@ class Login extends Component{
 							          </select>
 							        </FormGroup>
 							        <FormGroup>
-							          <Label for="username">Cédula o Pasaporte</Label>
-							          <Input type="text" name="cedula" id="cedula" value={cedula} required onChange={this.handleChange} placeholder="Ej: 10987658"/> 
+									  <Label>Cédula o Pasaporte</Label>
+										<Row>
+											<Col md='2'>
+												<select name="tipo_documento" className="form-control" onChange={this.handleChange} >
+													<option value="V">V</option>
+													<option value="E">E</option>
+													<option value="P">P</option>
+												</select>
+
+											</Col>
+											<Col md='10'>
+							          			<Input type="text" name="cedula" id="cedula" value={cedula} required onChange={this.handleChange} placeholder="Ej: 10987658"/> 
+											</Col>
+										</Row>
 							        </FormGroup>
 							        <FormGroup>
 							          <Label for="password">Contraseña</Label>

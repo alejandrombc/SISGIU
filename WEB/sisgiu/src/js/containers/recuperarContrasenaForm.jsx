@@ -14,7 +14,8 @@ class RecuperarContrasenaForm extends Component{
 	constructor(props) {
         super(props);
     	this.state = {
-        	cedula: '',
+			cedula: '',
+			tipo_documento: 'V',
         	loading: false,
         	visible: true,
     	};
@@ -36,7 +37,8 @@ class RecuperarContrasenaForm extends Component{
     handleSubmit(e) {
         e.preventDefault();
 
-        const { cedula } = this.state;
+		let { cedula, tipo_documento } = this.state;
+		cedula = tipo_documento + cedula;
         if (cedula) {
         	this.setState({loading: true, visible: true})
         	this.props.status['bad_input'] = false;
@@ -76,11 +78,29 @@ class RecuperarContrasenaForm extends Component{
                     				}
 
                     				<hr />
-							        <FormGroup>
+							        {/* <FormGroup>
 							          <Label for="cedula">Cédula o Pasaporte</Label>
 							          <Input type="text" name="cedula" id="cedula" value={cedula} required onChange={this.handleChange} placeholder="Ej: 10657835"/> 
 							          <font size="1">Se le enviará un correo electronico con un link para poder restablecer su contraseña</font>
-							        </FormGroup>
+							        </FormGroup> */}
+
+									<FormGroup>
+									<Label for="cedula">Cédula o Pasaporte</Label>
+										<Row>
+											<Col md='2'>
+												<select name="tipo_documento" className="form-control" onChange={this.handleChange} >
+													<option value="V">V</option>
+													<option value="E">E</option>
+													<option value="P">P</option>
+												</select>
+
+											</Col>
+											<Col md='10'>
+												<Input type="text" name="cedula" id="cedula" value={cedula} required onChange={this.handleChange} placeholder="Ej: 10987658" />
+											</Col>
+										</Row>
+									</FormGroup>
+									<font size="1">Se le enviará un correo electronico con un link para poder restablecer su contraseña</font>
 									
 									<div className="text-center">
 										<Button color="primary">Restablecer</Button>

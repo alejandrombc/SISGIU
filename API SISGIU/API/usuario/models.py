@@ -33,7 +33,7 @@ class Usuario(AbstractUser):
 		db_table = 'usuario'
 
 	def __str__(self):
-		return str(self.tipo_documento) + ' ' + str(self.cedula) + ' ' + str(self.first_name) + ' ' + str(self.last_name)
+		return str(self.cedula) + ' ' + str(self.first_name) + ' ' + str(self.last_name)
 
 
 class Estudiante(models.Model):

@@ -241,7 +241,7 @@ def get_admin(request, cedula):
 		list_result = {"usuario": user}
 		return Response(list_result, status=status.HTTP_200_OK)
 
-	return Response(response_data, status=status.HTTP_404_NOT_FOUND)
+	return Response(status=status.HTTP_404_NOT_FOUND)
 
 
 @csrf_exempt

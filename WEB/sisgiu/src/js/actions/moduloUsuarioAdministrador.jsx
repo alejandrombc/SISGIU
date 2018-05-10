@@ -99,9 +99,10 @@ export const editarDocumento = (tipo_documento, documento, cedula) => {
 export const crearUsuario = (user, tipo_usuario) => {
 	let token = localStorage.getItem('user_token');
 	let modulo = tipo_usuario 
-	let cedula = user['usuario']['cedula']
+	let cedula = user.usuario.tipo_documento+user.usuario.cedula
 	user['usuario']['password'] = user['usuario']['cedula'];
-	user['usuario']['username'] = user['usuario']['cedula'];
+	user.usuario.username = cedula;
+	user.usuario.cedula = cedula;
 	if(tipo_usuario === "administradores") { 
 		modulo = "usuarios"; 
 		user = user['usuario'];
