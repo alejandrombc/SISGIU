@@ -3,12 +3,14 @@ import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { PulseLoader } from 'halogenium';
-import { InputGroup, Input, Button, Row, Col, Table, Alert } from 'reactstrap';
+import { InputGroup, Input, Button, Row, Col, Alert } from 'reactstrap';
+import ConfirmButton from 'react-confirm-button';
 
 // Components
 import ModalUsuarioEdit from '../Administrador/modalUsuarioEdit';
 import HistorialAcademico from '../Estudiante/historialAcademico';
-import { cargado, get_info_usuario, cargando } from '../../actions/inicio';
+import { cargado, get_info_usuario, cargando, retirar_periodo, estado_retiro_estudiante } from '../../actions/inicio';
+
 
 class UsuariosAdministrativo extends Component {
 
@@ -21,8 +23,8 @@ class UsuariosAdministrativo extends Component {
         }
         this.handleChange = this.handleChange.bind(this);
         this.buscarEstudiante = this.buscarEstudiante.bind(this);
-        this.get_listPeriodos = this.get_listPeriodos.bind(this);
         this.onDismiss = this.onDismiss.bind(this);
+        this.retirar_periodo = this.retirar_periodo.bind(this);
     }
 
     onDismiss() {
@@ -44,56 +46,14 @@ class UsuariosAdministrativo extends Component {
 
     buscarEstudiante() {
         this.props.cargando();
-        this.props.get_info_usuario(this.state.tipo_documento+this.state.cedula).then(() => this.get_listPeriodos() );
+        this.props.estado_retiro_estudiante(this.state.tipo_documento + this.state.cedula)
+                .then(() => this.props.cargado());
+
+        this.props.get_info_usuario(this.state.tipo_documento + this.state.cedula);
     }
 
-    get_listPeriodos() {
-        if (this.props.administrativoUser.info_usuarios_administrativo.periodos && this.props.administrativoUser.info_usuarios_administrativo.periodos[0].length > 0) {
-            let listItems = this.props.administrativoUser.info_usuarios_administrativo.periodos.map((historial, i) => {
-                return (
-                    <div key={i}>
-                        <center><h6>Periodo: {historial[0].periodo}</h6></center>
-                        <Table bordered hover responsive striped size="sm">
-                            <thead>
-                                <tr className="text-center">
-                                    <th>Asignatura</th>
-                                    <th>Tipo</th>
-                                    <th>UC</th>
-                                    <th>Nota</th>
-                                </tr>
-                            </thead>
-                            <tbody className="tabla_usuarios">
-                                {
-                                    historial.map((periodo, index) => {
-                                        return (
-                                            <tr className="text-center" key={index}>
-                                                <td className="text-left asignatura_td">({periodo.asignatura_codigo}) {periodo.asignatura_nombre}</td>
-                                                <td className="tipo_asignatura_td">{periodo.tipo_asignatura}</td>
-                                                <td className="unidad_credito_td">{periodo.unidad_credito}</td>
-                                                <td className="nota_definitiva_td">{periodo.nota_definitiva}</td>
-                                            </tr>
-                                        )
-                                    })
-                                }
-                            </tbody>
-                        </Table>
-                        <br />
-                    </div>
-                )
-            })
-
-            let data = this.state.data;
-
-            data.datasets[0].data = [this.props.administrativoUser.info_usuarios_administrativo.asignaturas_aprobadas,
-            this.props.administrativoUser.info_usuarios_administrativo.asignaturas_reprobadas,
-            this.props.administrativoUser.info_usuarios_administrativo.asignaturas_retiradas,
-            ];
-
-            this.setState({ periodos: listItems, data: data });
-
-        }
-        this.props.cargado();
-
+    retirar_periodo(cedula, id_periodo) {
+        this.props.retirar_periodo(cedula, id_periodo).then(() => this.props.cargado() );
     }
 
     render() {
@@ -139,9 +99,30 @@ class UsuariosAdministrativo extends Component {
                         <div>
                             <hr />
                             <HistorialAcademico cedula={this.props.administrativoUser.info_usuarios_administrativo.cedula}/>
+                            {!this.props.administrativoUser.estudiante_retirado &&
+                            <Row>
+                                <Col md='12' className="text-center">
+                                    <ConfirmButton
+                                        disableAfterConfirmed
+                                        onConfirm={() => this.retirar_periodo(this.props.administrativoUser.info_usuarios_administrativo.cedula, this.props.administrativoUser.info_usuarios_administrativo.id_periodo_actual)}
+                                        text="Retirar"
+                                        className="btn btn-danger btn-sm float-right"
+                                        confirming={{
+                                            text: '¿Está Seguro?',
+                                            className: 'btn btn-danger btn-sm float-right',
+                                        }}
+                                        disabled={{
+                                            text: 'Retirado',
+                                            className: 'btn btn-danger btn-sm float-right',
+                                        }}
+                                        />
+                                </Col>
+                            </Row>
+                            }
                         </div>
-                    }
 
+                    }
+                    
 
                 </div>
             )
@@ -163,6 +144,8 @@ const mapDispatchToProps = (dispatch) => {
         cargado: cargado,
         get_info_usuario: get_info_usuario,
         cargando: cargando,
+        retirar_periodo: retirar_periodo,
+        estado_retiro_estudiante: estado_retiro_estudiante,
      }, dispatch)
 }
 

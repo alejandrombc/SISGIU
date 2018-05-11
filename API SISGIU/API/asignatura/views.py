@@ -233,7 +233,7 @@ def get_asignaturas_por_estudiante(request, cedula):
 
 @csrf_exempt
 @api_view(['POST'])
-@permission_classes((isEstudianteOrAdmin, ))
+@permission_classes((isAdministrativoOrAdmin, ))
 def retirar_periodo_estudiante(request, cedula, periodo):
 
 	member = EstudianteAsignatura.objects.filter(

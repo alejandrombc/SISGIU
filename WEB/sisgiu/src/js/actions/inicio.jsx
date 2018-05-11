@@ -127,7 +127,6 @@ export const get_historial = (cedula) =>{
 
 export const get_info_usuario = (cedula) => {
 	let token = localStorage.getItem('user_token');
-	// let modulo = localStorage.getItem('modulo');
 
 	return request
 		.get(host + 'api/informacionUsuariosAdministrativo/' + cedula + '/')
@@ -148,21 +147,21 @@ export const get_info_usuario = (cedula) => {
 }
 
 
-export const retirar_periodo = (user, periodo) => {
+export const retirar_periodo = (cedula, id_periodo) => {
 	let token = localStorage.getItem('user_token');
 	return request
-	   .post(host+'api/retirar/estudiante/'+user.usuario.cedula+'/periodo/'+periodo+'/')
-	   .set('Authorization', 'JWT '+token)
-	   .then(function(res) {
+		.post(host + 'api/retirar/estudiante/' + cedula + '/periodo/' + id_periodo+'/')
+		.set('Authorization', 'JWT '+token)
+		.then(function(res) {
 				return function (dispatch) {
-				    dispatch(get_information(user));
+				    dispatch(get_info_usuario(cedula));
 				}
-	   })
-	   .catch(function(err) {
+		})
+		.catch(function(err) {
 			return function (dispatch) {
-			    dispatch(get_information(user));
+			    dispatch(get_info_usuario(cedula));
 			}
-	   });
+		});
 }
 
 
@@ -334,5 +333,27 @@ export const get_programacion_academica = () => {
 				type: "ERROR"
 			}
 	   });
+
+}
+
+// Funcion que evalua si un estudiante se encuentra retirado o no
+export const estado_retiro_estudiante = (cedula) => {
+	let token = localStorage.getItem('user_token');
+	return request
+		.get(host + 'api/estudiante/'+cedula+'/estado_retiro/')
+		.set('Authorization', 'JWT ' + token)
+		.then(function (res) {
+			console.log(res.body);
+			return {
+				type: "ESTADO_RETIRO_ESTUDIANTE_EXITOSO",
+				payload: { 'estudiante_retirado': res.body }
+			}
+
+		})
+		.catch(function (err) {
+			return {
+				type: "ESTADO_RETIRO_ESTUDIANTE_ERROR"
+			}
+		});
 
 }

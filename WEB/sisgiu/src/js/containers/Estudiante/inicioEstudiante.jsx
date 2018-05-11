@@ -5,7 +5,6 @@ import {bindActionCreators} from 'redux';
 import { Alert, Button, Row, Col, ListGroup, ListGroupItem, ListGroupItemHeading, ListGroupItemText} from 'reactstrap';
 import { PulseLoader } from 'halogenium';
 import Inscripcion from './inscripcion';
-import ConfirmButton from 'react-confirm-button';
 
 
 // Components
@@ -16,7 +15,6 @@ import {
     get_estado_estudiante, 
     cargado,
     cargando,
-    retirar_periodo,
     get_tipo_postgrado,
     } from '../../actions/inicio';
 
@@ -33,7 +31,6 @@ class InicioEstudiante extends Component{
       this.get_ListItems = this.get_ListItems.bind(this);
       this.actualizarInformacionInicio = this.actualizarInformacionInicio.bind(this);
       this.buscarInformacionAsignaturas = this.buscarInformacionAsignaturas.bind(this);
-      this.retirar_periodo = this.retirar_periodo.bind(this);
       this.get_titulo = this.get_titulo.bind(this);
       this.mostrar_descripcion_periodo = this.mostrar_descripcion_periodo.bind(this);
 
@@ -64,10 +61,6 @@ class InicioEstudiante extends Component{
 
   onDismiss() {
     this.setState({ visible: false });
-  }
-
-  retirar_periodo(user, periodo) {
-    this.props.retirar_periodo(user, periodo);
   }
 
   get_ListItems(dias) {
@@ -140,6 +133,12 @@ class InicioEstudiante extends Component{
   }
 
   render(){
+    console.log(this.props.activeUser.user);
+    if (this.props.estudianteUser.lista_periodo_activo.length > 0) {
+
+      console.log(this.props.estudianteUser.lista_periodo_activo[0].id);
+    } 
+
     const dias = {
       "0":"Lunes",
       "1":"Martes",
@@ -209,31 +208,6 @@ class InicioEstudiante extends Component{
                   </div>
                 }
 
-                {this.props.estudianteUser.lista_periodos.length === 0 && this.props.estudianteUser['tiene_asignaturas']
-                  && this.props.estudianteUser.materias.length > 0 && !this.props.estudianteUser.materias[0].retirado &&
-                  <div>
-                    <br/>
-                    <Row>
-                      <Col md='12' className="text-center">
-                        <ConfirmButton
-                          disableAfterConfirmed
-                          onConfirm={() => this.retirar_periodo(this.props.activeUser.user, this.props.estudianteUser.lista_periodo_activo[0].id)}
-                          text="Retirar"
-                          className="btn btn-danger btn-sm float-right"
-                          confirming={{
-                            text: '¿Está Seguro?',
-                            className: 'btn btn-danger btn-sm float-right',
-                          }}
-                          disabled={{
-                            text: 'Retirada',
-                            className: 'btn btn-danger btn-sm float-right',
-                          }}
-                        />
-                      </Col>
-                    </Row>
-                  </div>
-                }
-
 
               </div>
           );
@@ -272,7 +246,6 @@ const mapDispatchToProps = (dispatch) => {
     get_estado_estudiante: get_estado_estudiante,
     cargado: cargado,
     cargando: cargando,
-    retirar_periodo: retirar_periodo,
     get_tipo_postgrado: get_tipo_postgrado,
 
   }, dispatch )

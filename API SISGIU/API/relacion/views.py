@@ -528,6 +528,10 @@ def informacion_usuarios_administrativo(request, cedula):
 		obj_usuario['estado_estudiante'] = usuario.id_estado_estudiante.estado
 		obj_usuario['id_estado_estudiante'] = usuario.id_estado_estudiante.id
 		obj_usuario['tipo_usuario'] = 'estudiantes'
+		try:
+			obj_usuario['id_periodo_actual'] = Periodo.objects.get(tipo_postgrado__id=usuario.id_tipo_postgrado.id, estado_periodo__estado='activo').id
+		except Exception as ex:
+			pass
 
 	elif PersonalDocente.objects.filter(usuario__cedula=cedula).exists():
 		usuario = PersonalDocente.objects.get(usuario__cedula=cedula)
@@ -580,4 +584,22 @@ def cargar_notas(request):
 		estudiante_asignatura.update(nota_definitiva=estudiante['nota_definitiva'])
 
 	return Response(status=status.HTTP_200_OK)
+
+
+@api_view(['GET'])
+@permission_classes((isAdministrativoOrAdmin, ))
+def estado_retiro_estudiante(request, cedula):
+	response_data = {}
+	try:
+		periodo_estudiante = PeriodoEstudiante.objects.get(periodo__estado_periodo__estado='activo', estudiante=Estudiante.objects.get(usuario__cedula=cedula))
+		estudiante_asignatura = EstudianteAsignatura.objects.filter(periodo_estudiante=periodo_estudiante).first()
+
+		if estudiante_asignatura.retirado:
+			response_data['retirado'] = True
+		else:
+			response_data['retirado'] = False
+	except Exception as ex:
+		pass
+	return Response(response_data, status=status.HTTP_200_OK)
+
 #endregion

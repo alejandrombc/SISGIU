@@ -11,6 +11,7 @@ const initialState = {
 	inscripcion_modificada: false,
 	error_info_usuarios: false,
 	info_usuarios_administrativo: {},
+	estudiante_retirado: false,
 };
 
 export default function (state=initialState, action) {
@@ -83,6 +84,15 @@ export default function (state=initialState, action) {
 			nuevo_estado['info_usuarios_administrativo'] = {"tipo_usuario":"error"};
 			return nuevo_estado;
 		
+		case "ESTADO_RETIRO_ESTUDIANTE_EXITOSO":
+			nuevo_estado['estudiante_retirado'] = action.payload['estudiante_retirado']['retirado'];
+			return nuevo_estado;
+		
+		case "ESTADO_RETIRO_ESTUDIANTE_ERROR":
+			nuevo_estado['estudiante_retirado'] = false;
+			return nuevo_estado;
+			
+			
 
 		default:
 			return state;
