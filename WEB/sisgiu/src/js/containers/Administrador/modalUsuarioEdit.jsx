@@ -53,6 +53,7 @@ class ModalUsuarioEdit extends React.Component {
     this.handleSubmit = this.handleSubmit.bind(this);
     this.subirDocumento = this.subirDocumento.bind(this);
     this.handleChangeDocumento = this.handleChangeDocumento.bind(this);
+    this.handleChangeCheckbox = this.handleChangeCheckbox.bind(this);
     this.get_today = this.get_today.bind(this);
     
   }
@@ -92,6 +93,11 @@ class ModalUsuarioEdit extends React.Component {
   handleChangeExtraData(e) {
     const { name, value } = e.target;
     this.setState({ [name]: value });  
+  }
+
+  handleChangeCheckbox(e) {
+    const { name, checked } = e.target;
+    this.setState({ [name]: checked });
   }
 
   handleSubmit(e) {
@@ -170,7 +176,6 @@ class ModalUsuarioEdit extends React.Component {
         <option key={estado_estudiante['id']} value={estado_estudiante['id']} name={estado_estudiante['estado']}> {estado_estudiante['estado']} </option>
       ); 
     }
-
 
     return (
       <div>
@@ -342,51 +347,63 @@ class ModalUsuarioEdit extends React.Component {
                                     <Input  bsSize="sm" disabled={this.state.is_disabled} type="textarea" name="direccion" id="direccion" onChange={this.handleChangeExtraData} value={this.state.direccion} />
                                   </Col>
                               </FormGroup>
-                                <FormGroup row>
-                                    <Label for="rif" sm={3}>RIF</Label>
-                                    <Col sm={5}>
-                                      <Input className="form-control" disabled={this.state.is_disabled} bsSize="sm" type="file" name="rif" id="rif" onChange={this.handleChangeDocumento} />                                    
-                                    </Col>
-                                    <Col sm={2}>
-                                      <a href={this.state.rif} target='_blank' ><Button color="primary" size='sm' type='button'> Descargar </Button> </a>
-                                    </Col>
-                                    <Col sm={2}>
-                                      <Button disabled={this.state.is_disabled} onClick={() => { this.subirDocumento('rif') }} color="primary" size='sm'> Subir </Button>
-                                    </Col>
-                                </FormGroup>
+                              <FormGroup row>
+                                  <Label for="rif" sm={3}>RIF</Label>
+                                  <Col sm={5}>
+                                    <Input className="form-control" disabled={this.state.is_disabled} bsSize="sm" type="file" name="rif" id="rif" onChange={this.handleChangeDocumento} />                                    
+                                  </Col>
+                                  <Col sm={2}>
+                                    <a href={this.state.rif} target='_blank' ><Button color="primary" size='sm' type='button'> Descargar </Button> </a>
+                                  </Col>
+                                  <Col sm={2}>
+                                    <Button disabled={this.state.is_disabled} onClick={() => { this.subirDocumento('rif') }} color="primary" size='sm'> Subir </Button>
+                                  </Col>
+                              </FormGroup>
 
-                                <FormGroup row>
-                                    <Label for="curriculum" sm={3}>Curriculum</Label>
-                                    <Col sm={5}>
-                                      <Input disabled={this.state.is_disabled} className="form-control" bsSize="sm" type="file" name="curriculum" id="curriculum" onChange={this.handleChangeDocumento} />
-                                    </Col>
-                                    <Col sm={2}>
-                                      <a href={this.state.curriculum} target='_blank'><Button color="primary" size='sm' type='button'> Descargar </Button> </a>
-                                    </Col>
-                                    <Col sm={2}>
-                                      <Button disabled={this.state.is_disabled} onClick={() => { this.subirDocumento('curriculum') }} color="primary" size='sm'> Subir </Button>
-                                    </Col>
-                                </FormGroup>
+                              <FormGroup row>
+                                  <Label for="curriculum" sm={3}>Curriculum</Label>
+                                  <Col sm={5}>
+                                    <Input disabled={this.state.is_disabled} className="form-control" bsSize="sm" type="file" name="curriculum" id="curriculum" onChange={this.handleChangeDocumento} />
+                                  </Col>
+                                  <Col sm={2}>
+                                    <a href={this.state.curriculum} target='_blank'><Button color="primary" size='sm' type='button'> Descargar </Button> </a>
+                                  </Col>
+                                  <Col sm={2}>
+                                    <Button disabled={this.state.is_disabled} onClick={() => { this.subirDocumento('curriculum') }} color="primary" size='sm'> Subir </Button>
+                                  </Col>
+                              </FormGroup>
 
-                                <FormGroup row>
-                                    <Label for="permiso_ingresos" sm={3}>Permisos</Label>
-                                    <Col sm={5}>
-                                      <Input disabled={this.state.is_disabled} className="form-control" bsSize="sm" type="file" name="permiso_ingresos" id="permiso_ingresos" onChange={this.handleChangeDocumento} />
-                                    </Col>
-                                    <Col sm={2}>
-                                      <a href={this.state.permiso_ingresos} target='_blank'><Button color="primary" size='sm' type='button'> Descargar </Button> </a>
-                                    </Col>
-                                    <Col sm={2}>
-                                      <Button disabled={this.state.is_disabled} onClick={() => { this.subirDocumento('permiso_ingresos') }} color="primary" size='sm'> Subir </Button>
-                                    </Col>
-                                </FormGroup>
+                              <FormGroup row>
+                                  <Label for="permiso_ingresos" sm={3}>Permisos</Label>
+                                  <Col sm={5}>
+                                    <Input disabled={this.state.is_disabled} className="form-control" bsSize="sm" type="file" name="permiso_ingresos" id="permiso_ingresos" onChange={this.handleChangeDocumento} />
+                                  </Col>
+                                  <Col sm={2}>
+                                    <a href={this.state.permiso_ingresos} target='_blank'><Button color="primary" size='sm' type='button'> Descargar </Button> </a>
+                                  </Col>
+                                  <Col sm={2}>
+                                    <Button disabled={this.state.is_disabled} onClick={() => { this.subirDocumento('permiso_ingresos') }} color="primary" size='sm'> Subir </Button>
+                                  </Col>
+                              </FormGroup>
 
-                                <FormGroup check>
-                                  <Label check>
-                                    <Input  disabled={this.state.is_disabled} bsSize="sm" defaultChecked={this.state.coordinador} type="checkbox" name="coordinador" id="coordinador"  onChange={this.handleChangeExtraData} />{' '}
-                                    Es coordinador
-                                  </Label>
+                              <FormGroup check>
+                                <Label check>
+                                  <Input disabled={this.state.is_disabled} bsSize="sm" defaultChecked={this.state.coordinador} type="checkbox" name="coordinador" id="coordinador" onChange={this.handleChangeCheckbox} />{' '}
+                                  Es coordinador
+                                </Label>
+                              </FormGroup>
+
+                              { this.state.coordinador &&
+                                <FormGroup row>
+                                  <Label for="id_tipo_postgrado" sm={4}>Postgrado</Label>
+                                  <Col sm={8}>
+                                      <Input bsSize="sm" defaultValue={this.state['id_tipo_postgrado']} onChange={this.handleChangeExtraData} type="select" name="id_tipo_postgrado" id="id_tipo_postgrado" required>
+                                      <option value={null} name={-1}> {' '} </option>
+                                      {listPostgrados}
+                                    </Input>
+                                  </Col>
                                 </FormGroup>
+                              }
 
                             </div>
                           }                        

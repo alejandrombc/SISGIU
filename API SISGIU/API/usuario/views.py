@@ -306,6 +306,7 @@ def get_usuarios(request, modulo):
 					request.build_absolute_uri('/')+"media/"+docente['permiso_ingresos']
 				)
 				usuario['coordinador'] = docente['coordinador']
+				usuario['id_tipo_postgrado'] = docente['id_tipo_postgrado_id']
 				usuario['foto'] = request.build_absolute_uri('/')+"media/"+usuario['foto']
 
 				response_data.append(usuario)
