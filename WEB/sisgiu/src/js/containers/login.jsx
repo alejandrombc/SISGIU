@@ -97,7 +97,7 @@ class Login extends Component{
 							        <FormGroup>
 									  <Label>Cédula o Pasaporte</Label>
 										<Row>
-											<Col md='2'>
+											<Col md='3'>
 												<select name="tipo_documento" className="form-control" onChange={this.handleChange} >
 													<option value="V">V</option>
 													<option value="E">E</option>
@@ -105,7 +105,7 @@ class Login extends Component{
 												</select>
 
 											</Col>
-											<Col md='10'>
+											<Col md='9'>
 							          			<Input type="text" name="cedula" id="cedula" value={cedula} required onChange={this.handleChange} placeholder="Ej: 10987658"/> 
 											</Col>
 										</Row>
