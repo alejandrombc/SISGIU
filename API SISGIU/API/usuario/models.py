@@ -95,6 +95,10 @@ class PersonalDocente(models.Model):
 	curriculum = models.FileField(upload_to=user_directory_path_subuser)
 	permiso_ingresos = models.FileField(upload_to=user_directory_path_subuser)
 	coordinador = models.BooleanField()
+	id_tipo_postgrado = models.OneToOneField(
+			TipoPostgrado,
+			on_delete=models.SET_NULL,
+			null=True)
 
 	class Meta:
 		ordering = ['usuario__last_name', 'usuario__segundo_apellido']

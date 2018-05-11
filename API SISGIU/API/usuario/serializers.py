@@ -197,12 +197,11 @@ class DocenteSerializer(serializers.ModelSerializer):
     usuario = UsuarioListSerializer()
     curriculum = serializers.FileField(required=False, max_length=None, allow_empty_file=True, use_url=True)
     rif = serializers.FileField(required=False, max_length=None, allow_empty_file=True, use_url=True)
-    permiso_ingresos = serializers.FileField(required=False, max_length=None, allow_empty_file=True,
-                                             use_url=True)
+    permiso_ingresos = serializers.FileField(required=False, max_length=None, allow_empty_file=True, use_url=True)
 
     class Meta:
         model = PersonalDocente
-        fields = ('usuario', 'curriculum', 'rif', 'direccion', 'permiso_ingresos', 'coordinador')
+        fields = ('usuario', 'curriculum', 'rif', 'direccion', 'permiso_ingresos', 'coordinador', 'id_tipo_postgrado')
 
     def create(self, validated_data):
         user_data = validated_data.pop('usuario')
@@ -214,20 +213,24 @@ class DocenteSerializer(serializers.ModelSerializer):
                 user = Usuario.objects.get(cedula=user_data['cedula'])
                 docente, created = PersonalDocente.objects.update_or_create(
                     usuario=user,
-                    curriculum=validated_data.get('curriculum'), rif=validated_data.get('rif'),
+                    curriculum=validated_data.get('curriculum'),
+                    rif=validated_data.get('rif'),
                     direccion=validated_data.pop('direccion'),
                     permiso_ingresos=validated_data.get('permiso_ingresos'),
-                    coordinador=validated_data.pop('coordinador'))
+                    coordinador=validated_data.pop('coordinador'),
+                    id_tipo_postgrado=validated_data.pop('id_tipo_postgrado'))
                 send_welcome_mail("Docente", user)
                 return docente
             except:
                 user = UsuarioListSerializer.create(UsuarioListSerializer(), validated_data=user_data)
                 docente, created = PersonalDocente.objects.update_or_create(
                                     usuario=user,
-                                    curriculum=validated_data.get('curriculum'), rif=validated_data.get('rif'),
+                                    curriculum=validated_data.get('curriculum'),
+                                    rif=validated_data.get('rif'),
                                     direccion=validated_data.pop('direccion'),
                                     permiso_ingresos=validated_data.get('permiso_ingresos'),
-                                    coordinador=validated_data.pop('coordinador'))
+                                    coordinador=validated_data.pop('coordinador'),
+                                    id_tipo_postgrado=validated_data.pop('id_tipo_postgrado'))
                 send_welcome_mail("Docente", user)
                 return docente
 
@@ -236,13 +239,12 @@ class DocenteDetailSerializer(serializers.ModelSerializer):
     usuario = UsuarioDetailSerializer()
     curriculum = serializers.FileField(required=False, max_length=None, allow_empty_file=True, use_url=True)
     rif = serializers.FileField(required=False, max_length=None, allow_empty_file=True, use_url=True)
-    permiso_ingresos = serializers.FileField(required=False, max_length=None, allow_empty_file=True,
-                                             use_url=True)
+    permiso_ingresos = serializers.FileField(required=False, max_length=None, allow_empty_file=True, use_url=True)
 
     class Meta:
 
         model = PersonalDocente
-        fields = ('usuario', 'curriculum', 'rif', 'direccion', 'permiso_ingresos', 'coordinador')
+        fields = ('usuario', 'curriculum', 'rif', 'direccion', 'permiso_ingresos', 'coordinador', 'id_tipo_postgrado')
 
     def update(self, instance, validated_data):
 
@@ -256,6 +258,7 @@ class DocenteDetailSerializer(serializers.ModelSerializer):
             instance.permiso_ingresos = validated_data.get('permiso_ingresos', instance.permiso_ingresos)
 
         instance.coordinador = validated_data.get('coordinador', instance.coordinador)
+        instance.id_tipo_postgrado = validated_data.get('id_tipo_postgrado', instance.id_tipo_postgrado)
         instance.direccion = validated_data.get('direccion', instance.direccion)
         instance.save()
 
@@ -277,6 +280,7 @@ class DocenteDetailSerializer(serializers.ModelSerializer):
         docente_usuario.sexo = usuario['sexo']
         docente_usuario.nacionalidad = usuario['nacionalidad']
         docente_usuario.estado_civil = usuario['estado_civil']
+
         if(usuario.get('foto')):
             docente_usuario.foto = usuario['foto']
 

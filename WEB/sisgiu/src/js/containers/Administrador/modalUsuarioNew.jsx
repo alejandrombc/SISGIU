@@ -42,13 +42,10 @@ class ModalUsuarioNew extends React.Component {
     this.toggle = this.toggle.bind(this);
     this.handleChangeUsuario = this.handleChangeUsuario.bind(this);
     this.handleChangeExtraData = this.handleChangeExtraData.bind(this);
+    this.handleChangeCheckbox = this.handleChangeCheckbox.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.get_today = this.get_today.bind(this);
   }
-
-
-
-
 
   toggle() {
     this.setState({
@@ -67,6 +64,11 @@ class ModalUsuarioNew extends React.Component {
   handleChangeExtraData(e) {
     const { name, value } = e.target;
     this.setState({ [name]: value });  
+  }
+  
+  handleChangeCheckbox(e) {
+    const { name, checked } = e.target;
+    this.setState({ [name]: checked });  
   }
 
   handleSubmit(e) {
@@ -135,7 +137,6 @@ class ModalUsuarioNew extends React.Component {
         <option key={estado_estudiante['id']} value={estado_estudiante['id']} name={estado_estudiante['estado']}> {estado_estudiante['estado']} </option>
       ); 
     }
-
 
     return (
       <div>
@@ -289,10 +290,23 @@ class ModalUsuarioNew extends React.Component {
 
                             <FormGroup check>
                               <Label check>
-                                <Input bsSize="sm" defaultChecked={this.state.coordinador} type="checkbox" name="coordinador" id="coordinador"  onChange={this.handleChangeExtraData} />{' '}
+                                <Input bsSize="sm" defaultChecked={this.state.coordinador} type="checkbox" name="coordinador" id="coordinador"  onChange={this.handleChangeCheckbox} />{' '}
                                 Es coordinador
                               </Label>
                             </FormGroup>
+
+                            { this.state.coordinador &&
+                              <FormGroup row>
+                                <Label for="id_tipo_postgrado" sm={4}>Postgrado</Label>
+                                <Col sm={8}>
+                                  <Input bsSize="sm" value={this.state.value} defaultValue={this.state['id_tipo_postgrado']} onChange={this.handleChangeExtraData} type="select" name="id_tipo_postgrado" id="id_tipo_postgrado" required>
+                                    <option value={null} name={-1}> {' '} </option>
+                                    {listPostgrados}
+                                  </Input>
+                                </Col>
+                              </FormGroup>
+                            }
+
                             <br />
                             <font size="2">Para los archivos, por favor edite el usuario una vez este creado</font>
                           </div>
