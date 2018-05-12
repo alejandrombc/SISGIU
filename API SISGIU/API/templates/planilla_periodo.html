@@ -89,18 +89,18 @@
         <br>
         <div class='wrapper'>
             <div class='header'>
-             <p class='title_child'><b>PLANILLA PERIODO {{periodo}} - {{tipo_postgrado}}</b></p>
+             <p class='title_child'><b>PLANILLA PERIODO <b>{{numero_periodo}} ({{mes_inicio}} {{anio_inicio}} - {{mes_fin}} {{anio_fin}})</b> - {{tipo_postgrado}}</b></p>
             </div>
             {%for docente in docentes%}
             <div class='texto'>
-                <center><p>Estudiantes del docente <b>{{docente.nombre}} {{docente.apellido}}</b> (C.I: {{docente.cedula}}) para la asignatura <b>{{docente.asignatura}}</b>.</p></center>
+                <center><p>Estudiantes del docente <b>{{docente.nombre}} {{docente.apellido}}</b> | <b>{{docente.cedula}}</b>. Para la asignatura <b>{{docente.asignatura}}</b> | UC:<b>{{unidad_credito}}</b>.</p></center>
                 <table>
                   <thead>
                     <tr>
-                      <th>Cedula</th>
-                      <th>Nombre</th>
-                      <th>Apellido</th>
-                      <th>Nota</th>
+                      <th>C.I</th>
+                      <th>NOMBRE</th>
+                      <th>APELLIDO</th>
+                      <th>NOTA</th>
                     </tr>
                   </thead>
                   <tbody>

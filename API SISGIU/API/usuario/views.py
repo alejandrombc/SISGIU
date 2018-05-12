@@ -42,7 +42,8 @@ from usuario.serializers import (
 from relacion.models import (
 	EstudianteAsignatura,
 	PeriodoEstudiante,
-	DocenteAsignatura,)
+	DocenteAsignatura,
+	AsignaturaTipoPostgrado,)
 
 from asignatura.models import (
 	Asignatura,)
@@ -568,6 +569,23 @@ def planilla_docente(request, cedula, codigo):
 
 	periodo = Periodo.objects.get(id=docente_asignatura['periodo_id'])
 	asignatura = Asignatura.objects.get(id=docente_asignatura['asignatura_id'])
+	tipo_postgrado_asignatura = AsignaturaTipoPostgrado.objects.filter(asignatura_id=docente_asignatura['asignatura_id'])
+	
+	for tipos in tipo_postgrado_asignatura:
+		tipos_info = {}
+		try:
+			coordinador = PersonalDocente.objects.get(id_tipo_postgrado__tipo=tipos.tipo_postgrado.tipo,
+				coordinador=True)
+			tipos_info['coordinador_nombre'] = coordinador.usuario.first_name
+			tipos_info['coordinador_apellido'] = coordinador.usuario.last_name
+		except:
+			tipos_info['coordinador_nombre'] = ""
+			tipos_info['coordinador_apellido'] = ""
+		
+		tipos_info['nombre'] = tipos.tipo_postgrado.tipo
+		tipos_info['estudiantes'] = []
+		user_information['estudiantes'].append(tipos_info)
+
 	user_information['periodo'] = periodo.descripcion
 	user_information['anio_inicio'] = periodo.anio_inicio
 	user_information['anio_fin'] = periodo.anio_fin
@@ -575,6 +593,7 @@ def planilla_docente(request, cedula, codigo):
 	user_information['mes_fin'] = periodo.mes_fin
 	user_information['numero_periodo'] = periodo.numero_periodo
 	user_information['asignatura'] = asignatura.nombre
+	user_information['unidad_credito'] = asignatura.unidad_credito
 
 	estudiantes = EstudianteAsignatura.objects.filter(asignatura__codigo=codigo, periodo_estudiante__periodo_id=docente_asignatura['periodo_id'])
 	for estudiante in estudiantes:
@@ -583,7 +602,11 @@ def planilla_docente(request, cedula, codigo):
 		estudiante_info['apellido'] = estudiante.periodo_estudiante.estudiante.usuario.last_name
 		estudiante_info['cedula'] = estudiante.periodo_estudiante.estudiante.usuario.cedula
 		estudiante_info['nota'] = estudiante.nota_definitiva
-		user_information['estudiantes'].append(estudiante_info)
+		estudiante_info['postgrado'] = estudiante.periodo_estudiante.estudiante.id_tipo_postgrado.tipo
+		for tipos in user_information['estudiantes']:
+			if(estudiante.periodo_estudiante.estudiante.id_tipo_postgrado.tipo == tipos['nombre']):
+				tipos['estudiantes'].append(estudiante_info)
+
 
 	content = 'attachment; filename="planilla'+str(cedula)+'.pdf"'
 	pdf = render_to_pdf('planilla_docente.html', user_information)
@@ -628,6 +651,7 @@ def planilla_periodo(request, periodo):
 			asignatura = Asignatura.objects.get(id=docentes.asignatura.id)
 
 			docente['asignatura'] = asignatura.nombre
+			docente['unidad_credito'] = asignatura.unidad_credito
 			estudiantes = EstudianteAsignatura.objects.filter(asignatura__codigo=asignatura.codigo, periodo_estudiante__periodo_id=periodo)
 
 			for estudiante in estudiantes:

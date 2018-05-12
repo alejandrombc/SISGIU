@@ -105,28 +105,28 @@ class ModalAsignaturaNew extends React.Component {
                       <Col sm="12">
                           
                           <FormGroup row>
-                            <Label for="codigo" sm={5}>Código</Label>
+                            <Label className="required" for="codigo" sm={5}>Código</Label>
                             <Col sm={7}>
                               <Input bsSize="sm" type="text" name="codigo" id="codigo" onChange={this.handleChange} defaultValue={this.state['codigo']} required/>
                             </Col>
                           </FormGroup>
 
                           <FormGroup row>
-                            <Label for="nombre" sm={5}>Nombre</Label>
+                            <Label className="required" for="nombre" sm={5}>Nombre</Label>
                             <Col sm={7}>
                               <Input bsSize="sm" type="text" name="nombre" id="nombre" onChange={this.handleChange} defaultValue={this.state['nombre']} required/>
                             </Col>
                           </FormGroup>
 
                           <FormGroup row>
-                            <Label for="unidad_credito" sm={5}>Unidades de Crédito</Label>
+                            <Label className="required" for="unidad_credito" sm={5}>Unidades de Crédito</Label>
                             <Col sm={7}>
                               <Input bsSize="sm" type="number" name="unidad_credito" id="unidad_credito" onChange={this.handleChange} defaultValue={this.state['unidad_credito']} required/>
                             </Col>
                           </FormGroup>
 
                           <FormGroup row>
-                            <Label for="tipo_asignatura" sm={5}>Tipo</Label>
+                            <Label className="required" for="tipo_asignatura" sm={5}>Tipo</Label>
                             <Col sm={7}>
                               <Input bsSize="sm" value={this.state.value} defaultValue={this.state['tipo_asignatura']} onChange={this.handleChange} type="select" name="tipo_asignatura" id="tipo_asignatura" required>
                                 <option value={null} name={-1}> {' '} </option>
@@ -154,7 +154,7 @@ class ModalAsignaturaNew extends React.Component {
                           </FormGroup>
 
                           <FormGroup row>
-                            <Label for="tipos_postgrado" sm={5}>Tipo de Postgrado</Label>
+                            <Label className="required" for="tipos_postgrado" sm={5}>Tipo de Postgrado</Label>
                             <Col sm={7}>
                               <Select
                                 closeOnSelect={true}
@@ -172,7 +172,7 @@ class ModalAsignaturaNew extends React.Component {
                             </Col>
                           </FormGroup>
 
-                          
+                          <font size="2"><span className="required"></span> Campo requerido</font>
                           
                       </Col>
                     </Row>

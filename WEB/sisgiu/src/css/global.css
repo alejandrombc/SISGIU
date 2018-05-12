@@ -63,3 +63,8 @@
 .eyes:hover {
   cursor: pointer;
 }
+
+/*FOR * IN REQUIRED FIELDS*/
+.required:after {
+  content:"*";color:red;
+}

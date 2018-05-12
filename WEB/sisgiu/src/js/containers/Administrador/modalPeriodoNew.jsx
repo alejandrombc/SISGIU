@@ -103,7 +103,7 @@ class ModalPeriodoNew extends React.Component {
                       <Col sm="12">
 
                         <FormGroup row>
-                          <Label for="tipo_postgrado" sm={4}>Postgrado</Label>
+                          <Label className="required" for="tipo_postgrado" sm={4}>Postgrado</Label>
                           <Col sm={8}>
                             <Input bsSize="sm" value={this.state.value} defaultValue={this.state['tipo_postgrado']} onChange={this.handleChange} type="select" name="tipo_postgrado" id="tipo_postgrado" required>
                               <option value={null} name={-1}> {' '} </option>
@@ -113,7 +113,7 @@ class ModalPeriodoNew extends React.Component {
                         </FormGroup>
                           
                         <FormGroup row>
-                          <Label for="numero_periodo" sm={4}>Periodo N°</Label>
+                          <Label className="required" for="numero_periodo" sm={4}>Periodo N°</Label>
                           <Col sm={8}>
                             <Input bsSize="sm" defaultValue={this.state.numero_periodo} onChange={this.handleChange} type="select" name="numero_periodo" id="numero_periodo" required>
                               <option value={1} name={1}> 1 </option>
@@ -125,19 +125,19 @@ class ModalPeriodoNew extends React.Component {
                         </FormGroup>
 
                         <FormGroup row>
-                          <Label for="fecha_inicio" sm={4}>Fecha Inicio</Label>
+                          <Label className="required" for="fecha_inicio" sm={4}>Fecha Inicio</Label>
                           <Col sm={8}>
                           <Input bsSize="sm" format="dd/mm/yyyy" type="date" name="fecha_inicio" id="fecha_inicio" onChange={this.handleChange} defaultValue={this.state.fecha_inicio} required />
                           </Col>
                         </FormGroup>
 
                         <FormGroup row>
-                          <Label for="fecha_fin" sm={4}>Fecha Fin</Label>
+                          <Label className="required" for="fecha_fin" sm={4}>Fecha Fin</Label>
                           <Col sm={8}>
                             <Input bsSize="sm" format="dd/mm/yyyy" type="date" name="fecha_fin" id="fecha_fin" onChange={this.handleChange} defaultValue={this.state.fecha_fin} required />
                           </Col>
                         </FormGroup>
-
+                        <font size="2"><span className="required"></span> Campo requerido</font>
                       </Col>
                     </Row>
 

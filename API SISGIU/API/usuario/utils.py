@@ -20,9 +20,11 @@ def send_welcome_mail(modulo, user):
 	if(modulo == "Administrador"):
 		correo = user['email']
 		nombre = user['first_name'] + " " + user['last_name']
+		tipo_documento = user['tipo_documento']
 	else:
 		correo = user.email
 		nombre = user.first_name + " " + user.last_name
+		tipo_documento = user.tipo_documento
 
 	template = get_template("email_template_welcome.html")
 	html = template.render(
@@ -30,6 +32,7 @@ def send_welcome_mail(modulo, user):
 								"modulo": modulo,
 								"nombre": nombre,
 								"host_react": host_react,
+								"tipo_documento": tipo_documento
 							}
 						)
 

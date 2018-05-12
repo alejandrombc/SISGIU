@@ -45,7 +45,7 @@ class ModalUsuarioDelete extends React.Component {
                 Eliminar usuario 
           </ModalHeader>
             <ModalBody>
-                ¿Está seguro de que desea eliminar al usuario {this.props.usuario.first_name} {this.props.usuario.last_name}?
+                ¿Está seguro de que desea eliminar al usuario {this.props.usuario.first_name} {this.props.usuario.last_name}?. Se eliminarán <b>todos</b> los roles asociados a él.
 
             </ModalBody>
             <ModalFooter>

@@ -46,7 +46,7 @@
                 /* text-align: right;*/
              }
 
-            table { 
+            .table_estudiantes { 
                 border-collapse: collapse; 
                 margin:50px auto;
                 table-layout: fixed;
@@ -54,21 +54,22 @@
                 word-wrap:break-word;
             }
 
-            tr:nth-of-type(odd) { 
+            .th_estudiantes:nth-of-type(odd) { 
                 background: #eee; 
             }
 
-            th { 
+            .th_estudiantes { 
                 background: #3498db; 
                 color: black; 
                 font-weight: bold; 
+                font-size: 12px;
             }
 
-            td, th { 
+            .td_estudiantes, .th_estudiantes { 
                 padding: 10px; 
                 border: 1px solid #ccc; 
                 text-align: left; 
-                font-size: 18px;
+                font-size: 10px;
             }
 
         </style>
@@ -92,56 +93,88 @@
              <p class='title_child'><b>PLANILLA DE CALIFICACIÓN</b></p>
             </div>
             <div class='texto'>
-                <!--                
-                <table class="table_header">
-                      <thead>
-                        <tr>
-                          <th width="20%">POSTGRADO:</th>
-                          <th width="80%">Doctorado en urbanismo</th>
-                        </tr>
-                        <tr>
-                          <th width="20%">PROFESOR:</th>
-                          <th width="80%">{{nombre}} {{apellido}}</th>
-                        </tr>
-                        <tr>
-                          <th width="20%">ASIGNATURA:</th>
-                          <th width="80%">{{asignatura}}</th>
-                        </tr>
-                        <tr>
-                          <th width="20%">N° CREDITOS:</th>
-                          <th width="80%">N</th>
-                        </tr>
-                        <tr>
-                          <th width="20%">PERIODO:</th>
-                          <th width="80%">{{periodo}}</th>
-                        </tr>
-                      </thead>
-                </table>
-                <br/>
-                <br />
-                <br /> 
-                -->
-                <center><p>Estudiantes del docente <b>{{nombre}} {{apellido}}</b> (C.I: {{cedula}}) para la asignatura <b>{{asignatura}}</b> del periodo <b>{{periodo}}</b></p></center>
-                <table>
-                  <thead>
-                    <tr>
-                      <th>Cedula</th>
-                      <th>Nombre</th>
-                      <th>Apellido</th>
-                      <th>Nota</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {% for estudiante in estudiantes %}
-                    <tr>
-                      <td width="20%" data-column="Cedula">{{estudiante.cedula}}</td>
-                      <td width="40%" data-column="Nombre">{{estudiante.nombre}}</td>
-                      <td width="45%" data-column="Apellido">{{estudiante.apellido}}</td>
-                      <td width="15%" data-column="Calificacion">{{estudiante.nota}}</td>
-                    </tr>
-                    {% endfor %}
-                  </tbody>
-                </table>
+                <center>
+                    <p>DOCENTE: <b>{{nombre}} {{apellido}}</b> | <b>({{cedula}})</b></p>
+                    <p>ASIGNATURA: <b>{{asignatura}}</b></p>
+                    <p>N° CREDITOS: <b>{{unidad_credito}}</b>.</p> 
+                    <p>PERIODO: <b>{{numero_periodo}} ({{mes_inicio}} {{anio_inicio}} - {{mes_fin}} {{anio_fin}})</b></p>
+                </center>
+                <br>
+                <br>
+                {% for tipos in estudiantes %}
+                    {% if tipos.estudiantes %}
+                        <center><h3>POSTGRADO: {{tipos.nombre}}</h3></center>
+                        {% for estudiante in tipos.estudiantes %}
+                            <table class="table_estudiantes">
+                              <thead>
+                                <tr>
+                                  <th class="th_estudiantes">C.I</th>
+                                  <th class="th_estudiantes">NOMBRE</th>
+                                  <th class="th_estudiantes">APELLIDO</th>
+                                  <th class="th_estudiantes">NOTA</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                    <tr> 
+                                      <td class="td_estudiantes" width="25%" >{{estudiante.cedula}}</td>
+                                      <td class="td_estudiantes" width="30%" >{{estudiante.nombre}}</td>
+                                      <td class="td_estudiantes" width="30%" >{{estudiante.apellido}}</td>
+                                      <td class="td_estudiantes" width="15%" >{{estudiante.nota}}</td>
+                                    </tr>
+                              </tbody>
+                            </table>
+                        {% endfor %}             
+                        <br>
+                        <br>
+                        <br>
+                        <table>
+                          <thead>
+                            <tr>
+                              <th >_____________________________________</th>
+                              <th >_____________________________________</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                                <td>
+                                    <div>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        <i>Profesor de la Asignatura</i>
+                                    </div>
+                                    <div>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        {{nombre}} {{apellido}}
+                                    </div>
+                                </td>
+                                <td>
+                                    <div>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        &nbsp;&nbsp;
+                                        <i>Coordinador de Postgrado</i>
+                                    </div>
+                                    <div>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        &nbsp;&nbsp;
+                                        {{tipos.coordinador_nombre}} {{tipos.coordinador_apellido}}
+                                    </div>
+                                </td>
+                          </tbody>
+                        </table>
+                    {% endif %}
+                {% endfor %}
             </div>
         </div>
      </body>

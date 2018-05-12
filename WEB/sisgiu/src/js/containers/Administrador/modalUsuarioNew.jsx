@@ -126,6 +126,12 @@ class ModalUsuarioNew extends React.Component {
     let listPostgrados = '';
     let lista_estadoEstudiante = '';
     
+    let user_type = {
+      "estudiantes": "Estudiantes",
+      "docentes": "Personal Docente",
+      "administrativo": "Personal Administrativo",
+      "administradores": "Administradores"
+    }
     if (this.props.adminUser.lista_postgrados && this.props.adminUser.lista_postgrados.length > 0) {
       listPostgrados = this.props.adminUser.lista_postgrados.map((tipo_postgrado) =>
         <option key={tipo_postgrado['id']} value={tipo_postgrado['id']} name={tipo_postgrado['tipo']}> {tipo_postgrado['tipo']} </option>
@@ -143,7 +149,7 @@ class ModalUsuarioNew extends React.Component {
         <Button color="primary" size='sm' onClick={this.toggle} data-toggle="tooltip" title="Nuevo usuario"><FontAwesomeIcon name="plus"/></Button>
         <Modal isOpen={this.state.modal} toggle={this.toggle} className={this.props.className}>
           <ModalHeader toggle={this.toggle}> 
-                Agregar nuevo usuario 
+                <h5>Agregar nuevo usuario: {user_type[this.props.tipo_usuario]}</h5>
           </ModalHeader>
           <Form onSubmit={this.handleSubmit}>
             <ModalBody>
@@ -152,7 +158,7 @@ class ModalUsuarioNew extends React.Component {
                     <Row>
                       <Col sm="12">
                         <FormGroup row>
-                          <Label for="identificacion" sm={3}>Identificación</Label>
+                          <Label className="required" for="identificacion" sm={3}>Identificación</Label>
 
                           <Col sm={2}>
                             <Input bsSize="sm" defaultValue={this.state.usuario.tipo_documento} onChange={this.handleChangeUsuario} type="select" name="tipo_documento" required>
@@ -168,7 +174,7 @@ class ModalUsuarioNew extends React.Component {
                         </FormGroup>
                           
                         <FormGroup row>
-                          <Label for="first_name" sm={4}>Primer Nombre</Label>
+                          <Label className="required" for="first_name" sm={4}>Primer Nombre</Label>
                           <Col sm={8}>
                             <Input maxLength={50} bsSize="sm" type="text" name="first_name" id="first_name" onChange={this.handleChangeUsuario} defaultValue={this.state.usuario['first_name']} required/>
                           </Col>
@@ -180,25 +186,25 @@ class ModalUsuarioNew extends React.Component {
                           </Col>
                         </FormGroup>
                         <FormGroup row>
-                          <Label for="last_name" sm={4}>Primer Apellido</Label>
+                          <Label className="required" for="last_name" sm={4}>Primer Apellido</Label>
                           <Col sm={8}>
                             <Input maxLength={50} bsSize="sm" type="text" name="last_name" id="last_name" onChange={this.handleChangeUsuario} defaultValue={this.state.usuario['last_name']} required/>
                           </Col>
                         </FormGroup>
                         <FormGroup row>
-                          <Label for="segundo_apellido" sm={4}>Segundo Apellido</Label>
+                          <Label className="required" for="segundo_apellido" sm={4}>Segundo Apellido</Label>
                           <Col sm={8}>
                             <Input maxLength={50} bsSize="sm" type="text" name="segundo_apellido" id="segundo_apellido" onChange={this.handleChangeUsuario} defaultValue={this.state.usuario['segundo_apellido']} required/>
                           </Col>
                         </FormGroup>
                         <FormGroup row>
-                          <Label for="fecha_nacimiento" sm={4}>F. Nacimiento</Label>
+                          <Label className="required" for="fecha_nacimiento" sm={4}>F. Nacimiento</Label>
                           <Col sm={8}>
                             <Input max={this.get_today()} min="1930-01-01" bsSize="sm" type="date" name="fecha_nacimiento" id="fecha_nacimiento" onChange={this.handleChangeUsuario} defaultValue={this.state.usuario['fecha_nacimiento']} required/>
                           </Col>
                         </FormGroup>
                         <FormGroup row>
-                          <Label for="email" sm={4}>Correo</Label>
+                          <Label className="required" for="email" sm={4}>Correo</Label>
                           <Col sm={8}>
                             <Input bsSize="sm" type="email" name="email" id="email"  onChange={this.handleChangeUsuario} value={this.state.usuario['email']} required/>
                           </Col>
@@ -222,13 +228,13 @@ class ModalUsuarioNew extends React.Component {
                           </Col>
                         </FormGroup>
                         <FormGroup row>
-                          <Label for="nacionalidad" sm={4}>Nacionalidad</Label>
+                          <Label className="required" for="nacionalidad" sm={4}>Nacionalidad</Label>
                           <Col sm={8}>
                             <Input bsSize="sm" type="text" name="nacionalidad" id="nacionalidad" onChange={this.handleChangeUsuario} value={this.state.usuario['nacionalidad']} required/>
                           </Col>
                         </FormGroup>
                         <FormGroup row>
-                          <Label for="sexo" sm={4}>Sexo</Label>
+                          <Label className="required" for="sexo" sm={4}>Sexo</Label>
                           <Col sm={8}>
                             <Input bsSize="sm" value={this.state.value} defaultValue={this.state.usuario['sexo']} onChange={this.handleChangeUsuario} type="select" name="sexo" id="sexo" required>
                               <option value="M" name="M">M</option>
@@ -237,7 +243,7 @@ class ModalUsuarioNew extends React.Component {
                           </Col>
                         </FormGroup>
                         <FormGroup row>
-                          <Label for="estado_civil" sm={4}>Estado Civil</Label>
+                          <Label className="required" for="estado_civil" sm={4}>Estado Civil</Label>
                           <Col sm={8}>
                             <Input bsSize="sm" value={this.state.value} defaultValue={this.state.usuario['estado_civil']} onChange={this.handleChangeUsuario} type="select" name="estado_civil" id="estado_civil" required>
                               <option value="Soltero" name="Soltero">Soltero</option>
@@ -258,7 +264,7 @@ class ModalUsuarioNew extends React.Component {
                             </FormGroup>
 
                             <FormGroup row>
-                              <Label for="id_tipo_postgrado" sm={4}>Postgrado</Label>
+                              <Label className="required" for="id_tipo_postgrado" sm={4}>Postgrado</Label>
                               <Col sm={8}>
                                 <Input bsSize="sm" value={this.state.value} defaultValue={this.state['id_tipo_postgrado']} onChange={this.handleChangeExtraData} type="select" name="id_tipo_postgrado" id="id_tipo_postgrado" required>
                                   <option value={null} name={-1}> {' '} </option>
@@ -268,7 +274,7 @@ class ModalUsuarioNew extends React.Component {
                             </FormGroup>
 
                             <FormGroup row>
-                              <Label for="estado_estudiante" sm={4}>Estado</Label>
+                              <Label className="required" for="estado_estudiante" sm={4}>Estado</Label>
                               <Col sm={8}>
                                 <Input bsSize="sm" value={this.state.value} defaultValue={this.state['id_estado_estudiante']} onChange={this.handleChangeExtraData} type="select" name="id_estado_estudiante" id="id_estado_estudiante" required>
                                   <option value={null} name={-1}> {' '} </option>
@@ -297,7 +303,7 @@ class ModalUsuarioNew extends React.Component {
 
                             { this.state.coordinador &&
                               <FormGroup row>
-                                <Label for="id_tipo_postgrado" sm={4}>Postgrado</Label>
+                                <Label className="required" for="id_tipo_postgrado" sm={4}>Postgrado</Label>
                                 <Col sm={8}>
                                   <Input bsSize="sm" value={this.state.value} defaultValue={this.state['id_tipo_postgrado']} onChange={this.handleChangeExtraData} type="select" name="id_tipo_postgrado" id="id_tipo_postgrado" required>
                                     <option value={null} name={-1}> {' '} </option>
@@ -311,7 +317,8 @@ class ModalUsuarioNew extends React.Component {
                             <font size="2">Para los archivos, por favor edite el usuario una vez este creado</font>
                           </div>
                         }
-                        
+                        <font size="2"><span className="required"></span> Campo requerido</font>
+
                       </Col>
                     </Row>
 
