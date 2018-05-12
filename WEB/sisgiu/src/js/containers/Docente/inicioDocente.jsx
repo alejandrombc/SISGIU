@@ -31,9 +31,9 @@ class InicioDocente extends Component{
     .then( () => this.props.cargado() );
   }
 
-  get_file(codigo, cedula, token){
+  get_file(codigo, cedula, token, postgrado){
     return request
-       .get(host+'api/planillas/docente/'+cedula+'/'+codigo+'/')
+       .get(host+'api/planillas/docente/'+cedula+'/'+codigo+'/'+postgrado+'/')
        .set('Authorization', 'JWT '+token)
        .then(function(res) {
           var blob=new Blob([res.text]);
@@ -50,10 +50,10 @@ class InicioDocente extends Component{
   }
 
   // Planillas
-  get_planillas(codigo,cedula) {
+  get_planillas(codigo,cedula, postgrado) {
     let token = localStorage.getItem('user_token');
     this.setState({"cargando":true}, 
-      () => this.get_file(codigo,cedula,token)
+      () => this.get_file(codigo,cedula,token, postgrado)
       .then(
         () => {
           this.setState({"cargando":false});
@@ -82,7 +82,7 @@ class InicioDocente extends Component{
 
                 <Col md='4'>
                   <ListGroupItemText>
-                    <Button onClick={() => this.get_planillas(valor['codigo'], this.props.activeUser.user.usuario.cedula)} className="float-right" color="secondary" size="sm">Descargar Planilla</Button>
+                    <Button onClick={() => this.get_planillas(valor['codigo'], this.props.activeUser.user.usuario.cedula, valor['tipo_postgrado'])} className="float-right" color="secondary" size="sm">Descargar Planilla</Button>
                   </ListGroupItemText>
                 </Col>
                 

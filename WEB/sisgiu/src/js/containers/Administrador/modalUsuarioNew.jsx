@@ -149,7 +149,7 @@ class ModalUsuarioNew extends React.Component {
         <Button color="primary" size='sm' onClick={this.toggle} data-toggle="tooltip" title="Nuevo usuario"><FontAwesomeIcon name="plus"/></Button>
         <Modal isOpen={this.state.modal} toggle={this.toggle} className={this.props.className}>
           <ModalHeader toggle={this.toggle}> 
-                <h5>Agregar nuevo usuario: {user_type[this.props.tipo_usuario]}</h5>
+                Agregar nuevo usuario: <span className="modulo_nombre">{user_type[this.props.tipo_usuario]}</span>
           </ModalHeader>
           <Form onSubmit={this.handleSubmit}>
             <ModalBody>

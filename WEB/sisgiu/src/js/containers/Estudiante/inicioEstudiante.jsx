@@ -133,12 +133,6 @@ class InicioEstudiante extends Component{
   }
 
   render(){
-    console.log(this.props.activeUser.user);
-    if (this.props.estudianteUser.lista_periodo_activo.length > 0) {
-
-      console.log(this.props.estudianteUser.lista_periodo_activo[0].id);
-    } 
-
     const dias = {
       "0":"Lunes",
       "1":"Martes",

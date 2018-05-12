@@ -41,3 +41,8 @@
   margin: 0 auto;
   width: 50%;
 }
+
+/*FOR MODULE NAME IN USER ADD*/
+.modulo_nombre{
+  font-size: 20px;
+}

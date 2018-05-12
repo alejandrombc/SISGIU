@@ -343,7 +343,6 @@ export const estado_retiro_estudiante = (cedula) => {
 		.get(host + 'api/estudiante/'+cedula+'/estado_retiro/')
 		.set('Authorization', 'JWT ' + token)
 		.then(function (res) {
-			console.log(res.body);
 			return {
 				type: "ESTADO_RETIRO_ESTUDIANTE_EXITOSO",
 				payload: { 'estudiante_retirado': res.body }

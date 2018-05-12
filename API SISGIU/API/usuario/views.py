@@ -2,6 +2,7 @@
 import json
 import os
 import datetime
+import urllib 
 from django.http import HttpResponse
 from django.template.loader import get_template
 from usuario.utils import render_to_pdf
@@ -252,20 +253,25 @@ def edit_admin(request, cedula):
 	body_unicode = request.body.decode('utf-8')
 	body = json.loads(body_unicode)
 
-	user = Usuario.objects.get(username=cedula)
-	if(user):
-		user.first_name = body['usuario']['first_name']
-		user.last_name = body['usuario']['last_name']
-		user.estado_civil = body['usuario']['estado_civil']
-		user.email = body['usuario']['email']
-		user.celular = body['usuario']['celular']
-		user.telefono_trabajo = body['usuario']['telefono_trabajo']
-		user.telefono_casa = body['usuario']['telefono_casa']
-		if(user.password != body['usuario']['password']):
-			user.set_password(body['usuario']['password'])
-		user.save()
+	admin_usuario = Usuario.objects.get(username=cedula)
+	if(admin_usuario):
+		admin_usuario.first_name = body['usuario']['first_name']
+		if(admin_usuario.password != body['usuario']['password']):
+		    admin_usuario.set_password(body['usuario']['password'])
+		admin_usuario.segundo_nombre = body['usuario']['segundo_nombre']
+		admin_usuario.last_name = body['usuario']['last_name']
+		admin_usuario.segundo_apellido = body['usuario']['segundo_apellido']
+		admin_usuario.email = body['usuario']['email']
+		admin_usuario.correo_alternativo = body['usuario']['correo_alternativo']
+		admin_usuario.celular = body['usuario']['celular']
+		admin_usuario.telefono_casa = body['usuario']['telefono_casa']
+		admin_usuario.telefono_trabajo = body['usuario']['telefono_trabajo']
+		admin_usuario.fecha_nacimiento = body['usuario']['fecha_nacimiento']
+		admin_usuario.sexo = body['usuario']['sexo']
+		admin_usuario.nacionalidad = body['usuario']['nacionalidad']
+		admin_usuario.estado_civil = body['usuario']['estado_civil']
+		admin_usuario.save()
 		return Response(status=status.HTTP_204_NO_CONTENT)
-
 
 @api_view(['GET'])
 @permission_classes((IsAdminUser, ))
@@ -550,8 +556,8 @@ def constancia_estudio(request, cedula):
 
 @api_view(['GET'])
 @permission_classes((isDocenteOrAdmin, ))
-def planilla_docente(request, cedula, codigo):
-
+def planilla_docente(request, cedula, codigo, postgrado):
+	postgrado = urllib.parse.unquote(postgrado) 
 	user_information = {}
 	user = PersonalDocente.objects.get(usuario__cedula=cedula)
 
@@ -561,7 +567,7 @@ def planilla_docente(request, cedula, codigo):
 	user_information['estudiantes'] = []
 
 	try:
-		docente_asignatura = DocenteAsignatura.objects.filter(docente=user, asignatura__codigo=codigo, periodo__estado_periodo__estado="activo").values()[0]
+		docente_asignatura = DocenteAsignatura.objects.filter(docente=user, asignatura__codigo=codigo, periodo__estado_periodo__estado="activo", periodo__tipo_postgrado__tipo=postgrado).values()[0]
 	except Exception as ex:
 		response = {}
 		response['mensaje'] = str(ex)
@@ -571,20 +577,19 @@ def planilla_docente(request, cedula, codigo):
 	asignatura = Asignatura.objects.get(id=docente_asignatura['asignatura_id'])
 	tipo_postgrado_asignatura = AsignaturaTipoPostgrado.objects.filter(asignatura_id=docente_asignatura['asignatura_id'])
 	
-	for tipos in tipo_postgrado_asignatura:
-		tipos_info = {}
-		try:
-			coordinador = PersonalDocente.objects.get(id_tipo_postgrado__tipo=tipos.tipo_postgrado.tipo,
-				coordinador=True)
-			tipos_info['coordinador_nombre'] = coordinador.usuario.first_name
-			tipos_info['coordinador_apellido'] = coordinador.usuario.last_name
-		except:
-			tipos_info['coordinador_nombre'] = ""
-			tipos_info['coordinador_apellido'] = ""
-		
-		tipos_info['nombre'] = tipos.tipo_postgrado.tipo
-		tipos_info['estudiantes'] = []
-		user_information['estudiantes'].append(tipos_info)
+	tipos_info = {}
+	try:
+		coordinador = PersonalDocente.objects.get(id_tipo_postgrado__tipo=postgrado,
+			coordinador=True)
+		tipos_info['coordinador_nombre'] = coordinador.usuario.first_name
+		tipos_info['coordinador_apellido'] = coordinador.usuario.last_name
+	except:
+		tipos_info['coordinador_nombre'] = ""
+		tipos_info['coordinador_apellido'] = ""
+	
+	tipos_info['nombre'] = postgrado
+	tipos_info['estudiantes'] = []
+	user_information['estudiantes'].append(tipos_info)
 
 	user_information['periodo'] = periodo.descripcion
 	user_information['anio_inicio'] = periodo.anio_inicio

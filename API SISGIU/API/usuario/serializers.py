@@ -26,13 +26,22 @@ class AdministradorListSerializer(serializers.ModelSerializer):
                   'fecha_nacimiento', 'sexo', 'nacionalidad', 'estado_civil', 'foto', 'username', 'password')
 
     def create(self, validated_data):
-        password = validated_data.pop('password', None)
-        instance = self.Meta.model(**validated_data)
-        if password is not None:
-            instance.set_password(password)
-        instance.save()
-        send_welcome_mail("Administrador", validated_data)
-        return instance
+        user_data = validated_data
+        try:
+            user = Usuario.objects.get(cedula=user_data['cedula'])
+            user.is_superuser = True;
+            user.is_staff = True;
+            user.save()
+            send_welcome_mail("Administrador", user.__dict__)
+            return user
+        except Exception as e:
+            password = validated_data.pop('password', None)
+            instance = self.Meta.model(**validated_data)
+            if password is not None:
+                instance.set_password(password)
+            instance.save()
+            send_welcome_mail("Administrador", validated_data)
+            return instance
 
 
 # Todo menos el username (no se debe "re-poner")
@@ -47,12 +56,29 @@ class AdministradorDetailSerializer(serializers.ModelSerializer):
                   'fecha_nacimiento', 'sexo', 'nacionalidad', 'estado_civil', 'foto', 'username', 'password')
 
     def update(self, instance, validated_data):
-        for attr, value in validated_data.items():
-            if attr == 'password':
-                instance.set_password(value)
-            else:
-                setattr(instance, attr, value)
-        instance.save()
+        usuario = validated_data
+
+        admin_usuario = Usuario.objects.get(cedula=usuario['cedula'])
+        admin_usuario.first_name = usuario['first_name']
+        if(admin_usuario.password != usuario['password']):
+            admin_usuario.set_password(usuario['password'])
+        admin_usuario.segundo_nombre = usuario['segundo_nombre']
+        admin_usuario.last_name = usuario['last_name']
+        admin_usuario.segundo_apellido = usuario['segundo_apellido']
+        admin_usuario.email = usuario['email']
+        admin_usuario.correo_alternativo = usuario['correo_alternativo']
+        admin_usuario.celular = usuario['celular']
+        admin_usuario.telefono_casa = usuario['telefono_casa']
+        admin_usuario.telefono_trabajo = usuario['telefono_trabajo']
+        admin_usuario.fecha_nacimiento = usuario['fecha_nacimiento']
+        admin_usuario.sexo = usuario['sexo']
+        admin_usuario.nacionalidad = usuario['nacionalidad']
+        admin_usuario.estado_civil = usuario['estado_civil']
+        if(usuario.get('foto')):
+            admin_usuario.foto = usuario['foto']
+
+        admin_usuario.save()
+
         return instance
 
 """

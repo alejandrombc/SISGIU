@@ -101,7 +101,7 @@ urlpatterns = format_suffix_patterns([
 	url(r'^api/constancias/estudio/(?P<cedula>[\w\-]+)/$', constancia_estudio, name='reportes'),
 
 
-	url(r'^api/planillas/docente/(?P<cedula>[\w\-]+)/(?P<codigo>[\w\-]+)/$', planilla_docente, name='reportes'),
+	url(r'^api/planillas/docente/(?P<cedula>[\w\-]+)/(?P<codigo>[\w\-]+)/(?P<postgrado>[\w\s]+)/$', planilla_docente, name='reportes'),
 
 	url(r'^api/planillas/administrativo/(?P<periodo>\d+)/$', planilla_periodo, name='reportes'),
 
