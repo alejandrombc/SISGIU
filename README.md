@@ -42,7 +42,7 @@ Ir a /<tu_ruta>/SISGIU/API SISGIU/API/API/settings.py e incluye tu configuracion
 DATABASES = {
     'default': {
         'ENGINE': 'django.contrib.gis.db.backends.postgis',
-        'NAME': 'wallet',                      # database name
+        'NAME': 'sisgiu',                      # database name
         'USER': 'postgres',                      # database user
         'PASSWORD': '<contraseña>',        # database password (La que colocaste en el paso anterior)
         'HOST': 'localhost',                     # database server
