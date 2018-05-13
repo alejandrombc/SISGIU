@@ -575,7 +575,8 @@ def cargar_notas(request):
 	body_unicode = request.body.decode('utf-8')
 	body = json.loads(body_unicode)
 	"""Body contiene un array con todos los estudiantes y su respectiva nota y la cedula del docente """
-
+	print("########################")
+	print(body)
 	for estudiante in body['estudiantes']:
 		periodo_estudiante = PeriodoEstudiante.objects.get(periodo__tipo_postgrado__tipo=body['tipo_postgrado'], periodo__estado_periodo__estado='activo', estudiante__usuario__cedula=estudiante['cedula'])
 		estudiante_asignatura = EstudianteAsignatura.objects.filter(periodo_estudiante=periodo_estudiante, asignatura__codigo=body['asignatura'])

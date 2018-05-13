@@ -88,7 +88,7 @@ class ListaEstudiantes extends Component{
     // Itero sobre todo los usuarios de la asignatura
     for (var i = 0; i < N; i++){
       //Si encuentro el valor, coloco la nueva nota
-      if (new_usuarios[i].cedula === parseInt(name, 10)){
+      if (new_usuarios[i].cedula === name){
           new_usuarios[i].nota_definitiva = parseInt(value, 10);
           break;
       }

@@ -4,6 +4,7 @@ import FontAwesomeIcon from 'react-fontawesome';
 import '../../../css/moduloUsuarioAdministrador.css';
 import {bindActionCreators} from 'redux';
 import { connect } from 'react-redux';
+import {host} from '../../components/globalVariables';
 
 // Components
 import { editarUsuario, editarDocumento } from '../../actions/moduloUsuarioAdministrador';
@@ -161,7 +162,6 @@ class ModalUsuarioEdit extends React.Component {
   }
 
   render() {
-
     let listPostgrados = '';
     let lista_estadoEstudiante = '';
     
@@ -353,7 +353,11 @@ class ModalUsuarioEdit extends React.Component {
                                     <Input className="form-control" disabled={this.state.is_disabled} bsSize="sm" type="file" name="rif" id="rif" onChange={this.handleChangeDocumento} />                                    
                                   </Col>
                                   <Col sm={2}>
+                                   {this.state.rif !== host+'media/' ?
                                     <a href={this.state.rif} target='_blank' ><Button color="primary" size='sm' type='button'> Descargar </Button> </a>
+                                   :
+                                    <a href={this.state.rif} target='_blank' ><Button disabled color="primary" size='sm' type='button'> Descargar </Button> </a>
+                                   } 
                                   </Col>
                                   <Col sm={2}>
                                     <Button disabled={this.state.is_disabled} onClick={() => { this.subirDocumento('rif') }} color="primary" size='sm'> Subir </Button>
@@ -366,7 +370,11 @@ class ModalUsuarioEdit extends React.Component {
                                     <Input disabled={this.state.is_disabled} className="form-control" bsSize="sm" type="file" name="curriculum" id="curriculum" onChange={this.handleChangeDocumento} />
                                   </Col>
                                   <Col sm={2}>
-                                    <a href={this.state.curriculum} target='_blank'><Button color="primary" size='sm' type='button'> Descargar </Button> </a>
+                                    {this.state.curriculum !== host+'media/' ?
+                                      <a href={this.state.curriculum} target='_blank'><Button color="primary" size='sm' type='button'> Descargar </Button> </a>
+                                    :
+                                      <a href={this.state.curriculum} target='_blank'><Button disabled color="primary" size='sm' type='button'> Descargar </Button> </a>
+                                    }
                                   </Col>
                                   <Col sm={2}>
                                     <Button disabled={this.state.is_disabled} onClick={() => { this.subirDocumento('curriculum') }} color="primary" size='sm'> Subir </Button>
@@ -379,7 +387,11 @@ class ModalUsuarioEdit extends React.Component {
                                     <Input disabled={this.state.is_disabled} className="form-control" bsSize="sm" type="file" name="permiso_ingresos" id="permiso_ingresos" onChange={this.handleChangeDocumento} />
                                   </Col>
                                   <Col sm={2}>
-                                    <a href={this.state.permiso_ingresos} target='_blank'><Button color="primary" size='sm' type='button'> Descargar </Button> </a>
+                                    {this.state.permiso_ingresos !== host+'media/' ?
+                                      <a href={this.state.permiso_ingresos} target='_blank'><Button color="primary" size='sm' type='button'> Descargar </Button> </a>
+                                    :
+                                      <a href={this.state.permiso_ingresos} target='_blank'><Button disabled color="primary" size='sm' type='button'> Descargar </Button> </a>
+                                    }
                                   </Col>
                                   <Col sm={2}>
                                     <Button disabled={this.state.is_disabled} onClick={() => { this.subirDocumento('permiso_ingresos') }} color="primary" size='sm'> Subir </Button>

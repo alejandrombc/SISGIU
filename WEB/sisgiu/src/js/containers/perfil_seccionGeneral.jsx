@@ -5,6 +5,7 @@ import { Alert, Form, FormGroup, Label, Input, Button, Row, Col} from 'reactstra
 import { editarUsuario } from '../actions/perfilUsuario';
 import {bindActionCreators} from 'redux';
 import { PulseLoader } from 'halogenium'; //Spinner
+import {host} from '../components/globalVariables';
 
 // Components
 import { 
@@ -175,14 +176,22 @@ class SeccionGeneral extends Component{
 								  <FormGroup row>
 								      <Label for="rif" sm={2}>RIF</Label>
 								      <Col sm={10}>
-								        <a href={this.props.token['user']['rif']} target='_blank'><Button type='button' color="info" size='sm' name="rif"> Descargar </Button> </a>
+								      	{(this.props.token['user']['rif']) && this.props.token['user']['rif'] !== host+'media/' ?
+								        	<a href={this.props.token['user']['rif']} target='_blank'><Button type='button' color="info" size='sm' name="rif"> Descargar </Button> </a>
+								      	:
+								       		<a href={this.props.token['user']['rif']} target='_blank'><Button disabled type='button' color="info" size='sm' name="rif"> Descargar </Button> </a>
+								       	}
 								      </Col>
 							      </FormGroup>
 
 								  <FormGroup row>
 								      <Label for="curriculum" sm={2}>Curriculum</Label>
 								      <Col sm={10}>
-								        <a href={this.props.token['user']['curriculum']} target='_blank'><Button type='button' color="info" size='sm' name="curriculum" > Descargar </Button> </a>
+								      	{(this.props.token['user']['curriculum']) && this.props.token['user']['curriculum'] !== host+'media/' ?
+								        	<a href={this.props.token['user']['curriculum']} target='_blank'><Button type='button' color="info" size='sm' name="curriculum" > Descargar </Button> </a>
+								      	:
+								      		<a href={this.props.token['user']['curriculum']} target='_blank'><Button disabled type='button' color="info" size='sm' name="curriculum" > No disponible </Button> </a>
+								      	}
 								      </Col>
 								  </FormGroup>
 								</div>

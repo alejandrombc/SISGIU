@@ -456,10 +456,10 @@ def estudiante_pago_inscripcion(request, periodo_id):
 @api_view(['POST'])
 @permission_classes((IsAdminUser, ))
 def update_file(request, cedula, tipo_documento):
-
+	print("$$$$$$$$$")
 	username = request.POST.get("username")
 	user = PersonalDocente.objects.get(usuario__username=username)
-
+	print(username)
 	if(username == cedula):
 		documento = request.FILES[tipo_documento]
 		if(user):
