@@ -507,6 +507,14 @@ def constancia_estudio(request, cedula):
 	user_information['last_name'] = user['last_name']
 
 	tipo_postgrado = TipoPostgrado.objects.get(id=estudiante['id_tipo_postgrado_id']).__dict__
+	try:
+		coordinador = PersonalDocente.objects.get(id_tipo_postgrado=estudiante['id_tipo_postgrado_id'],
+			coordinador=True)
+		user_information['coordinador_nombre'] = coordinador.usuario.first_name
+		user_information['coordinador_apellido'] = coordinador.usuario.last_name
+	except:
+		user_information['coordinador_nombre'] = ""
+		user_information['coordinador_apellido'] = ""
 
 	user_information['tipo_postgrado'] = tipo_postgrado['tipo']
 
@@ -537,21 +545,24 @@ def constancia_estudio(request, cedula):
 		user_information['asignaturas'].append(asignatura)
 		user_information['unidad_creditos'] += asignatura['unidad_credito']
 
-	now = datetime.datetime.now()
-	meses = [
-			'Enero', 'Febrero', 'Marzo', 'Abril',
-			'Mayo', 'Junio', 'Julio', 'Agosto',
-			'Septiembre', 'Octubre', 'Noviembre',
-			'Diciembre'
-	]
-	user_information['dia'] = now.day
-	user_information['mes'] = meses[now.month - 1]
-	user_information['anio'] = now.year
+	if user_information['unidad_creditos'] != 0:
+		now = datetime.datetime.now()
+		meses = [
+				'Enero', 'Febrero', 'Marzo', 'Abril',
+				'Mayo', 'Junio', 'Julio', 'Agosto',
+				'Septiembre', 'Octubre', 'Noviembre',
+				'Diciembre'
+		]
+		user_information['dia'] = now.day
+		user_information['mes'] = meses[now.month - 1]
+		user_information['anio'] = now.year
 
-	content = 'attachment; filename="constancia_'+str(cedula)+'.pdf"'
-	pdf = render_to_pdf('constancia_estudio.html', user_information)
-	pdf['Content-Disposition'] = content
-	return HttpResponse(pdf, content_type='application/pdf')
+		content = 'attachment; filename="constancia_'+str(cedula)+'.pdf"'
+		pdf = render_to_pdf('constancia_estudio.html', user_information)
+		pdf['Content-Disposition'] = content
+		return HttpResponse(pdf, content_type='application/pdf')
+	else:
+		return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(['GET'])
@@ -635,6 +646,15 @@ def planilla_periodo(request, periodo):
 	periodo_info['tipo_postgrado'] = periodo_completo.tipo_postgrado.tipo
 	periodo_info['docentes'] = []
 
+	try:
+		coordinador = PersonalDocente.objects.get(id_tipo_postgrado__tipo=periodo_completo.tipo_postgrado.tipo,
+			coordinador=True)
+		periodo_info['coordinador_nombre'] = coordinador.usuario.first_name
+		periodo_info['coordinador_apellido'] = coordinador.usuario.last_name
+	except:
+		periodo_info['coordinador_nombre'] = ""
+		periodo_info['coordinador_apellido'] = ""
+		
 	cedulas_agregadas = {}
 
 	docente_asignatura = DocenteAsignatura.objects.filter(periodo=periodo_completo)

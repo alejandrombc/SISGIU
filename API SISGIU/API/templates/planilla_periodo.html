@@ -62,13 +62,14 @@
                 background: #3498db; 
                 color: black; 
                 font-weight: bold; 
+                font-size: 12px;
             }
 
             td, th { 
                 padding: 10px; 
                 border: 1px solid #ccc; 
                 text-align: left; 
-                font-size: 18px;
+                font-size: 10px;
             }
 
         </style>
@@ -93,7 +94,7 @@
             </div>
             {%for docente in docentes%}
             <div class='texto'>
-                <center><p>Estudiantes del docente <b>{{docente.nombre}} {{docente.apellido}}</b> | <b>{{docente.cedula}}</b>. Para la asignatura <b>{{docente.asignatura}}</b> | UC:<b>{{unidad_credito}}</b>.</p></center>
+                <center><p>Estudiantes del docente <b>{{docente.nombre}} {{docente.apellido}}</b> | <b>{{docente.cedula}}</b>. Para la asignatura <b>{{docente.asignatura}}</b> | UC: <b>{{docente.unidad_credito}}</b>.</p></center>
                 <table>
                   <thead>
                     <tr>
@@ -116,6 +117,21 @@
                 </table>
             </div>
             {% endfor %}
+            <br>
+            <br>
+            <br>
+            <center><div>
+                <p>___________________________________________________</p>
+            </div></center>
+             <div class='wrapper'>
+             <div class='header'>
+                 <p style="font-size:15px" class='title_child'>
+                    {{coordinador_nombre}} {{coordinador_apellido}}
+                    <br>
+                    COORDINADOR DE POSTGRADO
+                 </p>
+             </div>
+             <br>
         </div>
      </body>
  </html>

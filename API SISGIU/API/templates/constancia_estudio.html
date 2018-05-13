@@ -68,7 +68,7 @@
              </div>
          <div>
          <div class='texto'>
-			 <p>Quien subscribe, jefe de la División de Control de Estudios de la Facultad de Arquitectura de la Universidad Central de Venezuela, por medio de la presente, hace constar que el Sr(a). <b>{{last_name}} {{first_name}}</b> portador de la cédula de identidad No. <b>{{cedula}}</b> es estudiante de <b>{{tipo_postgrado}}</b> para el período <b>{{periodo}}</b> y cursa un total de <b>{{unidad_creditos}}</b> unidades de crédito en las siguientes asignaturas:</p>
+			 <p>Quien subscribe, jefe de la División de Control de Estudios de la Facultad de Arquitectura de la Universidad Central de Venezuela, por medio de la presente, hace constar que el Sr(a). <b>{{last_name}} {{first_name}}</b> portador de la cédula de identidad No. <b>{{cedula}}</b> es estudiante de <b>{{tipo_postgrado}}</b> para el periodo <b>{{numero_periodo}} ({{mes_inicio}} {{anio_inicio}} - {{mes_fin}} {{anio_fin}})</b> y cursa un total de <b>{{unidad_creditos}}</b> unidades de crédito en las siguientes asignaturas:</p>
 			<br>
 			<b>
 				<ul>
@@ -84,17 +84,23 @@
 			<br>
 			<center><p>*** Válida por el período actual ***</p></center>
 			<br>
+            <br>
+            <br>
 			<center><div>
-	     	 	<img width="200px" height="100px" src="https://upload.wikimedia.org/wikipedia/commons/7/7e/Firma_Harriet.png">
+	     	 	<p>___________________________________________________</p>
      	 	</div></center>
 			 <div class='wrapper'>
              <div class='header'>
                  <p style="font-size:15px" class='title_child'>
-                 	PROF. MARISOL ORTEGA
+                 	{{coordinador_nombre}} {{coordinador_apellido}}
 					<br>
-					JEFA DE DIVISIÓN DE CONTROL DE ESTUDIOS
+					COORDINADOR DE POSTGRADO
                  </p>
              </div>
+             <br>
+             <br>
+             <br>
+             <br>
          <div>
              <hr class='hrItem' />
          </div>
