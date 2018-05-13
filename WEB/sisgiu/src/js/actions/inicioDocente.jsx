@@ -56,7 +56,7 @@ export const cargar_notas = (estudiantes, cedula_docente, asignatura, tipo_postg
 	data['tipo_postgrado'] = tipo_postgrado;
 
 	return request
-	   .post(host+'api/estudianteAsignatura/cargarNotas/')
+	   .post(host+'api/estudiantes_cargarNotas/')
 	   .set('Authorization', 'JWT '+token)
 	   .send(data)
 	   .then(function(res) {

@@ -70,7 +70,7 @@ urlpatterns = format_suffix_patterns([
     url(r'^api/informacionUsuariosAdministrativo/(?P<cedula>[\w\-]+)/$', informacion_usuarios_administrativo, name='usuarios-administrativo-info'),
 
     #Actualiza la calificacion de todos los estudiantes de un docente para una asignatura
-    url(r'^api/estudianteAsignatura/cargarNotas/$', cargar_notas, name='EstudianteAsignatura-cargar-notas'),
+    url(r'^api/estudiantes_cargarNotas/$', cargar_notas, name='EstudianteAsignatura-cargar-notas'),
 
 
     # AsignaturaTipoPostgrado

@@ -92,7 +92,7 @@ class SeccionContrasena extends Component{
 	                    }
 	                   	{(!this.props.edit['edit_password'] && this.state.typing) && (this.state.password.length < 6 || this.state.secondPassword.length < 6) &&
 	                      <Alert color="warning" isOpen={this.state.visible} toggle={this.onDismiss}>
-	                        Las contraseñas deben tener mas de 6 caracteres
+	                        Las contraseñas deben tener más de 6 caracteres
 	                      </Alert>
 	                    }
 	                    {this.state.showPassword &&
