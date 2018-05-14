@@ -204,3 +204,12 @@ export function get_estado_estudiante () {
 	   });
 
 }
+
+export function hide_alerts() {
+	let token = localStorage.getItem('user_token');
+
+	return {
+		type: "HIDE_ALERTS"
+	}
+
+}

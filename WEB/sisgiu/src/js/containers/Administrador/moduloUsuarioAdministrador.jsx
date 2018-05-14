@@ -4,9 +4,11 @@ import { Row, Col, TabContent, TabPane, Nav, NavItem, NavLink} from 'reactstrap'
 import '../../../css/moduloUsuarioAdministrador.css'; 
 import classnames from 'classnames';
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 
 // Components
 import ListaUsuarios from './listaUsuarios';
+import { hide_alerts } from '../../actions/moduloUsuarioAdministrador';
 
 
 class ModuloUsuarioAdministrador extends Component{
@@ -27,6 +29,7 @@ class ModuloUsuarioAdministrador extends Component{
         activeTab: tab
       });
     }
+    this.props.hide_alerts();
   }
 
 
@@ -113,7 +116,12 @@ const mapStateToProps = (state)=> {
   };
 }
 
+const mapDispatchToProps = (dispatch) => {
+  return bindActionCreators({
+    hide_alerts: hide_alerts,
+  }, dispatch )
+}
 
-export default connect(mapStateToProps)(ModuloUsuarioAdministrador);
+export default connect(mapStateToProps, mapDispatchToProps)(ModuloUsuarioAdministrador);
 
 

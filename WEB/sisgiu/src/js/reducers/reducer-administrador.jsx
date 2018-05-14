@@ -128,6 +128,10 @@ export default function (state=initialState, action) {
 			nuevo_estado['error_creando_periodo'] = true;
 			return nuevo_estado;
 
+		case "HIDE_ALERTS":
+			nuevo_estado['edit'] = false;
+			nuevo_estado['bad_input'] = false;
+			return nuevo_estado;
 
 
 
