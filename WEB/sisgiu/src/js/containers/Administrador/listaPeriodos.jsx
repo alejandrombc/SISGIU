@@ -358,6 +358,7 @@ class ListaPeriodos extends Component{
           {
             return(
               <PeriodoEdit
+              hide_alerts={this.props.hide_alerts}
               periodo={this.state.periodo} 
               asignaturas={this.state.asignaturas} 
               triggerVolverPasoAnterior={this.volverPasoAnterior} 
