@@ -1,5 +1,6 @@
 const initialState = {
 	edit:false, 
+	create: false,
 	tiene_periodos_activos: true, 
 	periodo_terminado_error: false, 
 	lista_usuarios: [], 
@@ -54,6 +55,7 @@ export default function (state=initialState, action) {
 
 		case "EDIT_USER_INFO_SUCCESS":
 			nuevo_estado['bad_input'] = false;
+			nuevo_estado['create'] = false;
 			nuevo_estado['edit'] = true;
 			nuevo_estado['lista_usuarios'] = action.payload['lista_usuarios'];
 			return nuevo_estado;
@@ -61,6 +63,8 @@ export default function (state=initialState, action) {
 
 		case "EDIT_USER_INFO_ERROR":
 			nuevo_estado['bad_input'] = true;
+			nuevo_estado['create'] = false;
+			nuevo_estado['edit'] = false;
 			nuevo_estado['lista_usuarios'] = action.payload['lista_usuarios'];
 			return nuevo_estado;
 
@@ -131,6 +135,14 @@ export default function (state=initialState, action) {
 		case "HIDE_ALERTS":
 			nuevo_estado['edit'] = false;
 			nuevo_estado['bad_input'] = false;
+			nuevo_estado['create'] = false;
+			return nuevo_estado;
+		
+		case "CREATE_USER_SUCCESS":
+			nuevo_estado['create'] = true;
+			nuevo_estado['edit'] = false;
+			nuevo_estado['bad_input'] = false;
+			nuevo_estado['lista_usuarios'] = action.payload['lista_usuarios'];
 			return nuevo_estado;
 
 

@@ -3,21 +3,32 @@ import {host} from '../components/globalVariables';
 import mergeJSON from 'merge-json';
 
 
-export function get_usuarios (tipo_usuario, edit) {
+/* 
+edit_create_or_error = 1 -> Editado Exitosamente
+edit_create_or_error = 2 -> Error
+edit_create_or_error = 3 -> Creado Exitosamente
+*/
+
+export function get_usuarios (tipo_usuario, edit_create_or_error) {
 	let token = localStorage.getItem('user_token');
 
 	return request
 	   .get(host+'api/usuarios/'+tipo_usuario+'/')
 	   .set('Authorization', 'JWT '+token)
 	   .then(function(res) {
-	   		if(edit === 1){
+	   		if(edit_create_or_error === 1){
 	   			return {
 					type: "EDIT_USER_INFO_SUCCESS",
 					payload: {lista_usuarios: res.body}
 				}
-	   		}else if(edit === 2){
+	   		} else if(edit_create_or_error === 2){
 	   			return {
 					type: "EDIT_USER_INFO_ERROR",
+					payload: {lista_usuarios: res.body}
+				}
+	   		} else if(edit_create_or_error === 3){
+	   			return {
+					type: "CREATE_USER_SUCCESS",
 					payload: {lista_usuarios: res.body}
 				}
 	   		}
@@ -127,7 +138,7 @@ export const crearUsuario = (user, tipo_usuario) => {
 			   .send(user)
 			   .then(function(res) {
 					return function (dispatch) {
-						dispatch(get_usuarios(tipo_usuario ,1));
+						dispatch(get_usuarios(tipo_usuario ,3));
 					}
 
 			   })
@@ -145,7 +156,7 @@ export const crearUsuario = (user, tipo_usuario) => {
 			   .send(user)
 			   .then(function(res) {
 				   	  	return function (dispatch) {
-						    dispatch(get_usuarios(tipo_usuario ,1));
+						    dispatch(get_usuarios(tipo_usuario ,3));
 						}
 
 			   })
