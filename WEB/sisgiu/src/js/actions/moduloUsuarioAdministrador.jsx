@@ -71,7 +71,7 @@ export const editarUsuario = (cambios, user, tipo_usuario) => {
 	delete result.curriculum;
 	delete result.permiso_ingresos;
 	
-	if (!result.coordinador) {
+	if (tipo_usuario === 'docentes' && !result.coordinador) {
 		result.id_tipo_postgrado = null;
 	}
 
@@ -132,7 +132,7 @@ export const crearUsuario = (user, tipo_usuario) => {
 	user.usuario.cedula = cedula;
 
 
-	if (!user.coordinador) {
+	if (tipo_usuario === 'docentes' && !user.coordinador) {
 		user.id_tipo_postgrado = null;
 	}
 

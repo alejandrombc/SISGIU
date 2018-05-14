@@ -2,7 +2,7 @@
 import json
 import os
 import datetime
-import urllib 
+import urllib
 from django.http import HttpResponse
 from django.template.loader import get_template
 from usuario.utils import render_to_pdf
@@ -257,7 +257,7 @@ def edit_admin(request, cedula):
 	if(admin_usuario):
 		admin_usuario.first_name = body['usuario']['first_name']
 		if(admin_usuario.password != body['usuario']['password']):
-		    admin_usuario.set_password(body['usuario']['password'])
+			admin_usuario.set_password(body['usuario']['password'])
 		admin_usuario.segundo_nombre = body['usuario']['segundo_nombre']
 		admin_usuario.last_name = body['usuario']['last_name']
 		admin_usuario.segundo_apellido = body['usuario']['segundo_apellido']
@@ -272,6 +272,7 @@ def edit_admin(request, cedula):
 		admin_usuario.estado_civil = body['usuario']['estado_civil']
 		admin_usuario.save()
 		return Response(status=status.HTTP_204_NO_CONTENT)
+
 
 @api_view(['GET'])
 @permission_classes((IsAdminUser, ))
@@ -508,8 +509,7 @@ def constancia_estudio(request, cedula):
 
 	tipo_postgrado = TipoPostgrado.objects.get(id=estudiante['id_tipo_postgrado_id']).__dict__
 	try:
-		coordinador = PersonalDocente.objects.get(id_tipo_postgrado=estudiante['id_tipo_postgrado_id'],
-			coordinador=True)
+		coordinador = PersonalDocente.objects.get(id_tipo_postgrado=estudiante['id_tipo_postgrado_id'], coordinador=True)
 		user_information['coordinador_nombre'] = coordinador.usuario.first_name
 		user_information['coordinador_apellido'] = coordinador.usuario.last_name
 	except:
@@ -568,7 +568,7 @@ def constancia_estudio(request, cedula):
 @api_view(['GET'])
 @permission_classes((isDocenteOrAdmin, ))
 def planilla_docente(request, cedula, codigo, postgrado):
-	postgrado = urllib.parse.unquote(postgrado) 
+	postgrado = urllib.parse.unquote(postgrado)
 	user_information = {}
 	user = PersonalDocente.objects.get(usuario__cedula=cedula)
 
@@ -587,17 +587,16 @@ def planilla_docente(request, cedula, codigo, postgrado):
 	periodo = Periodo.objects.get(id=docente_asignatura['periodo_id'])
 	asignatura = Asignatura.objects.get(id=docente_asignatura['asignatura_id'])
 	tipo_postgrado_asignatura = AsignaturaTipoPostgrado.objects.filter(asignatura_id=docente_asignatura['asignatura_id'])
-	
+
 	tipos_info = {}
 	try:
-		coordinador = PersonalDocente.objects.get(id_tipo_postgrado__tipo=postgrado,
-			coordinador=True)
+		coordinador = PersonalDocente.objects.get(id_tipo_postgrado__tipo=postgrado, coordinador=True)
 		tipos_info['coordinador_nombre'] = coordinador.usuario.first_name
 		tipos_info['coordinador_apellido'] = coordinador.usuario.last_name
 	except:
 		tipos_info['coordinador_nombre'] = ""
 		tipos_info['coordinador_apellido'] = ""
-	
+
 	tipos_info['nombre'] = postgrado
 	tipos_info['estudiantes'] = []
 	user_information['estudiantes'].append(tipos_info)
@@ -623,7 +622,6 @@ def planilla_docente(request, cedula, codigo, postgrado):
 			if(estudiante.periodo_estudiante.estudiante.id_tipo_postgrado.tipo == tipos['nombre']):
 				tipos['estudiantes'].append(estudiante_info)
 
-
 	content = 'attachment; filename="planilla'+str(cedula)+'.pdf"'
 	pdf = render_to_pdf('planilla_docente.html', user_information)
 	pdf['Content-Disposition'] = content
@@ -647,14 +645,13 @@ def planilla_periodo(request, periodo):
 	periodo_info['docentes'] = []
 
 	try:
-		coordinador = PersonalDocente.objects.get(id_tipo_postgrado__tipo=periodo_completo.tipo_postgrado.tipo,
-			coordinador=True)
+		coordinador = PersonalDocente.objects.get(id_tipo_postgrado__tipo=periodo_completo.tipo_postgrado.tipo, coordinador=True)
 		periodo_info['coordinador_nombre'] = coordinador.usuario.first_name
 		periodo_info['coordinador_apellido'] = coordinador.usuario.last_name
 	except:
 		periodo_info['coordinador_nombre'] = ""
 		periodo_info['coordinador_apellido'] = ""
-		
+
 	cedulas_agregadas = {}
 
 	docente_asignatura = DocenteAsignatura.objects.filter(periodo=periodo_completo)

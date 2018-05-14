@@ -61,7 +61,7 @@ class Estudiante(models.Model):
 		db_table = 'estudiante'
 
 	def __str__(self):
-		return str(self.usuario) + ' ' + str(self.usuario.first_name) + ' ' + str(self.usuario.last_name)
+		return str(self.usuario)
 
 
 class TipoPostgrado(models.Model):
