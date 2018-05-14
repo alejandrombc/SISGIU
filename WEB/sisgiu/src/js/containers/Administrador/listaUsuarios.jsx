@@ -120,10 +120,8 @@ class ListaUsuarios extends Component{
         return(
         <div>
               <br />
-              {this.state.loading && !this.props.adminUser.edit && !this.props.adminUser.bad_input && !this.props.adminUser.create &&
-
+              {this.state.loading && !this.props.adminUser.edit && !this.props.adminUser.bad_input && !this.props.adminUser.create && !this.props.adminUser.error_docente_tipo_postgrado &&
                 <center><PulseLoader color="#b3b1b0" size="16px" margin="4px"/></center>
-
               }
               {this.props.adminUser.create &&
                 <Alert color="success" isOpen={this.state.visible} toggle={this.onDismiss}>
@@ -138,6 +136,11 @@ class ListaUsuarios extends Component{
               {this.props.adminUser.bad_input === true &&
                   <Alert color="danger" isOpen={this.state.visible} toggle={this.onDismiss}>
                       Ha ocurrido un error
+                  </Alert>
+              }
+              {this.props.adminUser.error_docente_tipo_postgrado === true &&
+                  <Alert color="danger" isOpen={this.state.visible} toggle={this.onDismiss}>
+                      Ya existe un coordinador del tipo de postgrado seleccionado
                   </Alert>
               }
               <Row>

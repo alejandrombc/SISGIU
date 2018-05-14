@@ -31,7 +31,7 @@ urlpatterns = format_suffix_patterns([
     # Periodos
     url(r'^api/periodo/$',
         PeriodoListCreateAPIView.as_view(), name='Periodo-list-create'),
-    
+
     # Periodos en base a una busqueda
     url(r'^api/periodo/(?P<filtro>[\w\s]+)/$', get_periodos_by_filter, name='Periodo-list-filter'),
 
@@ -41,17 +41,17 @@ urlpatterns = format_suffix_patterns([
 
     # Activar un periodo (cambia el estado de no iniciado a en inscripcion)
     url(r'^api/periodo/activar/(?P<periodo_id>\d+)/$', activar_periodo, name='Periodo-activar'),
-    
+
     url(r'^api/periodo/(?P<pk>\d+)/$',
         PeriodoDetailAPIView.as_view(), name='Periodo-detail'),
 
     #Obtiene el estado de un periodo en base a su ID
     url(r'^api/periodo/(?P<periodo_id>\d+)/estado/$', get_estado_periodo, name='estado-periodo'),
 
-    # Cambia el estado de un periodo a alguno que se indique 
+    # Cambia el estado de un periodo a alguno que se indique
     url(r'^api/periodo/(?P<periodo>\d+)/edit/filtro/(?P<filtro>[\w\s]+)/$',
         cambiar_estado_periodo, name='cambiar-estado-periodo'),
-    
+
     url(r'^api/periodo/(?P<pk>\d+)/edit/$',
         PeriodoUpdateAPIView.as_view(), name='Periodo-update'),
     url(r'^api/periodo/(?P<pk>\d+)/delete/$',

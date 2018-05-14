@@ -313,6 +313,12 @@ class ListaPeriodos extends Component{
                         Ya existe un periodo con "No Iniciado" del tipo de postgrado seleccionado.
                     </Alert>
                   }
+                  {/*ALERT DE ERROR*/}
+                  {this.props.adminUser.periodo_en_inscripcion_repetido === true &&
+                    <Alert color="danger" isOpen={this.state.visible} toggle={this.onDismiss}>
+                        Ya existe un periodo en inscripción o activo del tipo de postgrado seleccionado.
+                    </Alert>
+                  }
                    
 
                   <Row>

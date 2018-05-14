@@ -8,6 +8,8 @@ edit_create_or_error = 2 -> Error
 edit_create_or_error = 3 -> Creado Exitosamente
 */
 
+let periodo_en_inscripcion_repetido = false;
+
 export function get_periodos (edit_create_or_error, filtro) {
 	let token = localStorage.getItem('user_token');
 	return request
@@ -20,6 +22,12 @@ export function get_periodos (edit_create_or_error, filtro) {
 					payload: {lista_periodos: res.body}
 				}
 	   		}else if(edit_create_or_error === 2){
+				if (periodo_en_inscripcion_repetido) {
+					return {
+						type: "PERIODO_EN_INSCRIPCION_REPETIDO",
+						payload: { lista_periodos: res.body }
+					}
+				}
 	   			return {
 					type: "PERIODO_ERROR",
 					payload: {lista_periodos: res.body}
@@ -207,6 +215,9 @@ export const activar_periodo = (periodo_id) => {
 			}
 	   })
 	   .catch(function(err) {
+			if (err.status === 409 && err.response.body.codigo === 1) {
+				periodo_en_inscripcion_repetido = true;
+			}
 	      	return function (dispatch) {
 			    dispatch(get_periodos(2, 'no iniciado'));
 			}

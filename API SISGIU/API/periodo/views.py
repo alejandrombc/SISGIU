@@ -165,18 +165,21 @@ def activar_periodo(request, periodo_id):
 	# Validamos si el periodo seleccionado ya esta activo
 	if(estado_periodo.estado == "en inscripcion" or estado_periodo.estado == "activo"):
 		response_data['error'] = 'El periodo seleccionado ya se encuentra en inscripción o activo.'
+		response_data['codigo'] = 0
 		return Response(response_data, status=status.HTTP_409_CONFLICT)
 
 	# Validamos que no exista otro "tipo de postgrado" en inscripcion
 	periodo_postgrado = Periodo.objects.filter(tipo_postgrado_id=periodo.tipo_postgrado_id, estado_periodo_id__estado="en inscripcion")
 	if periodo_postgrado:
 		response_data['error'] = 'Ya existe un periodo en inscripción para este tipo de postgrado.'
+		response_data['codigo'] = 1
 		return Response(response_data, status=status.HTTP_409_CONFLICT)
 
 	# Validamos que no exista otro "tipo de postgrado" activo
 	periodo_postgrado = Periodo.objects.filter(tipo_postgrado_id=periodo.tipo_postgrado_id, estado_periodo_id__estado="activo")
 	if periodo_postgrado:
 		response_data['error'] = 'Ya existe un periodo activo para este tipo de postgrado.'
+		response_data['codigo'] = 2
 		return Response(response_data, status=status.HTTP_409_CONFLICT)
 
 	# Actualizo el periodo a "en inscripcion"

@@ -9,6 +9,8 @@ edit_create_or_error = 2 -> Error
 edit_create_or_error = 3 -> Creado Exitosamente
 */
 
+let error_docente_tipo_postgrado_repetido = false;
+
 export function get_usuarios (tipo_usuario, edit_create_or_error) {
 	let token = localStorage.getItem('user_token');
 
@@ -22,6 +24,12 @@ export function get_usuarios (tipo_usuario, edit_create_or_error) {
 					payload: {lista_usuarios: res.body}
 				}
 	   		} else if(edit_create_or_error === 2){
+				if (error_docente_tipo_postgrado_repetido) {
+					return {
+						type: "ERROR_DOCENTE_TIPO_POSTGRADO",
+						payload: { lista_usuarios: res.body }
+					}
+				}
 	   			return {
 					type: "EDIT_USER_INFO_ERROR",
 					payload: {lista_usuarios: res.body}
@@ -155,12 +163,14 @@ export const crearUsuario = (user, tipo_usuario) => {
 			   .set('Content-Type', 'application/json')
 			   .send(user)
 			   .then(function(res) {
-				   	  	return function (dispatch) {
-						    dispatch(get_usuarios(tipo_usuario ,3));
-						}
-
+					return function (dispatch) {
+						dispatch(get_usuarios(tipo_usuario ,3));
+					}
 			   })
 			   .catch(function(err) {
+					if (err.status === 400 && err.response.body.id_tipo_postgrado) {
+						error_docente_tipo_postgrado_repetido = true;
+					}
 			   	  	return function (dispatch) {
 					    dispatch(get_usuarios(tipo_usuario ,2));
 					}
