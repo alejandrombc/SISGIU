@@ -64,13 +64,18 @@ export const editarUsuario = (cambios, user, tipo_usuario) => {
 	let usuario = {
 		"usuario": user
 	}
-
+	
 	var result = mergeJSON.merge(usuario, cambios);
 	delete result.usuario.foto;
 	delete result.rif;
 	delete result.curriculum;
 	delete result.permiso_ingresos;
+	
+	if (!result.coordinador) {
+		result.id_tipo_postgrado = null;
+	}
 
+	
 	return request
 	   .put(host+'api/'+tipo_usuario+'/'+usuario['usuario']['cedula']+'/edit/')
 	   .set('Authorization', 'JWT '+token)
@@ -83,6 +88,9 @@ export const editarUsuario = (cambios, user, tipo_usuario) => {
 
 	   })
 	   .catch(function(err) {
+			if (err.status === 400 && err.response.body.id_tipo_postgrado) {
+				error_docente_tipo_postgrado_repetido = true;
+			}
 	   	  	return function (dispatch) {
 			    dispatch(get_usuarios(tipo_usuario ,2));
 			}
@@ -122,6 +130,12 @@ export const crearUsuario = (user, tipo_usuario) => {
 	user['usuario']['password'] = user['usuario']['cedula'];
 	user.usuario.username = cedula;
 	user.usuario.cedula = cedula;
+
+
+	if (!user.coordinador) {
+		user.id_tipo_postgrado = null;
+	}
+
 	if(tipo_usuario === "administradores") { 
 		modulo = "usuarios"; 
 		user = user['usuario'];
