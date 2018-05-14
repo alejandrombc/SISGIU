@@ -12,6 +12,20 @@ export default function (state=initialState, action) {
 	
 	switch (action.type){
 
+		// Global
+		case "HIDE_ALERTS":
+			nuevo_estado['edit'] = false;
+			nuevo_estado['bad_input'] = false;
+			nuevo_estado['bad_input_password'] = false;
+			nuevo_estado['edit_password'] = false;
+			nuevo_estado['bad_photo_request'] = false;
+			nuevo_estado['edit_photo'] = false;
+			return nuevo_estado;
+
+		case "ERROR":
+			nuevo_estado['loggedIn'] = false;
+			return nuevo_estado;
+
 		case "EDIT_USER_INFO_SUCCESS":
 			nuevo_estado['user'] = action.payload['user'];
 			nuevo_estado['bad_input'] = false;

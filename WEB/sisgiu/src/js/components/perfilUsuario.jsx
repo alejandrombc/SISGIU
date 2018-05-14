@@ -6,6 +6,9 @@ import classnames from 'classnames';
 import SeccionContrasena from '../containers/perfil_seccionContrasena';
 import SeccionGeneral from '../containers/perfil_seccionGeneral';
 import SeccionFoto from '../containers/perfil_seccionFoto';
+import { hide_alerts } from '../actions/moduloUsuarioAdministrador';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 
 
 class PerfilUsuario extends Component{
@@ -27,6 +30,7 @@ class PerfilUsuario extends Component{
         activeTab: tab
       });
     }
+    this.props.hide_alerts();
   }
 
   render(){
@@ -76,7 +80,17 @@ class PerfilUsuario extends Component{
 
 
 
+const mapStateToProps = (state) => {
+  return {
+  };
+}
 
-export default (PerfilUsuario);
+const mapDispatchToProps = (dispatch) => {
+  return bindActionCreators({
+    hide_alerts: hide_alerts,
+  }, dispatch)
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(PerfilUsuario);
 
 
