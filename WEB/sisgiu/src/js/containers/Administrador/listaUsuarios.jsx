@@ -132,7 +132,7 @@ class ListaUsuarios extends Component{
               }
               {this.props.adminUser.edit &&
                 <Alert color="success" isOpen={this.state.visible} toggle={this.onDismiss}>
-                    Datos actualizados exitosamente
+                    Operación realizada exitosamente
                 </Alert> 
               }
               {this.props.adminUser.bad_input === true &&

@@ -1,21 +1,32 @@
 import request from 'superagent';
 import {host} from '../components/globalVariables';
 
-export function get_periodos (edit, filtro) {
-	let token = localStorage.getItem('user_token');
 
+/* 
+edit_create_or_error = 1 -> Editado Exitosamente
+edit_create_or_error = 2 -> Error
+edit_create_or_error = 3 -> Creado Exitosamente
+*/
+
+export function get_periodos (edit_create_or_error, filtro) {
+	let token = localStorage.getItem('user_token');
 	return request
 	   .get(host+'api/periodo/'+filtro+'/')
 	   .set('Authorization', 'JWT '+token)
 	   .then(function(res) {
-	   		if(edit === 1){
+	   		if(edit_create_or_error === 1){
 	   			return {
 					type: "EDIT_PERIODO_EXITOSO",
 					payload: {lista_periodos: res.body}
 				}
-	   		}else if(edit === 2){
+	   		}else if(edit_create_or_error === 2){
 	   			return {
 					type: "PERIODO_ERROR",
+					payload: {lista_periodos: res.body}
+				}
+	   		}else if(edit_create_or_error === 3){
+	   			return {
+					type: "CREATE_PERIODO_EXITOSO",
 					payload: {lista_periodos: res.body}
 				}
 	   		}
@@ -106,7 +117,7 @@ export function crear_periodo (periodo, id_estado_periodo, descripcion) {
 	   .send(periodo)
 	   .then(function(res) {
 	   		return function (dispatch) {
-			    dispatch(get_periodos(1, 'no iniciado'));
+			    dispatch(get_periodos(3, 'no iniciado'));
 			}
 	   })
 	   .catch(function(err) {

@@ -1,7 +1,14 @@
 import request from 'superagent';
 import {host} from '../components/globalVariables';
 
-export function get_asignaturas (edit) {
+
+/* 
+edit_create_or_error = 1 -> Editado Exitosamente
+edit_create_or_error = 2 -> Error
+edit_create_or_error = 3 -> Creado Exitosamente
+*/
+
+export function get_asignaturas (edit_create_or_error) {
 	let token = localStorage.getItem('user_token');
 
 
@@ -14,14 +21,19 @@ export function get_asignaturas (edit) {
 				   .get(host+'api/asignaturas_necesarias/all/')
 				   .set('Authorization', 'JWT '+token)
 				   .then(function(res) {
-				   		if(edit === 1){
+				   		if(edit_create_or_error === 1){
 				   			return {
 								type: "EDIT_ASIGNATURA_EXITOSO",
 								payload: {lista_prelacion: res.body, lista_asignaturas:lista_asignaturas}
 							}
-				   		}else if(edit === 2){
+				   		}else if(edit_create_or_error === 2){
 				   			return {
 								type: "ASIGNATURAS_ERROR",
+								payload: {lista_prelacion: res.body, lista_asignaturas:lista_asignaturas}
+							}
+				   		}else if(edit_create_or_error === 3){
+				   			return {
+								type: "CREAR_ASIGNATURA_EXITOSO",
 								payload: {lista_prelacion: res.body, lista_asignaturas:lista_asignaturas}
 							}
 				   		}
@@ -121,7 +133,7 @@ export function crear_asignatura (asignatura) {
 			   .send(asignatura)
 			   .then(function(res) {
 				   return function (dispatch) {
-					   dispatch(get_asignaturas(1));
+					   dispatch(get_asignaturas(3));
 				   }
 			   })
 			   .catch(function(err) {

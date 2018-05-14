@@ -24,6 +24,7 @@ import {
   get_estado_periodo,
   get_docente_asignatura,
 } from '../../actions/moduloPeriodos';
+import { hide_alerts } from '../../actions/moduloUsuarioAdministrador';
 
 
 import Paginacion from '../../components/pagination';
@@ -76,7 +77,7 @@ class ListaPeriodos extends Component{
 
   onDismiss() {
     this.setState({ visible: false, loading: false});
-    this.props.adminUser['edit'] = false;
+    this.props.hide_alerts();
   }
 
   searchUpdated (term) {
@@ -89,6 +90,7 @@ class ListaPeriodos extends Component{
 
   volverPasoAnterior() {
     this.setState({editando_periodo: this.state.editando_periodo-1});
+    this.props.hide_alerts();
   }
 
   volverPrimerPaso() {
@@ -287,11 +289,16 @@ class ListaPeriodos extends Component{
             return(
         		<div>
                   <br />
-
+                  {/*ALERT DE EXITO*/}
+                  {this.props.adminUser.create &&
+                    <Alert color="success" isOpen={this.state.visible} toggle={this.onDismiss}>
+                        Periodo creado exitosamente
+                    </Alert> 
+                  }
                   {/*ALERT DE EXITO*/}
                   {this.props.adminUser['edit'] &&
                     <Alert color="success" isOpen={this.state.visible} toggle={this.onDismiss}>
-                        Datos actualizados exitosamente
+                        Operación realizada exitosamente
                     </Alert> 
                   }
                   {/*ALERT DE ERROR*/}
@@ -350,8 +357,7 @@ class ListaPeriodos extends Component{
           else if(this.state.editando_periodo === 2 || this.state.editando_periodo === 3 )
           {
             return(
-              <PeriodoEdit 
-              onDismiss={this.onDismiss} 
+              <PeriodoEdit
               periodo={this.state.periodo} 
               asignaturas={this.state.asignaturas} 
               triggerVolverPasoAnterior={this.volverPasoAnterior} 
@@ -414,6 +420,7 @@ const mapDispatchToProps = (dispatch) => {
     activar_periodo: activar_periodo,
     cargando: cargando,
     cargado: cargado,
+    hide_alerts: hide_alerts,
   }, dispatch )
 }
 

@@ -72,6 +72,7 @@ export default function (state=initialState, action) {
 			nuevo_estado['lista_asignaturas'] = action.payload['lista_asignaturas'];
 			nuevo_estado['lista_prelacion'] = action.payload['lista_prelacion'];
 			nuevo_estado['edit'] = false;
+			nuevo_estado['create'] = false;
 			return nuevo_estado;
 
 		case "GET_TIPOS_POSTGRADO_EXITOSO":
@@ -85,6 +86,7 @@ export default function (state=initialState, action) {
 		case "EDIT_ASIGNATURA_EXITOSO":
 			nuevo_estado['edit'] = true;
 			nuevo_estado['bad_input'] = false;
+			nuevo_estado['create'] = false;
 			nuevo_estado['lista_asignaturas'] = action.payload['lista_asignaturas'];
 			nuevo_estado['lista_prelacion'] = action.payload['lista_prelacion'];
 			return nuevo_estado;
@@ -93,6 +95,8 @@ export default function (state=initialState, action) {
 			nuevo_estado['lista_asignaturas'] = action.payload['lista_asignaturas'];
 			nuevo_estado['lista_prelacion'] = action.payload['lista_prelacion'];
 			nuevo_estado['bad_input'] = true;
+			nuevo_estado['create'] = false;
+			nuevo_estado['edit'] = false;
 			return nuevo_estado;
 
 		case "GET_PERIODOS_EXITOSO":
@@ -103,6 +107,7 @@ export default function (state=initialState, action) {
 		case "EDIT_PERIODO_EXITOSO":
 			nuevo_estado['edit'] = true;
 			nuevo_estado['bad_input'] = false;
+			nuevo_estado['create'] = false;
 			nuevo_estado['error_creando_periodo'] = false;
 			nuevo_estado['lista_periodos'] = action.payload['lista_periodos'];
 			return nuevo_estado;
@@ -136,6 +141,7 @@ export default function (state=initialState, action) {
 			nuevo_estado['edit'] = false;
 			nuevo_estado['bad_input'] = false;
 			nuevo_estado['create'] = false;
+			nuevo_estado['error_creando_periodo'] = false;
 			return nuevo_estado;
 		
 		case "CREATE_USER_SUCCESS":
@@ -143,6 +149,22 @@ export default function (state=initialState, action) {
 			nuevo_estado['edit'] = false;
 			nuevo_estado['bad_input'] = false;
 			nuevo_estado['lista_usuarios'] = action.payload['lista_usuarios'];
+			return nuevo_estado;
+		
+		case "CREAR_ASIGNATURA_EXITOSO":
+			nuevo_estado['create'] = true;
+			nuevo_estado['edit'] = false;
+			nuevo_estado['bad_input'] = false;
+			nuevo_estado['lista_asignaturas'] = action.payload['lista_asignaturas'];
+			nuevo_estado['lista_prelacion'] = action.payload['lista_prelacion'];
+			return nuevo_estado;
+		
+		case "CREATE_PERIODO_EXITOSO":
+			nuevo_estado['create'] = true;
+			nuevo_estado['edit'] = false;
+			nuevo_estado['bad_input'] = false;
+			nuevo_estado['error_creando_periodo'] = false;
+			nuevo_estado['lista_periodos'] = action.payload['lista_periodos'];
 			return nuevo_estado;
 
 

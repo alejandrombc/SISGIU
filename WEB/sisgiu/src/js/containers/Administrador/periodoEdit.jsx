@@ -26,8 +26,8 @@ class PeriodoEdit extends React.Component {
     this.guardarCambiosEdit = this.guardarCambiosEdit.bind(this);
     this.get_listItemsFinales = this.get_listItemsFinales.bind(this);
     this.actualizar_docente_asignatura = this.actualizar_docente_asignatura.bind(this);
+    
   }
-
 
   eliminarDocenteAsignatura(index) {
     let array = this.state.docente_asignatura;

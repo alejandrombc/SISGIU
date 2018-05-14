@@ -98,8 +98,8 @@ class SeccionGeneral extends Component{
                     		}
                     		{this.props.edit['edit'] && !this.state.typing &&
                 		      <Alert color="success" isOpen={this.state.visible} toggle={this.onDismiss}>
-						        Datos actualizados exitosamente
-						      </Alert>
+						        				Operación realizada exitosamente
+						      				</Alert>
                     		}
 		                  <legend>Perfil</legend>
 		                  <Form onSubmit={this.handleSubmit}>

@@ -57,13 +57,13 @@ class ListaAsignaturas extends Component{
   }
 
   updateLoading(){
-    this.setState({"loading":!this.state.loading});
+    this.setState({loading: !this.state.loading});
   }
 
 
 
   render(){
-       if (!this.props.activeUser.cargado) {
+    if (!this.props.activeUser.cargado) {
         return (<center><PulseLoader color="#b3b1b0" size="16px" margin="4px"/></center>);
       } else {
         let listItems = '';
@@ -127,15 +127,17 @@ class ListaAsignaturas extends Component{
       		<div>
                 <br />
 
-                {this.state.loading && !this.props.adminUser['edit'] && !this.props.adminUser['bad_input'] &&
-
+                {this.state.loading && !this.props.adminUser.edit && !this.props.adminUser.bad_input && !this.props.adminUser.create &&
                   <center><PulseLoader color="#b3b1b0" size="16px" margin="4px"/></center>
-
                 }
-
+                {this.props.adminUser.create &&
+                  <Alert color="success" isOpen={this.state.visible} toggle={this.onDismiss}>
+                      Asignatura creada exitosamente
+                  </Alert> 
+                }
                 {this.props.adminUser['edit'] &&
                   <Alert color="success" isOpen={this.state.visible} toggle={this.onDismiss}>
-                      Datos actualizados exitosamente
+                      Operación realizada exitosamente
                   </Alert> 
                 }
                 {this.props.adminUser['bad_input'] === true &&

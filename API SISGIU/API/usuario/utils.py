@@ -47,7 +47,7 @@ def send_welcome_mail(modulo, user):
 			)
 
 	try:
-		send_mail('Bienvenida', body, 'sisgiu.fau@gmail.com', [correo], html_message=html)
+		send_mail('Bienvenido a SISGIU', body, 'sisgiu.fau@gmail.com', [correo], html_message=html)
 		return True
 	except:
 		return True
