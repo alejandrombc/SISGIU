@@ -28,8 +28,8 @@ def import_asignaturas(datos):
                 if len(codigos) > 1 or codigos[0] != '':
                     for codigo in codigos:
                         PrelacionAsignatura.objects.get_or_create(
-                            asignatura_objetivo=Asignatura.objects.get(codigo=codigo),
-                            asignatura_prela=obj
+                            asignatura_objetivo=obj,
+                            asignatura_prela=Asignatura.objects.get(codigo=codigo)
                         )
 
                 tipos_postgrado = row[5].split(';')
@@ -50,10 +50,11 @@ def import_estudiantes(datos):
     response = {}
     try:
         for row in datos:
-            if row[0] != 'username':
+            if row[0] != 'tipo_documento':
                 objUser, created = Usuario.objects.get_or_create(
-                                username=row[0],
-                                cedula=row[1],
+                                tipo_documento=row[0],
+                                username=row[0]+row[1],
+                                cedula=row[0]+row[1],
                                 first_name=row[2],
                                 segundo_nombre=row[3],
                                 last_name=row[4],
@@ -78,7 +79,7 @@ def import_estudiantes(datos):
                     direccion=row[14],
                 )
     except Exception as ex:
-        response['detail'] = 'Ha ocurrido un error importando estudiantes en la base de datos.'
+        response['error'] = str(ex)
         return Response(response, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     return Response(status=status.HTTP_204_NO_CONTENT)
@@ -88,10 +89,11 @@ def import_docentes(datos):
     response = {}
     try:
         for row in datos:
-            if row[0] != 'username':
+            if row[0] != 'tipo_documento':
                 objUser, created = Usuario.objects.get_or_create(
-                                username=row[0],
-                                cedula=row[1],
+                                tipo_documento=row[0],
+                                username=row[0]+row[1],
+                                cedula=row[0]+row[1],
                                 first_name=row[2],
                                 segundo_nombre=row[3],
                                 last_name=row[4],
@@ -105,6 +107,9 @@ def import_docentes(datos):
                                 sexo=row[12],
                                 estado_civil=row[13],
                                 )
+
+                objUser.set_password(row[1])
+                objUser.save()
 
                 obj, created = PersonalDocente.objects.get_or_create(
                     usuario=objUser,
@@ -112,9 +117,9 @@ def import_docentes(datos):
                     coordinador=row[15],
                 )
     except Exception as ex:
-        response['detail'] = 'Ha ocurrido un error importando personal docente en la base de datos.'
+        response['error'] = str(ex)
         return Response(response, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-    
+
     return Response(status=status.HTTP_204_NO_CONTENT)
 
 
@@ -122,10 +127,11 @@ def import_administrativo(datos):
     response = {}
     try:
         for row in datos:
-            if row[0] != 'username':
+            if row[0] != 'tipo_documento':
                 objUser, created = Usuario.objects.get_or_create(
-                                username=row[0],
-                                cedula=row[1],
+                                tipo_documento=row[0],
+                                username=row[0]+row[1],
+                                cedula=row[0]+row[1],
                                 first_name=row[2],
                                 segundo_nombre=row[3],
                                 last_name=row[4],
@@ -139,11 +145,14 @@ def import_administrativo(datos):
                                 sexo=row[12],
                                 estado_civil=row[13],
                                 )
+                objUser.set_password(row[1])
+                objUser.save()
+
                 obj, created = PersonalAdministrativo.objects.get_or_create(usuario=objUser)
     except Exception as ex:
-        response['detail'] = 'Ha ocurrido un error importando personal administrativo en la base de datos.'
+        response['error'] = str(ex)
         return Response(response, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-    
+
     return Response(status=status.HTTP_204_NO_CONTENT)
 
 
@@ -161,7 +170,7 @@ def import_bd(request, tipo):
         response = {}
         response['detail'] = 'El nombre de archivo especificado no existe.'
         return Response(response, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-        
+
     if tipo == 'estudiantes':
         return import_estudiantes(datos)
     elif tipo == 'docentes':

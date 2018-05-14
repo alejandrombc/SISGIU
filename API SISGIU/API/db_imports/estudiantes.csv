@@ -1,21 +1,21 @@
-username,cedula,first_name,segundo_nombre,last_name,segundo_apellido,fecha_nacimiento,email,celular,telefono_casa,telefono_trabajo,nacionalidad,sexo,estado_civil,direccion,id_tipo_postgrado,id_estado_estudiante
-8699988,8699988,Alexia,Fionna,Ben,Stapforth,1987-08-24,fstapforth0@cmu.edu,,,,Yuman,F,Soltero,Vidon,1,1
-11179910,11179910,Evanne,Benny,Alebrooke,Quinsee,1997-09-23,bquinsee1@engadget.com,,,,Ottawa,F,Soltero,Village,1,1
-9989104,9989104,Roanne,Guenevere,Pettecrew,Meriot,1970-10-25,gmeriot2@google.es,,,,Costa Rican,F,Soltero,Forest,1,1
-8116111,8116111,Hugo,Christophorus,Tripony,Guille,1985-05-27,cguille3@mail.ru,,,,Venezuelan,M,Soltero,Muir,1,1
-15275406,15275406,Diana,Ann-marie,Kennealy,Sheed,1974-12-05,asheed4@hubpages.com,,,,Yakama,F,Soltero,Beilfuss,1,1
-15031821,15031821,Karalynn,Eydie,Ley,Collins,1975-01-30,ecollins5@twitpic.com,,,,Tlingit-Haida,F,Soltero,Crest Line,2,1
-18881004,18881004,Cortney,Carita,Todhunter,Perrelli,1996-01-25,cperrelli6@chicagotribune.com,,,,Korean,F,Soltero,Dakota,2,1
-25535150,25535150,Lamont,Mill,Van Arsdall,Loveman,1991-10-22,mloveman7@cbslocal.com,,,,Cheyenne,M,Soltero,Truax,2,1
-25658108,25658108,Angus,Haskel,Boldra,Demogeot,1988-12-11,hdemogeot8@ox.ac.uk,,,,Japanese,M,Soltero,Michigan,2,1
-23724604,23724604,Norbert,Andreas,Denton,Brandino,1991-01-07,abrandino9@youtube.com,,,,Navajo,M,Soltero,Pond,2,1
-12415829,12415829,Waverley,Alwyn,Bernardos,Lillywhite,1989-06-12,alillywhitea@twitpic.com,,,,Comanche,M,Soltero,Cardinal,4,1
-11099833,11099833,Todd,Morgun,Mulcaster,Gilchriest,1974-08-10,mgilchriestb@wordpress.com,,,,Colville,M,Soltero,Tennyson,4,1
-21255654,21255654,Leonard,Ricky,Slimm,Maryin,1983-10-25,rmaryinc@google.nl,,,,Mexican,M,Soltero,Barnett,4,1
-24447217,24447217,Doyle,Murray,Lear,Starton,1992-08-19,mstartond@ocn.ne.jp,,,,Cherokee,M,Soltero,Straubel,4,1
-17915855,17915855,Laurence,Arvie,Craythorne,Sarfat,1984-07-14,asarfate@newsvine.com,,,,Latin American,M,Soltero,Clarendon,3,1
-22277916,22277916,Ludvig,Reilly,Bustin,Dower,1998-01-18,rdowerf@plala.or.jp,,,,Peruvian,M,Soltero,Dwight,1,1
-14203117,14203117,Dimitry,Roy,Kivelhan,Charteris,1974-11-25,rcharterisg@biglobe.ne.jp,,,,Houma,M,Soltero,Birchwood,1,1
-22654612,22654612,Zulema,Sofie,Scopham,Jouning,1972-11-21,sjouningh@about.me,,,,Puget Sound,F,Soltero,Starling,1,1
-10660114,10660114,Yance,Erasmus,Baison,Harcus,1988-09-23,eharcusi@mlb.com,,,,Alaskan,M,Soltero,Dunning,1,1
-10888311,10888311,Natale,Devlin,Kohnemann,Ludford,1995-06-24,dludfordj@dmoz.org,,,,Fijian,M,Soltero,Crest Line,3,1
+tipo_documento,cedula,first_name,segundo_nombre,last_name,segundo_apellido,fecha_nacimiento,email,celular,telefono_casa,telefono_trabajo,nacionalidad,sexo,estado_civil,direccion,id_tipo_postgrado,id_estado_estudiante
+V,8699988,Alexia,Fionna,Ben,Stapforth,1987-08-24,fstapforth0@cmu.edu,,,,Yuman,F,Soltero,Vidon,1,1
+V,11179910,Evanne,Benny,Alebrooke,Quinsee,1997-09-23,bquinsee1@engadget.com,,,,Ottawa,F,Soltero,Village,1,1
+V,9989104,Roanne,Guenevere,Pettecrew,Meriot,1970-10-25,gmeriot2@google.es,,,,Costa Rican,F,Soltero,Forest,1,1
+V,8116111,Hugo,Christophorus,Tripony,Guille,1985-05-27,cguille3@mail.ru,,,,Venezuelan,M,Soltero,Muir,1,1
+V,15275406,Diana,Ann-marie,Kennealy,Sheed,1974-12-05,asheed4@hubpages.com,,,,Yakama,F,Soltero,Beilfuss,1,1
+V,15031821,Karalynn,Eydie,Ley,Collins,1975-01-30,ecollins5@twitpic.com,,,,Tlingit-Haida,F,Soltero,Crest Line,2,1
+V,18881004,Cortney,Carita,Todhunter,Perrelli,1996-01-25,cperrelli6@chicagotribune.com,,,,Korean,F,Soltero,Dakota,2,1
+V,25535150,Lamont,Mill,Van Arsdall,Loveman,1991-10-22,mloveman7@cbslocal.com,,,,Cheyenne,M,Soltero,Truax,2,1
+V,25658108,Angus,Haskel,Boldra,Demogeot,1988-12-11,hdemogeot8@ox.ac.uk,,,,Japanese,M,Soltero,Michigan,2,1
+V,23724604,Norbert,Andreas,Denton,Brandino,1991-01-07,abrandino9@youtube.com,,,,Navajo,M,Soltero,Pond,2,1
+V,12415829,Waverley,Alwyn,Bernardos,Lillywhite,1989-06-12,alillywhitea@twitpic.com,,,,Comanche,M,Soltero,Cardinal,4,1
+V,11099833,Todd,Morgun,Mulcaster,Gilchriest,1974-08-10,mgilchriestb@wordpress.com,,,,Colville,M,Soltero,Tennyson,4,1
+V,21255654,Leonard,Ricky,Slimm,Maryin,1983-10-25,rmaryinc@google.nl,,,,Mexican,M,Soltero,Barnett,4,1
+V,24447217,Doyle,Murray,Lear,Starton,1992-08-19,mstartond@ocn.ne.jp,,,,Cherokee,M,Soltero,Straubel,4,1
+V,17915855,Laurence,Arvie,Craythorne,Sarfat,1984-07-14,asarfate@newsvine.com,,,,Latin American,M,Soltero,Clarendon,3,1
+V,22277916,Ludvig,Reilly,Bustin,Dower,1998-01-18,rdowerf@plala.or.jp,,,,Peruvian,M,Soltero,Dwight,1,1
+V,14203117,Dimitry,Roy,Kivelhan,Charteris,1974-11-25,rcharterisg@biglobe.ne.jp,,,,Houma,M,Soltero,Birchwood,1,1
+V,22654612,Zulema,Sofie,Scopham,Jouning,1972-11-21,sjouningh@about.me,,,,Puget Sound,F,Soltero,Starling,1,1
+V,10660114,Yance,Erasmus,Baison,Harcus,1988-09-23,eharcusi@mlb.com,,,,Alaskan,M,Soltero,Dunning,1,1
+V,10888311,Natale,Devlin,Kohnemann,Ludford,1995-06-24,dludfordj@dmoz.org,,,,Fijian,M,Soltero,Crest Line,3,1

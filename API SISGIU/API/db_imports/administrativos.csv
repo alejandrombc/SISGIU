@@ -1,11 +1,11 @@
-username,cedula,first_name,segundo_nombre,last_name,segundo_apellido,fecha_nacimiento,email,celular,telefono_casa,telefono_trabajo,nacionalidad,sexo,estado_civil
-17202877,17202877,Terry,Kelli,Heinish,Giovannoni,1972-02-19,kgiovannoni0@com.com,,,,Bolivian,F,Soltero
-20824559,20824559,Marice,Rochelle,Vannoort,Lodewick,1977-02-19,rlodewick1@washingtonpost.com,,,,Apache,F,Soltero
-8588929,8588929,Erica,Agata,Thorley,Custed,1990-07-05,acusted2@msu.edu,,,,Laotian,F,Soltero
-25930280,25930280,Benn,Durward,Frostdicke,MacKeogh,1999-08-11,dmackeogh3@sakura.ne.jp,,,,Paiute,M,Soltero
-22762362,22762362,Osmond,Cullen,Peacop,Ferrey,1993-09-29,cferrey4@dropbox.com,,,,Aleut,M,Soltero
-14334949,14334949,Donnie,Genovera,Versey,Farrell,1971-11-16,gfarrell5@sfgate.com,,,,Peruvian,F,Soltero
-14011397,14011397,Larry,Torrance,Laxon,Ludlamme,1981-12-15,tludlamme6@wsj.com,,,,Paraguayan,M,Soltero
-16949550,16949550,Adolpho,Ogdan,Wethered,Wearden,1992-03-31,owearden7@dyndns.org,,,,Latin American Indian,M,Soltero
-23492983,23492983,Sarene,Lynnette,Smythin,Doodson,1978-06-12,ldoodson8@dot.gov,,,,Honduran,F,Soltero
-22866385,22866385,Randy,Isaak,Snepp,Kitcherside,1998-10-16,ikitcherside9@cloudflare.com,,,,Cherokee,M,Soltero
+tipo_documento,cedula,first_name,segundo_nombre,last_name,segundo_apellido,fecha_nacimiento,email,celular,telefono_casa,telefono_trabajo,nacionalidad,sexo,estado_civil
+V,17202877,Terry,Kelli,Heinish,Giovannoni,1972-02-19,kgiovannoni0@com.com,,,,Bolivian,F,Soltero
+V,20824559,Marice,Rochelle,Vannoort,Lodewick,1977-02-19,rlodewick1@washingtonpost.com,,,,Apache,F,Soltero
+V,8588929,Erica,Agata,Thorley,Custed,1990-07-05,acusted2@msu.edu,,,,Laotian,F,Soltero
+V,25930280,Benn,Durward,Frostdicke,MacKeogh,1999-08-11,dmackeogh3@sakura.ne.jp,,,,Paiute,M,Soltero
+V,22762362,Osmond,Cullen,Peacop,Ferrey,1993-09-29,cferrey4@dropbox.com,,,,Aleut,M,Soltero
+V,14334949,Donnie,Genovera,Versey,Farrell,1971-11-16,gfarrell5@sfgate.com,,,,Peruvian,F,Soltero
+V,14011397,Larry,Torrance,Laxon,Ludlamme,1981-12-15,tludlamme6@wsj.com,,,,Paraguayan,M,Soltero
+V,16949550,Adolpho,Ogdan,Wethered,Wearden,1992-03-31,owearden7@dyndns.org,,,,Latin American Indian,M,Soltero
+V,23492983,Sarene,Lynnette,Smythin,Doodson,1978-06-12,ldoodson8@dot.gov,,,,Honduran,F,Soltero
+V,22866385,Randy,Isaak,Snepp,Kitcherside,1998-10-16,ikitcherside9@cloudflare.com,,,,Cherokee,M,Soltero
