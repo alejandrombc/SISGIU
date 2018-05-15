@@ -1,5 +1,5 @@
 const initialState = {
-	materias: [], 
+	materias: [],
 	tiene_asignaturas: true,
 	lista_periodo_estudiante: [],
 	lista_periodos: [],
@@ -9,14 +9,14 @@ const initialState = {
 	error_inscripcion: false,
 	estado_estudiante: '',
 	lista_periodo_activo: [],
-	historial_academico:{},
+	historial_academico: {},
 	postgrado: {},
 };
 
-export default function (state=initialState, action) {
+export default function (state = initialState, action) {
 
 	var nuevo_estado = Object.assign({}, state);
-	switch (action.type){
+	switch (action.type) {
 
 		case "GET_INFORMATION_SUCCESS":
 			nuevo_estado['materias'] = action.payload['materias'];
@@ -50,7 +50,7 @@ export default function (state=initialState, action) {
 			nuevo_estado['loggedIn'] = false;
 			nuevo_estado['loading'] = false;
 			return nuevo_estado;
-		
+
 		case "GET_ASIGNATURAS_INSCRIPCION_EXITOSO":
 			nuevo_estado['lista_asignaturas_inscripcion'] = action.payload['lista_asignaturas_inscripcion'];
 			return nuevo_estado;

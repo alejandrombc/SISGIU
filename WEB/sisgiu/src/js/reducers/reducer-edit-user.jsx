@@ -1,16 +1,16 @@
 const initialState = {
-	bad_input:false, 
-	edit: false, 
-	bad_input_password: false ,
+	bad_input: false,
+	edit: false,
+	bad_input_password: false,
 	edit_password: false,
 	bad_photo_request: false,
-	edit_photo: false, 
-	};
+	edit_photo: false,
+};
 
-export default function (state=initialState, action) {
+export default function (state = initialState, action) {
 	var nuevo_estado = Object.assign({}, state);
-	
-	switch (action.type){
+
+	switch (action.type) {
 
 		// Global
 		case "HIDE_ALERTS":

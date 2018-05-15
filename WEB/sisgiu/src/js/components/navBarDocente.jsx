@@ -1,6 +1,6 @@
 // Dependencies
 import React, { Component } from 'react';
-import {NavItem, NavLink, Nav } from 'reactstrap';
+import { NavItem, NavLink, Nav } from 'reactstrap';
 import { connect } from 'react-redux';
 
 

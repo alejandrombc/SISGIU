@@ -1,50 +1,50 @@
 //Dependencies
-import React,{Component} from 'react';
-import {bindActionCreators} from 'redux';
+import React, { Component } from 'react';
+import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import SeleccionarAsignaturas from './seleccionarAsignaturas';
 import { get_asignaturas_inscripcion } from '../../actions/inscripcion';
 
-class Inscripcion extends Component{
+class Inscripcion extends Component {
 
 	constructor(props) {
-   		super(props);
-   		this.get_asignaturas = this.get_asignaturas.bind(this);
-   		this.mostrar_descripcion_periodo = this.mostrar_descripcion_periodo.bind(this);
-    }
-
-    componentDidMount() {
-   		this.props.get_asignaturas_inscripcion(this.props.usuario_activo.user.usuario.cedula);
-    }
-
-    get_asignaturas() {
-
-    	let aux = this.props.estudianteUser.lista_asignaturas_inscripcion;
-    	let asignaturas = [];
-    	let N = aux.length;
-
-    	for (var i = 0; i < N; i++) {
-    		let asignatura = {};
-    		asignatura['codigo'] = aux[i]['codigo'];
-    		asignatura['nombre'] = aux[i]['nombre'];
-    		asignatura['tipo_asignatura'] = aux[i]['tipo_asignatura_id'];
-    		asignatura['unidad_credito'] = aux[i]['unidad_credito'];
-    		asignatura['value'] = aux[i]['id'];
-    		asignaturas.push(asignatura);
-    	}
-
-    	return asignaturas;
+		super(props);
+		this.get_asignaturas = this.get_asignaturas.bind(this);
+		this.mostrar_descripcion_periodo = this.mostrar_descripcion_periodo.bind(this);
 	}
-	
+
+	componentDidMount() {
+		this.props.get_asignaturas_inscripcion(this.props.usuario_activo.user.usuario.cedula);
+	}
+
+	get_asignaturas() {
+
+		let aux = this.props.estudianteUser.lista_asignaturas_inscripcion;
+		let asignaturas = [];
+		let N = aux.length;
+
+		for (var i = 0; i < N; i++) {
+			let asignatura = {};
+			asignatura['codigo'] = aux[i]['codigo'];
+			asignatura['nombre'] = aux[i]['nombre'];
+			asignatura['tipo_asignatura'] = aux[i]['tipo_asignatura_id'];
+			asignatura['unidad_credito'] = aux[i]['unidad_credito'];
+			asignatura['value'] = aux[i]['id'];
+			asignaturas.push(asignatura);
+		}
+
+		return asignaturas;
+	}
+
 	mostrar_descripcion_periodo() {
 		let periodo = this.props.estudianteUser.lista_periodos[0];
 		return 'Periodo: ' + periodo.numero_periodo + ' (' + periodo.mes_inicio + ' ' + periodo.anio_inicio + ' - ' + periodo.mes_fin + ' ' + periodo.anio_fin + ')';
 	}
 
 
-	render(){
+	render() {
 
-		return(
+		return (
 			<div>
 				<h4 className="text-center">
 					Seleccione las asignaturas
@@ -53,14 +53,14 @@ class Inscripcion extends Component{
 					{this.mostrar_descripcion_periodo()}
 				</h6>
 				<br />
-				<SeleccionarAsignaturas triggerBuscarInformacionAsignaturas={()=>this.props.triggerBuscarInformacionAsignaturas()} asignaturas={this.get_asignaturas()} cedula={this.props.usuario_activo.user.usuario.cedula} triggerInscripcion={() => this.props.triggerInscripcion()}/>
+				<SeleccionarAsignaturas triggerBuscarInformacionAsignaturas={() => this.props.triggerBuscarInformacionAsignaturas()} asignaturas={this.get_asignaturas()} cedula={this.props.usuario_activo.user.usuario.cedula} triggerInscripcion={() => this.props.triggerInscripcion()} />
 			</div>
 		);
 	}
 }
 
-const mapStateToProps = (state)=> {
-	return{
+const mapStateToProps = (state) => {
+	return {
 		usuario_activo: state.activeUser,
 		estudianteUser: state.estudianteUser,
 	};
@@ -70,7 +70,7 @@ const mapDispatchToProps = (dispatch) => {
 	return bindActionCreators({
 		get_asignaturas_inscripcion: get_asignaturas_inscripcion,
 
-	}, dispatch )
+	}, dispatch)
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Inscripcion);

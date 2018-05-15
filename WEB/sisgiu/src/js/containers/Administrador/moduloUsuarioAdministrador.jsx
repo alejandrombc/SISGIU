@@ -1,7 +1,7 @@
 // Dependencies
-import React, {Component} from 'react';
-import { Row, Col, TabContent, TabPane, Nav, NavItem, NavLink} from 'reactstrap';
-import '../../../css/moduloUsuarioAdministrador.css'; 
+import React, { Component } from 'react';
+import { Row, Col, TabContent, TabPane, Nav, NavItem, NavLink } from 'reactstrap';
+import '../../../css/moduloUsuarioAdministrador.css';
 import classnames from 'classnames';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -11,15 +11,15 @@ import ListaUsuarios from './listaUsuarios';
 import { hide_alerts } from '../../actions/moduloUsuarioAdministrador';
 
 
-class ModuloUsuarioAdministrador extends Component{
+class ModuloUsuarioAdministrador extends Component {
 
   constructor(props) {
-      super(props);
-      this.state = {
-        activeTab: '1'
-      }
+    super(props);
+    this.state = {
+      activeTab: '1'
+    }
 
-      this.toggle = this.toggle.bind(this);
+    this.toggle = this.toggle.bind(this);
   }
 
   toggle(tab) {
@@ -33,85 +33,85 @@ class ModuloUsuarioAdministrador extends Component{
   }
 
 
-  render(){
+  render() {
 
-      return(
-        <div>
+    return (
+      <div>
 
-          <Nav tabs classnames="TabsCursor">
-            <NavItem>
-              <NavLink className={classnames({ active: this.state.activeTab === '1' })} onClick={() => { this.toggle('1'); }} >
-                Estudiantes
+        <Nav tabs classnames="TabsCursor">
+          <NavItem>
+            <NavLink className={classnames({ active: this.state.activeTab === '1' })} onClick={() => { this.toggle('1'); }} >
+              Estudiantes
               </NavLink>
-            </NavItem>
-            <NavItem>
-              <NavLink className={classnames({ active: this.state.activeTab === '2' })} onClick={() => { this.toggle('2'); }} >
-                Personal Docente
+          </NavItem>
+          <NavItem>
+            <NavLink className={classnames({ active: this.state.activeTab === '2' })} onClick={() => { this.toggle('2'); }} >
+              Personal Docente
               </NavLink>
-            </NavItem>
-            <NavItem>
-              <NavLink className={classnames({ active: this.state.activeTab === '3' })} onClick={() => { this.toggle('3'); }} >
-                Personal Administrativo
+          </NavItem>
+          <NavItem>
+            <NavLink className={classnames({ active: this.state.activeTab === '3' })} onClick={() => { this.toggle('3'); }} >
+              Personal Administrativo
               </NavLink>
-            </NavItem>
-            <NavItem>
-              <NavLink className={classnames({ active: this.state.activeTab === '4' })} onClick={() => { this.toggle('4'); }} >
-                Administradores
+          </NavItem>
+          <NavItem>
+            <NavLink className={classnames({ active: this.state.activeTab === '4' })} onClick={() => { this.toggle('4'); }} >
+              Administradores
               </NavLink>
-            </NavItem>
-          </Nav>
+          </NavItem>
+        </Nav>
 
-          <TabContent activeTab={this.state.activeTab}>
-            
-            <TabPane tabId="1">
-              <Row>
-                <Col sm="12">
-                { this.state.activeTab === '1' &&
-                  <ListaUsuarios tipo_usuario='estudiantes'/>
+        <TabContent activeTab={this.state.activeTab}>
+
+          <TabPane tabId="1">
+            <Row>
+              <Col sm="12">
+                {this.state.activeTab === '1' &&
+                  <ListaUsuarios tipo_usuario='estudiantes' />
                 }
-                </Col>
-              </Row>
-            </TabPane>
+              </Col>
+            </Row>
+          </TabPane>
 
-            <TabPane tabId="2">
-              <Row>
-                <Col sm="12">
-                { this.state.activeTab === '2' &&
-                  <ListaUsuarios tipo_usuario='docentes'/>
+          <TabPane tabId="2">
+            <Row>
+              <Col sm="12">
+                {this.state.activeTab === '2' &&
+                  <ListaUsuarios tipo_usuario='docentes' />
                 }
-                </Col>
-              </Row>
-            </TabPane>
+              </Col>
+            </Row>
+          </TabPane>
 
-            <TabPane tabId="3">
-              <Row>
-                <Col sm="12">
-                { this.state.activeTab === '3' &&
-                  <ListaUsuarios tipo_usuario='administrativo'/>
+          <TabPane tabId="3">
+            <Row>
+              <Col sm="12">
+                {this.state.activeTab === '3' &&
+                  <ListaUsuarios tipo_usuario='administrativo' />
                 }
-                </Col>
-              </Row>
-            </TabPane>
+              </Col>
+            </Row>
+          </TabPane>
 
-            <TabPane tabId="4">
-              <Row>
-                <Col sm="12">
-                { this.state.activeTab === '4' &&
-                  <ListaUsuarios tipo_usuario='administradores'/>
+          <TabPane tabId="4">
+            <Row>
+              <Col sm="12">
+                {this.state.activeTab === '4' &&
+                  <ListaUsuarios tipo_usuario='administradores' />
                 }
-                </Col>
-              </Row>
-            </TabPane>
+              </Col>
+            </Row>
+          </TabPane>
 
-          </TabContent>
+        </TabContent>
 
-        </div>
-      )
+      </div>
+    )
   }
 }
 
-const mapStateToProps = (state)=> {
-  return{
+const mapStateToProps = (state) => {
+  return {
     pagination: state.paginacion,
   };
 }
@@ -119,7 +119,7 @@ const mapStateToProps = (state)=> {
 const mapDispatchToProps = (dispatch) => {
   return bindActionCreators({
     hide_alerts: hide_alerts,
-  }, dispatch )
+  }, dispatch)
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(ModuloUsuarioAdministrador);

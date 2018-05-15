@@ -1,35 +1,35 @@
 // Dependencies
-import React, {Component} from 'react';
-import {NavItem, NavLink, Nav } from 'reactstrap';
+import React, { Component } from 'react';
+import { NavItem, NavLink, Nav } from 'reactstrap';
 import { connect } from 'react-redux';
 
 
-class NavBarEstudiante extends Component{
+class NavBarEstudiante extends Component {
 
   render() {
-    
-      return (
-        <Nav navbar >
-          <NavItem>
-            <NavLink href="inicio" disabled={!this.props.activeUser.cargado}>Inicio</NavLink>
-          </NavItem>
 
-          <NavItem>
-              <NavLink href="/historial" disabled={!this.props.activeUser.cargado}>Historial Académico</NavLink>
-          </NavItem>
+    return (
+      <Nav navbar >
+        <NavItem>
+          <NavLink href="inicio" disabled={!this.props.activeUser.cargado}>Inicio</NavLink>
+        </NavItem>
 
-          <NavItem>
-            <NavLink href="/constancias" disabled={!this.props.activeUser.cargado}>Constancias</NavLink>
-          </NavItem>
+        <NavItem>
+          <NavLink href="/historial" disabled={!this.props.activeUser.cargado}>Historial Académico</NavLink>
+        </NavItem>
 
-          <NavItem>
-            <NavLink href="/programacionAcademica" disabled={!this.props.activeUser.cargado}>Programación Académica</NavLink>
-          </NavItem>
-       
+        <NavItem>
+          <NavLink href="/constancias" disabled={!this.props.activeUser.cargado}>Constancias</NavLink>
+        </NavItem>
 
-        </Nav>
+        <NavItem>
+          <NavLink href="/programacionAcademica" disabled={!this.props.activeUser.cargado}>Programación Académica</NavLink>
+        </NavItem>
 
-      )
+
+      </Nav>
+
+    )
 
   }
 
@@ -37,8 +37,8 @@ class NavBarEstudiante extends Component{
 
 
 
-const mapStateToProps = (state)=> {
-  return{
+const mapStateToProps = (state) => {
+  return {
     activeUser: state.activeUser,
   };
 }

@@ -1,13 +1,13 @@
 const initialState = {
-	edit:false, 
+	edit: false,
 	create: false,
-	tiene_periodos_activos: true, 
-	periodo_terminado_error: false, 
-	lista_usuarios: [], 
-	bad_input: false, 
-	lista_asignaturas: [], 
-	lista_postgrados: [], 
-	lista_periodos : [],
+	tiene_periodos_activos: true,
+	periodo_terminado_error: false,
+	lista_usuarios: [],
+	bad_input: false,
+	lista_asignaturas: [],
+	lista_postgrados: [],
+	lista_periodos: [],
 	lista_tipoAsignaturas: [],
 	lista_estadoEstudiante: [],
 	lista_estadoPeriodo: [],
@@ -18,12 +18,12 @@ const initialState = {
 	periodo_en_inscripcion_repetido: false,
 };
 
-export default function (state=initialState, action) {
+export default function (state = initialState, action) {
 	var nuevo_estado = Object.assign({}, state);
 
-	switch (action.type){
+	switch (action.type) {
 
-	
+
 		// Global
 		case "HIDE_ALERTS":
 			nuevo_estado['edit'] = false;
@@ -149,7 +149,7 @@ export default function (state=initialState, action) {
 			nuevo_estado['periodo_en_inscripcion_repetido'] = true;
 			nuevo_estado['lista_periodos'] = action.payload['lista_periodos'];
 			return nuevo_estado;
-		
+
 		case "CREATE_PERIODO_EXITOSO":
 			nuevo_estado['create'] = true;
 			nuevo_estado['edit'] = false;
@@ -158,7 +158,7 @@ export default function (state=initialState, action) {
 			nuevo_estado['periodo_en_inscripcion_repetido'] = false;
 			nuevo_estado['lista_periodos'] = action.payload['lista_periodos'];
 			return nuevo_estado;
-		
+
 		case "GET_PERIODOS_EXITOSO":
 			nuevo_estado['edit'] = false;
 			nuevo_estado['bad_input'] = false;
@@ -168,7 +168,7 @@ export default function (state=initialState, action) {
 			nuevo_estado['error_creando_periodo'] = false;
 			nuevo_estado['lista_periodos'] = action.payload['lista_periodos'];
 			return nuevo_estado;
-		
+
 		case "EDIT_PERIODO_EXITOSO":
 			nuevo_estado['edit'] = true;
 			nuevo_estado['bad_input'] = false;
@@ -187,7 +187,7 @@ export default function (state=initialState, action) {
 			nuevo_estado['error_creando_periodo'] = true;
 			nuevo_estado['lista_periodos'] = action.payload['lista_periodos'];
 			return nuevo_estado;
-		
+
 		case "ERROR_CREANDO_PERIODO":
 			nuevo_estado['error_creando_periodo'] = true;
 			nuevo_estado['periodo_en_inscripcion_repetido'] = false;
@@ -203,11 +203,11 @@ export default function (state=initialState, action) {
 			nuevo_estado['periodo_en_inscripcion_repetido'] = false;
 			nuevo_estado['create'] = false;
 			return nuevo_estado;
-		
+
 		case "GET_DOCENTE_ASIGNATURA_EXITOSO":
 			nuevo_estado['lista_docente_asignatura'] = action.payload['lista_docente_asignatura'];
 			return nuevo_estado;
-		
+
 		case "GET_ESTADO_PERIODO_EXITOSO":
 			nuevo_estado['lista_estadoPeriodo'] = action.payload['lista_estadoPeriodo'];
 			return nuevo_estado;

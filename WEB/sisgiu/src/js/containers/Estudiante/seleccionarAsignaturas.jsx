@@ -2,7 +2,7 @@ import React from 'react';
 import MultiselectTwoSides from 'react-multiselect-two-sides';
 import '../../../css/seleccionarAsignaturas.css';
 import { Button, Row, Col } from 'reactstrap';
-import {bindActionCreators} from 'redux';
+import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 // Components
@@ -24,18 +24,18 @@ class SeleccionarAsignaturas extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    this.setState({options: nextProps.asignaturas});
+    this.setState({ options: nextProps.asignaturas });
   }
 
-  handleChange (value) {
+  handleChange(value) {
     this.setState({ value: value }); //another array
   }
 
   inscribirse() {
-    this.props.inscribir_asignaturas(this.state, this.props.cedula).then( ()=> this.props.triggerBuscarInformacionAsignaturas() );
+    this.props.inscribir_asignaturas(this.state, this.props.cedula).then(() => this.props.triggerBuscarInformacionAsignaturas());
     this.props.triggerInscripcion();
   }
- 
+
   render() {
 
     var total = this.state.value.length;
@@ -56,7 +56,7 @@ class SeleccionarAsignaturas extends React.Component {
         <br />
         <Row>
           <Col className="text-right" md="12">
-            <Button onClick={ ()=> this.inscribirse() } disabled={this.state.value.length===0 || this.state.value.length>this.state.cantidad_max_asignaturas}>
+            <Button onClick={() => this.inscribirse()} disabled={this.state.value.length === 0 || this.state.value.length > this.state.cantidad_max_asignaturas}>
               Inscribirse
             </Button>
           </Col>
@@ -66,8 +66,8 @@ class SeleccionarAsignaturas extends React.Component {
   }
 }
 
-const mapStateToProps = (state)=> {
-  return{
+const mapStateToProps = (state) => {
+  return {
     usuario_activo: state.activeUser,
     estudianteUser: state.estudianteUser,
   };
@@ -75,9 +75,9 @@ const mapStateToProps = (state)=> {
 
 const mapDispatchToProps = (dispatch) => {
   return bindActionCreators({
-  inscribir_asignaturas: inscribir_asignaturas,
+    inscribir_asignaturas: inscribir_asignaturas,
 
-  }, dispatch )
+  }, dispatch)
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(SeleccionarAsignaturas);

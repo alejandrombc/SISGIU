@@ -47,7 +47,7 @@ class ModalPeriodoDelete extends React.Component {
           </ModalHeader>
                     <ModalBody>
                         ¿Está seguro de que desea eliminar el periodo?
-        
+
             </ModalBody>
                     <ModalFooter>
                         <Button color="danger" onClick={() => { this.handleDelete() }}>Eliminar</Button>{' '}

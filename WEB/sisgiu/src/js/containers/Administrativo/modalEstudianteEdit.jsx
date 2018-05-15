@@ -2,7 +2,7 @@ import React from 'react';
 import { Input, Form, Label, Row, Col, Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import FontAwesomeIcon from 'react-fontawesome';
 import '../../../css/moduloUsuarioAdministrador.css';
-import {bindActionCreators} from 'redux';
+import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { PulseLoader } from 'halogenium';
 
@@ -27,14 +27,14 @@ class ModalEstudianteEdit extends React.Component {
   }
 
   buscar_asignaturas() {
-    
+
     if (this.state.modal) {
       this.props.get_asignaturas_totales(this.props.periodo)
-          .then( () => this.props.get_asignaturas_estudiante(this.props.data.estudiante.cedula) 
-          .then( () => this.setState({cargado:true}) 
-      )); 
-    }else{
-      this.setState({cargado:false});
+        .then(() => this.props.get_asignaturas_estudiante(this.props.data.estudiante.cedula)
+          .then(() => this.setState({ cargado: true })
+          ));
+    } else {
+      this.setState({ cargado: false });
     }
 
   }
@@ -43,9 +43,9 @@ class ModalEstudianteEdit extends React.Component {
     this.setState({
       modal: !this.state.modal
     }, () => this.props.get_estado_periodo(this.props.periodo)
-              .then( () => this.buscar_asignaturas() ));
+      .then(() => this.buscar_asignaturas()));
 
-    if(!this.state.modal) { this.props.habilitarAlerts(); }
+    if (!this.state.modal) { this.props.habilitarAlerts(); }
 
   }
 
@@ -53,16 +53,16 @@ class ModalEstudianteEdit extends React.Component {
   get_asignaturas(filtro) {
 
     let aux = [];
-    filtro ? 
-    aux = this.props.administrativoUser.lista_asignatura_periodo
-    :
-    aux = this.props.administrativoUser.lista_asignatura_estudiante;
+    filtro ?
+      aux = this.props.administrativoUser.lista_asignatura_periodo
+      :
+      aux = this.props.administrativoUser.lista_asignatura_estudiante;
     let asignaturas = [];
     let values = [];
     let N = aux.length;
 
     for (var i = 0; i < N; i++) {
-      if(!values.includes(aux[i]['id'])){
+      if (!values.includes(aux[i]['id'])) {
         let asignatura = {};
         asignatura['codigo'] = aux[i]['codigo'];
         asignatura['nombre'] = aux[i]['nombre'];
@@ -72,12 +72,12 @@ class ModalEstudianteEdit extends React.Component {
         asignaturas.push(asignatura);
         values.push(aux[i]['id']);
       }
-      
+
     }
 
-    if(filtro){ 
+    if (filtro) {
       return asignaturas;
-    }else{
+    } else {
       return values;
     }
   }
@@ -86,115 +86,115 @@ class ModalEstudianteEdit extends React.Component {
 
     return (
       <div>
-        <Button color="success" size='sm' onClick={this.toggle} data-toggle="tooltip" title="Editar"><FontAwesomeIcon name="edit"/></Button>
+        <Button color="success" size='sm' onClick={this.toggle} data-toggle="tooltip" title="Editar"><FontAwesomeIcon name="edit" /></Button>
         <Modal isOpen={this.state.modal} toggle={this.toggle} className={this.props.className}>
-          <ModalHeader toggle={this.toggle}> 
-                Editar estudiante 
+          <ModalHeader toggle={this.toggle}>
+            Editar estudiante
           </ModalHeader>
           <Form id="Form">
             <ModalBody>
-                <img className="center-img" width="100px" height="100px" src={this.props.data.estudiante.foto} alt="foto_usuario" />
-                <br />
-                {!this.state.cargado ?
-                  <center><PulseLoader color="#b3b1b0" size="16px" margin="4px"/></center>
+              <img className="center-img" width="100px" height="100px" src={this.props.data.estudiante.foto} alt="foto_usuario" />
+              <br />
+              {!this.state.cargado ?
+                <center><PulseLoader color="#b3b1b0" size="16px" margin="4px" /></center>
                 :
                 <div>
                   <br />
-                    <Row>
-                      <Col sm="12">
-                        <Row>
-                          <Label for="cedula" sm={4}>Identificación</Label>
-                          <Col sm={8}>
-                            <Input  bsSize="sm" type="text" name="cedula" id="cedula" defaultValue={this.props.data.estudiante.cedula} readOnly/>
-                          </Col>
-                        </Row>
-                        <Row>
-                            <Label for="first_name" sm={4}>Primer Nombre</Label>
-                            <Col sm={8}>
-                              <Input  bsSize="sm" type="text" name="first_name" id="first_name" defaultValue={this.props.data.estudiante.first_name} readOnly />
-                            </Col>
-                        </Row>
-                        <Row>
-                            <Label for="segundo_nombre" sm={4}>Segundo Nombre</Label>
-                            <Col sm={8}>
-                              <Input  bsSize="sm" type="text" name="segundo_nombre" id="segundo_nombre" defaultValue={this.props.data.estudiante.segundo_nombre} readOnly />
-                            </Col>
-                        </Row>
-                        <Row>
-                            <Label for="last_name" sm={4}>Primer Apellido</Label>
-                            <Col sm={8}>
-                              <Input  bsSize="sm" type="text" name="last_name" id="last_name" defaultValue={this.props.data.estudiante.last_name} readOnly />
-                            </Col>
-                        </Row>
-                        <Row>
-                            <Label for="segundo_apellido" sm={4}>Segundo Apellido</Label>
-                            <Col sm={8}>
-                              <Input  bsSize="sm" type="text" name="segundo_apellido" id="segundo_apellido" defaultValue={this.props.data.estudiante.segundo_apellido} readOnly />
-                            </Col>
-                        </Row>
-                        <Row>
-                            <Label for="email" sm={4}>Correo</Label>
-                            <Col sm={8}>
-                              <Input  bsSize="sm" type="text" name="email" id="email" defaultValue={this.props.data.estudiante.email} readOnly />
-                            </Col>
-                        </Row>
-                        <Row>
-                            <Label for="telefono_casa" sm={4}>Tlf Casa </Label>
-                            <Col sm={8}>
-                              <Input  bsSize="sm" type="text" name="telefono_casa" id="telefono_casa" defaultValue={this.props.data.estudiante.telefono_casa} readOnly />
-                            </Col>
-                        </Row>
-                        <Row>
-                            <Label for="celular" sm={4}>Celular </Label>
-                            <Col sm={8}>
-                              <Input  bsSize="sm" type="text" name="celular" id="celular" defaultValue={this.props.data.estudiante.celular} readOnly />
-                            </Col>
-                        </Row>
-                        <Row>
-                            <Label for="nacimiento" sm={4}>Nacimiento </Label>
-                            <Col sm={8}>
-                              <Input  bsSize="sm" type="text" name="nacimiento" id="nacimiento" defaultValue={this.props.data.estudiante.fecha_nacimiento} readOnly />
-                            </Col>
-                        </Row>
-                        <Row>
-                            <Label for="sexo" sm={4}>Sexo </Label>
-                            <Col sm={8}>
-                              <Input  bsSize="sm" type="text" name="sexo" id="sexo" defaultValue={this.props.data.estudiante.sexo} readOnly />
-                            </Col>
-                        </Row>
-                        <Row>
-                            <Label for="nacionalidad" sm={4}>Nacionalidad </Label>
-                            <Col sm={8}>
-                              <Input  bsSize="sm" type="text" name="nacionalidad" id="nacionalidad" defaultValue={this.props.data.estudiante.nacionalidad} readOnly />
-                            </Col>
-                        </Row>
-                      </Col>
-                    </Row>
-                    <br />
-                    <CambiarAsignaturas
-                      estado_periodo={this.props.administrativoUser.estado_periodo.estado !== 'en inscripcion'} 
-                      asignaturas_inscritas={this.get_asignaturas(false)} 
-                      asignaturas={this.get_asignaturas(true)} 
-                      cedula={this.props.data.estudiante.cedula}
-                      triggerEsconderModal={ () => this.toggle() }
-                    />   
+                  <Row>
+                    <Col sm="12">
+                      <Row>
+                        <Label for="cedula" sm={4}>Identificación</Label>
+                        <Col sm={8}>
+                          <Input bsSize="sm" type="text" name="cedula" id="cedula" defaultValue={this.props.data.estudiante.cedula} readOnly />
+                        </Col>
+                      </Row>
+                      <Row>
+                        <Label for="first_name" sm={4}>Primer Nombre</Label>
+                        <Col sm={8}>
+                          <Input bsSize="sm" type="text" name="first_name" id="first_name" defaultValue={this.props.data.estudiante.first_name} readOnly />
+                        </Col>
+                      </Row>
+                      <Row>
+                        <Label for="segundo_nombre" sm={4}>Segundo Nombre</Label>
+                        <Col sm={8}>
+                          <Input bsSize="sm" type="text" name="segundo_nombre" id="segundo_nombre" defaultValue={this.props.data.estudiante.segundo_nombre} readOnly />
+                        </Col>
+                      </Row>
+                      <Row>
+                        <Label for="last_name" sm={4}>Primer Apellido</Label>
+                        <Col sm={8}>
+                          <Input bsSize="sm" type="text" name="last_name" id="last_name" defaultValue={this.props.data.estudiante.last_name} readOnly />
+                        </Col>
+                      </Row>
+                      <Row>
+                        <Label for="segundo_apellido" sm={4}>Segundo Apellido</Label>
+                        <Col sm={8}>
+                          <Input bsSize="sm" type="text" name="segundo_apellido" id="segundo_apellido" defaultValue={this.props.data.estudiante.segundo_apellido} readOnly />
+                        </Col>
+                      </Row>
+                      <Row>
+                        <Label for="email" sm={4}>Correo</Label>
+                        <Col sm={8}>
+                          <Input bsSize="sm" type="text" name="email" id="email" defaultValue={this.props.data.estudiante.email} readOnly />
+                        </Col>
+                      </Row>
+                      <Row>
+                        <Label for="telefono_casa" sm={4}>Tlf Casa </Label>
+                        <Col sm={8}>
+                          <Input bsSize="sm" type="text" name="telefono_casa" id="telefono_casa" defaultValue={this.props.data.estudiante.telefono_casa} readOnly />
+                        </Col>
+                      </Row>
+                      <Row>
+                        <Label for="celular" sm={4}>Celular </Label>
+                        <Col sm={8}>
+                          <Input bsSize="sm" type="text" name="celular" id="celular" defaultValue={this.props.data.estudiante.celular} readOnly />
+                        </Col>
+                      </Row>
+                      <Row>
+                        <Label for="nacimiento" sm={4}>Nacimiento </Label>
+                        <Col sm={8}>
+                          <Input bsSize="sm" type="text" name="nacimiento" id="nacimiento" defaultValue={this.props.data.estudiante.fecha_nacimiento} readOnly />
+                        </Col>
+                      </Row>
+                      <Row>
+                        <Label for="sexo" sm={4}>Sexo </Label>
+                        <Col sm={8}>
+                          <Input bsSize="sm" type="text" name="sexo" id="sexo" defaultValue={this.props.data.estudiante.sexo} readOnly />
+                        </Col>
+                      </Row>
+                      <Row>
+                        <Label for="nacionalidad" sm={4}>Nacionalidad </Label>
+                        <Col sm={8}>
+                          <Input bsSize="sm" type="text" name="nacionalidad" id="nacionalidad" defaultValue={this.props.data.estudiante.nacionalidad} readOnly />
+                        </Col>
+                      </Row>
+                    </Col>
+                  </Row>
+                  <br />
+                  <CambiarAsignaturas
+                    estado_periodo={this.props.administrativoUser.estado_periodo.estado !== 'en inscripcion'}
+                    asignaturas_inscritas={this.get_asignaturas(false)}
+                    asignaturas={this.get_asignaturas(true)}
+                    cedula={this.props.data.estudiante.cedula}
+                    triggerEsconderModal={() => this.toggle()}
+                  />
                 </div>
-                }
+              }
             </ModalBody>
             <ModalFooter>
 
             </ModalFooter>
           </Form>
         </Modal>
-        
+
       </div>
     );
 
-}
+  }
 }
 
-const mapStateToProps = (state)=> {
-  return{
+const mapStateToProps = (state) => {
+  return {
     administrativoUser: state.administrativoUser,
   };
 }
@@ -204,8 +204,8 @@ const mapDispatchToProps = (dispatch) => {
     get_asignaturas_totales: get_asignaturas_totales,
     get_asignaturas_estudiante: get_asignaturas_estudiante,
     get_estado_periodo: get_estado_periodo,
-    }, 
-    dispatch 
+  },
+    dispatch
   )
 }
 

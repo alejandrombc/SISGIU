@@ -1,12 +1,12 @@
 // Footer de la pagina. 
 
-import React,{Component} from 'react';
+import React, { Component } from 'react';
 import '../../css/global.css';
 
 
-class Footer extends Component{
+class Footer extends Component {
 
-	render(){
+	render() {
 		return (
 			<div className='footer'>
 				<hr />
@@ -16,7 +16,7 @@ class Footer extends Component{
 					</div>
 				</center>
 			</div>
-			)
+		)
 	}
 }
 

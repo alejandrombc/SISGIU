@@ -1,7 +1,7 @@
 // Dependencies
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import {Collapse, Navbar, NavbarToggler, NavbarBrand} from 'reactstrap';
+import { Collapse, Navbar, NavbarToggler, NavbarBrand } from 'reactstrap';
 
 // Components
 import NavBarEstudiante from '../components/navBarEstudiante';
@@ -37,47 +37,47 @@ class NavigationBar extends Component {
 
       let modulo = this.props.token['modulo'];
 
-      switch ( modulo ) {
+      switch (modulo) {
 
         case 'estudiantes':
-          navigationBar = ( <NavBarEstudiante /> )
-        break;
+          navigationBar = (<NavBarEstudiante />)
+          break;
 
         case 'docentes':
-          navigationBar = ( <NavBarDocente /> )
-        break;
+          navigationBar = (<NavBarDocente />)
+          break;
 
         case 'administrativo':
-          navigationBar = ( <NavBarAdministrativo /> )
-        break;
+          navigationBar = (<NavBarAdministrativo />)
+          break;
 
         case 'administradores':
-          navigationBar = ( <NavBarAdministrador /> )
-        break;
+          navigationBar = (<NavBarAdministrador />)
+          break;
 
         default:
           navigationBar = (<NavBarEstudiante />)
-        break;
+          break;
 
       }
-    } 
+    }
 
 
 
     return (
       <div>
         <Navbar color="fixed" dark expand="md">
-          
-          
+
+
           <NavbarToggler onClick={this.toggle} />
           <NavbarBrand href="/" className="navBarBrand-title">
             SISGIU
           </NavbarBrand>
-          
-          <Collapse isOpen={this.state.isOpen} navbar>           
-                
-               
-            { navigationBar }
+
+          <Collapse isOpen={this.state.isOpen} navbar>
+
+
+            {navigationBar}
 
           </Collapse>
         </Navbar>
@@ -86,8 +86,8 @@ class NavigationBar extends Component {
   }
 }
 
-const mapStateToProps = (state)=> {
-  return{
+const mapStateToProps = (state) => {
+  return {
     token: state.activeUser
   };
 }

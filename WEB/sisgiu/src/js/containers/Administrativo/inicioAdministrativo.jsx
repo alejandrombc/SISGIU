@@ -1,7 +1,7 @@
 // Dependencies
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import {bindActionCreators} from 'redux';
+import { bindActionCreators } from 'redux';
 import { PulseLoader } from 'halogenium';
 import { Row, Col, ListGroup, ListGroupItem, ListGroupItemHeading, ListGroupItemText, Button } from 'reactstrap';
 import { host } from '../../components/globalVariables';
@@ -12,55 +12,55 @@ import { cargado } from '../../actions/inicio';
 import { get_periodos_actuales } from '../../actions/inicio';
 import { get_estado_periodo } from '../../actions/moduloPeriodos';
 
-class InicioAdministrativo extends Component{
+class InicioAdministrativo extends Component {
 
-	constructor(props) {
+  constructor(props) {
     super(props);
-    this.state ={
-        cargando: false,
-      }
+    this.state = {
+      cargando: false,
+    }
 
     this.get_planillas = this.get_planillas.bind(this);
     this.get_ListItems = this.get_ListItems.bind(this);
     this.mostrar_descripcion_periodo = this.mostrar_descripcion_periodo.bind(this);
   }
 
-  get_file(periodo, nombre, token){
+  get_file(periodo, nombre, token) {
     return request
-       .get(host+'api/planillas/administrativo/'+periodo+'/')
-       .set('Authorization', 'JWT '+token)
-       .then(function(res) {
-          var blob=new Blob([res.text]);
-          var link=document.createElement('a');
-          link.href=window.URL.createObjectURL(blob);
-          link.download="planilla_"+nombre+".pdf";
-          link.click();
-          
-       })
-       .catch(function(err) {
-          alert("Error al crear la planilla");
-          
-    });
+      .get(host + 'api/planillas/administrativo/' + periodo + '/')
+      .set('Authorization', 'JWT ' + token)
+      .then(function (res) {
+        var blob = new Blob([res.text]);
+        var link = document.createElement('a');
+        link.href = window.URL.createObjectURL(blob);
+        link.download = "planilla_" + nombre + ".pdf";
+        link.click();
+
+      })
+      .catch(function (err) {
+        alert("Error al crear la planilla");
+
+      });
   }
 
   // Planillas
   get_planillas(periodo, nombre) {
     let token = localStorage.getItem('user_token');
-    this.setState({"cargando":true}, 
-      () => this.get_file(periodo,nombre,token)
-      .then(
-        () => {
-          this.setState({"cargando":false});
-        }
-      )
-    );    
+    this.setState({ "cargando": true },
+      () => this.get_file(periodo, nombre, token)
+        .then(
+          () => {
+            this.setState({ "cargando": false });
+          }
+        )
+    );
   };
 
   mostrar_descripcion_periodo(periodo) {
     return 'Periodo: ' + periodo.numero_periodo + ' (' + periodo.mes_inicio + ' ' + periodo.anio_inicio + ' - ' + periodo.mes_fin + ' ' + periodo.anio_fin + ')';
   }
 
-  get_ListItems (){
+  get_ListItems() {
     let listItems = '';
     if (this.props.administrativoUser['lista_periodos'] && this.props.administrativoUser['lista_periodos'].length > 0) {
       listItems = this.props.administrativoUser['lista_periodos'].map((valor, index) => {
@@ -114,7 +114,7 @@ class InicioAdministrativo extends Component{
           {this.state.cargando &&
             <center><PulseLoader color="#b3b1b0" size="16px" margin="4px" /></center>
           }
-          <br/>
+          <br />
           <Row className='text-center'>
             <Col md='12'>
               {this.props.administrativoUser['lista_periodos'].length > 0 ?
@@ -124,9 +124,9 @@ class InicioAdministrativo extends Component{
               }
             </Col>
           </Row>
-          
 
-          <br/>
+
+          <br />
           <Row>
             <Col md='12'>
               <ListGroup>
@@ -143,8 +143,8 @@ class InicioAdministrativo extends Component{
 }
 
 
-const mapStateToProps = (state)=> {
-  return{
+const mapStateToProps = (state) => {
+  return {
     activeUser: state.activeUser,
     administrativoUser: state.administrativoUser,
   };
@@ -156,7 +156,7 @@ const mapDispatchToProps = (dispatch) => {
     get_periodos_actuales: get_periodos_actuales,
     get_estado_periodo: get_estado_periodo,
 
-  }, dispatch )
+  }, dispatch)
 }
 
 

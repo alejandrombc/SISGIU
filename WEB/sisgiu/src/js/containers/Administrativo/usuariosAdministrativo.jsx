@@ -36,7 +36,7 @@ class UsuariosAdministrativo extends Component {
     }
 
     componentWillReceiveProps(props) {
-        this.setState({tipo_documento: 'V'});
+        this.setState({ tipo_documento: 'V' });
     }
 
     handleChange(e) {
@@ -47,13 +47,13 @@ class UsuariosAdministrativo extends Component {
     buscarEstudiante() {
         this.props.cargando();
         this.props.estado_retiro_estudiante(this.state.tipo_documento + this.state.cedula)
-                .then(() => this.props.cargado());
+            .then(() => this.props.cargado());
 
         this.props.get_info_usuario(this.state.tipo_documento + this.state.cedula);
     }
 
     retirar_periodo(cedula, id_periodo) {
-        this.props.retirar_periodo(cedula, id_periodo).then(() => this.props.cargado() );
+        this.props.retirar_periodo(cedula, id_periodo).then(() => this.props.cargado());
     }
 
     render() {
@@ -85,9 +85,9 @@ class UsuariosAdministrativo extends Component {
                     </Row>
                     <br />
                     <br />
-                    { (this.props.administrativoUser.info_usuarios_administrativo.tipo_usuario === 'estudiantes' || this.props.administrativoUser.info_usuarios_administrativo.tipo_usuario === 'docentes') &&
+                    {(this.props.administrativoUser.info_usuarios_administrativo.tipo_usuario === 'estudiantes' || this.props.administrativoUser.info_usuarios_administrativo.tipo_usuario === 'docentes') &&
                         <div>
-                             <Row>
+                            <Row>
                                 <Col className="text-center" md='12' sm='12' xs='12'>
                                     <ModalUsuarioEdit onDismiss={this.onDismiss} usuario={this.props.administrativoUser.info_usuarios_administrativo} is_disabled={true} tipo_usuario={this.props.administrativoUser.info_usuarios_administrativo.tipo_usuario} />
                                 </Col>
@@ -95,34 +95,34 @@ class UsuariosAdministrativo extends Component {
                         </div>
                     }
 
-                    {  this.props.administrativoUser.info_usuarios_administrativo.tipo_usuario === 'estudiantes' &&
+                    {this.props.administrativoUser.info_usuarios_administrativo.tipo_usuario === 'estudiantes' &&
                         <div>
                             <hr />
-                            <HistorialAcademico cedula={this.props.administrativoUser.info_usuarios_administrativo.cedula}/>
+                            <HistorialAcademico cedula={this.props.administrativoUser.info_usuarios_administrativo.cedula} />
                             {!this.props.administrativoUser.estudiante_retirado &&
-                            <Row>
-                                <Col md='12' className="text-center">
-                                    <ConfirmButton
-                                        disableAfterConfirmed
-                                        onConfirm={() => this.retirar_periodo(this.props.administrativoUser.info_usuarios_administrativo.cedula, this.props.administrativoUser.info_usuarios_administrativo.id_periodo_actual)}
-                                        text="Retirar"
-                                        className="btn btn-danger btn-sm float-right"
-                                        confirming={{
-                                            text: '¿Está Seguro?',
-                                            className: 'btn btn-danger btn-sm float-right',
-                                        }}
-                                        disabled={{
-                                            text: 'Retirado',
-                                            className: 'btn btn-danger btn-sm float-right',
-                                        }}
+                                <Row>
+                                    <Col md='12' className="text-center">
+                                        <ConfirmButton
+                                            disableAfterConfirmed
+                                            onConfirm={() => this.retirar_periodo(this.props.administrativoUser.info_usuarios_administrativo.cedula, this.props.administrativoUser.info_usuarios_administrativo.id_periodo_actual)}
+                                            text="Retirar"
+                                            className="btn btn-danger btn-sm float-right"
+                                            confirming={{
+                                                text: '¿Está Seguro?',
+                                                className: 'btn btn-danger btn-sm float-right',
+                                            }}
+                                            disabled={{
+                                                text: 'Retirado',
+                                                className: 'btn btn-danger btn-sm float-right',
+                                            }}
                                         />
-                                </Col>
-                            </Row>
+                                    </Col>
+                                </Row>
                             }
                         </div>
 
                     }
-                    
+
 
                 </div>
             )
@@ -140,13 +140,13 @@ const mapStateToProps = (state) => {
 }
 
 const mapDispatchToProps = (dispatch) => {
-    return bindActionCreators({ 
+    return bindActionCreators({
         cargado: cargado,
         get_info_usuario: get_info_usuario,
         cargando: cargando,
         retirar_periodo: retirar_periodo,
         estado_retiro_estudiante: estado_retiro_estudiante,
-     }, dispatch)
+    }, dispatch)
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(UsuariosAdministrativo);

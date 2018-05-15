@@ -2,7 +2,7 @@ import React from 'react';
 import MultiselectTwoSides from 'react-multiselect-two-sides';
 import '../../../css/seleccionarAsignaturas.css';
 import { Button, Row, Col } from 'reactstrap';
-import {bindActionCreators} from 'redux';
+import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 // Components
@@ -24,26 +24,26 @@ class CambiarAsignaturas extends React.Component {
   componentDidMount() {
 
     this.setState(
-    {
-      options:this.props.asignaturas, 
-      value:this.props.asignaturas_inscritas,
-    })
+      {
+        options: this.props.asignaturas,
+        value: this.props.asignaturas_inscritas,
+      })
 
   }
 
   componentWillReceiveProps(nextProps) {
-    this.setState({options: nextProps.asignaturas});
+    this.setState({ options: nextProps.asignaturas });
   }
- 
-  handleChange (value) {
+
+  handleChange(value) {
     this.setState({ value: value }); //another array
   }
 
   inscribirse() {
 
-    this.props.inscribir_asignaturas_administrativo(this.state, this.props.cedula).then( () => this.props.triggerEsconderModal() );
+    this.props.inscribir_asignaturas_administrativo(this.state, this.props.cedula).then(() => this.props.triggerEsconderModal());
   }
- 
+
   render() {
     return (
       <div>
@@ -61,7 +61,7 @@ class CambiarAsignaturas extends React.Component {
         <br />
         <Row>
           <Col className="text-right" md="12">
-            <Button onClick={ ()=> this.inscribirse() } disabled={this.props.estado_periodo} size='sm'>
+            <Button onClick={() => this.inscribirse()} disabled={this.props.estado_periodo} size='sm'>
               Guardar
             </Button>
           </Col>
@@ -71,8 +71,8 @@ class CambiarAsignaturas extends React.Component {
   }
 }
 
-const mapStateToProps = (state)=> {
-  return{
+const mapStateToProps = (state) => {
+  return {
     usuario_activo: state.activeUser,
     estudianteUser: state.estudianteUser,
   };
@@ -80,9 +80,9 @@ const mapStateToProps = (state)=> {
 
 const mapDispatchToProps = (dispatch) => {
   return bindActionCreators({
-  inscribir_asignaturas_administrativo: inscribir_asignaturas_administrativo,
+    inscribir_asignaturas_administrativo: inscribir_asignaturas_administrativo,
 
-  }, dispatch )
+  }, dispatch)
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(CambiarAsignaturas);

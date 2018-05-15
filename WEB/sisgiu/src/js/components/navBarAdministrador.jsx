@@ -1,39 +1,39 @@
 // Dependencies
-import React, {Component} from 'react';
-import {NavItem, NavLink, Nav } from 'reactstrap';
+import React, { Component } from 'react';
+import { NavItem, NavLink, Nav } from 'reactstrap';
 import { connect } from 'react-redux';
 
 // Components
 
-class NavBarAdministrador extends Component{
+class NavBarAdministrador extends Component {
 
   render() {
-    
-      return (
-        <Nav navbar >                
-          <NavItem>
-            <NavLink href="/inicio" disabled={!this.props.activeUser.cargado}>Inicio</NavLink>
-          </NavItem>
 
-          <NavItem>
-            <NavLink href="/moduloUsuarioAdministrador" disabled={!this.props.activeUser.cargado}>Usuarios</NavLink>
-          </NavItem>
+    return (
+      <Nav navbar >
+        <NavItem>
+          <NavLink href="/inicio" disabled={!this.props.activeUser.cargado}>Inicio</NavLink>
+        </NavItem>
 
-          <NavItem>
-            <NavLink href="/moduloAsignaturas" disabled={!this.props.activeUser.cargado}>Asignaturas</NavLink>
-          </NavItem>
+        <NavItem>
+          <NavLink href="/moduloUsuarioAdministrador" disabled={!this.props.activeUser.cargado}>Usuarios</NavLink>
+        </NavItem>
 
-          <NavItem>
-            <NavLink href="/moduloPeriodos" disabled={!this.props.activeUser.cargado}>Periodos</NavLink>
-          </NavItem>
+        <NavItem>
+          <NavLink href="/moduloAsignaturas" disabled={!this.props.activeUser.cargado}>Asignaturas</NavLink>
+        </NavItem>
 
-          <NavItem>
-            <NavLink href="/programacionAcademica" disabled={!this.props.activeUser.cargado}>Programación Académica</NavLink>
-          </NavItem>
-          
-        </Nav>
+        <NavItem>
+          <NavLink href="/moduloPeriodos" disabled={!this.props.activeUser.cargado}>Periodos</NavLink>
+        </NavItem>
 
-      )
+        <NavItem>
+          <NavLink href="/programacionAcademica" disabled={!this.props.activeUser.cargado}>Programación Académica</NavLink>
+        </NavItem>
+
+      </Nav>
+
+    )
 
   }
 
@@ -41,8 +41,8 @@ class NavBarAdministrador extends Component{
 
 
 
-const mapStateToProps = (state)=> {
-  return{
+const mapStateToProps = (state) => {
+  return {
     activeUser: state.activeUser,
   };
 }

@@ -1,9 +1,9 @@
-const initialState = {correo_enviado: false, bad_input: false};
+const initialState = { correo_enviado: false, bad_input: false };
 
-export default function (state=initialState, action) {
+export default function (state = initialState, action) {
 	var nuevo_estado = Object.assign({}, state);
 
-	switch (action.type){
+	switch (action.type) {
 
 		case "CORREO_ENVIADO":
 			nuevo_estado['correo_enviado'] = true;
@@ -13,7 +13,7 @@ export default function (state=initialState, action) {
 		case "CEDULA_ERROR":
 			nuevo_estado['correo_enviado'] = false;
 			nuevo_estado['bad_input'] = true;
-			return nuevo_estado; 
+			return nuevo_estado;
 
 		case "URL_CORRECTO":
 			nuevo_estado['check_url'] = true;

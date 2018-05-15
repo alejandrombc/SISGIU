@@ -1,4 +1,4 @@
-import {combineReducers} from 'redux';
+import { combineReducers } from 'redux';
 import ActiveUserReducer from './reducer-active-user';
 import DocenteReducer from './reducer-docente-user';
 import RecuperarContrasena from './reducer-olvido-contrasena';
@@ -22,15 +22,15 @@ const allReducers = combineReducers({
 	docenteUser: DocenteReducer,
 	administrativoUser: AdministrativoUser,
 	editUser: EditUserReducer,
-	recuperarContrasena : RecuperarContrasena,
+	recuperarContrasena: RecuperarContrasena,
 	paginacion: PaginacionReducer,
 });
 
-const combineReducers_test = ( state, action ) => {
-  if ( action.type === 'LOGOUT_SUCCESS' ) {
-    state = undefined;
-  }
-  return allReducers(state, action)
+const combineReducers_test = (state, action) => {
+	if (action.type === 'LOGOUT_SUCCESS') {
+		state = undefined;
+	}
+	return allReducers(state, action)
 }
 
 export default combineReducers_test

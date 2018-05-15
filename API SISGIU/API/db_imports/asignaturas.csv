@@ -5,6 +5,6 @@ IA01,Introducción a la Informática,1,4,,1;2
 M001,Matematicas I,1,5,,1
 M002,Matematicas II,1,5,M001,1
 MD01,Matematicas Discretas I,1,4,,3
-MD02,Matematicas Discretas II,1,4,,3
+MD02,Matematicas Discretas II,1,4,MD01,3
 hg01,test hg I,2,4,,4;3
 hg02,test hg II,2,4,hg01;IA01,4;3

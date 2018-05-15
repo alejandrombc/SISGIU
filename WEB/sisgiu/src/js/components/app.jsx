@@ -8,13 +8,13 @@ import RutasPrincipales from '../routes/rutas-principales'
 import Footer from './footer'
 
 const App = () => (
-		<div className="content_background">
-			<Header />
+	<div className="content_background">
+		<Header />
 
-			<RutasPrincipales />
+		<RutasPrincipales />
 
-			<Footer/>
-		</div>
+		<Footer />
+	</div>
 );
 
 export default (App);

@@ -3,10 +3,10 @@ const initialState = {
 };
 
 
-export default function (state=initialState, action) {
+export default function (state = initialState, action) {
 	var nuevo_estado = Object.assign({}, state);
 
-	switch (action.type){
+	switch (action.type) {
 
 		case "SET_CURRENT":
 			nuevo_estado['pagina'] = action.payload['pagina'];

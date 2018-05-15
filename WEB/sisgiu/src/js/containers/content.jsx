@@ -1,5 +1,5 @@
 //Dependencies
-import React,{Component} from 'react';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
 
@@ -22,88 +22,88 @@ import ConstanciaDocente from './Docente/constanciasDocente';
 
 
 
-class Content extends Component{
-	
-	render(){
+class Content extends Component {
+
+	render() {
 		var modulo = localStorage.getItem('modulo');
 		return (
-		      <div className="col-md-9" >
-		              <div className="profile-content">
-
-		                
-		                {this.props.pestana === "perfil" &&  
-		                	<PerfilUsuario/>
-		            	}
-
-		            	{this.props.pestana === "inicio" && modulo === "estudiantes" &&
-		                	<InicioEstudiante/>
-		            	}
-
-		            	{this.props.pestana === "inicio" && modulo === "docentes" &&
-		                	<InicioDocente/>
-		            	}
+			<div className="col-md-9" >
+				<div className="profile-content">
 
 
-		            	{this.props.pestana === "inicio" && modulo === "administrativo" &&
-		                	<InicioAdministrativo/>
-		            	}
+					{this.props.pestana === "perfil" &&
+						<PerfilUsuario />
+					}
+
+					{this.props.pestana === "inicio" && modulo === "estudiantes" &&
+						<InicioEstudiante />
+					}
+
+					{this.props.pestana === "inicio" && modulo === "docentes" &&
+						<InicioDocente />
+					}
 
 
-		            	{this.props.pestana === "inicio" && modulo === "administradores" &&
-		                	<InicioAdministrador/>
-		            	}
+					{this.props.pestana === "inicio" && modulo === "administrativo" &&
+						<InicioAdministrativo />
+					}
 
-		            	{this.props.pestana === "moduloUsuarioAdministrador" && modulo === "administradores" &&
-		                	<ModuloUsuarioAdministrador/>
-		            	}
 
-		            	{this.props.pestana === "moduloAsignaturas" && modulo === "administradores" &&
-		                	<ModuloAsignaturas/>
-		            	}
+					{this.props.pestana === "inicio" && modulo === "administradores" &&
+						<InicioAdministrador />
+					}
 
-		            	{this.props.pestana === "moduloPeriodos" && modulo === "administradores" &&
-		                	<ModuloPeriodos/>
-		            	} 
+					{this.props.pestana === "moduloUsuarioAdministrador" && modulo === "administradores" &&
+						<ModuloUsuarioAdministrador />
+					}
 
-		            	{this.props.pestana === "historial" && modulo === "estudiantes"&&
-		                	<HistorialAcademico/>
-		            	} 
+					{this.props.pestana === "moduloAsignaturas" && modulo === "administradores" &&
+						<ModuloAsignaturas />
+					}
 
-						{this.props.pestana === "usuarios" && modulo === "administrativo" &&
-							<UsuariosAdministrativo />
-						}
-						
-						{this.props.pestana === "programacionAcademica" &&
-		                	<ProgramacionAcademica/>
-		            	} 
+					{this.props.pestana === "moduloPeriodos" && modulo === "administradores" &&
+						<ModuloPeriodos />
+					}
 
-		            	{this.props.pestana === "cargarNotas" && modulo === "docentes"&&
-		                	<CargarNotas/>
-		            	}
+					{this.props.pestana === "historial" && modulo === "estudiantes" &&
+						<HistorialAcademico />
+					}
 
-		            	{this.props.pestana === "inscripciones" && modulo === "administrativo"&&
-		                	<Inscripciones/>
-		            	}
+					{this.props.pestana === "usuarios" && modulo === "administrativo" &&
+						<UsuariosAdministrativo />
+					}
 
-		            	{this.props.pestana === "constancias" && modulo === "estudiantes"&&
-		            		<ConstanciaEstudiante />
-		            	}
+					{this.props.pestana === "programacionAcademica" &&
+						<ProgramacionAcademica />
+					}
 
-		            	{this.props.pestana === "constancias" && modulo === "docentes"&&
-		            		<ConstanciaDocente />
-		            	}
-		            	
+					{this.props.pestana === "cargarNotas" && modulo === "docentes" &&
+						<CargarNotas />
+					}
 
-		              </div>
-		      </div>
+					{this.props.pestana === "inscripciones" && modulo === "administrativo" &&
+						<Inscripciones />
+					}
+
+					{this.props.pestana === "constancias" && modulo === "estudiantes" &&
+						<ConstanciaEstudiante />
+					}
+
+					{this.props.pestana === "constancias" && modulo === "docentes" &&
+						<ConstanciaDocente />
+					}
+
+
+				</div>
+			</div>
 		)
 	}
 }
 
-const mapStateToProps = (state)=> {
-	return{
-		
-	};	
+const mapStateToProps = (state) => {
+	return {
+
+	};
 }
 
 

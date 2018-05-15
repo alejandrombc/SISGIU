@@ -1,7 +1,7 @@
 const initialState = {
-	lista_periodos : [],
-	tiene_periodos_activos: true, 
-	edit:false, 
+	lista_periodos: [],
+	tiene_periodos_activos: true,
+	edit: false,
 	lista_estudiantes: [],
 	pago_inscripcion_editado: false,
 	error: false,
@@ -14,10 +14,10 @@ const initialState = {
 	estudiante_retirado: false,
 };
 
-export default function (state=initialState, action) {
+export default function (state = initialState, action) {
 	var nuevo_estado = Object.assign({}, state);
 
-	switch (action.type){
+	switch (action.type) {
 
 		case "GET_PERIODOS_ACTIVOS_EXITOSO":
 			nuevo_estado['lista_periodos'] = action.payload['periodos'];
@@ -78,21 +78,21 @@ export default function (state=initialState, action) {
 			nuevo_estado['info_usuarios_administrativo'] = action.payload['info_usuarios_administrativo'];
 			nuevo_estado['error_info_usuarios'] = false;
 			return nuevo_estado;
-		
+
 		case "GET_INFO_USUARIOS_ERROR":
 			nuevo_estado['error_info_usuarios'] = true;
-			nuevo_estado['info_usuarios_administrativo'] = {"tipo_usuario":"error"};
+			nuevo_estado['info_usuarios_administrativo'] = { "tipo_usuario": "error" };
 			return nuevo_estado;
-		
+
 		case "ESTADO_RETIRO_ESTUDIANTE_EXITOSO":
 			nuevo_estado['estudiante_retirado'] = action.payload['estudiante_retirado']['retirado'];
 			return nuevo_estado;
-		
+
 		case "ESTADO_RETIRO_ESTUDIANTE_ERROR":
 			nuevo_estado['estudiante_retirado'] = false;
 			return nuevo_estado;
-			
-			
+
+
 
 		default:
 			return state;

@@ -1,22 +1,22 @@
 // Dependencies
-import React, {Component} from 'react';
-import { Row, Col, TabContent, TabPane, Nav, NavItem, NavLink} from 'reactstrap';
-import '../../../css/moduloUsuarioAdministrador.css'; 
+import React, { Component } from 'react';
+import { Row, Col, TabContent, TabPane, Nav, NavItem, NavLink } from 'reactstrap';
+import '../../../css/moduloUsuarioAdministrador.css';
 import classnames from 'classnames';
 
 // Components
 import ListaPeriodos from './listaPeriodos';
 
 
-class ModuloPeriodos extends Component{
+class ModuloPeriodos extends Component {
 
   constructor(props) {
-      super(props);
-      this.state = {
-        activeTab: '1'
-      }
+    super(props);
+    this.state = {
+      activeTab: '1'
+    }
 
-      this.toggle = this.toggle.bind(this);
+    this.toggle = this.toggle.bind(this);
   }
 
   toggle(tab) {
@@ -28,35 +28,35 @@ class ModuloPeriodos extends Component{
   }
 
 
-  render(){
+  render() {
 
-      return(
-        <div>
+    return (
+      <div>
 
-          <Nav tabs classnames="TabsCursor">
-            <NavItem>
-              <NavLink className={classnames({ active: this.state.activeTab === '1' })} onClick={() => { this.toggle('1'); }} >
-                Periodos Guardados
+        <Nav tabs classnames="TabsCursor">
+          <NavItem>
+            <NavLink className={classnames({ active: this.state.activeTab === '1' })} onClick={() => { this.toggle('1'); }} >
+              Periodos Guardados
               </NavLink>
-            </NavItem>
-          </Nav>
+          </NavItem>
+        </Nav>
 
-          <TabContent activeTab={this.state.activeTab}>
-            
-            <TabPane tabId="1">
-              <Row>
-                <Col sm="12">
-                { this.state.activeTab === '1' &&
+        <TabContent activeTab={this.state.activeTab}>
+
+          <TabPane tabId="1">
+            <Row>
+              <Col sm="12">
+                {this.state.activeTab === '1' &&
                   <ListaPeriodos />
                 }
-                </Col>
-              </Row>
-            </TabPane>
+              </Col>
+            </Row>
+          </TabPane>
 
-          </TabContent>
+        </TabContent>
 
-        </div>
-      )
+      </div>
+    )
   }
 }
 

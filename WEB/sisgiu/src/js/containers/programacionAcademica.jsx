@@ -8,7 +8,7 @@ import { cargado } from '../actions/inicio';
 
 // Components
 import { get_programacion_academica } from '../actions/inicio';
-import { get_tipo_postgrado } from '../actions/moduloAsignaturas';  
+import { get_tipo_postgrado } from '../actions/moduloAsignaturas';
 
 
 class ProgramacionAcademica extends Component {
@@ -16,7 +16,7 @@ class ProgramacionAcademica extends Component {
     constructor(props) {
         super(props);
         this.state = {
-          postgrado: '',
+            postgrado: '',
         }
         this.get_tipos_postgrados = this.get_tipos_postgrados.bind(this);
         this.handleChange = this.handleChange.bind(this);
@@ -26,12 +26,12 @@ class ProgramacionAcademica extends Component {
 
     componentDidMount() {
         this.props.get_tipo_postgrado()
-            .then( () => this.props.get_programacion_academica()
-                .then(() => this.props.cargado() ));
+            .then(() => this.props.get_programacion_academica()
+                .then(() => this.props.cargado()));
     }
 
 
-    get_items(postgrado){
+    get_items(postgrado) {
         //Dias de la semana
         const dias = {
             "0": "Lunes",
@@ -43,10 +43,10 @@ class ProgramacionAcademica extends Component {
             "6": "Domingo",
         }
         const pisos = ['Aula Digital', 'Piso 1', 'Piso 2', 'Piso 3', 'Piso 4'];
-        if(postgrado !== '-1'){
+        if (postgrado !== '-1') {
             var listItems = "";
             //Validamos que exista el arreglo y sea mayor a cero
-            if(this.props.activeUser['programacionAcademica'] && this.props.activeUser['programacionAcademica'].length > 0){
+            if (this.props.activeUser['programacionAcademica'] && this.props.activeUser['programacionAcademica'].length > 0) {
                 let N = this.props.activeUser['programacionAcademica'].length;
                 //Recorremos todos los periodos del arreglo
                 for (var j = 0; j < N; j++) {
@@ -55,36 +55,36 @@ class ProgramacionAcademica extends Component {
                         //Guardo el id del periodo
                         let periodo = this.props.activeUser['programacionAcademica'][j].periodo_id;
                         //Filtro el arreglo de ese id
-                        listItems = this.props.activeUser['programacionAcademica'][j][periodo].map((valor, index) =>{
+                        listItems = this.props.activeUser['programacionAcademica'][j][periodo].map((valor, index) => {
                             var lista_docentes = [];
                             var codigo_asignatura = valor.codigo; //Obtengo el codigo de la asignatura
-                            
-                            
+
+
                             //Parseo cada informacion de la asignatura (horario dia y horario hora)
                             for (var i = 0; i < valor[codigo_asignatura].length; i++) {
                                 lista_docentes[i] = <font key={i}> {dias[valor[codigo_asignatura][i]['dia']]} {valor[codigo_asignatura][i]['hora']} | {pisos[valor[codigo_asignatura][i]['piso']]} <br /></font>
                             }
                             //Creo la lista de retorno por cada asignatura
                             return (
-                              <ListGroupItem key={index}>
-                                <ListGroupItemHeading>({valor['codigo']}) {valor['nombre']}</ListGroupItemHeading>
-                                <ListGroupItemText>
-                                    {lista_docentes}
-                                    Prof: {valor[codigo_asignatura][0]['first_name']} {valor[codigo_asignatura][0]['last_name']}
-                                </ListGroupItemText>
-                              </ListGroupItem>
+                                <ListGroupItem key={index}>
+                                    <ListGroupItemHeading>({valor['codigo']}) {valor['nombre']}</ListGroupItemHeading>
+                                    <ListGroupItemText>
+                                        {lista_docentes}
+                                        Prof: {valor[codigo_asignatura][0]['first_name']} {valor[codigo_asignatura][0]['last_name']}
+                                    </ListGroupItemText>
+                                </ListGroupItem>
                             )
-                            });
+                        });
 
                         return listItems;
-                    } 
+                    }
                 }
                 return (<center><h6>Información no disponible</h6></center>);
             }
         }
-	return (<center><h6>Seleccione un tipo de postgrado</h6></center>);
+        return (<center><h6>Seleccione un tipo de postgrado</h6></center>);
     }
-    
+
 
 
     handleChange(e) {
@@ -94,27 +94,27 @@ class ProgramacionAcademica extends Component {
 
     get_tipos_postgrados() {
 
-        if ( this.props.docenteUser.lista_postgrados.length > 0) {
-          return this.props.docenteUser.lista_postgrados.map((postgrado, index) =>
-            <option key={index} value={postgrado.tipo} name='postgrado'> {postgrado.tipo}</option>
-          ); 
+        if (this.props.docenteUser.lista_postgrados.length > 0) {
+            return this.props.docenteUser.lista_postgrados.map((postgrado, index) =>
+                <option key={index} value={postgrado.tipo} name='postgrado'> {postgrado.tipo}</option>
+            );
         }
 
         return '';
     }
 
     mostrar_descripcion_periodo(postgrado) {
-            let N = this.props.activeUser.programacionAcademica.length;
-            let index = -1;
-            for (let i = 0; i < N; i++) {
-                if (this.props.activeUser.programacionAcademica[i].tipo_postgrado === postgrado) {
-                    index = i;
-                    i = N;
-                }
+        let N = this.props.activeUser.programacionAcademica.length;
+        let index = -1;
+        for (let i = 0; i < N; i++) {
+            if (this.props.activeUser.programacionAcademica[i].tipo_postgrado === postgrado) {
+                index = i;
+                i = N;
             }
-            if (index === -1) return '';
-            let periodo = this.props.activeUser.programacionAcademica[index];
-            return 'Periodo: ' + periodo.numero_periodo + ' (' + periodo.mes_inicio + ' ' + periodo.anio_inicio + ' - ' + periodo.mes_fin + ' ' + periodo.anio_fin + ')';
+        }
+        if (index === -1) return '';
+        let periodo = this.props.activeUser.programacionAcademica[index];
+        return 'Periodo: ' + periodo.numero_periodo + ' (' + periodo.mes_inicio + ' ' + periodo.anio_inicio + ' - ' + periodo.mes_fin + ' ' + periodo.anio_fin + ')';
     }
 
     render() {
@@ -122,42 +122,42 @@ class ProgramacionAcademica extends Component {
             return (<center><PulseLoader color="#b3b1b0" size="16px" margin="4px" /></center>);
         } else {
             return (
-            <div>
-            <FormGroup row>
-                <Label for="periodo" sm={5}>Seleccione un tipo de postgrado:</Label>
-                <Col sm={7}>
-                <Input 
-                    bsSize="sm" 
-                    defaultValue={this.state.postgrado} 
-                    onChange={this.handleChange} 
-                    type="select" 
-                    name="postgrado" 
-                    required>
-                    <option value={-1} name='periodo'> </option>
-                    {this.get_tipos_postgrados()}
-                </Input>
-                </Col>
-            </FormGroup>
-    
-            
-            
-            {this.state.postgrado !== '' &&
                 <div>
-                    <h6 className="text-center">
-                        {this.mostrar_descripcion_periodo(this.state.postgrado)}
-                    </h6>
-                    <br/>
-                    <Row>
-                        <Col md='12'>
-                            <ListGroup>
-                                {this.get_items(this.state.postgrado)}
-                            </ListGroup>
+                    <FormGroup row>
+                        <Label for="periodo" sm={5}>Seleccione un tipo de postgrado:</Label>
+                        <Col sm={7}>
+                            <Input
+                                bsSize="sm"
+                                defaultValue={this.state.postgrado}
+                                onChange={this.handleChange}
+                                type="select"
+                                name="postgrado"
+                                required>
+                                <option value={-1} name='periodo'> </option>
+                                {this.get_tipos_postgrados()}
+                            </Input>
                         </Col>
-                    </Row>
-                </div>
-            }
+                    </FormGroup>
 
-            </div>
+
+
+                    {this.state.postgrado !== '' &&
+                        <div>
+                            <h6 className="text-center">
+                                {this.mostrar_descripcion_periodo(this.state.postgrado)}
+                            </h6>
+                            <br />
+                            <Row>
+                                <Col md='12'>
+                                    <ListGroup>
+                                        {this.get_items(this.state.postgrado)}
+                                    </ListGroup>
+                                </Col>
+                            </Row>
+                        </div>
+                    }
+
+                </div>
             )
 
         }
@@ -178,7 +178,7 @@ const mapDispatchToProps = (dispatch) => {
         cargado: cargado,
         get_tipo_postgrado: get_tipo_postgrado,
         get_programacion_academica: get_programacion_academica,
-     }, dispatch)
+    }, dispatch)
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(ProgramacionAcademica);

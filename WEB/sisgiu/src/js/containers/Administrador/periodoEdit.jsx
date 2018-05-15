@@ -1,7 +1,7 @@
 import { Table, Col, Button, Row } from 'reactstrap';
 import '../../../css/moduloUsuarioAdministrador.css';
 import FontAwesomeIcon from 'react-fontawesome';
-import {bindActionCreators} from 'redux';
+import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import React from 'react';
 import ConfirmButton from 'react-confirm-button';
@@ -26,54 +26,54 @@ class PeriodoEdit extends React.Component {
     this.guardarCambiosEdit = this.guardarCambiosEdit.bind(this);
     this.get_listItemsFinales = this.get_listItemsFinales.bind(this);
     this.actualizar_docente_asignatura = this.actualizar_docente_asignatura.bind(this);
-    
+
   }
 
   eliminarDocenteAsignatura(index) {
     let array = this.state.docente_asignatura;
     array.splice(index, 1);
-    this.setState({ docente_asignatura : array });
+    this.setState({ docente_asignatura: array });
   }
 
   guardarCambiosEdit() {
     this.props.cargando();
     this.props.hide_alerts();
     this.props.guardar_docente_asignatura_periodo(this.state.docente_asignatura, this.props.periodo.id)
-    .then( () => this.props.triggerUpdateDocenteAsignatura()
-      .then( () => this.props.triggerVolverPrimerPaso()
-    ));
-    
+      .then(() => this.props.triggerUpdateDocenteAsignatura()
+        .then(() => this.props.triggerVolverPrimerPaso()
+        ));
+
 
   }
 
   get_listItemsFinales(days) {
-    const pisos = ['Aula Digital', 'Piso 1','Piso 2', 'Piso 3', 'Piso 4'];
+    const pisos = ['Aula Digital', 'Piso 1', 'Piso 2', 'Piso 3', 'Piso 4'];
     // Esta es la lista de todas las asignaturas con horarios, pisos, etc que se mostrara en el paso final al editar un periodo. 
     let listItemsFinales = this.state.docente_asignatura.map((docente, index) =>
       <tr key={index}>
-        <td> 
+        <td>
           {docente.usuario.first_name}{' '}{docente.usuario.last_name}
         </td>
         <td>{docente.asignatura.nombre}</td>
-        <td>        
+        <td>
           {days[docente.horario_dia]}
         </td>
-        <td>        
+        <td>
           {docente.horario_hora}
         </td>
-        <td>        
+        <td>
           {pisos[docente.piso]}
         </td>
         <td>
           <ConfirmButton
-              onConfirm={() => this.eliminarDocenteAsignatura(index) }
-              text= {<FontAwesomeIcon name="trash-alt"/>}
-              className="btn btn-danger btn-sm"
-              confirming={{
-                text: '¿Está seguro? Se eliminará este horario.',
-                className: 'btn btn-danger btn-sm',
-              }}
-            />
+            onConfirm={() => this.eliminarDocenteAsignatura(index)}
+            text={<FontAwesomeIcon name="trash-alt" />}
+            className="btn btn-danger btn-sm"
+            confirming={{
+              text: '¿Está seguro? Se eliminará este horario.',
+              className: 'btn btn-danger btn-sm',
+            }}
+          />
         </td>
       </tr>
     );
@@ -81,43 +81,41 @@ class PeriodoEdit extends React.Component {
   }
 
   actualizar_docente_asignatura(data) {
-    this.setState({docente_asignatura: data});
+    this.setState({ docente_asignatura: data });
   }
 
 
   render() {
-    const days = ['Lunes', 'Martes', 'Miercoles','Jueves', 'Viernes', 'Sabado', 'Domingo'];
+    const days = ['Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado', 'Domingo'];
     let listItemsFinales = this.get_listItemsFinales(days);
 
-    if ( this.props.editando_periodo === 2 ) 
-    {
-      return (  
-        <AgregarDocenteAsignatura 
-        triggerVolverPasoAnterior = {() => this.props.triggerVolverPasoAnterior()}
-        triggerSiguientePaso = {() => this.props.triggerSiguientePaso()}
-        docente_asignatura = {this.state.docente_asignatura}
-        periodo = {this.props.periodo}
-        trigger_actualizar_docente_asignatura = {this.actualizar_docente_asignatura}
+    if (this.props.editando_periodo === 2) {
+      return (
+        <AgregarDocenteAsignatura
+          triggerVolverPasoAnterior={() => this.props.triggerVolverPasoAnterior()}
+          triggerSiguientePaso={() => this.props.triggerSiguientePaso()}
+          docente_asignatura={this.state.docente_asignatura}
+          periodo={this.props.periodo}
+          trigger_actualizar_docente_asignatura={this.actualizar_docente_asignatura}
         />
       );
 
-    } else 
-    { // this.props.editando_periodo === 3 PASO FINAL
+    } else { // this.props.editando_periodo === 3 PASO FINAL
       return (
         <div>
 
-          <br/>
+          <br />
           <Row>
             <Col md='12'>
-              <Button color="secondary" size='sm' data-toggle="tooltip" title="Regresar" onClick={() => this.props.triggerVolverPasoAnterior()}><FontAwesomeIcon name="arrow-left"/></Button>
+              <Button color="secondary" size='sm' data-toggle="tooltip" title="Regresar" onClick={() => this.props.triggerVolverPasoAnterior()}><FontAwesomeIcon name="arrow-left" /></Button>
             </Col>
           </Row>
-          <br/>
+          <br />
 
           <Row>
             <Col md='12'>
               <h6>Paso 3: Confirmar Cambios</h6>
-              <hr/>
+              <hr />
             </Col>
           </Row>
 
@@ -134,13 +132,13 @@ class PeriodoEdit extends React.Component {
               </tr>
             </thead>
             <tbody className="tabla_usuarios">
-                
-                {listItemsFinales}
-              
-              
+
+              {listItemsFinales}
+
+
             </tbody>
           </Table>
-          <hr/>
+          <hr />
           <Row>
             <Col md='12' className='text-right'>
               <Button color="primary" size='sm' data-toggle="tooltip" title="Guardar" onClick={() => this.guardarCambiosEdit()}>Guardar</Button>
@@ -150,15 +148,15 @@ class PeriodoEdit extends React.Component {
         </div>
 
       );
-    
+
     }
 
-    
+
   }
 }
 
-const mapStateToProps = (state)=> {
-  return{
+const mapStateToProps = (state) => {
+  return {
     adminUser: state.adminUser,
   };
 }
@@ -168,8 +166,8 @@ const mapDispatchToProps = (dispatch) => {
     guardar_docente_asignatura_periodo: guardar_docente_asignatura_periodo,
     cargando: cargando,
     cargado: cargado,
-    }, 
-    dispatch 
+  },
+    dispatch
   )
 }
 
