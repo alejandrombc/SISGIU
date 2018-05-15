@@ -644,6 +644,9 @@ def planilla_periodo(request, periodo):
 	periodo_info['tipo_postgrado'] = periodo_completo.tipo_postgrado.tipo
 	periodo_info['docentes'] = []
 
+	if(periodo_completo.estado_periodo.estado != "activo"):
+		return Response(status=status.HTTP_400_BAD_REQUEST)
+
 	try:
 		coordinador = PersonalDocente.objects.get(id_tipo_postgrado__tipo=periodo_completo.tipo_postgrado.tipo, coordinador=True)
 		periodo_info['coordinador_nombre'] = coordinador.usuario.first_name
