@@ -40,8 +40,6 @@ from rest_framework.generics import (
 from rest_framework.permissions import (
 	AllowAny,
 	IsAdminUser,
-	IsAuthenticated,
-	IsAuthenticatedOrReadOnly,
 	)
 
 from .permissions import (
@@ -61,13 +59,13 @@ from rest_framework.response import Response
 class TipoAsignaturaListCreateAPIView(ListCreateAPIView):
 	queryset = TipoAsignatura.objects.all()
 	serializer_class = TipoAsignaturaListSerializer
-	permission_classes = [IsAuthenticated, IsListOrCreate]
+	permission_classes = [IsListOrCreate]
 
 
 class TipoAsignaturaDetailAPIView(RetrieveAPIView):
 	queryset = TipoAsignatura.objects.all()
 	serializer_class = TipoAsignaturaDetailSerializer
-	permission_classes = [IsAuthenticated]
+	permission_classes = []
 
 
 class TipoAsignaturaUpdateAPIView(RetrieveUpdateAPIView):
@@ -89,7 +87,7 @@ class TipoAsignaturaDeleteAPIView(DestroyAPIView):
 class AsignaturaListCreateAPIView(ListCreateAPIView):
 	queryset = Asignatura.objects.all()
 	serializer_class = AsignaturaListSerializer
-	permission_classes = [IsAuthenticatedOrReadOnly, IsListOrCreate]
+	permission_classes = [IsListOrCreate]
 
 	def get(self, request, format=None):
 		asignaturas = Asignatura.objects.all().values()
@@ -111,7 +109,7 @@ class AsignaturaListCreateAPIView(ListCreateAPIView):
 class AsignaturaDetailAPIView(RetrieveAPIView):
 	queryset = Asignatura.objects.all()
 	serializer_class = AsignaturaDetailSerializer
-	permission_classes = [IsAuthenticated]
+	permission_classes = []
 	lookup_field = 'codigo'
 
 

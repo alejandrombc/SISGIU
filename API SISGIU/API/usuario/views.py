@@ -11,8 +11,6 @@ from django.core.mail import send_mail
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.permissions import (
 	IsAdminUser,
-	IsAuthenticated,
-	IsAuthenticatedOrReadOnly,
 	AllowAny)
 
 from .permissions import (
@@ -100,14 +98,14 @@ class AdministradorDeleteAPIView(DestroyAPIView):
 class EstudianteListCreateAPIView(ListCreateAPIView):
 	queryset = Estudiante.objects.all()
 	serializer_class = EstudianteSerializer
-	permission_classes = [IsAuthenticated, IsListOrCreate]
+	permission_classes = [IsListOrCreate]
 
 
 class EstudianteDetailAPIView(RetrieveAPIView):
 	queryset = Estudiante.objects.all()
 	serializer_class = EstudianteDetailSerializer
 	lookup_field = 'usuario__cedula'
-	permission_classes = [IsAuthenticated]
+	permission_classes = []
 
 
 class EstudianteUpdateAPIView(RetrieveUpdateAPIView):
@@ -129,19 +127,19 @@ class EstudianteDeleteAPIView(DestroyAPIView):
 class TipoPostgradoListCreateAPIView(ListCreateAPIView):
 	queryset = TipoPostgrado.objects.all()
 	serializer_class = TipoPostgradoSerializer
-	permission_classes = [IsListOrCreate, IsAuthenticated]
+	permission_classes = [IsListOrCreate]
 
 
 class TipoPostgradoDetailAPIView(RetrieveAPIView):
 	queryset = TipoPostgrado.objects.all()
 	serializer_class = TipoPostgradoSerializer
-	permission_classes = [IsListOrCreate, IsAuthenticated]
+	permission_classes = [IsListOrCreate]
 
 
 class TipoPostgradoUpdateAPIView(RetrieveUpdateAPIView):
 	queryset = TipoPostgrado.objects.all()
 	serializer_class = TipoPostgradoSerializer
-	permission_classes = [IsAdminUser, IsAuthenticated]
+	permission_classes = [IsAdminUser]
 
 
 class TipoPostgradoDeleteAPIView(DestroyAPIView):
@@ -155,13 +153,13 @@ class TipoPostgradoDeleteAPIView(DestroyAPIView):
 class EstadoEstudianteListCreateAPIView(ListCreateAPIView):
 	queryset = EstadoEstudiante.objects.all()
 	serializer_class = EstadoEstudianteSerializer
-	permission_classes = [IsListOrCreate, IsAuthenticated]
+	permission_classes = [IsListOrCreate]
 
 
 class EstadoEstudianteDetailAPIView(RetrieveAPIView):
 	queryset = EstadoEstudiante.objects.all()
 	serializer_class = EstadoEstudianteSerializer
-	permission_classes = [IsAuthenticated]
+	permission_classes = []
 
 
 class EstadoEstudianteDeleteAPIView(DestroyAPIView):
@@ -175,20 +173,20 @@ class EstadoEstudianteDeleteAPIView(DestroyAPIView):
 class DocenteListCreateAPIView(ListCreateAPIView):
 	queryset = PersonalDocente.objects.all()
 	serializer_class = DocenteSerializer
-	permission_classes = [IsAuthenticated, IsListOrCreate]
+	permission_classes = [IsListOrCreate]
 
 
 class DocenteDetailAPIView(RetrieveAPIView):
 	queryset = PersonalDocente.objects.all()
 	serializer_class = DocenteDetailSerializer
-	permission_classes = [IsAuthenticated]
+	permission_classes = []
 	lookup_field = 'usuario__cedula'
 
 
 class DocenteUpdateAPIView(RetrieveUpdateAPIView):
 	queryset = PersonalDocente.objects.all()
 	serializer_class = DocenteDetailSerializer
-	permission_classes = [IsAuthenticatedOrReadOnly, isOwnerOrReadOnly]
+	permission_classes = [isOwnerOrReadOnly]
 	lookup_field = 'usuario__cedula'
 
 
@@ -204,20 +202,20 @@ class DocenteDeleteAPIView(DestroyAPIView):
 class AdministrativoListCreateAPIView(ListCreateAPIView):
 	queryset = PersonalAdministrativo.objects.all()
 	serializer_class = AdministrativoSerializer
-	permission_classes = [IsAuthenticated, IsListOrCreate]
+	permission_classes = [IsListOrCreate]
 
 
 class AdministrativoDetailAPIView(RetrieveAPIView):
 	queryset = PersonalAdministrativo.objects.all()
 	serializer_class = AdministrativoDetailSerializer
-	permission_classes = [IsAuthenticated]
+	permission_classes = []
 	lookup_field = 'usuario__cedula'
 
 
 class AdministrativoUpdateAPIView(RetrieveUpdateAPIView):
 	queryset = PersonalAdministrativo.objects.all()
 	serializer_class = AdministrativoDetailSerializer
-	permission_classes = [IsAuthenticatedOrReadOnly, isOwnerOrReadOnly]
+	permission_classes = [isOwnerOrReadOnly]
 	lookup_field = 'usuario__cedula'
 
 
