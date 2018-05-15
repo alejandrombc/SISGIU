@@ -104,7 +104,7 @@
                 {% for tipos in estudiantes %}
                     {% if tipos.estudiantes %}
                         <center><h3>POSTGRADO: {{tipos.nombre}}</h3></center>
-                        {% for estudiante in tipos.estudiantes %}
+                       
                             <table class="table_estudiantes">
                               <thead>
                                 <tr>
@@ -115,15 +115,17 @@
                                 </tr>
                               </thead>
                               <tbody>
+                                {% for estudiante in tipos.estudiantes %}
                                     <tr> 
                                       <td class="td_estudiantes" width="25%" >{{estudiante.cedula}}</td>
                                       <td class="td_estudiantes" width="30%" >{{estudiante.nombre}}</td>
                                       <td class="td_estudiantes" width="30%" >{{estudiante.apellido}}</td>
                                       <td class="td_estudiantes" width="15%" >{{estudiante.nota}}</td>
                                     </tr>
+                                {% endfor %}   
                               </tbody>
-                            </table>
-                        {% endfor %}             
+                               
+                            </table>     
                         <br>
                         <br>
                         <br>

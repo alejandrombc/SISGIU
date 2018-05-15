@@ -148,6 +148,7 @@ class EstudianteSerializer(serializers.ModelSerializer):
         fields = ('usuario', 'id_tipo_postgrado', 'id_estado_estudiante', 'direccion',)
 
     def create(self, validated_data):
+        print("############################")
         user_data = validated_data.pop('usuario')
         try:
             estudiante = Estudiante.objects.get(usuario__cedula=user_data['cedula'])

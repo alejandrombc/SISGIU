@@ -79,7 +79,7 @@ class ProgramacionAcademica extends Component {
                         return listItems;
                     } 
                 }
-                return (<center><h6>Este periodo no tiene asignaturas</h6></center>);
+                return (<center><h6>Información no disponible</h6></center>);
             }
         }
 	return (<center><h6>Seleccione un tipo de postgrado</h6></center>);
