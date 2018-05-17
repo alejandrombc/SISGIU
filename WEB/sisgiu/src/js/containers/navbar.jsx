@@ -8,6 +8,7 @@ import NavBarEstudiante from '../components/navBarEstudiante';
 import NavBarDocente from '../components/navBarDocente';
 import NavBarAdministrativo from '../components/navBarAdministrativo';
 import NavBarAdministrador from '../components/navBarAdministrador';
+import NavBarInicio from '../components/navBarInicio'
 
 
 class NavigationBar extends Component {
@@ -60,6 +61,8 @@ class NavigationBar extends Component {
           break;
 
       }
+    }else{
+      navigationBar = (<NavBarInicio />)
     }
 
 

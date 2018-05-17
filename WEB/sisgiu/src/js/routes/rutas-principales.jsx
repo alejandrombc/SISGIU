@@ -10,7 +10,7 @@ import RecuperarContrasenaForm from '../containers/recuperarContrasenaForm';
 import NuevaContrasenaForm from '../containers/nuevaContrasenaForm';
 import Inicio from '../containers/inicio';
 import Page404 from '../components/page404';
-
+import Creditos from '../components/creditos'
 
 
 
@@ -138,7 +138,9 @@ class RutasPrincipales extends React.Component {
 							)
 					)} />
 
-
+					<Route exact path="/creditos" render={() => (
+							<Creditos />
+					)} />
 					<Route component={Page404} ></Route>
 				</Switch>
 			</BrowserRouter>

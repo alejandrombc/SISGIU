@@ -68,3 +68,9 @@
 .required:after {
   content:"*";color:red;
 }
+
+
+
+.navbar_right {
+  float: right
+}
