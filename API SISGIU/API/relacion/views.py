@@ -50,7 +50,7 @@ from .permissions import (
 	)
 
 from django.views.decorators.csrf import csrf_exempt
-from django.db.models import Q
+from django.db.models import Q, Count
 from rest_framework.decorators import permission_classes, api_view
 from usuario.permissions import isAdministrativoOrEstudianteOrAdmin, isDocenteOrAdmin, isEstudianteOrAdmin, isAdministrativoOrAdmin
 from rest_framework import status
@@ -608,10 +608,9 @@ def get_reporte_periodo(request):
 
 	body_unicode = request.body.decode('utf-8')
 	body = json.loads(body_unicode)
-
-	print(body)
-
 	periodo = Periodo.objects.get(id=body['periodo'])
+
+	# print(body)
 
 	data_pdf = {}
 
@@ -652,99 +651,191 @@ def get_reporte_periodo(request):
 		cant_docentes = 0
 
 		for x in docente_asignatura:
-			cant_docentes += 1
-			docente = {}
-			docente['cedula'] = x.docente.usuario.cedula
-			docente['first_name'] = x.docente.usuario.first_name
-			docente['last_name'] = x.docente.usuario.last_name
-			docente['segundo_nombre'] = x.docente.usuario.segundo_nombre
-			docente['segundo_apellido'] = x.docente.usuario.segundo_apellido
-			docentes.append(docente)
+			if not any(d['cedula'] == x.docente.usuario.cedula for d in docentes):
+				cant_docentes += 1
+				docente = {}
+				docente['cedula'] = x.docente.usuario.cedula
+				docente['first_name'] = x.docente.usuario.first_name
+				docente['last_name'] = x.docente.usuario.last_name
+				docente['segundo_nombre'] = x.docente.usuario.segundo_nombre
+				docente['segundo_apellido'] = x.docente.usuario.segundo_apellido
+				docentes.append(docente)
 
 		data_pdf['docentes'] = docentes
 		data_pdf['cant_docentes'] = cant_docentes
 
 	if body['estudiantes_aprobados']:
-		periodo_estudiante = PeriodoEstudiante.objects.filter(periodo=periodo)
-		estudiantes = []
-		cant_estudiantes_inscritos = 0
+		estudiante_asignatura = EstudianteAsignatura.objects.filter(periodo_estudiante__periodo_id=periodo, nota_definitiva__gte=10, retirado=False).order_by('asignatura')
+		cant_estudiantes_aprobados = 0
+		asignatura = {}
+		asignatura['nombre'] = ''
+		asignatura['codigo'] = ''
+		asignatura['unidad_credito'] = ''
+		asignatura['estudiantes'] = []
+		asignaturas = list()
+		for x in estudiante_asignatura:
+			if(asignatura['codigo'] != '' and x.asignatura.codigo != asignatura['codigo']):
+				asignatura['cant_estudiantes_aprobados'] = cant_estudiantes_aprobados
+				asignaturas.append(asignatura.copy())
+				
+				asignatura['estudiantes'] = []
+				cant_estudiantes_aprobados = 0
 
-		for x in periodo_estudiante:
-			cant_estudiantes_inscritos += 1
+			asignatura['nombre'] = x.asignatura.nombre
+			asignatura['codigo'] = x.asignatura.codigo
+			asignatura['unidad_credito'] = x.asignatura.unidad_credito
+
+			cant_estudiantes_aprobados += 1
 			estudiante = {}
-			estudiante['cedula'] = x.estudiante.usuario.cedula
-			estudiante['first_name'] = x.estudiante.usuario.first_name
-			estudiante['last_name'] = x.estudiante.usuario.last_name
-			estudiante['segundo_nombre'] = x.estudiante.usuario.segundo_nombre
-			estudiante['segundo_apellido'] = x.estudiante.usuario.segundo_apellido
-			estudiantes.append(estudiante)
+			estudiante['cedula'] = x.periodo_estudiante.estudiante.usuario.cedula
+			estudiante['first_name'] = x.periodo_estudiante.estudiante.usuario.first_name
+			estudiante['last_name'] = x.periodo_estudiante.estudiante.usuario.last_name
+			estudiante['segundo_nombre'] = x.periodo_estudiante.estudiante.usuario.segundo_nombre
+			estudiante['segundo_apellido'] = x.periodo_estudiante.estudiante.usuario.segundo_apellido
+			estudiante['nota_definitiva'] = x.nota_definitiva
+			asignatura['estudiantes'].append(estudiante)
 
-		data_pdf['estudiantes_inscritos'] = estudiantes
-		data_pdf['cant_estudiantes_inscritos'] = cant_estudiantes_inscritos
+		asignatura['cant_estudiantes_aprobados'] = cant_estudiantes_aprobados
+		asignaturas.append(asignatura.copy())
+		data_pdf['estudiantes_aprobados'] = asignaturas
 
+	if body['estudiantes_reprobados']:
+		estudiante_asignatura = EstudianteAsignatura.objects.filter(periodo_estudiante__periodo_id=periodo, nota_definitiva__lt=10, retirado=False).order_by('asignatura')
+		cant_estudiantes_reprobados = 0
+		asignatura = {}
+		asignatura['nombre'] = ''
+		asignatura['codigo'] = ''
+		asignatura['unidad_credito'] = ''
+		asignatura['estudiantes'] = []
+		asignaturas = list()
+		for x in estudiante_asignatura:
+			if(asignatura['codigo'] != '' and x.asignatura.codigo != asignatura['codigo']):
+				asignatura['cant_estudiantes_reprobados'] = cant_estudiantes_reprobados
+				asignaturas.append(asignatura.copy())
+				
+				asignatura['estudiantes'] = []
+				cant_estudiantes_reprobados = 0
 
-	"""
-	Esto lo saque del endpoint de la planilla de administrativo
-	"""
-	# if body['informacion_detallada']:
-	# 	periodo_info = {}
-	# 	periodo_completo = Periodo.objects.get(id=periodo)
-	# 	periodo_info['periodo'] = periodo_completo.descripcion
-	# 	periodo_info['anio_inicio'] = periodo_completo.anio_inicio
-	# 	periodo_info['anio_fin'] = periodo_completo.anio_fin
-	# 	periodo_info['mes_inicio'] = periodo_completo.mes_inicio
-	# 	periodo_info['mes_fin'] = periodo_completo.mes_fin
-	# 	periodo_info['numero_periodo'] = periodo_completo.numero_periodo
+			asignatura['nombre'] = x.asignatura.nombre
+			asignatura['codigo'] = x.asignatura.codigo
+			asignatura['unidad_credito'] = x.asignatura.unidad_credito
 
-	# 	periodo_info['tipo_postgrado'] = periodo_completo.tipo_postgrado.tipo
-	# 	periodo_info['docentes'] = []
+			cant_estudiantes_reprobados += 1
+			estudiante = {}
+			estudiante['cedula'] = x.periodo_estudiante.estudiante.usuario.cedula
+			estudiante['first_name'] = x.periodo_estudiante.estudiante.usuario.first_name
+			estudiante['last_name'] = x.periodo_estudiante.estudiante.usuario.last_name
+			estudiante['segundo_nombre'] = x.periodo_estudiante.estudiante.usuario.segundo_nombre
+			estudiante['segundo_apellido'] = x.periodo_estudiante.estudiante.usuario.segundo_apellido
+			estudiante['nota_definitiva'] = x.nota_definitiva
+			asignatura['estudiantes'].append(estudiante)
 
-	# 	if(periodo_completo.estado_periodo.estado != "activo"):
-	# 		return Response(status=status.HTTP_400_BAD_REQUEST)
+		asignatura['cant_estudiantes_reprobados'] = cant_estudiantes_reprobados
+		asignaturas.append(asignatura.copy())
+		data_pdf['estudiantes_reprobados'] = asignaturas
 
-	# 	try:
-	# 		coordinador = PersonalDocente.objects.get(id_tipo_postgrado__tipo=periodo_completo.tipo_postgrado.tipo, coordinador=True)
-	# 		periodo_info['coordinador_nombre'] = coordinador.usuario.first_name
-	# 		periodo_info['coordinador_apellido'] = coordinador.usuario.last_name
-	# 	except:
-	# 		periodo_info['coordinador_nombre'] = ""
-	# 		periodo_info['coordinador_apellido'] = ""
+	if body['estudiantes_retirados']:
+		estudiante_asignatura = EstudianteAsignatura.objects.filter(periodo_estudiante__periodo_id=periodo, retirado=True).order_by('asignatura')
+		cant_estudiantes_retirados = 0
+		asignatura = {}
+		asignatura['nombre'] = ''
+		asignatura['codigo'] = ''
+		asignatura['unidad_credito'] = ''
+		asignatura['estudiantes'] = []
+		asignaturas = list()
+		for x in estudiante_asignatura:
+			if(asignatura['codigo'] != '' and x.asignatura.codigo != asignatura['codigo']):
+				asignatura['cant_estudiantes_retirados'] = cant_estudiantes_retirados
+				asignaturas.append(asignatura.copy())
+				
+				asignatura['estudiantes'] = []
+				cant_estudiantes_retirados = 0
 
-	# 	cedulas_agregadas = {}
+			asignatura['nombre'] = x.asignatura.nombre
+			asignatura['codigo'] = x.asignatura.codigo
+			asignatura['unidad_credito'] = x.asignatura.unidad_credito
 
-	# 	docente_asignatura = DocenteAsignatura.objects.filter(periodo=periodo_completo)
+			cant_estudiantes_retirados += 1
+			estudiante = {}
+			estudiante['cedula'] = x.periodo_estudiante.estudiante.usuario.cedula
+			estudiante['first_name'] = x.periodo_estudiante.estudiante.usuario.first_name
+			estudiante['last_name'] = x.periodo_estudiante.estudiante.usuario.last_name
+			estudiante['segundo_nombre'] = x.periodo_estudiante.estudiante.usuario.segundo_nombre
+			estudiante['segundo_apellido'] = x.periodo_estudiante.estudiante.usuario.segundo_apellido
+			asignatura['estudiantes'].append(estudiante)
 
-	# 	for docentes in docente_asignatura:
-	# 		user = PersonalDocente.objects.get(usuario__cedula=docentes.docente.usuario.cedula)
-	# 		if(user.usuario.cedula not in cedulas_agregadas):
-	# 			cedulas_agregadas[user.usuario.cedula] = []
+		asignatura['cant_estudiantes_retirados'] = cant_estudiantes_retirados
+		asignaturas.append(asignatura.copy())
+		data_pdf['estudiantes_retirados'] = asignaturas
 
-	# 		asignatura = Asignatura.objects.get(id=docentes.asignatura.id)
-	# 		if(asignatura.id not in cedulas_agregadas[user.usuario.cedula]):
-	# 			cedulas_agregadas[user.usuario.cedula].append(asignatura.id)
+	if body['informacion_detallada']:
+		periodo_info = {}
+		periodo_completo = periodo
+		periodo_info['periodo'] = periodo_completo.descripcion
+		periodo_info['anio_inicio'] = periodo_completo.anio_inicio
+		periodo_info['anio_fin'] = periodo_completo.anio_fin
+		periodo_info['mes_inicio'] = periodo_completo.mes_inicio
+		periodo_info['mes_fin'] = periodo_completo.mes_fin
+		periodo_info['numero_periodo'] = periodo_completo.numero_periodo
 
-	# 			docente = {}
-	# 			docente['cedula'] = user.usuario.cedula
-	# 			docente['nombre'] = user.usuario.first_name
-	# 			docente['apellido'] = user.usuario.last_name
-	# 			docente['estudiantes'] = []
-	# 			asignatura = Asignatura.objects.get(id=docentes.asignatura.id)
+		periodo_info['tipo_postgrado'] = periodo_completo.tipo_postgrado.tipo
+		periodo_info['docentes'] = []
 
-	# 			docente['asignatura'] = asignatura.nombre
-	# 			docente['unidad_credito'] = asignatura.unidad_credito
-	# 			estudiantes = EstudianteAsignatura.objects.filter(asignatura__codigo=asignatura.codigo, periodo_estudiante__periodo_id=periodo)
+		if(periodo_completo.estado_periodo.estado != "activo"):
+			return Response(status=status.HTTP_400_BAD_REQUEST)
 
-	# 			for estudiante in estudiantes:
-	# 				estudiante_info = {}
-	# 				estudiante_info['nombre'] = estudiante.periodo_estudiante.estudiante.usuario.first_name
-	# 				estudiante_info['apellido'] = estudiante.periodo_estudiante.estudiante.usuario.last_name
-	# 				estudiante_info['cedula'] = estudiante.periodo_estudiante.estudiante.usuario.cedula
-	# 				estudiante_info['nota'] = estudiante.nota_definitiva
-	# 				docente['estudiantes'].append(estudiante_info)
+		try:
+			coordinador = PersonalDocente.objects.get(id_tipo_postgrado__tipo=periodo_completo.tipo_postgrado.tipo, coordinador=True)
+			periodo_info['coordinador_nombre'] = coordinador.usuario.first_name
+			periodo_info['coordinador_apellido'] = coordinador.usuario.last_name
+		except:
+			periodo_info['coordinador_nombre'] = ""
+			periodo_info['coordinador_apellido'] = ""
 
-				# periodo_info['docentes'].append(docente)
+		cedulas_agregadas = {}
 
+		cantidad_asignaturas = 0
+		cantidad_docentes = 0
+		docente_asignatura = DocenteAsignatura.objects.filter(periodo=periodo_completo)
 
+		for docentes in docente_asignatura:
+			user = PersonalDocente.objects.get(usuario__cedula=docentes.docente.usuario.cedula)
+			if(user.usuario.cedula not in cedulas_agregadas):
+				cedulas_agregadas[user.usuario.cedula] = []
+				cantidad_docentes += 1
+
+			asignatura = Asignatura.objects.get(id=docentes.asignatura.id)
+			if(asignatura.id not in cedulas_agregadas[user.usuario.cedula]):
+				cedulas_agregadas[user.usuario.cedula].append(asignatura.id)
+				cantidad_asignaturas+=1
+
+				docente = {}
+				docente['cedula'] = user.usuario.cedula
+				docente['nombre'] = user.usuario.first_name
+				docente['apellido'] = user.usuario.last_name
+				docente['estudiantes'] = []
+				asignatura = Asignatura.objects.get(id=docentes.asignatura.id)
+
+				docente['asignatura'] = asignatura.nombre
+				docente['unidad_credito'] = asignatura.unidad_credito
+				estudiantes = EstudianteAsignatura.objects.filter(asignatura__codigo=asignatura.codigo, periodo_estudiante__periodo_id=periodo)
+
+				for estudiante in estudiantes:
+					estudiante_info = {}
+					estudiante_info['nombre'] = estudiante.periodo_estudiante.estudiante.usuario.first_name
+					estudiante_info['apellido'] = estudiante.periodo_estudiante.estudiante.usuario.last_name
+					estudiante_info['cedula'] = estudiante.periodo_estudiante.estudiante.usuario.cedula
+					estudiante_info['nota'] = estudiante.nota_definitiva
+					docente['estudiantes'].append(estudiante_info)
+
+				periodo_info['docentes'].append(docente)
+
+		cantidad_estudiantes = PeriodoEstudiante.objects.filter(periodo=periodo).count()
+		periodo_info['cantidad_estudiantes'] = cantidad_estudiantes
+		periodo_info['cantidad_asignaturas'] = cantidad_asignaturas
+		periodo_info['cantidad_docentes'] = cantidad_docentes
+
+		data_pdf['informacion_detallada'] = periodo_info
 
 	"""
 	Datos generales:
@@ -755,7 +846,7 @@ def get_reporte_periodo(request):
 	creo q mejor hacer el detalle y el general juntos...
 	"""
 
-	# print(data_pdf)
+	print(data_pdf)
 	return Response(data_pdf, status=status.HTTP_204_NO_CONTENT)
 
 #endregion

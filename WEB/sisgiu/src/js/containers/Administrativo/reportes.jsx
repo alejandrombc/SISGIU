@@ -145,15 +145,7 @@ class Reporte extends Component {
                                     <h5><center>¿Qué desea visualizar en el reporte?</center></h5><br />
                                     <Form >
                                         <Row>
-                                            <Col md="6" className="text-center">
-                                                <FormGroup >
-                                                    <Label check>
-                                                        <Input checked={this.state.informacion_general} name="informacion_general" onChange={this.handleChangeCheck} type="checkbox" />{' '}
-                                                        Datos Generales
-                                                            </Label>
-                                                </FormGroup>
-                                            </Col>
-                                            <Col md="6" className="text-center">
+                                            <Col md="12" className="text-center">
                                                 <FormGroup >
                                                     <Label check>
                                                         <Input checked={this.state.informacion_detallada} name="informacion_detallada" onChange={this.handleChangeCheck} type="checkbox" />{' '}
