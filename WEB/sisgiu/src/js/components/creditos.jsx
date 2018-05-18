@@ -20,8 +20,8 @@ class Creditos extends Component {
 							<hr />
 							<Label>
 								<b>Desarrolladores:</b><br/>
-								- Alejandro Barone <br/>
-								- José Castro
+								- Alejandro Moises Barone Cavalieri <br/>
+								- José Gregorio Castro Lazo
 							</Label>
 							<hr />
 							<Label>

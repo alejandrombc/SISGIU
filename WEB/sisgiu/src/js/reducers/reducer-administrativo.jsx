@@ -92,7 +92,16 @@ export default function (state = initialState, action) {
 			nuevo_estado['estudiante_retirado'] = false;
 			return nuevo_estado;
 
+		// Modulo REPORTES
+		case "GET_LISTA_PERIODOS_EXITOSO":
+			nuevo_estado['lista_periodos'] = action.payload['periodos'];
+			nuevo_estado['error'] = false;
+			return nuevo_estado;
 
+		case "GET_LISTA_PERIODOS_ERROR":
+			nuevo_estado['lista_periodos'] = [];
+			nuevo_estado['error'] = true;
+			return nuevo_estado;
 
 		default:
 			return state;

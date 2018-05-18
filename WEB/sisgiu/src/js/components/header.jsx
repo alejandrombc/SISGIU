@@ -13,19 +13,6 @@ class Header extends Component {
 				<Jumbotron>
 
 					<Row>
-						<Col lg='2' md='2' sm='4'>
-							<a href='http://urbe.fau.ucv.ve/presentacion_gente_marcano-f.html'>
-								{/* <img width="230px" height="120px" src={host + 'media/sisgiu/logo_iu_negro.png'} className="logo-header-iu" alt='fau-logo'/> */}
-								<img width="230px" height="120px" src={host + 'media/sisgiu/logo_iu_blanco.png'} className="logo-header-iu" alt='fau-logo' />
-							</a>
-						</Col>
-
-						<Col lg='7' md='7' sm='5'>
-							<center>
-								<h1>SISGIU</h1>
-								<p className="lead">Sistema de Gestión del Instituto de Urbanismo</p>
-							</center>
-						</Col>
 
 						<Col lg='3' md='3' sm='3'>
 							<a href='http://ucv.ve'>
@@ -33,6 +20,21 @@ class Header extends Component {
 							</a>
 							<a href='https://www.fau.ucv.ve/'>
 								<img width="200px" height="100px" src={host + 'media/sisgiu/logo_fau_blanco.png'} className="logo-header-fau" alt='instituto-urbanismo-logo' />
+							</a>
+						</Col>
+						<Col lg='6' md='6' sm='4'>
+							<center>
+								<h1>SISGIU</h1>
+								<p className="lead">
+									Sistema de Gestión Académica-Administrativa 
+									<br/> 
+									del Departamento de Docencia del Instituto de Urbanismo
+								</p>
+							</center>
+						</Col>
+						<Col lg='3' md='3' sm='5'>
+							<a href='http://urbe.fau.ucv.ve/presentacion_gente_marcano-f.html'>
+								<img width="230px" height="120px" src={host + 'media/sisgiu/logo_iu_blanco.png'} className="logo-header-iu" alt='fau-logo' />
 							</a>
 						</Col>
 

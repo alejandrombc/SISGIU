@@ -215,9 +215,9 @@ export default function (state = initialState, action) {
 		case "GET_TIPOS_POSTGRADO_EXITOSO":
 			nuevo_estado['lista_postgrados'] = action.payload['lista_postgrados'];
 			return nuevo_estado;
-
-
-		default:
+		
+		
+			default:
 			return state;
 	}
 }

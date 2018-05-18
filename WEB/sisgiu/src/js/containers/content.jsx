@@ -19,7 +19,7 @@ import ProgramacionAcademica from './programacionAcademica';
 import UsuariosAdministrativo from './Administrativo/usuariosAdministrativo';
 import ConstanciaEstudiante from './Estudiante/constanciasEstudiante';
 import ConstanciaDocente from './Docente/constanciasDocente';
-import Reporteria from './Administrativo/reporteria';
+import Reporte from './Administrativo/reportes';
 
 
 class Content extends Component {
@@ -94,7 +94,7 @@ class Content extends Component {
 					}
 
 					{this.props.pestana === "reportes" && modulo === "administrativo" &&
-						<Reporteria />
+						<Reporte />
 					}
 
 

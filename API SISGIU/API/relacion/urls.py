@@ -25,7 +25,8 @@ from relacion.views import (
     obtener_informacion_historial,
     informacion_usuarios_administrativo,
     cargar_notas,
-    estado_retiro_estudiante
+    estado_retiro_estudiante,
+    get_reporte_periodo
     )
 
 
@@ -85,5 +86,8 @@ urlpatterns = format_suffix_patterns([
 
     # EndPoint que indica si un estudiante se encuentra retirado
     url(r'^api/estudiante/(?P<cedula>[\w\-]+)/estado_retiro/$', estado_retiro_estudiante, name='estado-retiro-estudiante'),
+
+    # Generacion de reporte de periodo
+    url(r'^api/reporte/periodo/$', get_reporte_periodo, name='reporte-periodo'),
 
 ])
