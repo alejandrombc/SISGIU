@@ -617,13 +617,13 @@ def get_reporte_periodo(request):
 	if body['asignaturas_dictadas']:
 		docente_asignatura = DocenteAsignatura.objects.filter(periodo=periodo)
 		asignaturas = []
-
 		for x in docente_asignatura:
-			asignatura = {}
-			asignatura['codigo'] = x.asignatura.codigo
-			asignatura['nombre'] = x.asignatura.nombre
-			asignatura['unidad_credito'] = x.asignatura.unidad_credito
-			asignaturas.append(asignatura)
+			if not any(d['codigo'] == x.asignatura.codigo for d in asignaturas):
+				asignatura = {}
+				asignatura['codigo'] = x.asignatura.codigo
+				asignatura['nombre'] = x.asignatura.nombre
+				asignatura['unidad_credito'] = x.asignatura.unidad_credito
+				asignaturas.append(asignatura)
 
 		data_pdf['asignaturas'] = asignaturas
 
