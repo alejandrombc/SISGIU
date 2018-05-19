@@ -855,7 +855,6 @@ def get_reporte_periodo(request):
 
 		data_pdf['informacion_detallada'] = periodo_info
 
-	print (data_pdf)
 	content = 'attachment; filename="reporte_'+data_pdf['periodo']+'.pdf"'
 	pdf = render_to_pdf('reportes.html', data_pdf)
 	pdf['Content-Disposition'] = content
