@@ -684,7 +684,7 @@ def get_reporte_periodo(request):
 			if(asignatura['codigo'] != '' and x.asignatura.codigo != asignatura['codigo']):
 				asignatura['cant_estudiantes_aprobados'] = cant_estudiantes_aprobados
 				asignaturas.append(asignatura.copy())
-				
+
 				asignatura['estudiantes'] = []
 				cant_estudiantes_aprobados = 0
 
@@ -719,7 +719,7 @@ def get_reporte_periodo(request):
 			if(asignatura['codigo'] != '' and x.asignatura.codigo != asignatura['codigo']):
 				asignatura['cant_estudiantes_reprobados'] = cant_estudiantes_reprobados
 				asignaturas.append(asignatura.copy())
-				
+
 				asignatura['estudiantes'] = []
 				cant_estudiantes_reprobados = 0
 
@@ -754,7 +754,7 @@ def get_reporte_periodo(request):
 			if(asignatura['codigo'] != '' and x.asignatura.codigo != asignatura['codigo']):
 				asignatura['cant_estudiantes_retirados'] = cant_estudiantes_retirados
 				asignaturas.append(asignatura.copy())
-				
+
 				asignatura['estudiantes'] = []
 				cant_estudiantes_retirados = 0
 
@@ -806,7 +806,7 @@ def get_reporte_periodo(request):
 			asignatura = Asignatura.objects.get(id=docentes.asignatura.id)
 			if(asignatura.id not in cedulas_agregadas[user.usuario.cedula]):
 				cedulas_agregadas[user.usuario.cedula].append(asignatura.id)
-				cantidad_asignaturas+=1
+				cantidad_asignaturas += 1
 
 				docente = {}
 				docente['cedula'] = user.usuario.cedula
@@ -826,9 +826,9 @@ def get_reporte_periodo(request):
 					estudiante_info['cedula'] = estudiante.periodo_estudiante.estudiante.usuario.cedula
 					if(estudiante.retirado):
 						estudiante_info['nota'] = "RET"
-					else:	
+					else:
 						estudiante_info['nota'] = estudiante.nota_definitiva
-						
+
 					docente['estudiantes'].append(estudiante_info)
 
 				periodo_info['docentes'].append(docente)
@@ -843,7 +843,7 @@ def get_reporte_periodo(request):
 	content = 'attachment; filename="reporte_'+data_pdf['periodo']+'.pdf"'
 	pdf = render_to_pdf('reportes.html', data_pdf)
 	pdf['Content-Disposition'] = content
-	
+
 	return HttpResponse(pdf, content_type='application/pdf')
 
 #endregion
