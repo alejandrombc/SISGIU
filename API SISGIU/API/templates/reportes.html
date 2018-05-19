@@ -181,7 +181,7 @@
         {% endif %}
 
         <!-- Estudiantes Aprobados -->
-        {% if estudiantes_aprobados|length >= 1 %}
+        {% if estudiantes_aprobados.estudiantes|length >= 1 %}
                 <div class='header'>
                      <p class='title_child'><b>ESTUDIANTES APROBADOS</b></p>
                 </div>
@@ -218,7 +218,7 @@
         {% endif %}
 
         <!-- Estudiantes Reprobados -->
-        {% if estudiantes_reprobados|length >= 1 %}
+        {% if estudiantes_reprobados.estudiantes|length >= 1 %}
                 <div class='header'>
                      <p class='title_child'><b>ESTUDIANTES REPROBADOS</b></p>
                 </div>
@@ -255,7 +255,7 @@
         {% endif %}
 
         <!-- Estudiantes Retirados -->
-        {% if estudiantes_retirados|length >= 1 %}
+        {% if estudiantes_retirados.estudiantes|length >= 1 %}
                 <div class='header'>
                      <p class='title_child'><b>ESTUDIANTES RETIRADOS</b></p>
                 </div>

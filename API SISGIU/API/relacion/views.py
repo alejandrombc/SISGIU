@@ -620,7 +620,7 @@ def get_reporte_periodo(request):
 	data_pdf['mes_fin'] = periodo.mes_fin
 	data_pdf['numero_periodo'] = periodo.numero_periodo
 	data_pdf['tipo_postgrado'] = periodo.tipo_postgrado.tipo
-	
+
 	if body['asignaturas_dictadas']:
 		docente_asignatura = DocenteAsignatura.objects.filter(periodo=periodo)
 		asignaturas = []
@@ -839,7 +839,6 @@ def get_reporte_periodo(request):
 		periodo_info['cantidad_docentes'] = cantidad_docentes
 
 		data_pdf['informacion_detallada'] = periodo_info
-
 
 	content = 'attachment; filename="reporte_'+data_pdf['periodo']+'.pdf"'
 	pdf = render_to_pdf('reportes.html', data_pdf)
