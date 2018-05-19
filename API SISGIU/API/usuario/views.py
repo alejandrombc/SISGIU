@@ -455,10 +455,8 @@ def estudiante_pago_inscripcion(request, periodo_id):
 @api_view(['POST'])
 @permission_classes((IsAdminUser, ))
 def update_file(request, cedula, tipo_documento):
-	print("$$$$$$$$$")
 	username = request.POST.get("username")
 	user = PersonalDocente.objects.get(usuario__username=username)
-	print(username)
 	if(username == cedula):
 		documento = request.FILES[tipo_documento]
 		if(user):
@@ -614,7 +612,11 @@ def planilla_docente(request, cedula, codigo, postgrado):
 		estudiante_info['nombre'] = estudiante.periodo_estudiante.estudiante.usuario.first_name
 		estudiante_info['apellido'] = estudiante.periodo_estudiante.estudiante.usuario.last_name
 		estudiante_info['cedula'] = estudiante.periodo_estudiante.estudiante.usuario.cedula
-		estudiante_info['nota'] = estudiante.nota_definitiva
+		if(estudiante.retirado):
+			estudiante_info['nota'] = "RET"
+		else:
+			estudiante_info['nota'] = estudiante.nota_definitiva
+
 		estudiante_info['postgrado'] = estudiante.periodo_estudiante.estudiante.id_tipo_postgrado.tipo
 		for tipos in user_information['estudiantes']:
 			if(estudiante.periodo_estudiante.estudiante.id_tipo_postgrado.tipo == tipos['nombre']):
@@ -682,7 +684,11 @@ def planilla_periodo(request, periodo):
 				estudiante_info['nombre'] = estudiante.periodo_estudiante.estudiante.usuario.first_name
 				estudiante_info['apellido'] = estudiante.periodo_estudiante.estudiante.usuario.last_name
 				estudiante_info['cedula'] = estudiante.periodo_estudiante.estudiante.usuario.cedula
-				estudiante_info['nota'] = estudiante.nota_definitiva
+				if(estudiante.retirado):
+					estudiante_info['nota'] = "RET"
+				else:
+					estudiante_info['nota'] = estudiante.nota_definitiva
+
 				docente['estudiantes'].append(estudiante_info)
 
 			periodo_info['docentes'].append(docente)

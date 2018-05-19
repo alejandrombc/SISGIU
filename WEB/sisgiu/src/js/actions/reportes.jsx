@@ -23,26 +23,3 @@ export const get_lista_periodos = () => {
         });
 
 }
-
-export const get_reporte = (data) => {
-    let token = localStorage.getItem('user_token');
-    return request
-        .post(host + 'api/reporte/periodo/')
-        .set('Authorization', 'JWT ' + token)
-        .send(data)
-        .then(function (res) {
-            return {
-                type: "hola",
-                // payload: { periodos: res.body }
-            }
-
-        })
-        .catch(function (err) {
-            console.log(err.response.body);
-            return {
-                type: "holaerror",
-                error: err.response.body
-            }
-        });
-
-}

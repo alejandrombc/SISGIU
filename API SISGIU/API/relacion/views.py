@@ -55,6 +55,7 @@ from rest_framework.decorators import permission_classes, api_view
 from usuario.permissions import isAdministrativoOrEstudianteOrAdmin, isDocenteOrAdmin, isEstudianteOrAdmin, isAdministrativoOrAdmin
 from rest_framework import status
 from rest_framework.response import Response
+from usuario.utils import render_to_pdf
 #endregion
 
 
@@ -610,9 +611,15 @@ def get_reporte_periodo(request):
 	body = json.loads(body_unicode)
 	periodo = Periodo.objects.get(id=body['periodo'])
 
-	# print(body)
-
 	data_pdf = {}
+
+	data_pdf['periodo'] = periodo.descripcion
+	data_pdf['anio_inicio'] = periodo.anio_inicio
+	data_pdf['anio_fin'] = periodo.anio_fin
+	data_pdf['mes_inicio'] = periodo.mes_inicio
+	data_pdf['mes_fin'] = periodo.mes_fin
+	data_pdf['numero_periodo'] = periodo.numero_periodo
+	data_pdf['tipo_postgrado'] = periodo.tipo_postgrado.tipo
 
 	if body['asignaturas_dictadas']:
 		docente_asignatura = DocenteAsignatura.objects.filter(periodo=periodo)
@@ -771,14 +778,6 @@ def get_reporte_periodo(request):
 	if body['informacion_detallada']:
 		periodo_info = {}
 		periodo_completo = periodo
-		periodo_info['periodo'] = periodo_completo.descripcion
-		periodo_info['anio_inicio'] = periodo_completo.anio_inicio
-		periodo_info['anio_fin'] = periodo_completo.anio_fin
-		periodo_info['mes_inicio'] = periodo_completo.mes_inicio
-		periodo_info['mes_fin'] = periodo_completo.mes_fin
-		periodo_info['numero_periodo'] = periodo_completo.numero_periodo
-
-		periodo_info['tipo_postgrado'] = periodo_completo.tipo_postgrado.tipo
 		periodo_info['docentes'] = []
 
 		if(periodo_completo.estado_periodo.estado != "activo"):
@@ -825,7 +824,11 @@ def get_reporte_periodo(request):
 					estudiante_info['nombre'] = estudiante.periodo_estudiante.estudiante.usuario.first_name
 					estudiante_info['apellido'] = estudiante.periodo_estudiante.estudiante.usuario.last_name
 					estudiante_info['cedula'] = estudiante.periodo_estudiante.estudiante.usuario.cedula
-					estudiante_info['nota'] = estudiante.nota_definitiva
+					if(estudiante.retirado):
+						estudiante_info['nota'] = "RET"
+					else:	
+						estudiante_info['nota'] = estudiante.nota_definitiva
+						
 					docente['estudiantes'].append(estudiante_info)
 
 				periodo_info['docentes'].append(docente)
@@ -837,16 +840,11 @@ def get_reporte_periodo(request):
 
 		data_pdf['informacion_detallada'] = periodo_info
 
-	"""
-	Datos generales:
-	Estudiantes inscritos (cantidad)
-	Asignaturas abiertas
-	cant docentes
-	descripcion como tal del periodo
-	creo q mejor hacer el detalle y el general juntos...
-	"""
 
-	print(data_pdf)
-	return Response(data_pdf, status=status.HTTP_204_NO_CONTENT)
+	content = 'attachment; filename="reporte_'+data_pdf['periodo']+'.pdf"'
+	pdf = render_to_pdf('reportes.html', data_pdf)
+	pdf['Content-Disposition'] = content
+	
+	return HttpResponse(pdf, content_type='application/pdf')
 
 #endregion

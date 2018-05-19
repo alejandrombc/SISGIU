@@ -1,6 +1,6 @@
 <html>
      <head>
-         <title>Constancia de estudios - {{cedula}}</title>
+         <title>Planilla Periodo</title>
          <style type="text/css">
              body {
                  font-weight: 200;
@@ -93,29 +93,33 @@
              <p class='title_child'><b>PLANILLA PERIODO <b>{{numero_periodo}} ({{mes_inicio}} {{anio_inicio}} - {{mes_fin}} {{anio_fin}})</b> - {{tipo_postgrado}}</b></p>
             </div>
             {%for docente in docentes%}
-            <div class='texto'>
-                <center><p>Estudiantes del docente <b>{{docente.nombre}} {{docente.apellido}}</b> | <b>{{docente.cedula}}</b>. Para la asignatura <b>{{docente.asignatura}}</b> | UC: <b>{{docente.unidad_credito}}</b>.</p></center>
-                <table>
-                  <thead>
-                    <tr>
-                      <th>C.I</th>
-                      <th>NOMBRE</th>
-                      <th>APELLIDO</th>
-                      <th>NOTA</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {% for estudiante in docente.estudiantes %}
-                    <tr>
-                      <td width="20%" data-column="Cedula">{{estudiante.cedula}}</td>
-                      <td width="40%" data-column="Nombre">{{estudiante.nombre}}</td>
-                      <td width="45%" data-column="Apellido">{{estudiante.apellido}}</td>
-                      <td width="15%" data-column="Calificacion">{{estudiante.nota}}</td>
-                    </tr>
-                    {% endfor %}
-                  </tbody>
-                </table>
-            </div>
+                <div class='texto'>
+                    <center>
+                        <p>DOCENTE: <b>{{docente.nombre}} {{docente.apellido}}</b> | <b>({{docente.cedula}})</b></p>
+                        <p>ASIGNATURA: <b>{{docente.asignatura}}</b></p>
+                        <p>N° CREDITOS: <b>{{docente.unidad_credito}}</b>.</p> 
+                    </center>
+                    <table>
+                      <thead>
+                        <tr>
+                          <th>C.I</th>
+                          <th>NOMBRE</th>
+                          <th>APELLIDO</th>
+                          <th>NOTA</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {% for estudiante in docente.estudiantes %}
+                        <tr>
+                          <td width="20%" data-column="Cedula">{{estudiante.cedula}}</td>
+                          <td width="40%" data-column="Nombre">{{estudiante.nombre}}</td>
+                          <td width="45%" data-column="Apellido">{{estudiante.apellido}}</td>
+                          <td width="15%" data-column="Calificacion">{{estudiante.nota}}</td>
+                        </tr>
+                        {% endfor %}
+                      </tbody>
+                    </table>
+                </div>
             {% endfor %}
             <br>
             <br>

@@ -1,0 +1,343 @@
+<html>
+     <head>
+         <title>Reportes</title>
+         <style type="text/css">
+             body {
+                 font-weight: 200;
+                 font-size: 14px;
+             }
+             .header {
+                 font-size: 20px;
+                 font-weight: 100;
+                 text-align: center;
+             }
+             .title {
+                 font-size: 22px;
+                 font-weight: 100;
+                /* text-align: right;*/
+                padding: 10px 20px 0px 20px;  
+             }
+             .title_child {
+                 font-size: 17px;
+                 font-weight: 100;
+                /* text-align: right;*/
+                padding: 10px 20px 0px 20px;  
+             }
+             .title span {
+                 color: #007cae;
+             }
+             .details {
+                 padding: 10px 20px 0px 20px;
+                 text-align: left !important;
+                 /*margin-left: 40%;*/
+             }
+             .hrItem {
+                 border: none;
+                 height: 1px;
+                 /* Set the hr color */
+                 color: #333; /* old IE */
+                 background-color: #fff; /* Modern Browsers */
+             }
+             .texto{
+             	 font-size: 15px;
+                 font-weight: 100;
+                 text-align:justify;
+				 text-justify:inter-word;
+                /* text-align: right;*/
+             }
+
+            .table { 
+                border-collapse: collapse; 
+                margin:50px auto;
+                table-layout: fixed;
+                width: 100%;
+                word-wrap:break-word;
+            }
+
+            .th:nth-of-type(odd) { 
+                background: #eee; 
+            }
+
+            .th { 
+                background: #3498db; 
+                color: black; 
+                font-weight: bold; 
+                font-size: 12px;
+            }
+
+            .td, .th{ 
+                padding: 10px; 
+                border: 1px solid #ccc; 
+                text-align: left; 
+                font-size: 10px;
+            }
+
+        </style>
+     </head>
+     <body>
+     	 <div class='wrapper'>
+			<center><div>
+	     	 	<img width="100px" height="100px" src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9c/UCV.png/250px-UCV.png">
+	     	 	<img width="100px" height="100px" src="https://www.fau.ucv.ve/boletin/i/fau_azul.png">
+     	 	</div></center>
+            
+             <div class='header'>
+				 <div>
+	                 <center><p>UNIVERSIDAD CENTRAL DE VENEZUELA
+	                 <br>FACULTAD DE ARQUITECTURA
+	                 <br>DIVISIÓN DE CONTROL DE ESTUDIOS
+                     <br>PERIODO: <b>{{numero_periodo}} ({{mes_inicio}} {{anio_inicio}} - {{mes_fin}} {{anio_fin}})</b>
+                    <br>POSTGRADO: <b>{{tipo_postgrado}}</b></p><center>
+                 </div>
+             </div>
+
+        <!-- Asignaturas Dictadas -->
+        {% if asignaturas|length >= 1 %}
+            <div class='wrapper'>
+                <div class='header'>
+                 <p class='title_child'><b>ASIGNATURAS DICTADAS</b></p>
+                </div>
+                <div class='texto'>
+                    <table class="table">
+                      <thead>
+                        <tr>
+                          <th class="th">CODIGO</th>
+                          <th class="th">NOMBRE</th>
+                          <th class="th">UC</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {% for asignatura in asignaturas %}
+                            <tr> 
+                              <td class="td" width="20%" >{{asignatura.codigo}}</td>
+                              <td class="td" width="60%" >{{asignatura.nombre}}</td>
+                              <td class="td" width="20%" >{{asignatura.unidad_credito}}</td>
+                            </tr>
+                        {% endfor %}   
+                      </tbody>
+                    </table>     
+                </div>
+            </div>
+        {% endif %}
+
+        <!-- Estudiantes Inscritos -->
+        {% if estudiantes_inscritos|length >= 1 %}
+            <div class='wrapper'>
+                <div class='header'>
+                 <p class='title_child'><b>ESTUDIANTES INSCRITOS</b></p>
+                 <p style="font-size:14px;">CANTIDAD: {{cant_estudiantes_inscritos}}</p>
+                </div>
+                <div class='texto'>
+                    <table class="table">
+                      <thead>
+                        <tr>
+                          <th class="th">CEDULA</th>
+                          <th class="th">NOMBRE</th>
+                          <th class="th">APELIIDO</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {% for estudiantes in estudiantes_inscritos %}
+                            <tr> 
+                              <td class="td" width="20%" >{{estudiantes.cedula}}</td>
+                              <td class="td" width="40%" >{{estudiantes.first_name}}</td>
+                              <td class="td" width="40%" >{{estudiantes.last_name}}</td>
+                            </tr>
+                        {% endfor %}   
+                      </tbody>
+                    </table>     
+                </div>
+            </div>
+        {% endif %}
+
+        <!-- Docentes -->
+        {% if docentes|length >= 1 %}
+            <div class='wrapper'>
+                <div class='header'>
+                 <p class='title_child'><b>DOCENTES</b></p>
+                 <p style="font-size:14px;">CANTIDAD: {{cant_docentes}}</p>
+                </div>
+                <div class='texto'>
+                    <table class="table">
+                      <thead>
+                        <tr>
+                          <th class="th">CEDULA</th>
+                          <th class="th">NOMBRE</th>
+                          <th class="th">APELIIDO</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {% for docente in docentes %}
+                            <tr> 
+                              <td class="td" width="20%" >{{docente.cedula}}</td>
+                              <td class="td" width="40%" >{{docente.first_name}}</td>
+                              <td class="td" width="40%" >{{docente.last_name}}</td>
+                            </tr>
+                        {% endfor %}   
+                      </tbody>
+                    </table>     
+                </div>
+            </div>
+        {% endif %}
+
+        <!-- Estudiantes Aprobados -->
+        {% if estudiantes_aprobados|length >= 1 %}
+                <div class='header'>
+                     <p class='title_child'><b>ESTUDIANTES APROBADOS</b></p>
+                </div>
+            {% for asignatura in estudiantes_aprobados %}
+                <div class='wrapper'>
+                    <div class='header'>
+                     <p style="font-size:12px" class='title_child'>ASIGNATURA: [<b>{{asignatura.codigo}}</b>] <b>{{asignatura.nombre}}</b> UC: <b>{{asignatura.unidad_credito}}</b></p>
+                     <p style="font-size:10px">CANTIDAD: {{asignatura.cant_estudiantes_aprobados}}</p>
+                    </div>
+                    <div class='texto'>
+                        <table class="table">
+                          <thead>
+                            <tr>
+                              <th class="th">CEDULA</th>
+                              <th class="th">NOMBRE</th>
+                              <th class="th">APELIIDO</th>
+                              <th class="th">NOTA</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {% for estudiante in asignatura.estudiantes %}
+                                <tr> 
+                                  <td class="td" width="15%" >{{estudiante.cedula}}</td>
+                                  <td class="td" width="35%" >{{estudiante.first_name}}</td>
+                                  <td class="td" width="40%" >{{estudiante.last_name}}</td>
+                                  <td class="td" width="10%" >{{estudiante.nota_definitiva}}</td>
+                                </tr>
+                            {% endfor %}   
+                          </tbody>
+                        </table>     
+                    </div>
+                </div>
+            {% endfor %}   
+        {% endif %}
+
+        <!-- Estudiantes Reprobados -->
+        {% if estudiantes_reprobados|length >= 1 %}
+                <div class='header'>
+                     <p class='title_child'><b>ESTUDIANTES REPROBADOS</b></p>
+                </div>
+            {% for asignatura in estudiantes_reprobados %}
+                <div class='wrapper'>
+                    <div class='header'>
+                     <p style="font-size:12px" class='title_child'>ASIGNATURA: [<b>{{asignatura.codigo}}</b>] <b>{{asignatura.nombre}}</b> UC: <b>{{asignatura.unidad_credito}}</b></p>
+                     <p style="font-size:10px">CANTIDAD: {{asignatura.cant_estudiantes_reprobados}}</p>
+                    </div>
+                    <div class='texto'>
+                        <table class="table">
+                          <thead>
+                            <tr>
+                              <th class="th">CEDULA</th>
+                              <th class="th">NOMBRE</th>
+                              <th class="th">APELIIDO</th>
+                              <th class="th">NOTA</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {% for estudiante in asignatura.estudiantes %}
+                                <tr> 
+                                  <td class="td" width="15%" >{{estudiante.cedula}}</td>
+                                  <td class="td" width="35%" >{{estudiante.first_name}}</td>
+                                  <td class="td" width="40%" >{{estudiante.last_name}}</td>
+                                  <td class="td" width="10%" >{{estudiante.nota_definitiva}}</td>
+                                </tr>
+                            {% endfor %}   
+                          </tbody>
+                        </table>     
+                    </div>
+                </div>
+            {% endfor %}   
+        {% endif %}
+
+        <!-- Estudiantes Retirados -->
+        {% if estudiantes_retirados|length >= 1 %}
+                <div class='header'>
+                     <p class='title_child'><b>ESTUDIANTES RETIRADOS</b></p>
+                </div>
+            {% for asignatura in estudiantes_retirados %}
+                <div class='wrapper'>
+                    <div class='header'>
+                     <p style="font-size:12px" class='title_child'>ASIGNATURA: [<b>{{asignatura.codigo}}</b>] <b>{{asignatura.nombre}}</b> UC: <b>{{asignatura.unidad_credito}}</b></p>
+                     <p style="font-size:10px">CANTIDAD: {{asignatura.cant_estudiantes_retirados}}</p>
+                    </div>
+                    <div class='texto'>
+                        <table class="table">
+                          <thead>
+                            <tr>
+                              <th class="th">CEDULA</th>
+                              <th class="th">NOMBRE</th>
+                              <th class="th">APELIIDO</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {% for estudiante in asignatura.estudiantes %}
+                                <tr> 
+                                  <td class="td" width="20%" >{{estudiante.cedula}}</td>
+                                  <td class="td" width="40%" >{{estudiante.first_name}}</td>
+                                  <td class="td" width="40%" >{{estudiante.last_name}}</td>
+                                </tr>
+                            {% endfor %}   
+                          </tbody>
+                        </table>     
+                    </div>
+                </div>
+            {% endfor %}   
+        {% endif %}
+
+
+        <!-- Informacion Detallada -->
+        {% if informacion_detallada|length >= 1 %}
+                <div class='header'>
+                     <p class='title_child'><b>INFORMACION PERIODO</b></p>
+                    <center>
+                        <p>-----------------------------------------------</p> 
+                        <p style="font-size:12px" >CANTIDAD DE ASIGNATURAS: <b>{{informacion_detallada.cantidad_asignaturas}} </b></p>
+                        <p style="font-size:12px" >CANTIDAD DE DOCENTES: <b>{{informacion_detallada.cantidad_docentes}}</b></p>
+                        <p style="font-size:12px" >CANTIDAD DE ESTUDIANTES: <b>{{informacion_detallada.cantidad_estudiantes}}</b>.</p> 
+                        <p style="font-size:12px" >COORDINADOR DE POSTGRADO: <b>{{informacion_detallada.coordinador_nombre}} {{informacion_detallada.coordinador_apellido}}</b>.</p>
+                        <p>-----------------------------------------------</p> 
+                    </center>
+                </div>
+            {%for docente in informacion_detallada.docentes%}
+                <div class='texto'>
+                    <center>
+                        <p style="font-size:12px" >DOCENTE: <b>{{docente.nombre}} {{docente.apellido}}</b> | <b>({{docente.cedula}})</b></p>
+                        <p style="font-size:12px" >ASIGNATURA: <b>{{docente.asignatura}}</b></p>
+                        <p style="font-size:12px" >N° CREDITOS: <b>{{docente.unidad_credito}}</b>.</p> 
+                    </center>
+                    <table class="table">
+                      <thead>
+                        <tr>
+                          <th class="th">C.I</th>
+                          <th class="th" >NOMBRE</th>
+                          <th class="th" >APELLIDO</th>
+                          <th class="th">NOTA</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {% for estudiante in docente.estudiantes %}
+                        <tr>
+                          <td width="20%" class="td" data-column="Cedula">{{estudiante.cedula}}</td>
+                          <td width="40%" class="td" data-column="Nombre">{{estudiante.nombre}}</td>
+                          <td width="45%" class="td" data-column="Apellido">{{estudiante.apellido}}</td>
+                          <td width="15%" class="td" data-column="Calificacion">{{estudiante.nota}}</td>
+                        </tr>
+                        {% endfor %}
+                      </tbody>
+                    </table>
+                </div>
+            {% endfor %}
+            <br>
+        {% endif %}
+
+
+
+
+
+     </body>
+ </html>

@@ -8,7 +8,9 @@ import { Input, Button, FormGroup, Form, Label, Row, Col } from 'reactstrap';
 // Components
 import { cargado } from '../../actions/inicio';
 import { get_tipo_postgrado } from '../../actions/moduloAsignaturas';
-import { get_lista_periodos, get_reporte } from '../../actions/reportes';
+import { get_lista_periodos } from '../../actions/reportes';
+import { host } from '../../components/globalVariables';
+import request from 'superagent';
 
 class Reporte extends Component {
 
@@ -25,11 +27,13 @@ class Reporte extends Component {
             estudiantes_retirados: false,
             informacion_general: false,
             informacion_detallada: false,
+            cargando: false,
 
         }
         this.handleChange = this.handleChange.bind(this);
         this.handleChangeCheck = this.handleChangeCheck.bind(this);
         this.get_tipos_postgrado = this.get_tipos_postgrados.bind(this);
+        this.get_reporte = this.get_reporte.bind(this);
         this.get_periodos_por_tipo_postgrado = this.get_periodos_por_tipo_postgrado.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
     }
@@ -54,9 +58,40 @@ class Reporte extends Component {
         });
     }
 
+    get_file(periodo, token) {
+    return request
+      .post(host + 'api/reporte/periodo/')
+      .set('Authorization', 'JWT ' + token)
+      .send(periodo)
+      .then(function (res) {
+        var blob = new Blob([res.text]);
+        var link = document.createElement('a');
+        link.href = window.URL.createObjectURL(blob);
+        link.download = "reporte_periodo.pdf";
+        link.click();
+
+      })
+      .catch(function (err) {
+        alert("Error al crear el reporte");
+
+      });
+    }
+
+    // Reporte
+    get_reporte(periodo) {
+    let token = localStorage.getItem('user_token');
+    this.setState({ "cargando": true },
+      () => this.get_file(periodo, token)
+        .then(
+          () => {
+            this.setState({ "cargando": false });
+          }
+        )
+    );
+    };
 
     handleSubmit(e) {
-        this.props.get_reporte(this.state);
+        this.get_reporte(this.state);
         this.setState({
             asignaturas_dictadas: false,
             docentes: false,
@@ -105,6 +140,9 @@ class Reporte extends Component {
             return (
                 <div>
                     <h4><center>Reportes</center></h4><br />
+                    {this.state.cargando &&
+                        <center><PulseLoader color="#b3b1b0" size="16px" margin="4px" /></center>
+                    }
                     <FormGroup row>
                         <Label for="periodo" sm={5}>Seleccione un tipo de postgrado:</Label>
                         <Col sm={7}>
@@ -241,7 +279,6 @@ const mapDispatchToProps = (dispatch) => {
         cargado: cargado,
         get_tipo_postgrado: get_tipo_postgrado,
         get_lista_periodos: get_lista_periodos,
-        get_reporte: get_reporte,
     }, dispatch)
 }
 
