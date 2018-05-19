@@ -635,7 +635,10 @@ def get_reporte_periodo(request):
 		data_pdf['asignaturas'] = asignaturas
 
 	if body['estudiantes_inscritos']:
-		periodo_estudiante = PeriodoEstudiante.objects.filter(periodo=periodo)
+		try:
+			periodo_estudiante = PeriodoEstudiante.objects.filter(periodo=periodo)
+		except:
+			periodo_estudiante = []
 		estudiantes = []
 		cant_estudiantes_inscritos = 0
 
@@ -653,7 +656,10 @@ def get_reporte_periodo(request):
 		data_pdf['cant_estudiantes_inscritos'] = cant_estudiantes_inscritos
 
 	if body['docentes']:
-		docente_asignatura = DocenteAsignatura.objects.filter(periodo=periodo)
+		try:
+			docente_asignatura = DocenteAsignatura.objects.filter(periodo=periodo)
+		except:
+			docente_asignatura = []
 		docentes = []
 		cant_docentes = 0
 
@@ -672,7 +678,11 @@ def get_reporte_periodo(request):
 		data_pdf['cant_docentes'] = cant_docentes
 
 	if body['estudiantes_aprobados']:
-		estudiante_asignatura = EstudianteAsignatura.objects.filter(periodo_estudiante__periodo_id=periodo, nota_definitiva__gte=10, retirado=False).order_by('asignatura')
+		try:
+			estudiante_asignatura = EstudianteAsignatura.objects.filter(periodo_estudiante__periodo_id=periodo, nota_definitiva__gte=10, retirado=False).order_by('asignatura')
+		except:
+			estudiante_asignatura = []
+
 		cant_estudiantes_aprobados = 0
 		asignatura = {}
 		asignatura['nombre'] = ''
@@ -707,7 +717,11 @@ def get_reporte_periodo(request):
 		data_pdf['estudiantes_aprobados'] = asignaturas
 
 	if body['estudiantes_reprobados']:
-		estudiante_asignatura = EstudianteAsignatura.objects.filter(periodo_estudiante__periodo_id=periodo, nota_definitiva__lt=10, retirado=False).order_by('asignatura')
+		try:
+			estudiante_asignatura = EstudianteAsignatura.objects.filter(periodo_estudiante__periodo_id=periodo, nota_definitiva__lt=10, retirado=False).order_by('asignatura')
+		except:
+			estudiante_asignatura = []
+
 		cant_estudiantes_reprobados = 0
 		asignatura = {}
 		asignatura['nombre'] = ''
@@ -742,7 +756,11 @@ def get_reporte_periodo(request):
 		data_pdf['estudiantes_reprobados'] = asignaturas
 
 	if body['estudiantes_retirados']:
-		estudiante_asignatura = EstudianteAsignatura.objects.filter(periodo_estudiante__periodo_id=periodo, retirado=True).order_by('asignatura')
+		try:
+			estudiante_asignatura = EstudianteAsignatura.objects.filter(periodo_estudiante__periodo_id=periodo, retirado=True).order_by('asignatura')
+		except:
+			estudiante_asignatura = []
+
 		cant_estudiantes_retirados = 0
 		asignatura = {}
 		asignatura['nombre'] = ''
@@ -779,9 +797,6 @@ def get_reporte_periodo(request):
 		periodo_info = {}
 		periodo_completo = periodo
 		periodo_info['docentes'] = []
-
-		if(periodo_completo.estado_periodo.estado != "activo"):
-			return Response(status=status.HTTP_400_BAD_REQUEST)
 
 		try:
 			coordinador = PersonalDocente.objects.get(id_tipo_postgrado__tipo=periodo_completo.tipo_postgrado.tipo, coordinador=True)
@@ -840,7 +855,7 @@ def get_reporte_periodo(request):
 
 		data_pdf['informacion_detallada'] = periodo_info
 
-
+	print (data_pdf)
 	content = 'attachment; filename="reporte_'+data_pdf['periodo']+'.pdf"'
 	pdf = render_to_pdf('reportes.html', data_pdf)
 	pdf['Content-Disposition'] = content
