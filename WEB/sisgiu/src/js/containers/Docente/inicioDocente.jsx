@@ -7,6 +7,8 @@ import { host } from '../../components/globalVariables';
 import request from 'superagent';
 import { connect } from 'react-redux';
 import { PulseLoader } from 'halogenium';
+import DiagramaFlujo  from '../../components/diagramas'
+
 
 // Components
 import { cargado } from '../../actions/inicio';
@@ -99,10 +101,18 @@ class InicioDocente extends Component {
 
     if (this.props.docenteUser.asignaturas.length === 0) {
       return (
-        <center>
-          <br />
-          <h4>Actualmente no se encuentra impartiendo ninguna asignatura</h4>
-        </center>
+        <div>
+          <center>
+            <br />
+            <h4>Actualmente no se encuentra impartiendo ninguna asignatura</h4>
+          </center>
+          <Row>
+            <Col md="12" className="text-center">
+              <br /><hr /><br />
+              <DiagramaFlujo />
+            </Col>
+          </Row>
+        </div>
       );
     } else {
       return (
@@ -127,6 +137,13 @@ class InicioDocente extends Component {
               <ListGroup>
                 {this.get_ListItems()}
               </ListGroup>
+            </Col>
+          </Row>
+
+          <Row>
+            <Col md="12" className="text-center">
+              <br /><hr /><br />
+              <DiagramaFlujo />
             </Col>
           </Row>
 

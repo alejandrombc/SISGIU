@@ -1,7 +1,7 @@
 #region imports
 from django.http import HttpResponse
 import json
-
+import requests
 from usuario.models import (
 	Usuario,
 	TipoPostgrado,
@@ -845,5 +845,11 @@ def get_reporte_periodo(request):
 	pdf['Content-Disposition'] = content
 
 	return HttpResponse(pdf, content_type='application/pdf')
+
+@api_view(['GET'])
+def get_diagrama_flujo(request, modulo):
+	url = request.build_absolute_uri('/')+"media/sisgiu/diagrama_"+modulo+".png"
+	r = requests.get(url)
+	return HttpResponse(r.content, content_type="image/png")
 
 #endregion

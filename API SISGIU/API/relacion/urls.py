@@ -26,7 +26,8 @@ from relacion.views import (
     informacion_usuarios_administrativo,
     cargar_notas,
     estado_retiro_estudiante,
-    get_reporte_periodo
+    get_reporte_periodo,
+    get_diagrama_flujo,
     )
 
 
@@ -89,5 +90,8 @@ urlpatterns = format_suffix_patterns([
 
     # Generacion de reporte de periodo
     url(r'^api/reporte/periodo/$', get_reporte_periodo, name='reporte-periodo'),
+
+    # Descargar diagrama de flujo por cada rol
+    url(r'^api/diagrama/(?P<modulo>[\w\-]+)/$', get_diagrama_flujo, name='diagrama-flujo'),
 
 ])
