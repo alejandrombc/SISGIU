@@ -46,6 +46,9 @@ class Reporte extends Component {
 
     handleChange(e) {
         const { name, value } = e.target;
+        if(name === "postgrado"){
+            this.setState({ "periodo": '' });
+        }
         this.setState({ [name]: value });
     }
 

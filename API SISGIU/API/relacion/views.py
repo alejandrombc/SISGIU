@@ -780,8 +780,8 @@ def get_reporte_periodo(request):
 		periodo_completo = periodo
 		periodo_info['docentes'] = []
 
-		if(periodo_completo.estado_periodo.estado != "activo"):
-			return Response(status=status.HTTP_400_BAD_REQUEST)
+		#if(periodo_completo.estado_periodo.estado != "activo"):
+		#	return Response(status=status.HTTP_400_BAD_REQUEST)
 
 		try:
 			coordinador = PersonalDocente.objects.get(id_tipo_postgrado__tipo=periodo_completo.tipo_postgrado.tipo, coordinador=True)
