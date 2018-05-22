@@ -28,6 +28,9 @@ class NavBarDocente extends Component {
           <NavLink href="/constancias" disabled={!this.props.activeUser.cargado} >Constancias</NavLink>
         </NavItem>
 
+        <NavItem>
+          <NavLink href="/reportes" disabled={!this.props.activeUser.cargado}>Reportes</NavLink>
+        </NavItem>
       </Nav>
 
     )

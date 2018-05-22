@@ -29,8 +29,8 @@ class Creditos extends Component {
 								- Profa. Yosly Hernández (Escuela de Computación)
 							</Label>
 							<br />
-							<center><a class=" login-detail-panel-button btn" href="/">
-								<i class="fa fa-arrow-left"></i>
+							<center><a className=" login-detail-panel-button btn" href="/">
+								<i className="fa fa-arrow-left"></i>
 									Inicio
 			                </a></center>
 							<br />

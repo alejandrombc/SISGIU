@@ -12,10 +12,10 @@ class DiagramaFlujo extends Component {
         super(props);
         this.state = {
             cargando: false,
+            modulo : localStorage.getItem('modulo'),
         }
         this.get_diagrama = this.get_diagrama.bind(this);
     }
-
 
     get_file(token, modulo) {
         return new Promise(function (resolve, reject) {
@@ -64,7 +64,9 @@ class DiagramaFlujo extends Component {
                     {this.state.cargando &&
                         <center><PulseLoader color="#b3b1b0" size="16px" margin="4px" /></center>
                     }
-                    <Button color="primary" onClick={this.get_diagrama}>Ver funcionalidades</Button>
+                    <h6>Funcionalidades</h6>
+                    <img width="800px" height="600px" src={host+"media/sisgiu/diagrama_"+this.state.modulo+".png"} class="img-fluid" alt="Diagrama" />
+                    <Button color="primary" onClick={this.get_diagrama}>Descargar</Button>
                 </div>
             );
     }

@@ -93,7 +93,7 @@ class Content extends Component {
 						<ConstanciaDocente />
 					}
 
-					{this.props.pestana === "reportes" && modulo === "administrativo" &&
+					{this.props.pestana === "reportes" && (modulo === "administrativo" || modulo === "docentes") &&
 						<Reporte />
 					}
 

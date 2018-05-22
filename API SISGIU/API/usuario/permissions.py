@@ -44,3 +44,10 @@ class isAdministrativoOrEstudianteOrAdmin(BasePermission):
 
 	def has_permission(self, request, view):
 		return request.user.is_superuser or PersonalAdministrativo.objects.filter(usuario=request.user).exists() or Estudiante.objects.filter(usuario=request.user).exists()
+
+
+class isAdministrativoOrDocenteOrAdmin(BasePermission):
+	message = "El usuario debe pertenecer al personal administrativo o ser un docente."
+
+	def has_permission(self, request, view):
+		return request.user.is_superuser or PersonalAdministrativo.objects.filter(usuario=request.user).exists() or PersonalDocente.objects.filter(usuario=request.user).exists()

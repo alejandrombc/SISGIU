@@ -209,7 +209,7 @@
         {% endif %}
 
         <!-- Estudiantes Aprobados -->
-        {% if estudiantes_aprobados|length >= 1 %}
+        {% if estudiantes_aprobados.0.estudiantes|length >= 1 %}
         <div class='salto'>
             <div class='header'>
                 <p class='title_child'>
@@ -254,7 +254,7 @@
         {% endif %}
 
         <!-- Estudiantes Reprobados -->
-        {% if estudiantes_reprobados|length >= 1 %}
+        {% if estudiantes_reprobados.0.estudiantes|length >= 1 %}
         <div class='salto'>
             <div class='header'>
                 <p class='title_child'>
@@ -299,7 +299,7 @@
         {% endif %}
 
         <!-- Estudiantes Retirados -->
-        {% if estudiantes_retirados|length >= 1 %}
+        {% if estudiantes_retirados.0.estudiantes|length >= 1 %}
         <div class='salto'>
             <div class='header'>
                 <p class='title_child'>

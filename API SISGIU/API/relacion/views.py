@@ -52,7 +52,7 @@ from .permissions import (
 from django.views.decorators.csrf import csrf_exempt
 from django.db.models import Q, Count
 from rest_framework.decorators import permission_classes, api_view
-from usuario.permissions import isAdministrativoOrEstudianteOrAdmin, isDocenteOrAdmin, isEstudianteOrAdmin, isAdministrativoOrAdmin
+from usuario.permissions import isAdministrativoOrEstudianteOrAdmin, isAdministrativoOrDocenteOrAdmin, isDocenteOrAdmin, isEstudianteOrAdmin, isAdministrativoOrAdmin
 from rest_framework import status
 from rest_framework.response import Response
 from usuario.utils import render_to_pdf
@@ -604,7 +604,7 @@ def estado_retiro_estudiante(request, cedula):
 
 @csrf_exempt
 @api_view(['POST'])
-@permission_classes((isAdministrativoOrAdmin, ))
+@permission_classes((isAdministrativoOrDocenteOrAdmin, ))
 def get_reporte_periodo(request):
 
 	body_unicode = request.body.decode('utf-8')
@@ -839,6 +839,9 @@ def get_reporte_periodo(request):
 		periodo_info['cantidad_docentes'] = cantidad_docentes
 
 		data_pdf['informacion_detallada'] = periodo_info
+
+
+	print(data_pdf)
 
 	content = 'attachment; filename="reporte_'+data_pdf['periodo']+'.pdf"'
 	pdf = render_to_pdf('reportes.html', data_pdf)
