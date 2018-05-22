@@ -20,6 +20,7 @@ import UsuariosAdministrativo from './Administrativo/usuariosAdministrativo';
 import ConstanciaEstudiante from './Estudiante/constanciasEstudiante';
 import ConstanciaDocente from './Docente/constanciasDocente';
 import Reporte from './Administrativo/reportes';
+import ReporteDocente from './Docente/reportes';
 
 
 class Content extends Component {
@@ -93,8 +94,12 @@ class Content extends Component {
 						<ConstanciaDocente />
 					}
 
-					{this.props.pestana === "reportes" && (modulo === "administrativo" || modulo === "docentes") &&
+					{this.props.pestana === "reportes" && modulo === "administrativo" &&
 						<Reporte />
+					}
+
+					{this.props.pestana === "reportesDocente" && modulo === "docentes" &&
+						<ReporteDocente />
 					}
 
 

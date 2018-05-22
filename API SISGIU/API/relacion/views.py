@@ -604,7 +604,7 @@ def estado_retiro_estudiante(request, cedula):
 
 @csrf_exempt
 @api_view(['POST'])
-@permission_classes((isAdministrativoOrDocenteOrAdmin, ))
+@permission_classes((isAdministrativoOrAdmin, ))
 def get_reporte_periodo(request):
 
 	body_unicode = request.body.decode('utf-8')
@@ -848,6 +848,161 @@ def get_reporte_periodo(request):
 	pdf['Content-Disposition'] = content
 
 	return HttpResponse(pdf, content_type='application/pdf')
+
+
+@csrf_exempt
+@api_view(['POST'])
+@permission_classes((isDocenteOrAdmin, ))
+def get_reporte_periodo_docente(request, cedula):
+
+	body_unicode = request.body.decode('utf-8')
+	body = json.loads(body_unicode)
+	periodo = Periodo.objects.get(id=body['periodo'])
+
+	data_pdf = {}
+
+	data_pdf['periodo'] = periodo.descripcion
+	data_pdf['anio_inicio'] = periodo.anio_inicio
+	data_pdf['anio_fin'] = periodo.anio_fin
+	data_pdf['mes_inicio'] = periodo.mes_inicio
+	data_pdf['mes_fin'] = periodo.mes_fin
+	data_pdf['numero_periodo'] = periodo.numero_periodo
+	data_pdf['tipo_postgrado'] = periodo.tipo_postgrado.tipo
+
+	docente_asignatura = DocenteAsignatura.objects.filter(periodo=periodo, docente__usuario__cedula=cedula)
+
+	if body['asignaturas_dictadas']:
+		asignaturas = []
+		for x in docente_asignatura:
+			if not any(d['codigo'] == x.asignatura.codigo for d in asignaturas):
+				asignatura = {}
+				asignatura['codigo'] = x.asignatura.codigo
+				asignatura['nombre'] = x.asignatura.nombre
+				asignatura['unidad_credito'] = x.asignatura.unidad_credito
+				asignaturas.append(asignatura)
+
+		data_pdf['asignaturas'] = asignaturas
+
+	if body['estudiantes_aprobados']:
+		estudiante_asignatura = EstudianteAsignatura.objects.filter(periodo_estudiante__periodo_id=periodo, nota_definitiva__gte=10, retirado=False).order_by('asignatura')
+		cant_estudiantes_aprobados = 0
+		asignatura = {}
+		asignatura['nombre'] = ''
+		asignatura['codigo'] = ''
+		asignatura['unidad_credito'] = ''
+		asignatura['estudiantes'] = []
+		asignaturas = list()
+		for x in estudiante_asignatura:
+			print(x)
+			for item in docente_asignatura:
+				print(item)
+				if item.asignatura.codigo == x.asignatura.codigo :
+					if(asignatura['codigo'] != '' and x.asignatura.codigo != asignatura['codigo']):
+						asignatura['cant_estudiantes_aprobados'] = cant_estudiantes_aprobados
+						asignaturas.append(asignatura.copy())
+
+						asignatura['estudiantes'] = []
+						cant_estudiantes_aprobados = 0
+
+					asignatura['nombre'] = x.asignatura.nombre
+					asignatura['codigo'] = x.asignatura.codigo
+					asignatura['unidad_credito'] = x.asignatura.unidad_credito
+
+					cant_estudiantes_aprobados += 1
+					estudiante = {}
+					estudiante['cedula'] = x.periodo_estudiante.estudiante.usuario.cedula
+					estudiante['first_name'] = x.periodo_estudiante.estudiante.usuario.first_name
+					estudiante['last_name'] = x.periodo_estudiante.estudiante.usuario.last_name
+					estudiante['segundo_nombre'] = x.periodo_estudiante.estudiante.usuario.segundo_nombre
+					estudiante['segundo_apellido'] = x.periodo_estudiante.estudiante.usuario.segundo_apellido
+					estudiante['nota_definitiva'] = x.nota_definitiva
+					asignatura['estudiantes'].append(estudiante)
+
+
+		asignatura['cant_estudiantes_aprobados'] = cant_estudiantes_aprobados
+		asignaturas.append(asignatura.copy())
+		data_pdf['estudiantes_aprobados'] = asignaturas
+
+	if body['estudiantes_reprobados']:
+		estudiante_asignatura = EstudianteAsignatura.objects.filter(periodo_estudiante__periodo_id=periodo, nota_definitiva__lt=10, retirado=False).order_by('asignatura')
+		cant_estudiantes_reprobados = 0
+		asignatura = {}
+		asignatura['nombre'] = ''
+		asignatura['codigo'] = ''
+		asignatura['unidad_credito'] = ''
+		asignatura['estudiantes'] = []
+		asignaturas = list()
+		for x in estudiante_asignatura:
+			for item in docente_asignatura: 
+				if item.asignatura.codigo == x.asignatura.codigo :
+					if(asignatura['codigo'] != '' and x.asignatura.codigo != asignatura['codigo']):
+						asignatura['cant_estudiantes_reprobados'] = cant_estudiantes_reprobados
+						asignaturas.append(asignatura.copy())
+
+						asignatura['estudiantes'] = []
+						cant_estudiantes_reprobados = 0
+
+					asignatura['nombre'] = x.asignatura.nombre
+					asignatura['codigo'] = x.asignatura.codigo
+					asignatura['unidad_credito'] = x.asignatura.unidad_credito
+
+					cant_estudiantes_reprobados += 1
+					estudiante = {}
+					estudiante['cedula'] = x.periodo_estudiante.estudiante.usuario.cedula
+					estudiante['first_name'] = x.periodo_estudiante.estudiante.usuario.first_name
+					estudiante['last_name'] = x.periodo_estudiante.estudiante.usuario.last_name
+					estudiante['segundo_nombre'] = x.periodo_estudiante.estudiante.usuario.segundo_nombre
+					estudiante['segundo_apellido'] = x.periodo_estudiante.estudiante.usuario.segundo_apellido
+					estudiante['nota_definitiva'] = x.nota_definitiva
+					asignatura['estudiantes'].append(estudiante)
+
+		asignatura['cant_estudiantes_reprobados'] = cant_estudiantes_reprobados
+		asignaturas.append(asignatura.copy())
+		data_pdf['estudiantes_reprobados'] = asignaturas
+
+	if body['estudiantes_retirados']:
+		estudiante_asignatura = EstudianteAsignatura.objects.filter(periodo_estudiante__periodo_id=periodo, retirado=True).order_by('asignatura')
+		cant_estudiantes_retirados = 0
+		asignatura = {}
+		asignatura['nombre'] = ''
+		asignatura['codigo'] = ''
+		asignatura['unidad_credito'] = ''
+		asignatura['estudiantes'] = []
+		asignaturas = list()
+		for x in estudiante_asignatura:
+			for item in docente_asignatura: 
+				if item.asignatura.codigo == x.asignatura.codigo :
+					if(asignatura['codigo'] != '' and x.asignatura.codigo != asignatura['codigo']):
+						asignatura['cant_estudiantes_retirados'] = cant_estudiantes_retirados
+						asignaturas.append(asignatura.copy())
+
+						asignatura['estudiantes'] = []
+						cant_estudiantes_retirados = 0
+
+					asignatura['nombre'] = x.asignatura.nombre
+					asignatura['codigo'] = x.asignatura.codigo
+					asignatura['unidad_credito'] = x.asignatura.unidad_credito
+
+					cant_estudiantes_retirados += 1
+					estudiante = {}
+					estudiante['cedula'] = x.periodo_estudiante.estudiante.usuario.cedula
+					estudiante['first_name'] = x.periodo_estudiante.estudiante.usuario.first_name
+					estudiante['last_name'] = x.periodo_estudiante.estudiante.usuario.last_name
+					estudiante['segundo_nombre'] = x.periodo_estudiante.estudiante.usuario.segundo_nombre
+					estudiante['segundo_apellido'] = x.periodo_estudiante.estudiante.usuario.segundo_apellido
+					asignatura['estudiantes'].append(estudiante)
+
+		asignatura['cant_estudiantes_retirados'] = cant_estudiantes_retirados
+		asignaturas.append(asignatura.copy())
+		data_pdf['estudiantes_retirados'] = asignaturas
+
+
+	content = 'attachment; filename="reporte_'+data_pdf['periodo']+'.pdf"'
+	pdf = render_to_pdf('reportes.html', data_pdf)
+	pdf['Content-Disposition'] = content
+
+	return HttpResponse(pdf, content_type='application/pdf')
+
 
 @api_view(['GET'])
 def get_diagrama_flujo(request, modulo):

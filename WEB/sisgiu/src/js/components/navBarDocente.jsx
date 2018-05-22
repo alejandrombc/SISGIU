@@ -29,7 +29,7 @@ class NavBarDocente extends Component {
         </NavItem>
 
         <NavItem>
-          <NavLink href="/reportes" disabled={!this.props.activeUser.cargado}>Reportes</NavLink>
+          <NavLink href="/reportesDocente" disabled={!this.props.activeUser.cargado}>Reportes</NavLink>
         </NavItem>
       </Nav>
 
