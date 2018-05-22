@@ -37,7 +37,6 @@ export function cambiar_contraseña(nueva_contrasena, cedula, contraseña) {
 			}
 		})
 		.catch(function (err) {
-			alert("test");
 			return {
 				type: "RECUPERACION_ERRONEA"
 			}

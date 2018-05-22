@@ -65,7 +65,6 @@ export const get_information = (user) => {
 
 		})
 		.catch(function (err) {
-			alert('hola');
 			localStorage.removeItem('user_token');
 			localStorage.removeItem('modulo');
 			return {
