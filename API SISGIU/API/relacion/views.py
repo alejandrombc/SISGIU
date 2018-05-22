@@ -840,9 +840,6 @@ def get_reporte_periodo(request):
 
 		data_pdf['informacion_detallada'] = periodo_info
 
-
-	print(data_pdf)
-
 	content = 'attachment; filename="reporte_'+data_pdf['periodo']+'.pdf"'
 	pdf = render_to_pdf('reportes.html', data_pdf)
 	pdf['Content-Disposition'] = content
@@ -893,9 +890,7 @@ def get_reporte_periodo_docente(request, cedula):
 		asignatura['estudiantes'] = []
 		asignaturas = list()
 		for x in estudiante_asignatura:
-			print(x)
 			for item in docente_asignatura:
-				print(item)
 				if item.asignatura.codigo == x.asignatura.codigo :
 					if(asignatura['codigo'] != '' and x.asignatura.codigo != asignatura['codigo']):
 						asignatura['cant_estudiantes_aprobados'] = cant_estudiantes_aprobados
