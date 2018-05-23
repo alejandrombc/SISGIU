@@ -67,10 +67,10 @@ class DiagramaFlujo extends Component {
                     }
                     <h6>Funcionalidades</h6>
                     <ReactImageMagnify 
-                            enlargedImagePosition= "over"
-                            isHintEnabled="true"
-                            hintTextMouse="Desplaza el mouse para agrandar"
                             {...{
+                                enlargedImagePosition:"over",
+                                isHintEnabled:true,
+                                hintTextMouse:"Desplaza el mouse para agrandar",
                                 smallImage: {
                                     alt: 'Diagrama de flujo',
                                     isFluidWidth: true,
