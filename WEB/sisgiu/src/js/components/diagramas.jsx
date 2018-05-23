@@ -1,7 +1,8 @@
 // Dependencies
 import React, { Component } from 'react';
 import { PulseLoader } from 'halogenium';
-import { Button } from 'reactstrap';
+import { Button} from 'reactstrap';
+import ReactImageMagnify from 'react-image-magnify';
 
 // Components
 import { host } from './globalVariables';
@@ -65,7 +66,24 @@ class DiagramaFlujo extends Component {
                         <center><PulseLoader color="#b3b1b0" size="16px" margin="4px" /></center>
                     }
                     <h6>Funcionalidades</h6>
-                    <img width="800px" height="600px" src={host+"media/sisgiu/diagrama_"+this.state.modulo+".png"} class="img-fluid" alt="Diagrama" />
+                    <ReactImageMagnify 
+                            enlargedImagePosition= "over"
+                            isHintEnabled="true"
+                            hintTextMouse="Desplaza el mouse para agrandar"
+                            {...{
+                                smallImage: {
+                                    alt: 'Diagrama de flujo',
+                                    isFluidWidth: true,
+
+                                    src: host+"media/sisgiu/diagrama_"+this.state.modulo+".png"
+                                },
+                                largeImage: {
+                                    src: host+"media/sisgiu/diagrama_"+this.state.modulo+".png",
+                                    width: 1200,
+                                    height: 1800
+                                }
+                        } }/>
+                    <br />
                     <Button color="primary" onClick={this.get_diagrama}>Descargar</Button>
                 </div>
             );
