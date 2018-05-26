@@ -90,7 +90,7 @@ class ModalPeriodoNew extends React.Component {
 
     return (
       <div>
-        <Button color="primary" size='sm' onClick={this.toggle} data-toggle="tooltip" title="Nueva Asignatura"><FontAwesomeIcon name="plus" /></Button>
+        <Button color="primary" size='sm' onClick={this.toggle} data-toggle="tooltip" title="Nuevo Periodo"><FontAwesomeIcon name="plus" /></Button>
         <Modal isOpen={this.state.modal} toggle={this.toggle} className={this.props.className}>
           <ModalHeader toggle={this.toggle}>
             Agregar nuevo periodo

@@ -67,7 +67,7 @@ class InicioAdministrador extends Component {
                 <Col md='5' sm='5' key={valor.id + 0.1}>
                   <ConfirmButton
                     onConfirm={() => this.cambiarEstadoPeriodo(valor)}
-                    text="Terminar Periodo"
+                    text="Finalizar Periodo"
                     className="btn btn-danger btn-sm"
                     style={{ float: 'right' }}
                     confirming={{
