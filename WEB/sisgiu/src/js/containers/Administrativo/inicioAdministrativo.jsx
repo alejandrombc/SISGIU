@@ -24,6 +24,7 @@ class InicioAdministrativo extends Component {
 
     this.get_planillas = this.get_planillas.bind(this);
     this.get_ListItems = this.get_ListItems.bind(this);
+    this.periodos_activos = this.periodos_activos.bind(this);
     this.mostrar_descripcion_periodo = this.mostrar_descripcion_periodo.bind(this);
   }
 
@@ -62,30 +63,42 @@ class InicioAdministrativo extends Component {
     return 'Periodo: ' + periodo.numero_periodo + ' (' + periodo.mes_inicio + ' ' + periodo.anio_inicio + ' - ' + periodo.mes_fin + ' ' + periodo.anio_fin + ')';
   }
 
+  periodos_activos(){
+    let hay_periodos = false;
+    this.props.administrativoUser['lista_periodos'].forEach(function(entry) {
+      if(entry.estado_periodo === "activo"){ hay_periodos = true; }
+    });
+    return hay_periodos;
+  }
+
   get_ListItems() {
     let listItems = '';
     if (this.props.administrativoUser['lista_periodos'] && this.props.administrativoUser['lista_periodos'].length > 0) {
       listItems = this.props.administrativoUser['lista_periodos'].map((valor, index) => {
-        return (
-          <ListGroupItem key={index * -1}>
+        if(valor.estado_periodo === "activo"){
+          return (
+            <ListGroupItem key={index * -1}>
 
-            <Row>
+              <Row>
 
-              <Col md='7' sm='7'>
-                <ListGroupItemHeading>{valor['tipo_postgrado']}</ListGroupItemHeading>
-                <ListGroupItemText>{this.mostrar_descripcion_periodo(valor)}</ListGroupItemText>
-              </Col>
+                <Col md='7' sm='7'>
+                  <ListGroupItemHeading>{valor['tipo_postgrado']}</ListGroupItemHeading>
+                  <ListGroupItemText>{this.mostrar_descripcion_periodo(valor)}</ListGroupItemText>
+                </Col>
 
-              <Col md='5' sm='5'>
-                <ListGroupItemText>
-                  <Button onClick={() => this.get_planillas(valor['id'], valor['tipo_postgrado'])} className="float-right" color="secondary" size="sm">Descargar Planilla</Button>
-                </ListGroupItemText>
-              </Col>
+                <Col md='5' sm='5'>
+                  <ListGroupItemText>
+                    <Button onClick={() => this.get_planillas(valor['id'], valor['tipo_postgrado'])} className="float-right" color="secondary" size="sm">Descargar Planilla</Button>
+                  </ListGroupItemText>
+                </Col>
 
-            </Row>
+              </Row>
 
-          </ListGroupItem>
-        )
+            </ListGroupItem>
+          )
+        }else{
+          return (<div key={index * -1} />)
+        }
       });
     } else {
       if (this.props.administrativoUser['tiene_periodos_activos']) {
@@ -119,7 +132,7 @@ class InicioAdministrativo extends Component {
           <br />
           <Row className='text-center'>
             <Col md='12'>
-              {this.props.administrativoUser['lista_periodos'].length > 0 ?
+              {this.periodos_activos() ?
                 <h5>Periodos Actuales</h5>
                 :
                 <h5>Actualmente no se encuentra ningún periodo </h5>

@@ -72,6 +72,10 @@
                 font-size: 10px;
             }
 
+            .salto {
+                page-break-after: always;
+            }
+
         </style>
      </head>
      <body>
@@ -93,7 +97,7 @@
              <p class='title_child'><b>PLANILLA PERIODO <b>{{numero_periodo}} ({{mes_inicio}} {{anio_inicio}} - {{mes_fin}} {{anio_fin}})</b> - {{tipo_postgrado}}</b></p>
             </div>
             {%for docente in docentes%}
-                <div class='texto'>
+                <div class='texto salto'>
                     <center>
                         <p>DOCENTE: <b>{{docente.nombre}} {{docente.apellido}}</b> | <b>({{docente.cedula}})</b></p>
                         <p>ASIGNATURA: <b>{{docente.asignatura}}</b></p>
