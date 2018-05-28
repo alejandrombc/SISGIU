@@ -152,79 +152,82 @@
         
 
         <!-- Estudiantes Inscritos -->
-        
-        <div class='wrapper salto'>
-            <div class='header'>
-                <p class='title_child'>
-                    <b>ESTUDIANTES INSCRITOS</b>
-                </p>
-                <p style="font-size:14px;">CANTIDAD: {{cant_estudiantes_inscritos}}</p>
-            </div>
-            {% if estudiantes_inscritos|length >= 1 %}
-            <div class='texto'>
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th class="th">IDENTIFICACIÓN</th>
-                            <th class="th">NOMBRE</th>
-                            <th class="th">APELLIDO</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for estudiantes in estudiantes_inscritos %}
-                        <tr>
-                            <td class="td" width="20%">{{estudiantes.cedula}}</td>
-                            <td class="td" width="40%">{{estudiantes.first_name}}</td>
-                            <td class="td" width="40%">{{estudiantes.last_name}}</td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-            {% else %}
-                <div class='texto'>
-                    <center>No hay elementos para esa búsqueda</center>
+        {% if not es_docente %}
+            <div class='wrapper salto'>
+                <div class='header'>
+                    <p class='title_child'>
+                        <b>ESTUDIANTES INSCRITOS</b>
+                    </p>
+                    <p style="font-size:14px;">CANTIDAD: {{cant_estudiantes_inscritos}}</p>
                 </div>
+                {% if estudiantes_inscritos|length >= 1 %}
+                <div class='texto'>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th class="th">IDENTIFICACIÓN</th>
+                                <th class="th">NOMBRE</th>
+                                <th class="th">APELLIDO</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for estudiantes in estudiantes_inscritos %}
+                            <tr>
+                                <td class="td" width="20%">{{estudiantes.cedula}}</td>
+                                <td class="td" width="40%">{{estudiantes.first_name}}</td>
+                                <td class="td" width="40%">{{estudiantes.last_name}}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                    <div class='texto'>
+                        <center>No hay elementos para esa búsqueda</center>
+                    </div>
 
-            {% endif %}
-        </div>
+                {% endif %}
+            </div>
+        {% endif %}
 
         <!-- Docentes -->
-        <div class='wrapper salto'>
-            <div class='header'>
-                <p class='title_child'>
-                    <b>DOCENTES</b>
-                </p>
-                <p style="font-size:14px;">CANTIDAD: {{cant_docentes}}</p>
-            </div>
-            {% if docentes|length >= 1 %}
-            <div class='texto'>
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th class="th">IDENTIFICACIÓN</th>
-                            <th class="th">NOMBRE</th>
-                            <th class="th">APELIIDO</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for docente in docentes %}
-                        <tr>
-                            <td class="td" width="20%">{{docente.cedula}}</td>
-                            <td class="td" width="40%">{{docente.first_name}}</td>
-                            <td class="td" width="40%">{{docente.last_name}}</td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-            {% else %}
-                <div class='texto'>
-                    <center>No hay elementos para esa búsqueda</center>
+        {% if not es_docente %}
+            <div class='wrapper salto'>
+                <div class='header'>
+                    <p class='title_child'>
+                        <b>DOCENTES</b>
+                    </p>
+                    <p style="font-size:14px;">CANTIDAD: {{cant_docentes}}</p>
                 </div>
+                {% if docentes|length >= 1 %}
+                <div class='texto'>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th class="th">IDENTIFICACIÓN</th>
+                                <th class="th">NOMBRE</th>
+                                <th class="th">APELIIDO</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for docente in docentes %}
+                            <tr>
+                                <td class="td" width="20%">{{docente.cedula}}</td>
+                                <td class="td" width="40%">{{docente.first_name}}</td>
+                                <td class="td" width="40%">{{docente.last_name}}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                    <div class='texto'>
+                        <center>No hay elementos para esa búsqueda</center>
+                    </div>
 
-            {% endif %}
-        </div>
+                {% endif %}
+            </div>
+        {% endif %}
 
         <!-- Estudiantes Aprobados -->
         
@@ -378,7 +381,7 @@
 
 
         <!-- Informacion Detallada -->
-        {% if informacion_detallada|length >= 1 %}
+        {% if not es_docente %}
             <div class='header'>
                 <p class='title_child'>
                     <b>INFORMACIÓN PERIODO</b>
@@ -398,43 +401,49 @@
                     <p>-----------------------------------------------</p>
                 </center>
             </div>
-        
-            {%for docente in informacion_detallada.docentes%}
-            <div class='texto salto'>
-                <center>
-                    <p style="font-size:12px">DOCENTE:
-                        <b>{{docente.nombre}} {{docente.apellido}}</b> |
-                        <b>({{docente.cedula}})</b>
-                    </p>
-                    <p style="font-size:12px">ASIGNATURA:
-                        <b>{{docente.asignatura}}</b>
-                    </p>
-                    <p style="font-size:12px">N° CREDITOS:
-                        <b>{{docente.unidad_credito}}</b>.</p>
-                </center>
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th class="th">IDENTIFICACIÓN</th>
-                            <th class="th">NOMBRE</th>
-                            <th class="th">APELLIDO</th>
-                            <th class="th">NOTA</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for estudiante in docente.estudiantes %}
-                        <tr>
-                            <td width="20%" class="td" data-column="Cedula">{{estudiante.cedula}}</td>
-                            <td width="40%" class="td" data-column="Nombre">{{estudiante.nombre}}</td>
-                            <td width="45%" class="td" data-column="Apellido">{{estudiante.apellido}}</td>
-                            <td width="15%" class="td" data-column="Calificacion">{{estudiante.nota}}</td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-            {% endfor %}
-            <br>    
+            {% if informacion_detallada|length >= 1 %}
+                {%for docente in informacion_detallada.docentes%}
+                <div class='texto salto'>
+                    <center>
+                        <p style="font-size:12px">DOCENTE:
+                            <b>{{docente.nombre}} {{docente.apellido}}</b> |
+                            <b>({{docente.cedula}})</b>
+                        </p>
+                        <p style="font-size:12px">ASIGNATURA:
+                            <b>{{docente.asignatura}}</b>
+                        </p>
+                        <p style="font-size:12px">N° CREDITOS:
+                            <b>{{docente.unidad_credito}}</b>.</p>
+                    </center>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th class="th">IDENTIFICACIÓN</th>
+                                <th class="th">NOMBRE</th>
+                                <th class="th">APELLIDO</th>
+                                <th class="th">NOTA</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for estudiante in docente.estudiantes %}
+                            <tr>
+                                <td width="20%" class="td" data-column="Cedula">{{estudiante.cedula}}</td>
+                                <td width="40%" class="td" data-column="Nombre">{{estudiante.nombre}}</td>
+                                <td width="45%" class="td" data-column="Apellido">{{estudiante.apellido}}</td>
+                                <td width="15%" class="td" data-column="Calificacion">{{estudiante.nota}}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% endfor %}
+                <br>    
+            {% else %}
+                <div class='texto'>
+                    <center>No hay elementos para esa búsqueda</center>
+                </div>
+
+            {% endif %}
         {% endif %}
         
 

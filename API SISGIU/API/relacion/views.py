@@ -620,6 +620,7 @@ def get_reporte_periodo(request):
 	data_pdf['mes_fin'] = periodo.mes_fin
 	data_pdf['numero_periodo'] = periodo.numero_periodo
 	data_pdf['tipo_postgrado'] = periodo.tipo_postgrado.tipo
+	data_pdf['es_docente'] = False
 
 	if body['asignaturas_dictadas']:
 		docente_asignatura = DocenteAsignatura.objects.filter(periodo=periodo)
@@ -865,6 +866,7 @@ def get_reporte_periodo_docente(request, cedula):
 	data_pdf['mes_fin'] = periodo.mes_fin
 	data_pdf['numero_periodo'] = periodo.numero_periodo
 	data_pdf['tipo_postgrado'] = periodo.tipo_postgrado.tipo
+	data_pdf['es_docente'] = True
 
 	docente_asignatura = DocenteAsignatura.objects.filter(periodo=periodo, docente__usuario__cedula=cedula)
 
