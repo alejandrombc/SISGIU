@@ -891,7 +891,7 @@ def get_reporte_periodo_docente(request, cedula):
 		asignaturas = list()
 		for x in estudiante_asignatura:
 			for item in docente_asignatura:
-				if not any(d['codigo'] == x.asignatura.codigo for d in asignaturas):
+				if not any(d['codigo'] == item.asignatura.codigo for d in asignaturas):
 					if item.asignatura.codigo == x.asignatura.codigo :
 						if(asignatura['codigo'] != '' and x.asignatura.codigo != asignatura['codigo']):
 							asignatura['cant_estudiantes_aprobados'] = cant_estudiantes_aprobados
@@ -930,27 +930,28 @@ def get_reporte_periodo_docente(request, cedula):
 		asignaturas = list()
 		for x in estudiante_asignatura:
 			for item in docente_asignatura: 
-				if item.asignatura.codigo == x.asignatura.codigo :
-					if(asignatura['codigo'] != '' and x.asignatura.codigo != asignatura['codigo']):
-						asignatura['cant_estudiantes_reprobados'] = cant_estudiantes_reprobados
-						asignaturas.append(asignatura.copy())
+				if not any(d['codigo'] == item.asignatura.codigo for d in asignaturas):
+					if item.asignatura.codigo == x.asignatura.codigo :
+						if(asignatura['codigo'] != '' and x.asignatura.codigo != asignatura['codigo']):
+							asignatura['cant_estudiantes_reprobados'] = cant_estudiantes_reprobados
+							asignaturas.append(asignatura.copy())
 
-						asignatura['estudiantes'] = []
-						cant_estudiantes_reprobados = 0
+							asignatura['estudiantes'] = []
+							cant_estudiantes_reprobados = 0
 
-					asignatura['nombre'] = x.asignatura.nombre
-					asignatura['codigo'] = x.asignatura.codigo
-					asignatura['unidad_credito'] = x.asignatura.unidad_credito
+						asignatura['nombre'] = x.asignatura.nombre
+						asignatura['codigo'] = x.asignatura.codigo
+						asignatura['unidad_credito'] = x.asignatura.unidad_credito
 
-					cant_estudiantes_reprobados += 1
-					estudiante = {}
-					estudiante['cedula'] = x.periodo_estudiante.estudiante.usuario.cedula
-					estudiante['first_name'] = x.periodo_estudiante.estudiante.usuario.first_name
-					estudiante['last_name'] = x.periodo_estudiante.estudiante.usuario.last_name
-					estudiante['segundo_nombre'] = x.periodo_estudiante.estudiante.usuario.segundo_nombre
-					estudiante['segundo_apellido'] = x.periodo_estudiante.estudiante.usuario.segundo_apellido
-					estudiante['nota_definitiva'] = x.nota_definitiva
-					asignatura['estudiantes'].append(estudiante)
+						cant_estudiantes_reprobados += 1
+						estudiante = {}
+						estudiante['cedula'] = x.periodo_estudiante.estudiante.usuario.cedula
+						estudiante['first_name'] = x.periodo_estudiante.estudiante.usuario.first_name
+						estudiante['last_name'] = x.periodo_estudiante.estudiante.usuario.last_name
+						estudiante['segundo_nombre'] = x.periodo_estudiante.estudiante.usuario.segundo_nombre
+						estudiante['segundo_apellido'] = x.periodo_estudiante.estudiante.usuario.segundo_apellido
+						estudiante['nota_definitiva'] = x.nota_definitiva
+						asignatura['estudiantes'].append(estudiante)
 
 		asignatura['cant_estudiantes_reprobados'] = cant_estudiantes_reprobados
 		asignaturas.append(asignatura.copy())
@@ -967,26 +968,27 @@ def get_reporte_periodo_docente(request, cedula):
 		asignaturas = list()
 		for x in estudiante_asignatura:
 			for item in docente_asignatura: 
-				if item.asignatura.codigo == x.asignatura.codigo :
-					if(asignatura['codigo'] != '' and x.asignatura.codigo != asignatura['codigo']):
-						asignatura['cant_estudiantes_retirados'] = cant_estudiantes_retirados
-						asignaturas.append(asignatura.copy())
+				if not any(d['codigo'] == item.asignatura.codigo for d in asignaturas):
+					if item.asignatura.codigo == x.asignatura.codigo :
+						if(asignatura['codigo'] != '' and x.asignatura.codigo != asignatura['codigo']):
+							asignatura['cant_estudiantes_retirados'] = cant_estudiantes_retirados
+							asignaturas.append(asignatura.copy())
 
-						asignatura['estudiantes'] = []
-						cant_estudiantes_retirados = 0
+							asignatura['estudiantes'] = []
+							cant_estudiantes_retirados = 0
 
-					asignatura['nombre'] = x.asignatura.nombre
-					asignatura['codigo'] = x.asignatura.codigo
-					asignatura['unidad_credito'] = x.asignatura.unidad_credito
+						asignatura['nombre'] = x.asignatura.nombre
+						asignatura['codigo'] = x.asignatura.codigo
+						asignatura['unidad_credito'] = x.asignatura.unidad_credito
 
-					cant_estudiantes_retirados += 1
-					estudiante = {}
-					estudiante['cedula'] = x.periodo_estudiante.estudiante.usuario.cedula
-					estudiante['first_name'] = x.periodo_estudiante.estudiante.usuario.first_name
-					estudiante['last_name'] = x.periodo_estudiante.estudiante.usuario.last_name
-					estudiante['segundo_nombre'] = x.periodo_estudiante.estudiante.usuario.segundo_nombre
-					estudiante['segundo_apellido'] = x.periodo_estudiante.estudiante.usuario.segundo_apellido
-					asignatura['estudiantes'].append(estudiante)
+						cant_estudiantes_retirados += 1
+						estudiante = {}
+						estudiante['cedula'] = x.periodo_estudiante.estudiante.usuario.cedula
+						estudiante['first_name'] = x.periodo_estudiante.estudiante.usuario.first_name
+						estudiante['last_name'] = x.periodo_estudiante.estudiante.usuario.last_name
+						estudiante['segundo_nombre'] = x.periodo_estudiante.estudiante.usuario.segundo_nombre
+						estudiante['segundo_apellido'] = x.periodo_estudiante.estudiante.usuario.segundo_apellido
+						asignatura['estudiantes'].append(estudiante)
 
 		asignatura['cant_estudiantes_retirados'] = cant_estudiantes_retirados
 		asignaturas.append(asignatura.copy())
