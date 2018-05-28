@@ -30,7 +30,7 @@
     "superagent": "^3.8.2"
   },
   "scripts": {
-    "start": "HOST=199.192.17.43 react-scripts start",
+    "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
