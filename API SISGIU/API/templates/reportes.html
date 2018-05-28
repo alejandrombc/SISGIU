@@ -378,27 +378,27 @@
 
 
         <!-- Informacion Detallada -->
-        
-        <div class='header'>
-            <p class='title_child'>
-                <b>INFORMACIÓN PERIODO</b>
-            </p>
-            <center>
-                <p>-----------------------------------------------</p>
-                <p style="font-size:12px">CANTIDAD DE ASIGNATURAS:
-                    <b>{{informacion_detallada.cantidad_asignaturas}} </b>
-                </p>
-                <p style="font-size:12px">CANTIDAD DE DOCENTES:
-                    <b>{{informacion_detallada.cantidad_docentes}}</b>
-                </p>
-                <p style="font-size:12px">CANTIDAD DE ESTUDIANTES:
-                    <b>{{informacion_detallada.cantidad_estudiantes}}</b>.</p>
-                <p style="font-size:12px">COORDINADOR DE POSTGRADO:
-                    <b>{{informacion_detallada.coordinador_nombre}} {{informacion_detallada.coordinador_apellido}}</b>.</p>
-                <p>-----------------------------------------------</p>
-            </center>
-        </div>
         {% if informacion_detallada|length >= 1 %}
+            <div class='header'>
+                <p class='title_child'>
+                    <b>INFORMACIÓN PERIODO</b>
+                </p>
+                <center>
+                    <p>-----------------------------------------------</p>
+                    <p style="font-size:12px">CANTIDAD DE ASIGNATURAS:
+                        <b>{{informacion_detallada.cantidad_asignaturas}} </b>
+                    </p>
+                    <p style="font-size:12px">CANTIDAD DE DOCENTES:
+                        <b>{{informacion_detallada.cantidad_docentes}}</b>
+                    </p>
+                    <p style="font-size:12px">CANTIDAD DE ESTUDIANTES:
+                        <b>{{informacion_detallada.cantidad_estudiantes}}</b>.</p>
+                    <p style="font-size:12px">COORDINADOR DE POSTGRADO:
+                        <b>{{informacion_detallada.coordinador_nombre}} {{informacion_detallada.coordinador_apellido}}</b>.</p>
+                    <p>-----------------------------------------------</p>
+                </center>
+            </div>
+        
             {%for docente in informacion_detallada.docentes%}
             <div class='texto salto'>
                 <center>
@@ -435,11 +435,6 @@
             </div>
             {% endfor %}
             <br>    
-        {% else %}
-            <div class='texto'>
-                <center>No hay elementos para esa búsqueda</center>
-            </div>
-
         {% endif %}
         
 
