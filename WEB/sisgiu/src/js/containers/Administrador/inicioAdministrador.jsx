@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Alert, Row, Col, ListGroup, ListGroupItem, ListGroupItemHeading, ListGroupItemText } from 'reactstrap';
 import { PulseLoader } from 'halogenium'; //Spinner
-import DiagramaFlujo  from '../../components/diagramas'
+//import DiagramaFlujo  from '../../components/diagramas'
 import ConfirmButton from 'react-confirm-button';
 
 // Components
@@ -158,13 +158,13 @@ class InicioAdministrador extends Component {
               </ListGroup>
             </Col>
           </Row>
-
+	{/*
           <Row>
             <Col md="12" className="text-center">
               <br /><hr /><br />
               <DiagramaFlujo />
             </Col>
-          </Row>
+          </Row> */}
         </div>
       )
     }

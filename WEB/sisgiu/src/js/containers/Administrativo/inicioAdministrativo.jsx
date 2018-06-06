@@ -6,7 +6,7 @@ import { PulseLoader } from 'halogenium';
 import { Row, Col, ListGroup, ListGroupItem, ListGroupItemHeading, ListGroupItemText, Button } from 'reactstrap';
 import { host } from '../../components/globalVariables';
 import request from 'superagent';
-import DiagramaFlujo  from '../../components/diagramas'
+//import DiagramaFlujo  from '../../components/diagramas'
 
 
 // Components
@@ -149,14 +149,14 @@ class InicioAdministrativo extends Component {
               </ListGroup>
             </Col>
           </Row>
-
+	 {/*
           <Row>
             <Col md="12" className="text-center">
               <br /><hr /><br />
               <DiagramaFlujo />
             </Col>
           </Row>
-
+	  */}
         </div>
       )
     }

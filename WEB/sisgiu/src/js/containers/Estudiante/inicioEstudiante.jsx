@@ -5,7 +5,7 @@ import { bindActionCreators } from 'redux';
 import { Alert, Button, Row, Col, ListGroup, ListGroupItem, ListGroupItemHeading, ListGroupItemText } from 'reactstrap';
 import { PulseLoader } from 'halogenium';
 import Inscripcion from './inscripcion';
-import DiagramaFlujo  from '../../components/diagramas'
+//import DiagramaFlujo  from '../../components/diagramas'
 
 
 
@@ -204,12 +204,12 @@ class InicioEstudiante extends Component {
               }
 
 
-                <Row>
+                {/*<Row>
                   <Col md="12" className="text-center">
                     <br /><hr /><br />
                     <DiagramaFlujo />
                   </Col>
-                </Row>
+                </Row>*/}
 
             </div>
           );
@@ -217,12 +217,12 @@ class InicioEstudiante extends Component {
           return (
             <div>
               <Inscripcion triggerBuscarInformacionAsignaturas={() => this.buscarInformacionAsignaturas()} triggerInscripcion={() => this.enInscripcion()} />
-              <Row>
+              {/*<Row>
                 <Col md="12" className="text-center">
                   <br /><hr /><br />
                   <DiagramaFlujo />
                 </Col>
-              </Row>
+              </Row>*/}
             </div>
           );
         }
@@ -230,12 +230,12 @@ class InicioEstudiante extends Component {
         return (
           <div>
             <center><h5>Usted no es un estudiante activo</h5></center>
-              <Row>
+              {/*<Row>
                 <Col md="12" className="text-center">
                   <br /><hr /><br />
                   <DiagramaFlujo />
                 </Col>
-            </Row>
+            </Row>*/}
           </div>
         );
       }

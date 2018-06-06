@@ -7,7 +7,7 @@ import { host } from '../../components/globalVariables';
 import request from 'superagent';
 import { connect } from 'react-redux';
 import { PulseLoader } from 'halogenium';
-import DiagramaFlujo  from '../../components/diagramas';
+//import DiagramaFlujo  from '../../components/diagramas';
 
 
 
@@ -107,12 +107,12 @@ class InicioDocente extends Component {
             <br />
             <h4>Actualmente no se encuentra impartiendo ninguna asignatura</h4>
           </center>
-          <Row>
+          {/*<Row>
             <Col md="12" className="text-center">
               <br /><hr /><br />
               <DiagramaFlujo />
             </Col>
-          </Row>
+          </Row>*/}
         </div>
       );
     } else {
@@ -140,14 +140,14 @@ class InicioDocente extends Component {
               </ListGroup>
             </Col>
           </Row>
-
+	{/*
           <Row>
             <Col md="12" className="text-center">
               <br /><hr /><br />
               <DiagramaFlujo />
             </Col>
           </Row>
-
+	*/}
         </div>
       )
     }
